@@ -25,11 +25,7 @@
   <body {% block bodyattrs %}{% endblock%}>
 
 {%if user.is_authenticated %}
-    {% if request.user.is_superuser %}
-        {% include 'navbar/navbar_menu_admin.html' %}
-    {% else %}
-        {% include 'navbar/navbar_menu_user.html' %}
-    {% endif %}
+    {% include 'navbar/navbar_menu_user.html' %}
 {% else %}
     {% include 'navbar/navbar_menu_anon.html' %}
 {% endif %}

@@ -40,5 +40,49 @@ body {
    flex: 1;
 }
 
+@media (min-width: 992px){
+    .navdrawer-permanent-lg + #main-content, .navbar-drawer .container{
+        margin-left:$navdrawer-width;
+    }
+}
+.navdrawer-permanent-lg ~ #top-bar{
+    margin-left:$navdrawer-width;
+}
+
+@media (max-width: 992px){
+    .navbar-toggler.always-show{
+        display:block;
+    }
+}
+
+@media (max-width: 992px){
+    .navbar-toggler.always-show[aria-expanded="true"]{
+        margin-left:18.5rem;
+        z-index:200;
+    }
+}
+@media (max-width: 380px){
+    .navbar-toggler.always-show[aria-expanded="true"]{
+        margin-left: calc(100% - 2.2rem);
+    }
+}
+@-moz-keyframes spin { 100% { -moz-transform: rotate(-360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(-360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(-360deg); transform:rotate(-360deg); } }
+.mes-loader{
+    display:block;
+    width:150px;
+    height:150px;
+    background-image:url('mes-loader.png');
+    background-repeat:no-repeat;
+    background-position:center;
+     -webkit-animation:spin 1.2s linear infinite;
+    -moz-animation:spin 1.2s linear infinite;
+    animation:spin 1.2s linear infinite;
+    margin:auto;
+    opacity:0.7;
+}
+
+
 // Import Bootstrap extensions
 // @import './components/buttons';

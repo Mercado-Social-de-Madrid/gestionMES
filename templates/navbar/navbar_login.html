@@ -8,9 +8,8 @@
                 <div class="primary-title">{{user.get_username}}</div>
                 <small class="text-muted">{{user.email}}</small>
             </div>
-
-          <a class="dropdown-item" href="{% url 'dashboard' %}"><i class="ic ic-home"></i> Inicio</a>
-          <a class="dropdown-item" href="#"><i class="material-icons">mode_edit</i> Editar perfil</a>
+            
+          <a class="dropdown-item" href="{% url 'edit_profile' %}"><i class="material-icons">mode_edit</i> Editar perfil</a>
             <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="{% url 'logout' %}?next=/"><i class="material-icons">exit_to_app</i> Cerrar sesión</a>
         </div>

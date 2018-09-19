@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Mi perfil{% endblock %}
+
+{% block bodyattrs %} id="login-page" class="main-bg" {% endblock%}
+
+{% block content %}
+
+<div class="jumbo-header minimal" >
+    <div class="jumbotron">
+        <div class="container text-center">
+            <h1>Mi perfil</h1>
+        </div>
+    </div>
+</div>
+
+
+<div class="container px-5 mb-5">
+
+<ul class="nav nav-justified nav-tabs" id="tabs-content" role="tablist">
+      <li class="nav-item">
+        <a aria-controls="profile" aria-selected="true" class="nav-link {%if profile_tab%}active{%endif%}" data-toggle="tab" href="#profile-form" id="profile-tab" role="tab">Perfil</a>
+      </li>
+      <li class="nav-item">
+        <a aria-controls="password" aria-selected="false" class="nav-link {%if password_tab%} active{%endif%}" data-toggle="tab" href="#password-form" id="password-tab" role="tab">Contraseña</a>
+      </li>
+</ul>
+
+<div class="tab-content" id="profile-password-tabs">
+  <div aria-labelledby="profile-tab" class="tab-pane p-4 px-5 {%if profile_tab%}show active{%endif%}" id="profile-form" role="tabpanel">
+
+  <form method="post" action="{% url 'edit_profile' %}"  class="edit-form" >
+    {% csrf_token %}
+        <h4><i class="material-icons mr-3">account_circle</i> Datos de perfil</h4>
+      <div class="row">
+          <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=profile_form.username %}
+          </div>
+
+          <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=profile_form.email %}
+          </div>
+
+          <div class="col-sm-9">
+              {% include "common/forms/field.html" with field=profile_form.first_name %}
+          </div>
+
+          <div class="col-sm-12 ">
+              {% include "common/forms/field.html" with field=profile_form.last_name %}
+          </div>
+
+      </div>
+      <p class="text-center">
+          <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+      </p>
+  </form>
+
+  </div>
+
+  <div aria-labelledby="password-tab" class="tab-pane p-4 px-5 {%if password_tab%}show active{%endif%}" id="password-form" role="tabpanel">
+
+      <form method="post" class="edit-form" action="{% url 'profile_password' %}">
+
+        <h4><i class="material-icons">vpn_key</i> Actualizar contraseña</h4>
+         {% csrf_token %}
+
+        <div class="row justify-content-md-center">
+            <div class="col-md-12">
+                {% include "common/forms/field.html" with field=password_form.old_password %}
+            </div>
+            <div class="col-md-12">
+                {% include "common/forms/field.html" with field=password_form.new_password1 %}
+            </div>
+
+            <div class="col-md-12">
+                {% include "common/forms/field.html" with field=password_form.new_password2 %}
+            </div>
+        </div>
+
+        <p class="text-center">
+          <button type="submit" class="btn btn-primary btn-lg">Cambiar contraseña</button>
+      </p>
+    </form>
+
+  </div>
+</div>
+
+
+</div>
+
+
+{% endblock %}

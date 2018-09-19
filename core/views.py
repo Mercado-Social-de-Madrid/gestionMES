@@ -32,7 +32,13 @@ def register(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
-@login_required
+def dashboard(request):
+
+
+
+    return render(request, 'user/dashboard.html', {'user': request.user})
+
+
 def edit_profile(request):
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, instance=request.user)
@@ -50,7 +56,6 @@ def edit_profile(request):
                    'profile_tab': True
                    })
 
-@login_required
 def profile_password(request):
     if request.method == 'POST':
         password_form = PasswordForm(data=request.POST, user=request.user)
