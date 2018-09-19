@@ -1,0 +1,6 @@
+
+<div class="gallery popup-gallery">
+{% for photo in gallery %}
+    <a href="{{photo.image.url}}"  {%if photo.title %} title="{{photo.title}}" {% endif %}> <img src="{{photo.image_thumbnail.url}}"></a>
+{% endfor %}
+</div>

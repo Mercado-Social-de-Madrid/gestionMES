@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Login{% endblock %}
+
+{% block bodyattrs %} id="login-page" class="main-bg" {% endblock%}
+
+{% block content %}
+
+<header class="jumbo-header" style="background-image: url('{% static 'imgs/sei-bg.jpg' %}');">
+    <div class="container text-center">
+        <h1>Sei ViCCi</h1>
+    </div>
+
+</header>
+
+<div class="container justify-content-center mb-5">
+    <div class="card px-5 softbg" style="max-width:500px;margin:auto;margin-top:-60px;">
+        <div class="card-body">
+  <form method="post" class="edit-form" >
+    {% csrf_token %}
+
+        <div class="form-group">
+            <label>Nombre de usuario</label>
+            <input class="form-control" id="{{ form.username.id_for_label }}" maxlength="30" name="{{ form.username.html_name }}" type="text" placeholder="Usuario"/>
+            {%if form.username.errors %}
+            <div class="d-block invalid-feedback">
+                {%for error in form.username.errors %} {{error}} {%endfor%}
+            </div>
+            {% endif %}
+        </div>
+
+      <div class="form-group">
+          <label>Contraseña</label>
+            <input class="form-control" id="{{ form.password.id_for_label }}" maxlength="30" name="{{ form.password.html_name }}" type="password" />
+            {%if form.password.errors %}
+            <div class="d-block invalid-feedback">
+                {%for error in form.password.errors %} {{error}} {%endfor%}
+            </div>
+            {% endif %}
+        </div>
+
+      {% if form.non_field_errors %}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <strong>Ouch!</strong> {%for error in form.non_field_errors %} {{error}} {%endfor%}
+        </div>
+      {% endif %}
+
+      <p class="text-center">
+          <button type="submit" class="btn btn-primary btn-lg btn-block">Entrar</button>
+          <a href="#" class="mt-2 text-muted d-block">¿Olvidaste tu contraseña?</a>
+      </p>
+
+
+      <hr class="my-4">
+
+
+      <h4 class="text-center" style="font-weight: lighter;">¿Aún no tienes un usuario? </h4>
+        <div class="text-center">
+            <a href="{%url 'register' %}" class="btn btn-secondary btn-block btn-lg">Regístrate</a>
+        </div>
+      <!--<a href="#"  class="btn btn-lg">Olvidé mi contraseña</a>-->
+
+
+  </form>
+            </div>
+</div>
+</div>
+
+{% endblock %}

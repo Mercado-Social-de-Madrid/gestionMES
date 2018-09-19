@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load settings_value %}
+<html lang="es">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="initial-scale=1, shrink-to-fit=no, width=device-width" name="viewport">
+    <title>{% block title %}Boniatos{% endblock title%}</title>
+
+    <!-- CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <!-- Add Material CSS, replace Bootstrap CSS -->
+    <link href="{% static "css/libs/magnific-popup.css" %}" rel="stylesheet" />
+    <link href="{% sass_src 'css/mes.scss' %}" rel="stylesheet" type="text/css" />
+
+    {% block extra_styles %}{% endblock extra_styles %}
+  </head>
+  <body {% block bodyattrs %}{% endblock%}>
+
+{%if user.is_authenticated %}
+    {% if request.user.is_superuser %}
+        {% include 'navbar/navbar_menu_admin.html' %}
+    {% else %}
+        {% include 'navbar/navbar_menu_user.html' %}
+    {% endif %}
+{% else %}
+    {% include 'navbar/navbar_menu_anon.html' %}
+{% endif %}
+
+<div id="main-content">
+{% block content %}{% endblock content %}
+</div>
+
+   <div class="toast-messages" id="main-toasts">
+       {% for message in messages %}
+        <div class="toast {% if message.tags %}{{ message.tags }}{% endif %}">
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}<strong>Ouch!</strong> {% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% block toast_messages %}{% endblock toast_messages %}
+   </div>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <!-- Then Material JavaScript on top of Bootstrap JavaScript -->
+    <script src="{% static "js/material.min.js" %}"></script>
+    <script src="{% static "js/jquery.magnific-popup.min.js" %}"></script>
+    <script src="{% static "js/common.js" %}"></script>
+
+    {% block scripts %}{% endblock scripts %}
+  </body>
+</html>
+

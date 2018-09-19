@@ -1,0 +1,12 @@
+{% load settings_value %}
+
+Bienvenid@ al Mercado Social!
+Hola, {{entity.name}}!
+Recibes este email porque se ha registrado una entidad con este email en la aplicación del Mercado Social de Madrid.
+Desde este momento, puedes acceder a tu panel de usuario y configurar el perfil de tu entidad y tus ofertas, así como gestionar tu uso de la moneda social.
+
+Puedes acceder a tu panel de usuario y configurar el perfil de tu entidad accediendo al siguiente enlace: {% settings_value 'BASESITE_URL' %}{% url 'login' %}
+
+Aplicación móvil
+¿Sabías que hay una app desde la que gestionar tus movimientos con la moneda social de forma más cómoda? ¡Pruébala!
+Enlace a la app: https://play.google.com/store/apps/details?id=net.mercadosocial.moneda

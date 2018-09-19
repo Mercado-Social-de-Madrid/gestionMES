@@ -1,0 +1,22 @@
+{%if user.is_authenticated %}
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="material-icons">account_circle</i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-right pt-0" aria-labelledby="navbarDropdownMenuLink">
+            <div class="bg-light p-3">
+                <div class="primary-title">{{user.get_username}}</div>
+                <small class="text-muted">{{user.email}}</small>
+            </div>
+
+          <a class="dropdown-item" href="{% url 'dashboard' %}"><i class="ic ic-home"></i> Inicio</a>
+          <a class="dropdown-item" href="#"><i class="material-icons">mode_edit</i> Editar perfil</a>
+            <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'logout' %}?next=/"><i class="material-icons">exit_to_app</i> Cerrar sesión</a>
+        </div>
+      </li>
+    {% else %}
+    <li class="nav-item">
+      <a class="nav-link btn btn-outline-primary" href="{% url 'login' %}"><i class="fa fa-plug" aria-hidden="true"></i> Entrar</a>
+  </li>
+    {% endif %}

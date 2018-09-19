@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Login{% endblock %}
+
+{% block bodyattrs %} id="login-page" class="main-bg" {% endblock%}
+
+{% block content %}
+
+<header class="jumbo-header" style="background-image: url('{% static 'imgs/sei-bg.jpg' %}');">
+    <div class="container text-center">
+        <h1>Sei ViCCi</h1>
+        <h3 class="mb-0">Registro</h3>
+    </div>
+
+</header>
+
+<div class="container card softbg p-5 mb-5" style="max-width:520px;margin-top:-60px;">
+  <form method="post" class="edit-form" >
+    {% csrf_token %}
+
+      <div class="row">
+          <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=form.username %}
+          </div>
+
+          <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=form.email %}
+          </div>
+
+          <div class="col-sm-9">
+              {% include "common/forms/field.html" with field=form.first_name %}
+          </div>
+
+          <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=form.last_name %}
+          </div>
+
+          <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=form.birth_date %}
+          </div>
+
+          <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=form.phone_number %}
+          </div>
+
+          <div class="col-sm-6">
+              {% include "common/forms/field.html" with field=form.password1 %}
+          </div>
+
+          <div class="col-sm-6">
+              {% include "common/forms/field.html" with field=form.password2 %}
+          </div>
+
+
+      </div>
+
+      <p class="text-center">
+          <button type="submit" class="btn btn-primary btn-lg">Entrar</button>
+      </p>
+
+
+  </form>
+</div>
+
+
+
+{% endblock %}

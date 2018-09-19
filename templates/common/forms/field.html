@@ -1,0 +1,22 @@
+<div class="form-group">
+{% if not_floating %}
+    <label>{{ field.label }}</label>
+    {{ field }}
+{% else %}
+    <div class="floating-label">
+        <label for="{{field.auto_id}}">{{ field.label }}</label>
+        {{ field }}
+      </div>
+{% endif %}
+
+    {% if field.errors %}
+    <div class="d-block invalid-feedback">
+        {% for error in field.errors %} {{error}}<br> {%endfor%}
+    </div>
+    {% endif %}
+
+    {% if field.help_text%}
+      <small class="text-muted mt-2 d-block">{{ field.help_text|safe  }}</small>
+    {% endif %}
+
+</div>

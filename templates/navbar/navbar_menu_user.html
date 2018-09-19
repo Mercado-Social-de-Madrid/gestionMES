@@ -1,0 +1,46 @@
+   <nav class="navbar navbar-expand navbar-light" id="top-bar">
+     <div class="container">
+
+      <a class="navbar-brand" href="#">Boniatos</a>
+
+      <div class="collapse navbar-collapse" id="navbar-collapse">
+        <ul class="navbar-nav ml-auto mt-0">
+            {% include 'navbar/navbar_login.html' %}
+        </ul>
+      </div>
+     </div>
+</nav>
+
+<div class="nav navbar sticky-top navbar-expand-md " id="menu-nav">
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-menu" aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+       <div class="collapse navbar-collapse" id="navbar-menu">
+           <ul class="nav nav-tabs nav-fill flex-column flex-md-row flex-lg-row">
+              <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><i class="ic ic-home"></i> Inicio</a>
+              </li>
+
+            {% if perms.currency.can_manage_entity %}
+              <li class="nav-item">
+                <a class="nav-link {% if is_entity_owner %}active{% endif %}" href="{% url 'user_entity' %}"><i class="ic ic-entity"></i> Mi entidad</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% if is_offers_owner %}active{% endif %}" href="{% url 'user_offers' %}"><i class="ic ic-news"></i> Ofertas</a>
+              </li>
+            {% endif %}
+
+            {% if perms.currency.can_manage_person %}
+                <li class="nav-item">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'user_profile' %}active{% endif %}" href="{% url 'user_profile' %}"><i class="material-icons">person_outline</i> Mi perfil</a>
+                </li>
+            {% endif %}
+
+              <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'user_wallet' %}active{% endif %}" href="{% url 'user_wallet' %}"><i class="ic ic-wallet"></i> Monedero</a>
+              </li>
+            </ul>
+
+   </div>
+</div>
