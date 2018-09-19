@@ -10,13 +10,26 @@ $oppia-dark: #628817;
 $font-family-brand: 'Lato', sans-serif;
 $font-family-emphasis: 'Montserrat', sans-serif;
 
-$theme-colors: (
-  "primary": $oppia-mid
+$mes-primary: #653776;
+$mes-primary-light: #8d6b99;
+$mes-primary-lighter: #b39ebe;
+$mes-secondary: #99bb14;
+$mes-secondary-light: #C6E504;
+
+$body-bg: #fcfcfc;
+$jumbotron-bg: $mes-secondary-light;
+
+$primary: (
+  color: $mes-primary,
+  dark:  darken($mes-primary, 10%),
+  light: lighten($mes-primary, 10%)
 );
 
-$navbar-dark-toggler-border-color:transparent;
-
-$card-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0, 45, 0, 0.2);
+$secondary: (
+  color: $mes-secondary,
+  dark:  darken($mes-primary, 10%),
+  light: lighten($mes-primary, 10%)
+);
 
 @import "./material/material";
 
@@ -28,4 +41,4 @@ body {
 }
 
 // Import Bootstrap extensions
-@import './components/buttons';
+// @import './components/buttons';
