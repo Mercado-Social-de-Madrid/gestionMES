@@ -40,7 +40,15 @@ body {
    flex: 1;
 }
 
+
+
+
 @media (min-width: 992px){
+
+    .navdrawer-permanent-lg {
+        z-index: map-get($navdrawer-elevation-shadow, elevation);
+    }
+
     .navdrawer-permanent-lg + #main-content, .navbar-drawer .container{
         margin-left:$navdrawer-width;
     }
