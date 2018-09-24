@@ -80,6 +80,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mes.wsgi.application'
 
+MEMBER_CONSUMER = 'consumidora'
+MEMBER_COLAB = 'colaboradora'
+MEMBER_PROV = 'proveedora'
+MEMBER_TYPES = (
+    (MEMBER_CONSUMER, 'Socia consumidora'),
+    (MEMBER_COLAB, 'Socia colaboradora'),
+    (MEMBER_PROV, 'Socia proveedora'),
+)
 
 
 

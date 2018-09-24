@@ -4,12 +4,14 @@ from __future__ import unicode_literals
 from django.utils.translation import gettext as _
 from django.db import models
 
+from mes import settings
+
 
 class Process(models.Model):
 
     title = models.CharField(null=True, blank=True, verbose_name=_('Título'), max_length=250)
     created = models.DateTimeField(auto_now_add=True)
-    member_type = models.CharField(null=True, blank=True, verbose_name=_('Título'), max_length=30)
+    member_type = models.CharField(null=True, blank=True,max_length=30, choices=settings.MEMBER_TYPES, verbose_name=_('Tipo de socia'))
 
     class Meta:
         verbose_name = _('Proceso')
@@ -32,7 +34,7 @@ class ProcessStep(models.Model):
 
 
 class ProcessStepTask(models.Model):
-    process_step = models.ForeignKey(Process, null=False, on_delete=models.CASCADE, verbose_name=_('Tarea de un proceso'),
+    process_step = models.ForeignKey(ProcessStep, null=False, on_delete=models.CASCADE, verbose_name=_('Tarea de un proceso'),
                                 related_name='checklist')
     description = models.TextField(null=True, blank=True, verbose_name=_('Descripción'))
 
