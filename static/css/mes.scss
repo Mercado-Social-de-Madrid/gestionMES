@@ -18,6 +18,7 @@ $mes-secondary-light: #C6E504;
 
 $body-bg: #fcfcfc;
 $jumbotron-bg: $mes-secondary-light;
+$pagination-bg: transparent;
 
 $primary: (
   color: $mes-primary,
@@ -33,6 +34,10 @@ $secondary: (
 
 @import "./material/material";
 
+// Import extensions
+@import './components/navdrawer';
+@import './components/pagination';
+
 body {
   min-height: 100vh;
 }
@@ -41,39 +46,22 @@ body {
 }
 
 
-
-
-@media (min-width: 992px){
-
-    .navdrawer-permanent-lg {
-        z-index: map-get($navdrawer-elevation-shadow, elevation);
-    }
-
-    .navdrawer-permanent-lg + #main-content, .navbar-drawer .container{
-        margin-left:$navdrawer-width;
-    }
+.loading-spinner{
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin-top:-75px;
+    margin-left:-75px;
+    display:none;
 }
-.navdrawer-permanent-lg ~ #top-bar{
-    margin-left:$navdrawer-width;
+.loading-container{
+    opacity:0.6;
+    position: relative;
 }
-
-@media (max-width: 992px){
-    .navbar-toggler.always-show{
-        display:block;
-    }
+.loading-container .loading-spinner{
+    display:block;
 }
 
-@media (max-width: 992px){
-    .navbar-toggler.always-show[aria-expanded="true"]{
-        margin-left:18.5rem;
-        z-index:200;
-    }
-}
-@media (max-width: 380px){
-    .navbar-toggler.always-show[aria-expanded="true"]{
-        margin-left: calc(100% - 2.2rem);
-    }
-}
 @-moz-keyframes spin { 100% { -moz-transform: rotate(-360deg); } }
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(-360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(-360deg); transform:rotate(-360deg); } }
@@ -92,5 +80,3 @@ body {
 }
 
 
-// Import Bootstrap extensions
-// @import './components/buttons';

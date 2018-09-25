@@ -1,0 +1,6 @@
+.page-link {
+    .page-item.active & {
+        background-color: theme-color(primary);
+        color:color-yiq(theme-color(primary))
+    }
+}
