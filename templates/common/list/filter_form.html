@@ -1,4 +1,4 @@
-<form action="" method="get" class="ajax-filter">
+<form action="" method="get" class="ajax-filter" data-results="{{ list_selector|default:'#results' }}">
     {% for hidden in filter.form.hidden_fields %}
         {{ hidden }}
     {% endfor %}

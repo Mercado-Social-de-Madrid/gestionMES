@@ -67,6 +67,34 @@ function getCookie(name) {
 
     };
 
+     $.fn.ajaxFilter = function() {
+        var self = this;
+        var resultsTarget = self.attr('data-results') || '#results';
+        var resultsContainer = $(resultsTarget);
+        var initialUrl = resultsContainer.attr('data-initial');
+        var filterUrl = ((initialUrl != null) && (initialUrl!=''))? initialUrl : '' + '?';
+
+        self.on('submit', function(e){
+            e.preventDefault();
+            var query = filterUrl + self.serialize();
+            loadResults(resultsContainer, query)
+        });
+
+        self.on('change', 'select', function(e){
+            var query = filterUrl + self.serialize();
+            loadResults(resultsContainer, query);
+        });
+
+        self.on('click', '.pagination a', function(e){
+            e.preventDefault();
+            if ($(this).parent().hasClass('active'))
+                return;
+            var url = $(this).attr('href')
+            loadResults(self, url);
+        });
+
+    };
+
 }( jQuery ));
 
 function showToast(message, messageClasses){
@@ -92,6 +120,7 @@ $(function(){
     $('.show-at-load').modal('show');
     $('.datepicker').pickdate();
     $('.ajax-load').ajaxLoader();
+    $('.ajax-filter').ajaxFilter();
 
     $('[data-toggle="tooltip"]').tooltip();
 
