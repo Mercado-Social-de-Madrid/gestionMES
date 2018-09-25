@@ -1,0 +1,22 @@
+<form action="" method="get" class="ajax-filter">
+    {% for hidden in filter.form.hidden_fields %}
+        {{ hidden }}
+    {% endfor %}
+
+    <div class="filter-panel form-inline">
+    {% for field in filter.form.visible_fields %}
+        {% if field.field.widget.input_type == 'text' %}
+            <div class="input-group">
+                {{field}}
+                <div class="input-group-append">
+                <button class="btn btn-outline" type="submit"><i class="material-icons">search</i></button>
+              </div>
+            </div>
+        {% endif %}
+
+        {% if field.field.widget.input_type == 'select' %}
+            {{ field }}
+        {% endif %}
+    {% endfor %}
+    </div>
+</form>

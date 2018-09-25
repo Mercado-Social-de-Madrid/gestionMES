@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'core',
     'jet',
     'imagekit',
+    'django_filters',
     'ckeditor',
     'sass_processor',
     'django.contrib.admin',
@@ -47,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
 ]
 
 MIDDLEWARE = [
