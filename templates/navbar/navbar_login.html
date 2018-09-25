@@ -1,12 +1,12 @@
-{%if user.is_authenticated %}
+{%if request.user.is_authenticated %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="material-icons">account_circle</i> {{user.get_username}}
+          <i class="material-icons">account_circle</i> {{request.user.get_username}}
         </a>
         <div class="dropdown-menu dropdown-menu-right pt-0" aria-labelledby="navbarDropdownMenuLink">
             <div class="bg-light p-3">
-                <div class="primary-title">{{user.get_username}}</div>
-                <small class="text-muted">{{user.email}}</small>
+                <div class="primary-title">{{request.user.get_username}}</div>
+                <small class="text-muted">{{request.user.email}}</small>
             </div>
 
           <a class="dropdown-item" href="{% url 'edit_profile' %}"><i class="material-icons">mode_edit</i> Editar perfil</a>

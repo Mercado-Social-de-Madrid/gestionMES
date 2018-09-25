@@ -34,8 +34,6 @@ def register(request):
 
 def dashboard(request):
 
-
-
     return render(request, 'user/dashboard.html', {'user': request.user})
 
 

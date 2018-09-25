@@ -32,6 +32,6 @@ class ProcessesListView(FilterMixin, FilterView, AjaxTemplateResponseMixin):
     template_name = 'bpm/list.html'
     ajax_template_name = 'bpm/query.html'
     filterset_class = ProcessFilter
-    paginate_by = 2
+    paginate_by = 10
 
 
