@@ -124,6 +124,10 @@ $(function(){
 
     $('[data-toggle="tooltip"]').tooltip();
 
+    $(".link-row").click(function() {
+        window.location = $(this).data("href");
+    });
+
     $('.gallery-form').on('submit', function(event ){
         var order = 0;
 

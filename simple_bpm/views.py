@@ -8,6 +8,7 @@ from filters.views import FilterMixin
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.forms.BootstrapModelForm import BootstrapModelForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from simple_bpm.models import Process
 
 
@@ -25,9 +26,10 @@ class ProcessFilter(django_filters.FilterSet):
         fields = { 'member_type':['exact'], }
 
 
-class ProcessesListView(FilterMixin, FilterView, AjaxTemplateResponseMixin):
+class ProcessesListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     queryset = Process.objects.all()
+
     model = Process
     template_name = 'bpm/list.html'
     ajax_template_name = 'bpm/query.html'

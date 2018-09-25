@@ -79,6 +79,9 @@ body {
     opacity:0.7;
 }
 
+.jumbotron .breadcrumbs > a{
+    color: $black-secondary;
+}
 
 .filter-panel{
     margin-top: $spacer;
@@ -117,3 +120,11 @@ select.form-control, .custom-select {
     -webkit-appearance: none;
     -moz-appearance: none;
 }
+
+.material-icons.md-18 { font-size: 18px; margin:auto 5px; vertical-align:middle; }
+.material-icons.md-24 { font-size: 24px;  margin:auto 5px; vertical-align:middle; }
+.material-icons.md-36 { font-size: 36px;  margin:auto 5px; vertical-align:middle; }
+.material-icons.md-48 { font-size: 48px;  margin:auto 5px; vertical-align:middle; }
+
+
+tr.link-row:hover{ cursor: pointer; }

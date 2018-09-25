@@ -2,11 +2,10 @@
 from __future__ import unicode_literals
 
 import django_filters
-from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
-from django.utils.translation import gettext as _
 
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
@@ -14,6 +13,7 @@ from core.forms.BootstrapModelForm import BootstrapModelForm
 from core.forms.password import PasswordForm
 from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
 
 
@@ -29,13 +29,13 @@ class UserFilter(django_filters.FilterSet):
     class Meta:
         model = User
         form = UserForm
-        fields = { 'is_active':['exact'],  }
+        fields = { 'is_active':['exact'], }
 
 
-class UsersListView(FilterMixin, FilterView, AjaxTemplateResponseMixin):
+class UsersListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     queryset = User.objects.all()
-    model = User
+    objects_url_name = 'user_detail'
     template_name = 'user/list.html'
     ajax_template_name = 'user/query.html'
     filterset_class = UserFilter
@@ -67,11 +67,9 @@ class UserDetailView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         if 'profile_form' in request.POST:
-            form_class = self.profile_form
             form_name = 'profile_form'
             form = self.profile_form(**self.get_form_kwargs())
         else:
-            form_class = self.password_form
             form_name = 'password_form'
             form = self.password_form(user=self.object, **self.get_form_kwargs())
 
