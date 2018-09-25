@@ -57,12 +57,27 @@ class UserDetailView(UpdateView):
             context['password_form'] = self.password_form(user=user)
         if 'profile_form' not in context:
             context['profile_form'] = self.profile_form(instance=user)
+        if 'form_focus' not in context:
+            context['form_focus'] = 'profile_form'
 
         context['profile_tab'] = True
         return context
 
     def form_invalid(self, **kwargs):
         return self.render_to_response(self.get_context_data(**kwargs))
+
+    def get_simple_kwargs(self):
+        kwargs = {
+            'initial': self.get_initial(),
+            'prefix': self.get_prefix(),
+        }
+
+        if self.request.method in ('POST', 'PUT'):
+            kwargs.update({
+                'data': self.request.POST,
+                'files': self.request.FILES,
+            })
+        return kwargs
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -71,9 +86,9 @@ class UserDetailView(UpdateView):
             form = self.profile_form(**self.get_form_kwargs())
         else:
             form_name = 'password_form'
-            form = self.password_form(user=self.object, **self.get_form_kwargs())
+            form = self.password_form(user=self.object, **self.get_simple_kwargs())
 
         if form.is_valid():
             return self.form_valid(form)
         else:
-            return self.form_invalid(**{form_name: form})
+            return self.form_invalid(**{'form_focus': form_name, form_name: form})

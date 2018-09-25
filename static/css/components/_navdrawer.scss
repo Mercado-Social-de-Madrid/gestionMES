@@ -5,6 +5,9 @@
     .navdrawer-permanent-lg + #main-content, .navbar-drawer .container{
         margin-left:$navdrawer-width;
     }
+    .navdrawer-permanent-lg + #main-content .modal.show{
+        padding-left:$navdrawer-width;
+    }
 }
 .navdrawer-permanent-lg ~ #top-bar{
     margin-left:$navdrawer-width;
