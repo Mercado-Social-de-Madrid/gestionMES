@@ -5,6 +5,40 @@
 
 {% block content %}
 
-    {% include 'common/list/ajax_wrapper.html' with query_template='bpm/query.html' %}
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h3 class="mb-0">Procesos</h3>
+            </div>
+            <div class="col-sm-5 col-md-4 text-sm-right">
+                <a href="#" class="btn btn-primary"><i class="material-icons mr-2">add</i> Nuevo proceso</a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="filter-panel form-inline">
+
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Buscar..." aria-label="" aria-describedby="basic-addon1">
+                <div class="input-group-append">
+                <button class="btn btn-outline" type="button"><i class="material-icons">search</i></button>
+              </div>
+            </div>
+
+            <select class="custom-select ">
+              <option selected>Open this select menu</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
+
+        </div>
+
+        {% include 'common/list/ajax_wrapper.html' with query_template='bpm/query.html' %}
+    </div>
 
 {% endblock %}

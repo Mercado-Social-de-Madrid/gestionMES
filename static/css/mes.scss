@@ -80,3 +80,23 @@ body {
 }
 
 
+.filter-panel{
+    margin-top: $spacer;
+    display: flex;
+
+    .input-group, .custom-select{
+        display: inline-flex!important;
+        padding-left: $spacer;
+        padding-bottom: $spacer-sm;
+        box-shadow: map-get($shadows, 1);
+        @include border-radius($border-radius);
+        margin-right:$spacer-lg;
+        align-self: stretch;
+        border-color: rgba(0, 0, 0, 0.02);
+        background-color:#fff;
+    }
+    .custom-select{
+        border-color: transparent;
+    }
+}
+
