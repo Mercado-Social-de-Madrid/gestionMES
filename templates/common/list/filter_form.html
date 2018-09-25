@@ -3,10 +3,11 @@
         {{ hidden }}
     {% endfor %}
 
-    <div class="filter-panel form-inline">
+    <div class="d-md-flex filter-panel">
     {% for field in filter.form.visible_fields %}
+
         {% if field.field.widget.input_type == 'text' %}
-            <div class="input-group">
+            <div class="input-group align-self-stretch mb-2 flex-fill mr-md-3">
                 {{field}}
                 <div class="input-group-append">
                 <button class="btn btn-outline" type="submit"><i class="material-icons">search</i></button>
@@ -15,7 +16,20 @@
         {% endif %}
 
         {% if field.field.widget.input_type == 'select' %}
-            {{ field }}
+            {% if field.name == 'o' %}
+                <div class="d-flex mb-2 align-self-stretch flex-fill mr-md-3">
+                    <i class="material-icons mr-1 align-self-center">import_export</i>
+                    {{ field }}
+                </div>
+
+            {% else %}
+                <div class="d-flex align-self-stretch mb-2 flex-fill mr-md-3">
+                    <label class="mr-1 align-self-center">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endif %}
+
+
         {% endif %}
     {% endfor %}
     </div>

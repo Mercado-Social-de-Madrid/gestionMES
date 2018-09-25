@@ -3,6 +3,7 @@
  {% block table_head %}
     <th scope="col">Nombre</th>
     <th scope="col">Tipo de socia</th>
+    <th scope="col">Fecha creación</th>
 {% endblock %}
 
 
@@ -10,5 +11,6 @@
 
 <td class="entity-td">{{item.title}}</td>
 <td>{{item.member_type}}</td>
+<td>{{item.created}}</td>
 
 {% endblock %}

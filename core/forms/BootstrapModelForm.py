@@ -18,5 +18,9 @@ class BootstrapModelForm(forms.Form):
             else:
                 field.widget.attrs['class'] = widget_class
 
+            if field_name == 'o':
+                # For the ordering input, we set special attributes
+                field.widget.attrs['class'] += ' search-field'
+
             if not 'placeholder' in field.widget.attrs:
                 field.widget.attrs['placeholder'] = field.label
