@@ -1,0 +1,14 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Tipo de socia</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.title}}</td>
+<td>{{item.member_type}}</td>
+
+{% endblock %}

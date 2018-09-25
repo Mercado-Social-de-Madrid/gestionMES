@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}Procesos{% endblock %}
+
+
+{% block content %}
+
+    {% include 'common/list/ajax_wrapper.html' with query_template='bpm/query.html' %}
+
+{% endblock %}

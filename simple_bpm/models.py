@@ -24,6 +24,7 @@ class Process(models.Model):
 class ProcessStep(models.Model):
 
     process = models.ForeignKey(Process, null=False, on_delete=models.CASCADE, verbose_name=_('Proceso'), related_name='steps')
+    order = models.IntegerField(default=0, verbose_name=('Orden'))
     title = models.CharField(null=True, blank=True, verbose_name=_('Título'), max_length=250)
     description = models.TextField(null=True, blank=True, verbose_name=_('Descripción'))
     fa_icon = models.CharField(null=True, blank=True, verbose_name=_('Icono del paso'), max_length=50)

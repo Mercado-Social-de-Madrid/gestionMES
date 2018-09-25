@@ -19,9 +19,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from core import urls as core_urls
+from simple_bpm import urls as bpm_urls
 
 urlpatterns = [
     url(r'^', include(core_urls)),
+    url(r'^bpm/', include(bpm_urls)),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^admin/', admin.site.urls),
 ] + \
