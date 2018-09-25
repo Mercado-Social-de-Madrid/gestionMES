@@ -1,0 +1,17 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Usuario</th>
+    <th scope="col">Nombre</th>
+    <th scope="col">Alta</th>
+    <th scope="col">Última sesión</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.username}}</td>
+<td>{{item.get_full_name}}</td>
+<td>{{item.date_joined|date:'d/m/Y H:i'}}</td>
+<td>{%if item.last_login %} Hace {{item.last_login|timesince}}{% else %} Nunca {% endif %}</td>
+{% endblock %}

@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
 
-    url(r'^$', views.ProcessesListView.as_view(), name='list'),
+    url(r'^users/$', views.UsersListView.as_view(), name='users_list'),
 
 ]
 

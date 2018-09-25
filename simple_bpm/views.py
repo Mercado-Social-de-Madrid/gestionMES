@@ -2,16 +2,13 @@
 from __future__ import unicode_literals
 
 import django_filters
-from django import forms
 from django_filters.views import FilterView
-from django.shortcuts import render
 from filters.views import FilterMixin
-from django.utils.translation import gettext as _
+
+from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.forms.BootstrapModelForm import BootstrapModelForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
-from core.mixins.LabeledOrderingFilter import LabeledOrderingFilter
 from simple_bpm.models import Process
-
 
 
 class FilterForm(BootstrapModelForm):

@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'simple_bpm',
+    'management',
     'core',
     'jet',
     'imagekit',

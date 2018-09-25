@@ -23,7 +23,8 @@ from simple_bpm import urls as bpm_urls
 
 urlpatterns = [
     url(r'^', include(core_urls)),
-    url(r'^bpm/', include(bpm_urls)),
+    url(r'^bpm/', include(bpm_urls, namespace='bpm')),
+    url(r'^management/', include('management.urls', namespace='management')),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^admin/', admin.site.urls),
 ] + \
