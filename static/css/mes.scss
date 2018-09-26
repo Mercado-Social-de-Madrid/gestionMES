@@ -38,13 +38,6 @@ $secondary: (
 @import './components/navdrawer';
 @import './components/pagination';
 
-body {
-  min-height: 100vh;
-}
-.flex-grow {
-   flex: 1;
-}
-
 
 .loading-spinner{
     position:absolute;

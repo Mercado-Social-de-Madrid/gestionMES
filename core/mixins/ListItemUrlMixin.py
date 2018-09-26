@@ -1,10 +1,9 @@
 from django.urls import resolve
-from django.views.generic.base import TemplateResponseMixin
 
 
 class ListItemUrlMixin(object):
     """
-    A mixin that can be used to render a different templates based in the kind of request (Ajax or not).
+    A mixin to add the detail url for an object, constructing it with its namespace
     """
 
     objects_url_name = None

@@ -8,4 +8,4 @@ class ProcessForm(forms.ModelForm):
 
     class Meta:
         model = Process
-        fields = ['order', 'image', 'title']
+        fields = ['title', 'member_type']
