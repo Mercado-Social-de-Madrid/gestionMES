@@ -30,6 +30,15 @@
             </a>
           </li>
 
+            {% if perms.management.mespermission_can_manage_commissions %}
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'management:commission_list' %}">
+                  <i class="material-icons mr-3">dns</i>
+                  Comisiones
+                </a>
+            </li>
+            {% endif %}
+
             {% if perms.bpm.mespermission_can_manage_processes %}
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.namespace == 'bpm' %} active {% endif %}" href="{% url 'bpm:list' %}">

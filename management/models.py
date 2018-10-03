@@ -13,6 +13,9 @@ class Comission(models.Model):
     class Meta:
         verbose_name = _('Comisión')
         verbose_name_plural = _('Comisiones')
+        permissions = (
+            ("mespermission_can_manage_commissions", _("Puede gestionar las comisiones")),
+        )
 
     def __str__(self):
-        return "{}".format(self.group.name)
+        return "{}".format(self.group.name).encode('utf-8')

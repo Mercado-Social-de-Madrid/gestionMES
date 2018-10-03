@@ -23,3 +23,4 @@ class GroupAdmin(BaseGroupAdmin):
 # Re-register GroupAdmin
 admin.site.unregister(Group)
 admin.site.register(Group, GroupAdmin)
+admin.site.register(Comission)

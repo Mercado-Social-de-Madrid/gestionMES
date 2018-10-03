@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import django_filters
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django_filters.views import FilterView
@@ -99,14 +100,16 @@ class UserDetailView(UpdateView):
 class ComissionsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     queryset = Comission.objects.all()
-    objects_url_name = 'detail'
+    objects_url_name = 'commission_detail'
     model = Comission
-    template_name = 'comission/list.html'
-    ajax_template_name = 'comission/query.html'
+    template_name = 'commission/list.html'
+    ajax_template_name = 'commission/query.html'
     paginate_by = 10
 
 
 class ComissionDetailView(UpdateView):
-    template_name = 'comission/detail.html'
-    success_url = '/dashboard'
+    template_name = 'commission/detail.html'
     model = Comission
+
+    def get_success_url(self):
+        return reverse('commission_list')

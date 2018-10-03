@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Mi perfil{% endblock %}
+
+{% block bodyattrs %} id="login-page" class="main-bg" {% endblock%}
+
+{% block content %}
+
+
+ <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h4 class="mb-0 breadcrumbs"><a href="{% url 'bpm:list' %}">Comisiones</a><i class="material-icons md-18 ">arrow_forward_ios</i>{{object.group}}</h4>
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+ <form method="post" class="edit-form" >
+    {% csrf_token %}
+       {{ form.as_p }}
+      <p class="text-center">
+          <button type="submit" name="profile_form" class="btn btn-primary btn-lg">Guardar cambios</button>
+      </p>
+  </form>
+
+{% endblock %}

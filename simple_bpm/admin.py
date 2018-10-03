@@ -16,5 +16,6 @@ class ProcessStepAdmin(admin.ModelAdmin):
         ChecklistInline,
     ]
 
+
 admin.site.register(ProcessStep, ProcessStepAdmin)
 admin.site.register(Process)
