@@ -6,8 +6,8 @@ select_widget_class = 'custom-select'
 class BootstrapModelForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('label_suffix', '')
         super(BootstrapModelForm, self).__init__(*args, **kwargs)
+        self.label_suffix = ''
         for field_name, field in self.fields.items():
 
             widget_class = select_widget_class if field.widget.input_type == 'select' else text_widget_class

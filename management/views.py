@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, CreateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -16,10 +16,11 @@ from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
+from management.forms.UserForm import UserForm
 from management.models import Comission
 
 
-class UserForm(BootstrapModelForm):
+class UserFilterForm(BootstrapModelForm):
     field_order = ['o', 'search', 'is_active', ]
 
 
@@ -30,7 +31,7 @@ class UserFilter(django_filters.FilterSet):
 
     class Meta:
         model = User
-        form = UserForm
+        form = UserFilterForm
         fields = { 'is_active':['exact'], }
 
 
@@ -97,6 +98,21 @@ class UserDetailView(UpdateView):
 
 
 
+class UsersCreate(CreateView):
+
+    form_class = UserForm
+    model = User
+    template_name = 'user/create.html'
+
+    def form_valid(self, form):
+        response = super(UsersCreate, self).form_valid(form)
+        self.object.groups.add(form.cleaned_data['group'])
+        return response
+
+    def get_success_url(self):
+        return reverse('management:users_list')
+
+
 class ComissionsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     queryset = Comission.objects.all()
@@ -111,5 +127,6 @@ class ComissionDetailView(UpdateView):
     template_name = 'commission/detail.html'
     model = Comission
 
+
     def get_success_url(self):
-        return reverse('commission_list')
+        return reverse('management:commission_list')

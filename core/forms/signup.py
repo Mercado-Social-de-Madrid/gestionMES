@@ -10,11 +10,6 @@ from core.models import User
 
 class SignUpForm(UserCreationForm):
 
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault('label_suffix', '')
-        super(SignUpForm, self).__init__(*args, **kwargs)
-        self.fields['password1'].widget.attrs['class'] = 'form-control'
-        self.fields['password2'].widget.attrs['class'] = 'form-control'
 
     class Meta:
         model = User

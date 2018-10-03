@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Procesos{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h3 class="mb-0">Usuarios</h3>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post">{% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Save">
+        </form>
+    </div>
+
+{% endblock %}
