@@ -15,6 +15,7 @@ from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
+from management.models import Comission
 
 
 class UserForm(BootstrapModelForm):
@@ -92,3 +93,20 @@ class UserDetailView(UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(**{'form_focus': form_name, form_name: form})
+
+
+
+class ComissionsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+
+    queryset = Comission.objects.all()
+    objects_url_name = 'detail'
+    model = Comission
+    template_name = 'comission/list.html'
+    ajax_template_name = 'comission/query.html'
+    paginate_by = 10
+
+
+class ComissionDetailView(UpdateView):
+    template_name = 'comission/detail.html'
+    success_url = '/dashboard'
+    model = Comission
