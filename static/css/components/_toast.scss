@@ -1,0 +1,14 @@
+.toast-messages{
+    position:fixed;
+    bottom:$spacer-sm;
+    right:0;
+
+    .toast{
+        padding: $spacer $spacer-lg;
+        background: $black-secondary;
+        color: #fff;
+        margin-right: $spacer;
+        margin-bottom: $spacer-sm;
+        border-radius: $spacer-lg;
+    }
+}

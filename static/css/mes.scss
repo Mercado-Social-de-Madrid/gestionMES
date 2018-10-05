@@ -1,12 +1,6 @@
 // Custom.scss
 // Option A: Include all of Bootstrap
 
-// Oppia colors
-$oppia-lighter: #c1e552;
-$oppia-light: #9aca3c;
-$oppia-mid: #689e3a;
-$oppia-dark: #628817;
-
 $font-family-brand: 'Lato', sans-serif;
 $font-family-emphasis: 'Montserrat', sans-serif;
 
@@ -37,7 +31,7 @@ $secondary: (
 // Import extensions
 @import './components/navdrawer';
 @import './components/pagination';
-
+@import './components/toast';
 
 .loading-spinner{
     position:absolute;
