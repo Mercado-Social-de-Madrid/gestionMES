@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import django_filters
+from django.contrib import messages
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -107,6 +108,9 @@ class UsersCreate(CreateView):
     def form_valid(self, form):
         response = super(UsersCreate, self).form_valid(form)
         self.object.groups.add(form.cleaned_data['group'])
+
+        messages.success(self.request, _('Usuario añadido correctamente.'))
+
         return response
 
     def get_success_url(self):

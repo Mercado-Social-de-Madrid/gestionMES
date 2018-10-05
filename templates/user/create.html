@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Procesos{% endblock %}
+{% block title %}Nuevo usuario{% endblock %}
 
 
 {% block content %}
@@ -9,16 +9,53 @@
         <div class="container">
             <div class="row">
             <div class="col-sm-12">
-                <h3 class="mb-0">Usuarios</h3>
+                <h3 class="mb-0"><a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nuevo usuario</h3>
             </div>
         </div>
         </div>
     </div>
 
     <div class="container">
-        <form method="post">{% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Save">
+        <form method="post" class="mt-3 p-4">
+            {% csrf_token %}
+
+
+        <div class="row">
+
+            <div class="col-sm-6">
+              {% include "common/forms/field.html" with field=form.username %}
+            </div>
+
+            <div class="col-sm-6 ">
+              {% include "common/forms/field.html" with field=form.group not_floating=True %}
+          </div>
+
+            <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=form.email %}
+            </div>
+
+            <div class="col-sm-9">
+              {% include "common/forms/field.html" with field=form.first_name %}
+            </div>
+
+            <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=form.last_name %}
+            </div>
+
+            <div class="col-sm-6">
+              {% include "common/forms/field.html" with field=form.password1 %}
+            </div>
+
+          <div class="col-sm-6 ">
+              {% include "common/forms/field.html" with field=form.password2 %}
+          </div>
+
+
+        </div>
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Crear usuario</button>
+        </div>
+
         </form>
     </div>
 

@@ -33,7 +33,7 @@
       </li>
 
     <li class="nav-item">
-        <a aria-controls="groups" aria-selected="false" class="nav-link {%if group_tab %} active{%endif%}" data-toggle="tab" href="#group-form" id="history-tab" role="tab">Historial</a>
+        <a aria-controls="groups" aria-selected="false" class="nav-link {%if group_tab %} active{%endif%}" data-toggle="tab" href="#history-form" id="history-tab" role="tab">Historial</a>
       </li>
 </ul>
 
@@ -86,6 +86,13 @@
         {% empty %}
         El usuario no pertenece a ninguna comisión...
     {% endfor %}
+
+    </div>
+
+    <div aria-labelledby="history-tab" class="tab-pane p-4 p-5 {% if history_tab%}show active{% endif %}" id="history-form" role="tabpanel">
+
+        <h4><i class="material-icons mr-3 mb-4">group</i> Historial de acciones</h4>
+        Próximamente...
 
     </div>
 </div>
