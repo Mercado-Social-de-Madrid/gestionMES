@@ -9,7 +9,7 @@
 
 {% block item_row %}
 
-<td class="entity-td"><span class="p-2 mr-2 align-middle d-inline-block rounded-circle shadow-sm" style="background-color:{{item.label_color}}"></span>  {{item.group}}</td>
+<td class="entity-td"> {% include 'commission/_symbol.html' with commission=item %} {{item.group}}</td>
 <td>{{item.group.user_set.count}}</td>
 <td>
     <small class="text-muted">

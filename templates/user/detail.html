@@ -68,9 +68,24 @@
 
   </div>
 
-    <div aria-labelledby="group-tab" class="tab-pane p-4 px-5 {%if password_tab%}show active{%endif%}" id="group-form" role="tabpanel">
+    <div aria-labelledby="group-tab" class="tab-pane p-4 p-5 {%if password_tab%}show active{%endif%}" id="group-form" role="tabpanel">
 
-      Pendiente...
+        <h4><i class="material-icons mr-3 mb-4">group</i> Comisiones y permisos del usuario</h4>
+
+      {% for group in object.groups.all %}
+        <h4>
+            {% include 'commission/_symbol.html' with commission=group.comission %} {{group}}
+        </h4>
+        <div class="pl-4">
+        {% for perm in group.permissions.all %}
+            {{ perm.name }}<br>
+        {% endfor %}
+        </div>
+        <hr>
+
+        {% empty %}
+        El usuario no pertenece a ninguna comisión...
+    {% endfor %}
 
     </div>
 </div>
