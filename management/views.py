@@ -17,7 +17,8 @@ from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
-from management.forms.UserForm import UserForm
+from management.forms.commission import CommissionForm
+from management.forms.user import UserForm
 from management.models import Comission
 
 
@@ -108,7 +109,6 @@ class UsersCreate(CreateView):
     def form_valid(self, form):
         response = super(UsersCreate, self).form_valid(form)
         self.object.groups.add(form.cleaned_data['group'])
-
         messages.success(self.request, _('Usuario añadido correctamente.'))
 
         return response
@@ -131,6 +131,20 @@ class ComissionDetailView(UpdateView):
     template_name = 'commission/detail.html'
     model = Comission
 
+    def get_success_url(self):
+        return reverse('management:commission_list')
+
+
+class CommissionCreate(CreateView):
+
+    form_class = CommissionForm
+    model = Comission
+    template_name = 'commission/create.html'
+
+    def form_valid(self, form):
+        response = super(CommissionCreate, self).form_valid(form)
+        messages.success(self.request, _('Comisión añadida correctamente.'))
+        return response
 
     def get_success_url(self):
         return reverse('management:commission_list')
