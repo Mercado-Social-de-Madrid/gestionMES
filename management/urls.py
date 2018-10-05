@@ -12,7 +12,7 @@ urlpatterns = [
 
     url(r'^comm/$', views.ComissionsListView.as_view(), name='commission_list'),
     url(r'^comm/add/$', views.CommissionCreate.as_view(), name='commission_add'),
-    url(r'^users/(?P<pk>\d+)/$', views.UserDetailView.as_view(), name='commission_detail'),
+    url(r'^comm/(?P<pk>\d+)/$', views.CommissionDetailView.as_view(), name='commission_detail'),
 
 
 ]

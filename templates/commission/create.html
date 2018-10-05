@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load chunks %}
 {% block title %}Nuevo usuario{% endblock %}
 
 
@@ -9,7 +9,7 @@
         <div class="container">
             <div class="row">
             <div class="col-sm-12">
-                <h3 class="mb-0"><a href="{% url 'management:commission_list' %}">Comisioines</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nueva comisión</h3>
+                <h3 class="mb-0"><a href="{% url 'management:commission_list' %}">Comisiones</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nueva comisión</h3>
             </div>
         </div>
         </div>
@@ -19,42 +19,29 @@
         <form method="post" class="mt-3 p-4">
             {% csrf_token %}
 
-            {{ form.as_p }}
-
         <div class="row">
-
-            <div class="col-sm-6">
-              {% include "common/forms/field.html" with field=form.username %}
+            <div class="col-sm-12">
+              {% include "common/forms/field.html" with field=form.label_color %}
             </div>
 
-            <div class="col-sm-6 ">
-              {% include "common/forms/field.html" with field=form.group not_floating=True %}
+            <div class="col-sm-12 ">
+              {% include "common/forms/field.html" with field=form.group_name %}
           </div>
 
             <div class="col-sm-12">
-              {% include "common/forms/field.html" with field=form.email %}
-            </div>
-
-            <div class="col-sm-9">
-              {% include "common/forms/field.html" with field=form.first_name %}
-            </div>
-
-            <div class="col-sm-12">
-              {% include "common/forms/field.html" with field=form.last_name %}
-            </div>
-
-            <div class="col-sm-6">
-              {% include "common/forms/field.html" with field=form.password1 %}
-            </div>
-
-          <div class="col-sm-6 ">
-              {% include "common/forms/field.html" with field=form.password2 %}
+          <div class="form-group">
+            <label>{{ form.permissions.label }}</label>
+            <select name="{{form.permissions.name}}" multiple="multiple" id="{{form.fields.permissions.auto_id}}" class="custom-select special-select" data-title="Elige un permiso" data-style="btn-default btn-block">
+            {% for x,y in form.fields.permissions.choices %}
+               <option value="{{ x }}"{% if form.fields.permissions.value == x %} selected{% endif %}>{{ y|split:'|'|last }}</option>
+            {% endfor %}
+            </select>
           </div>
-
+        </div>
 
         </div>
         <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary btn-lg">Crear usuario</button>
+            <button type="submit" class="btn btn-primary btn-lg">Crear comisión</button>
         </div>
 
         </form>

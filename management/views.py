@@ -127,14 +127,6 @@ class ComissionsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplate
     paginate_by = 10
 
 
-class ComissionDetailView(UpdateView):
-    template_name = 'commission/detail.html'
-    model = Comission
-
-    def get_success_url(self):
-        return reverse('management:commission_list')
-
-
 class CommissionCreate(CreateView):
 
     form_class = CommissionForm
@@ -145,6 +137,15 @@ class CommissionCreate(CreateView):
         response = super(CommissionCreate, self).form_valid(form)
         messages.success(self.request, _('Comisión añadida correctamente.'))
         return response
+
+    def get_success_url(self):
+        return reverse('management:commission_list')
+
+
+class CommissionDetailView(UpdateView):
+    template_name = 'commission/detail.html'
+    form_class = CommissionForm
+    model = Comission
 
     def get_success_url(self):
         return reverse('management:commission_list')

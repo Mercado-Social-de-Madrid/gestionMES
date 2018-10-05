@@ -17,3 +17,11 @@ def chunks(value, chunk_length):
             yield chunk
         else:
             break
+
+
+@register.filter
+def split(value, arg):
+    """
+    Splits a string into an array by the argument
+    """
+    return value.split(arg)

@@ -115,3 +115,14 @@ select.form-control, .custom-select {
 
 
 tr.link-row:hover{ cursor: pointer; }
+
+
+.select2-container--default .select2-selection--multiple, .select2-container--default.select2-container--focus .select2-selection--multiple{
+    background-color:#transparent;
+    border:none;
+}
+.select2-container.select2-container--default.select2-container--open{
+    background:none;
+    border-width:0;
+    &:hover, &:focus{ border-width:0; box-shadow:none;}
+}

@@ -128,6 +128,8 @@ $(function(){
         window.location = $(this).data("href");
     });
 
+    $('.special-select').select2({ 'theme': 'default custom-select' });
+
     $('.gallery-form').on('submit', function(event ){
         var order = 0;
 
