@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% load chunks %}
-{% block title %}Nuevo usuario{% endblock %}
+
+{% block title %}Nueva comisión{% endblock %}
 
 
 {% block content %}
@@ -20,7 +22,7 @@
             {% csrf_token %}
 
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-6 col-md-4">
               {% include "common/forms/field.html" with field=form.label_color %}
             </div>
 
@@ -48,3 +50,17 @@
     </div>
 
 {% endblock %}
+
+
+{% block extra_styles %}
+<link rel='stylesheet' href="{% static 'css/libs/jquery.spectrum.css' %}" />
+{% endblock extra_styles %}
+
+{% block scripts %}
+<script src="{% static 'js/jquery.spectrum.js' %}"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.color-widget').wrap('<div class="color-container"></div>').spectrum({ preferredFormat: "hex"}).show();
+    });
+</script>
+{% endblock scripts %}

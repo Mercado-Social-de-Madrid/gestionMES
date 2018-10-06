@@ -14,6 +14,9 @@ class CommissionForm(forms.ModelForm, BootstrapModelForm):
     class Meta:
         model = Comission
         exclude = ['group']
+        widgets = {
+            'label_color': forms.TextInput(attrs={'class': 'color-widget'}),
+        }
 
     # Overriding __init__ here allows us to provide initial data for permissions
     def __init__(self, *args, **kwargs):

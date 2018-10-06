@@ -23,10 +23,11 @@
  <div class="container">
         <form method="post" class="mt-3 p-4">
             {% csrf_token %}
+            {{form.media}}
 
         <div class="row">
-            <div class="col-sm-12">
-              {% include "common/forms/field.html" with field=form.label_color %}
+            <div class="col-sm-6 col-md-4">
+              {% include "common/forms/field.html" with field=form.label_color  %}
             </div>
 
             <div class="col-sm-12 ">
@@ -42,6 +43,11 @@
                <option value="{{ x }}"{% if x in form.permissions.value %} selected {% endif %}>{{ y|split:'|'|last }}</option>
             {% endfor %}
             </select>
+               {% if form.permissions.errors %}
+                <div class="d-block invalid-feedback">
+                    {% for error in form.permissions.errors %} {{error}}<br> {%endfor%}
+                </div>
+                {% endif %}
           </div>
         </div>
 
@@ -54,3 +60,18 @@
     </div>
 
 {% endblock %}
+
+
+{% block extra_styles %}
+<link rel='stylesheet' href="{% static 'css/libs/jquery.spectrum.css' %}" />
+{% endblock extra_styles %}
+
+{% block scripts %}
+<script src="{% static 'js/jquery.spectrum.js' %}"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.color-widget').wrap('<div class="color-container"></div>').spectrum({ preferredFormat: "hex"}).show();
+
+    });
+</script>
+{% endblock scripts %}
