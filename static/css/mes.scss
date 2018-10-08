@@ -137,3 +137,13 @@ tr.link-row:hover{ cursor: pointer; }
     right:0;
     top:0;
 }
+
+.dropdown-chip .btn{
+    min-width:2rem; padding:0; color: $material-color-grey-500;
+    &:active, &:focus, &.active, &:hover{ background: transparent; }
+}
+
+.custom-selector-panel{
+    height:50vh;
+    overflow-y:scroll;
+}

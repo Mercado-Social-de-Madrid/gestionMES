@@ -1,0 +1,34 @@
+
+
+
+<div class="row custom-selector mt-4" data-action-class="card-actions pt-2 px-0 text-right">
+    <div class="col-md-6 mb-3">
+        <div class=" current-members" data-selector="current">
+
+                <h5 class="card-title ml-3"> Miembros de la comisión</h5>
+                <div class="custom-selector-panel">
+                {% include 'user/query.html' with object_list=commission.group.user_set.all simple_list=True %}
+                    </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class=" future-members" data-selector="future">
+
+                <h5 class="card-title ml-3">Resto de usuarias</h5>
+                 <div class="custom-selector-panel">
+                {% include 'user/query.html' with object_list=all_users simple_list=True %}
+                 </div>
+            </div>
+
+    </div>
+
+    <div class="action-buttons" style="display:none;">
+        <button data-action="remove" class="btn btn-outline-primary btn-sm"><i class="material-icons">delete</i></button>
+        <button data-action="add" class="btn btn-outline-primary btn-sm"><i class="material-icons">add</i></button>
+    </div>
+</div>
+
+
+

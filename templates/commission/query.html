@@ -4,6 +4,7 @@
     <th scope="col">Nombre</th>
     <th scope="col">Número de miembros</th>
     <th scope="col">Permisos</th>
+    <th></th>
 {% endblock %}
 
 
@@ -17,6 +18,17 @@
         {{ perm.name }}<br>
     {% endfor %}
     </small>
+</td>
+<td>
+    <div class="dropdown dropdown-chip">
+      <button class="btn btn-outline-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="material-icons">more_vert</i>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="{% url object_url_name item.pk %}?tab=permissions">Editar permisos</a>
+        <a class="dropdown-item" href="{% url object_url_name item.pk %}?tab=members">Gestionar miembros</a>
+      </div>
+    </div>
 </td>
 
 {% endblock %}

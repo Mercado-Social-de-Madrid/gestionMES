@@ -3,9 +3,11 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import UpdateView, CreateView
+from django.views.generic import UpdateView, CreateView, TemplateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -16,6 +18,7 @@ from core.forms.password import PasswordForm
 from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.models import User
 from management.forms.commission import CommissionForm
 from management.forms.user import UserForm
@@ -99,7 +102,6 @@ class UserDetailView(UpdateView):
             return self.form_invalid(**{'form_focus': form_name, form_name: form})
 
 
-
 class UsersCreate(CreateView):
 
     form_class = UserForm
@@ -110,7 +112,6 @@ class UsersCreate(CreateView):
         response = super(UsersCreate, self).form_valid(form)
         self.object.groups.add(form.cleaned_data['group'])
         messages.success(self.request, _('Usuario añadido correctamente.'))
-
         return response
 
     def get_success_url(self):
@@ -142,10 +143,42 @@ class CommissionCreate(CreateView):
         return reverse('management:commission_list')
 
 
-class CommissionDetailView(UpdateView):
+class CommissionDetailView(TabbedViewMixin, UpdateView):
     template_name = 'commission/detail.html'
+    default_tab = 'permissions'
+    available_tabs = ['permissions', 'members']
     form_class = CommissionForm
     model = Comission
 
     def get_success_url(self):
-        return reverse('management:commission_list')
+        return reverse('management:commission_detail', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        response = super(CommissionDetailView, self).form_valid(form)
+        messages.success(self.request, _('Datos actualizados correctamente.'))
+        return response
+
+
+class CommissionMembers(TemplateView):
+
+    template_name = 'commission/members.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.commission = kwargs.get('pk', None)
+        return super(CommissionMembers, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(CommissionMembers, self).get_context_data(**kwargs)
+        context['commission'] = get_object_or_404(Comission, pk=self.commission)
+        context['all_users'] = User.objects.filter(is_active=True).exclude(groups__comission=context['commission'])
+        return context
+
+    def post(self, post, *args, **kwargs):
+        commission = get_object_or_404(Comission, pk=self.commission)
+        members = self.request.POST.getlist('members[]', default='')
+
+        users = User.objects.filter(pk__in=members)
+        commission.group.user_set.clear()
+        commission.group.user_set.add(*users)
+
+        return HttpResponse(200)

@@ -20,7 +20,19 @@
         </div>
     </div>
 
- <div class="container">
+
+     <ul class="nav nav-justified nav-tabs" id="tabs-content" role="tablist">
+      <li class="nav-item">
+        <a aria-controls="profile" aria-selected="true" class="nav-link {%if permissions_tab%}active{%endif%}" data-toggle="tab" href="#data-form" id="data-tab" role="tab">Datos básicos y permisos</a>
+      </li>
+      <li class="nav-item">
+        <a aria-controls="members" aria-selected="false" class="nav-link {%if members_tab%} active{%endif%}" data-toggle="tab" href="#members-form" id="members-tab" role="tab">Miembros</a>
+      </li>
+    </ul>
+
+<div class="tab-content">
+  <div aria-labelledby="data-tab" class="tab-pane p-4 px-5 {%if permissions_tab%}show active{%endif%}" id="data-form" role="tabpanel">
+
         <form method="post" class="mt-3 p-4">
             {% csrf_token %}
             {{form.media}}
@@ -59,6 +71,31 @@
         </form>
     </div>
 
+    <div aria-labelledby="members-tab" class="tab-pane p-4 px-5 {%if members_tab%}show active{%endif%}" id="members-form" role="tabpanel">
+
+        <div class="card">
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-md-9">
+                <p class="pl-4 pt-4">Selecciona de la lista de usuarias las que quieras que formen parte de la comisión.<br>
+                    <span class="typography-subheading">
+                        Cuando hayas terminado de editar los miembros, pulsa el botón de guardar para conservar los cambios.
+                    </span>
+                </p>
+            </div>
+            <div class="col-md-3 pt-4 text-center">
+                <button class="btn btn-primary btn-lg" id="save-members"><i class="material-icons mr-2">save</i>Guardar cambios</button>
+            </div>
+        </div>
+
+        <div id="member-selector" data-href="{% url 'management:commission_members' object.pk %}"></div>
+        </div>
+</div>
+    </div>
+
+  </div>
+
 {% endblock %}
 
 
@@ -71,6 +108,56 @@
 <script type="text/javascript">
     $(function(){
         $('.color-widget').wrap('<div class="color-container"></div>').spectrum({ preferredFormat: "hex"}).show();
+
+        var membersSelector = $('#member-selector');
+        var membersUrl = membersSelector.data('href');
+
+        $.get(membersUrl, function(data){
+            membersSelector.html(data);
+
+            var selector = membersSelector.find('.custom-selector');
+            var actionsClass = selector.data('action-class');
+            var actionsCell = $('<td></td>').addClass(actionsClass);
+            var actionsFilter = '.' + actionsClass.split(' ').join('.');
+
+            var future = selector.find('[data-selector="future"]');
+            var current = selector.find('[data-selector="current"]');
+
+            var addBtn = selector.find('.action-buttons [data-action="add"]');
+            var removeBtn = selector.find('.action-buttons [data-action="remove"]');
+
+            current.find('tbody tr').each(function(i, elem){
+                actionsCell.clone().append(removeBtn.clone()).appendTo($(elem));
+            });
+            future.find('tbody tr').each(function(i, elem){
+                actionsCell.clone().append(addBtn.clone()).appendTo($(elem));
+            });
+
+            future.on('click', 'button', function(){ addToSelected($(this).parents('tr')); });
+            current.on('click', 'button', function(){ removeSelected($(this).parents('tr')); });
+
+            function addToSelected(member){
+                current.find('table').append(member);
+                member.find(actionsFilter).remove();
+                actionsCell.clone().append(removeBtn.clone()).appendTo(member);
+            }
+
+            function removeSelected(member){
+                future.find('table').append(member);
+                member.find(actionsFilter).remove();
+                actionsCell.clone().append(addBtn.clone()).appendTo(member);
+            }
+
+            $('#save-members').on('click', function(){
+                var members = [];
+                current.find('tbody tr').each(function(i,elem){ members.push($(elem).data('pk')); });
+                console.log(members);
+                $.post(membersUrl, {members:members}, function(){
+                    showToast("Cambios guardados correctamente.");
+                });
+
+            });
+        });
 
     });
 </script>

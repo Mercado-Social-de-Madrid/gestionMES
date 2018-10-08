@@ -124,8 +124,12 @@ $(function(){
 
     $('[data-toggle="tooltip"]').tooltip();
 
-    $(".link-row").click(function() {
-        window.location = $(this).data("href");
+    $(".link-row").click(function(e) {
+        var target = $(e.target);
+        if (!target.is('button') && !target.parents('button').length && !target.is('a') && !target.parents('a').length){
+            window.location = $(this).data("href");
+        }
+
     });
 
     $('.special-select').select2({ 'theme': 'default custom-select' });
