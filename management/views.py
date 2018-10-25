@@ -13,7 +13,7 @@ from filters.views import FilterMixin
 
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
-from core.forms.BootstrapModelForm import BootstrapModelForm
+from core.forms.BootstrapForm import BootstrapForm
 from core.forms.password import PasswordForm
 from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
@@ -25,7 +25,7 @@ from management.forms.user import UserForm
 from management.models import Comission
 
 
-class UserFilterForm(BootstrapModelForm):
+class UserFilterForm(BootstrapForm):
     field_order = ['o', 'search', 'is_active', ]
 
 

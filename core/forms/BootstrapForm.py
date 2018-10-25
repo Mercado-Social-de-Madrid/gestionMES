@@ -3,10 +3,10 @@ from django import forms
 text_widget_class = 'form-control'
 select_widget_class = 'custom-select'
 
-class BootstrapModelForm(forms.Form):
+class BootstrapForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
-        super(BootstrapModelForm, self).__init__(*args, **kwargs)
+        super(BootstrapForm, self).__init__(*args, **kwargs)
         self.label_suffix = ''
         for field_name, field in self.fields.items():
 

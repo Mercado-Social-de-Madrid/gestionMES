@@ -2,11 +2,11 @@ from django import forms
 from django.contrib.auth.models import Permission, Group
 from django.utils.translation import gettext as _
 
-from core.forms.BootstrapModelForm import BootstrapModelForm
+from core.forms.BootstrapForm import BootstrapForm
 from management.models import Comission
 
 
-class CommissionForm(forms.ModelForm, BootstrapModelForm):
+class CommissionForm(forms.ModelForm, BootstrapForm):
 
     group_name = forms.CharField(label=_('Nombre'), required=True)
     permissions = forms.ModelMultipleChoiceField(queryset=Permission.objects.filter(codename__startswith='mespermission'))
