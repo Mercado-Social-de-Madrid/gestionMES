@@ -20,6 +20,9 @@ class Process(models.Model):
             ("mespermission_can_manage_processes", _("Puede gestionar los procesos")),
         )
 
+    def __str__(self):
+        return "{}".format(self.title).encode('utf-8')
+
 
 class ProcessStep(models.Model):
 
@@ -32,6 +35,9 @@ class ProcessStep(models.Model):
     class Meta:
         verbose_name = _('Paso de un proceso')
         verbose_name_plural = _('Pasos de un proceso')
+
+    def __str__(self):
+        return "{} - {}".format(self.process.title, self.title).encode('utf-8')
 
 
 class ProcessStepTask(models.Model):
