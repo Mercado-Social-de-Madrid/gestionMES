@@ -1,0 +1,2 @@
+
+INLINE_INPUT_SEPARATOR = '&&&'

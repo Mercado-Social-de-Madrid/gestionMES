@@ -147,3 +147,18 @@ tr.link-row:hover{ cursor: pointer; }
     height:50vh;
     overflow-y:scroll;
 }
+
+/* For compatibility with older Bootstrap */
+.fade.in { opacity: 1; }
+
+.formset-item{
+    position:relative;
+
+    .delete-row{
+        position:absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+
+        i.material-icons{ font-size: 2rem; }
+    }
+}

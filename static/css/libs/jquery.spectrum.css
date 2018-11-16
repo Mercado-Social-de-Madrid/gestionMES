@@ -393,12 +393,10 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
     height:20px;
     width:20px;
     background:#fff;
-    content:"\f107";
     display:block;
     position:absolute;
     left:0;
     top:0;
-    font: normal normal normal 14px/1 FontAwesome;
     font-size: inherit;
     text-rendering: auto;
     -webkit-font-smoothing: antialiased;

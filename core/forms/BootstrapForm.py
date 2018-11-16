@@ -10,7 +10,7 @@ class BootstrapForm(forms.Form):
         self.label_suffix = ''
         for field_name, field in self.fields.items():
 
-            widget_class = select_widget_class if field.widget.input_type == 'select' else text_widget_class
+            widget_class = select_widget_class if hasattr(field.widget, 'input_type') and field.widget.input_type == 'select' else text_widget_class
 
             if 'class' in field.widget.attrs:
                 if widget_class not in field.widget.attrs['class']:
