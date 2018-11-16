@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.urls import reverse
-from django.views.generic import UpdateView, CreateView
+from django.views.generic import UpdateView, CreateView, DetailView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -60,33 +60,24 @@ class ProcessCreateView(CreateView, FormsetView):
     def formset_steps_valid(self, steps, process):
 
         for step in steps:
-
             process_step = step.save(commit=False)
             process_step.process = process
             process_step.save()
 
-            print process_step
-            print process_step.pk
-
             checklist_items = step.cleaned_data.get('checklist_tasks')
-            print "bbbb"
-            print checklist_items
             checklist = checklist_items.split(core.forms.INLINE_INPUT_SEPARATOR)
 
-            print checklist
             for order, description in enumerate(checklist, start=1):
                 if not description:
                     continue
                 task = ProcessStepTask()
                 task.step = process_step
-                print "aaa"
-                print description
                 task.description = description
                 task.save()
 
 
-class ProcessDetailView(UpdateView):
-    template_name = 'bpm/detail.html'
-    form_class = ProcessForm
-    success_url = '/dashboard'
+class ProcessDetailView(DetailView):
     model = Process
+    template_name = 'bpm/detail.html'
+
+

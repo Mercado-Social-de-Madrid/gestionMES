@@ -15,8 +15,11 @@ class StepForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = ProcessStep
-        fields = ['order', 'title', 'description', 'fa_icon', 'checklist_tasks']
+        fields = ['order', 'title', 'description', 'fa_icon', 'checklist_tasks', 'color']
         fields_required = ['title', 'order']
+        widgets = {
+            'color': forms.TextInput(attrs={'class': 'color-widget'}),
+        }
 
 class ProcessForm(forms.ModelForm, BootstrapForm):
 

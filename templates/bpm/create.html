@@ -46,7 +46,7 @@
                               {% include "common/forms/field.html" with field=step_form.title %}
                             </div>
 
-                            <div class="col-sm-5 ">
+                            <div class="col-sm-3 ">
                                 <div class="form-group">
                                     <label>{{ step_form.fa_icon.label }}</label>
                                     <div class="input-group">
@@ -54,6 +54,10 @@
                                         <span class="input-group-addon input-group-append"></span>
                                     </div>
                                 </div>
+                            </div>
+
+                           <div class="col-sm-2">
+                              {% include "common/forms/field.html" with field=step_form.color %}
                             </div>
 
                            <div class="col-sm-12">

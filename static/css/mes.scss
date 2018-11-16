@@ -31,6 +31,7 @@ $secondary: (
 // Import extensions
 @import './components/navdrawer';
 @import './components/pagination';
+@import './components/process_stepper';
 @import './components/toast';
 
 .loading-spinner{

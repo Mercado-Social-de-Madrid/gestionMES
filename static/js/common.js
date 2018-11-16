@@ -195,6 +195,9 @@ function initElems(container){
 		}
 	});
 
+    container.find('.color-widget').each(function(){
+        $(this).wrap('<div class="color-container"></div>').spectrum({ preferredFormat: "hex"}).show();
+    });
     container.find('.fa-selector').each(function(){
         $(this).iconpicker();
     });

@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block title %}Mi perfil{% endblock %}
-
-{% block bodyattrs %} id="login-page" class="main-bg" {% endblock%}
+{% block title %}{{object.title}}{% endblock %}
 
 {% block content %}
 
@@ -14,20 +12,36 @@
             <div class="col-sm-7 col-md-8">
                 <h4 class="mb-0 breadcrumbs"><a href="{% url 'bpm:list' %}">Procesos</a><i class="material-icons md-18 ">arrow_forward_ios</i>{{object.title}}</h4>
             </div>
-
-            <div class="col-sm-5 col-md-4 text-sm-right">
-                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#password-modal"><i class="material-icons mr-2">add</i> Modificar contraseña</a>
-            </div>
+                
         </div>
         </div>
     </div>
 
- <form method="post" class="edit-form" >
-    {% csrf_token %}
-       {{ form.as_p }}
-      <p class="text-center">
-          <button type="submit" name="profile_form" class="btn btn-primary btn-lg">Guardar cambios</button>
-      </p>
-  </form>
+
+<div class="container mt-3">
+
+    Creado: {{object.created}}
+    <br><br>
+    <h4>Pasos</h4>
+
+    <div class="stepper-vert process-stepper">
+        {% for step in object.steps.all %}
+  <div class="stepper active">
+    <div class="stepper-icon" {%if step.color %} style="background-color:{{step.color}}" {%endif%}>
+      <i class="{{step.fa_icon}}"></i>
+    </div>
+    <span class="stepper-text">
+        <h5>{{step.title}}</h5>
+        <span class="font-weight-light"> {{step.description}}</span>
+    </span>
+  </div>
+        {% endfor %}
+</div>
+
+
+
+
+
+</div>
 
 {% endblock %}

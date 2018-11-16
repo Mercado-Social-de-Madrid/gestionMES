@@ -50,17 +50,3 @@
     </div>
 
 {% endblock %}
-
-
-{% block extra_styles %}
-<link rel='stylesheet' href="{% static 'css/libs/jquery.spectrum.css' %}" />
-{% endblock extra_styles %}
-
-{% block scripts %}
-<script src="{% static 'js/jquery.spectrum.js' %}"></script>
-<script type="text/javascript">
-    $(function(){
-        $('.color-widget').wrap('<div class="color-container"></div>').spectrum({ preferredFormat: "hex"}).show();
-    });
-</script>
-{% endblock scripts %}
