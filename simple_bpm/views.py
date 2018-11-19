@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import django_filters
+from django.conf import settings
 from django.urls import reverse
 from django.views.generic import UpdateView, CreateView, DetailView
 from django_filters.views import FilterView
@@ -64,16 +65,19 @@ class ProcessCreateView(CreateView, FormsetView):
             process_step.process = process
             process_step.save()
 
-            checklist_items = step.cleaned_data.get('checklist_tasks')
-            checklist = checklist_items.split(core.forms.INLINE_INPUT_SEPARATOR)
+            if 'checklist_tasks' in step.cleaned_data:
+                checklist_items = step.cleaned_data.get('checklist_tasks')
+                checklist = checklist_items.split(settings.INLINE_INPUT_SEPARATOR)
 
-            for order, description in enumerate(checklist, start=1):
-                if not description:
-                    continue
-                task = ProcessStepTask()
-                task.step = process_step
-                task.description = description
-                task.save()
+                print process_step.pk
+
+                for order, description in enumerate(checklist, start=1):
+                    if not description:
+                        continue
+                    task = ProcessStepTask()
+                    task.process_step = process_step
+                    task.description = description
+                    task.save()
 
 
 class ProcessDetailView(DetailView):

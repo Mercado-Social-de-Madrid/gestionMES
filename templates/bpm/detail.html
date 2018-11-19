@@ -12,7 +12,7 @@
             <div class="col-sm-7 col-md-8">
                 <h4 class="mb-0 breadcrumbs"><a href="{% url 'bpm:list' %}">Procesos</a><i class="material-icons md-18 ">arrow_forward_ios</i>{{object.title}}</h4>
             </div>
-                
+
         </div>
         </div>
     </div>
@@ -33,6 +33,16 @@
     <span class="stepper-text">
         <h5>{{step.title}}</h5>
         <span class="font-weight-light"> {{step.description}}</span>
+        {% if step.checklist %}
+            <p class="font-weight-light mt-2">
+            <strong><i class="material-icons">playlist_add_check</i> Tareas</strong>
+                </p>
+            {% for task in step.checklist.all %}
+            <p class="text-black-50 pl-3"> <i class="material-icons mr-2">check_box</i>{{task.description}}</p>
+            {% endfor %}
+
+        {% endif %}
+
     </span>
   </div>
         {% endfor %}

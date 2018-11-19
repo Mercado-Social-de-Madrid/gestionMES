@@ -19,6 +19,7 @@ class StepForm(forms.ModelForm, BootstrapForm):
         fields_required = ['title', 'order']
         widgets = {
             'color': forms.TextInput(attrs={'class': 'color-widget'}),
+            'description': forms.Textarea(attrs={'rows':'1'}) ,
         }
 
 class ProcessForm(forms.ModelForm, BootstrapForm):

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load settings_value %}
 {% load chunks %}
 
 {% block title %}Nuevo proceso{% endblock %}
@@ -61,7 +62,28 @@
                             </div>
 
                            <div class="col-sm-12">
-                              {% include "common/forms/field.html" with field=step_form.description not_floating=True%}
+                              {% include "common/forms/field.html" with field=step_form.description not_floating=True %}
+                            </div>
+
+                           <div class="step_tasks col-sm-12">
+                                <label>Tareas</label>
+                                <div class="step_task mb-2">
+                                    <div class="input-group">
+                                    <input type="text" class="form-control">
+                                    <div class="input-group-append">
+                                     <button class="btn btn-flat"><i class="material-icons remove-task">clear</i></button>
+                                    </div>
+                                        </div>
+                                </div>
+                                <div class="step_task mb-2">
+                                    <div class="input-group">
+                                    <input type="text" class="form-control">
+                                    <div class="input-group-append">
+                                     <button class="btn btn-flat"><i class="material-icons remove-task">clear</i></button>
+                                    </div>
+                                        </div>
+                                </div>
+                                <div class="btn btn-primary add-task mb-4"><i class="material-icons left">add</i>añadir tarea</div>
                             </div>
                        </div>
                   </div>
@@ -94,5 +116,25 @@
             initElems(row);
         }
     });
+
+    $('form').on('submit', function(event ){
+        $('.step-formset').each(function(){
+            var $step = $(this);
+            var step_tasks = $step.find('.step_tasks input[type="text"]').map(function() {
+                return this.value !== '' ? this.value : null;
+            }).get().join('{% settings_value 'INLINE_INPUT_SEPARATOR'|escape|safe %}');
+            $step.find('input[id$="checklist_tasks"]').val(step_tasks);
+        });
+
+    });
+
+    var task = $('.step_task').first().clone();
+    $('.step_tasks')
+        .on('click', '.add-task', function(e){
+            $(this).before(task.clone());
+        })
+        .on('click', '.remove-task', function(e){
+            $(this).parents('.step_task').remove();
+        });
     </script>
 {% endblock %}
