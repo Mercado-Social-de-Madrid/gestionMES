@@ -5,14 +5,18 @@ import uuid
 from datetime import datetime
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from imagekit import ImageSpec, register
 from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFit, ResizeToFill
+from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
 from helpers import RandomFileName
 from mes import settings
+from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
 
 TERR_LOCAL = 'local'
 TERR_COUNTRY = 'estatal'
@@ -37,12 +41,21 @@ ACCOUNT_STATUSES = (
     (OPTED_OUT, 'Baja'),
 )
 
+STEP_SIGNUP_FORM = 'signup_form'
+STEP_CONSUMER_FORM = 'consumer_form'
+STEP_PAYMENT_RULES = 'payment_rules'
+STEP_PAYMENT = 'payment'
+STEP_CONSUMER_PAYMENT = 'consumer_payment'
+
 class LegalForm(models.Model):
 
     title = models.CharField(null=False, max_length=250,  verbose_name=_('Nombre'))
     class Meta:
         verbose_name = _('Forma legal')
         verbose_name_plural = _('Formas legales')
+
+    def __unicode__(self):
+        return self.title if self.title else ''
 
 class Category(models.Model):
 
@@ -81,7 +94,7 @@ class Account(PolymorphicModel):
     province = models.CharField(null=True, blank=True, max_length=100, verbose_name=_('Provincia'))
     postalcode = models.CharField(null=True, blank=True, max_length=10, verbose_name=_('Código Postal'))
     iban_code = models.CharField(null=True, blank=True, max_length=50, verbose_name=_('Cuenta bancaria (IBAN)'))
-    registration_date = models.DateField(verbose_name=_('Fecha de alta'))
+    registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
     cr_member = models.BooleanField(default=False, verbose_name=_('Miembro Consejo Rector'))
 
     class Meta:
@@ -91,16 +104,25 @@ class Account(PolymorphicModel):
             ("mespermission_can_view_accounts", _("Puede ver la lista de socias")),
         )
 
+    @property
+    def template_prefix(self):
+        return 'account'
+
     def __str__(self):
-        return "{}".format(self.group.name).encode('utf-8')
+        return "{}".format(self.cif).encode('utf-8')
 
 
 class Consumer(Account):
     first_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
     last_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Apellidos'))
 
+    @property
+    def template_prefix(self):
+        return 'consumer'
 
 class Entity(Account):
+    name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
+    business_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Razón social'))
     categories = models.ManyToManyField(Category, blank=True, verbose_name='Categorías', related_name='entities')
     territory = models.CharField(null=False, default=TERR_LOCAL, max_length=20, choices=TERRITORY_OPTIONS,
                                  verbose_name=_('Ámbito'))
@@ -125,8 +147,149 @@ class Entity(Account):
 class Colaborator(Entity):
     collaboration = models.TextField(blank=True, verbose_name=_('Modo de colaboración'))
 
+
 class Provider(Entity):
     is_physical_store = models.BooleanField(default=False, verbose_name=_('Es tienda física'))
     num_workers = models.IntegerField(default=1, verbose_name=_('Número de trabajadoras'))
     aprox_income = models.IntegerField(default=0, verbose_name=_('Facturación último año'))
 
+    @property
+    def template_prefix(self):
+        return 'provider'
+
+
+class SignupsManager(models.Manager):
+
+    def pending(query, entity=None):
+        return query.filter(workflow__completed=False)
+
+    def create_process(self, account):
+        signup = self.create(account=account)
+
+        account.status = SIGNUP
+        account.save()
+
+        if account.get_real_instance_class() is Provider:
+            signup.name = account.name
+            signup.member_type = settings.MEMBER_PROV
+            process = CurrentProcess.objects.filter(shortname='prov_signup').first().process
+            step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_SIGNUP_FORM).first().process_step
+            workflow = ProcessWorkflow()
+            workflow.process = process
+            workflow.current_state = step
+            workflow.save()
+            workflow.add_comment(user=None, comment='La entidad completa el formulario')
+            signup.workflow = workflow
+            signup.save()
+
+        if account.get_real_instance_class() is Consumer:
+            signup.name = "{} {}".format(account.first_name, account.last_name)
+            signup.member_type = settings.MEMBER_CONSUMER
+            process = CurrentProcess.objects.filter(shortname='cons_signup').first().process
+            step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_CONSUMER_FORM).first().process_step
+            workflow = ProcessWorkflow()
+            workflow.process = process
+            workflow.current_state = step
+            workflow.save()
+            workflow.add_comment(user=None, comment='La consumidora completa el formulario')
+            signup.workflow = workflow
+            signup.save()
+
+
+class SignupProcess(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Identificador proceso'))
+    workflow = models.ForeignKey(ProcessWorkflow, null=True, verbose_name=_('Seguimiento del proceso'))
+    member_type = models.CharField(null=True, blank=True, max_length=30, choices=settings.MEMBER_TYPES,
+                                   verbose_name=_('Tipo de socia'))
+    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'))
+    name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
+    contact_person = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Persona de contacto'))
+    contact_phone = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('Teléfono de contacto'))
+    contact_email = models.EmailField(null=False, verbose_name=_('Email de contacto'))
+
+    last_update = models.DateTimeField(auto_now=True, verbose_name=_('Última actualización'))
+
+    objects = SignupsManager()
+
+    def __str__(self):
+        return "{}".format(self.uuid).encode('utf-8')
+
+    def initialize(self):
+
+        if self.member_type == settings.MEMBER_PROV:
+            process = CurrentProcess.objects.filter(shortname='prov_signup').first().process
+
+        if self.member_type == settings.MEMBER_CONSUMER:
+            process = CurrentProcess.objects.filter(shortname='cons_signup').first().process
+
+        workflow = ProcessWorkflow()
+        workflow.process = process
+        workflow.current_state = workflow.get_first_step()
+        workflow.save()
+        self.workflow = workflow
+        self.save()
+
+
+    def form_filled(self, account):
+
+        account.status = SIGNUP
+        account.save()
+
+        self.account = account
+        self.save()
+
+        if account.get_real_instance_class() is Provider:
+            process = CurrentProcess.objects.filter(shortname='prov_signup').first().process
+            step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_SIGNUP_FORM).first().process_step
+
+            if self.workflow.is_first_step():
+                self.workflow.complete_current_step()
+                self.workflow.current_state = step
+                self.workflow.add_comment(user=None, comment='La entidad completa el formulario')
+
+
+        if account.get_real_instance_class() is Consumer:
+            process = CurrentProcess.objects.filter(shortname='cons_signup').first().process
+            step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_CONSUMER_FORM).first().process_step
+
+            if self.workflow.is_first_step():
+                self.workflow.complete_current_step()
+                self.workflow.current_state = step
+                self.workflow.add_comment(user=None, comment='La consumidora completa el formulario')
+
+
+
+@receiver(post_save, sender=ProcessWorkflowEvent)
+def update_process_event(sender, instance, **kwargs):
+    process = SignupProcess.objects.filter(workflow=instance.workflow).first()
+    if process:
+        process.last_update = datetime.now()
+        process.save()
+
+        if instance.step:
+
+            form_step = CurrentProcessStep.objects.filter(
+                                                          shortname=STEP_SIGNUP_FORM).first().process_step
+            if instance.step == form_step and process.account:
+                process.account.status = INITIAL_PAYMENT
+                process.account.registration_date = datetime.now()
+                process.account.save()
+
+            consumer_step = CurrentProcessStep.objects.filter(
+                                                          shortname=STEP_CONSUMER_FORM).first().process_step
+            if instance.step == consumer_step and process.account:
+                process.account.status = INITIAL_PAYMENT
+                process.account.registration_date = datetime.now()
+                process.account.save()
+
+            payment_step = CurrentProcessStep.objects.filter(
+                                                             shortname=STEP_PAYMENT).first().process_step
+            if instance.step == payment_step and process.account:
+                process.account.status = ACTIVE
+                process.account.save()
+
+            payment_consumer = CurrentProcessStep.objects.filter(
+                shortname=STEP_CONSUMER_PAYMENT).first().process_step
+            if instance.step == payment_consumer and process.account:
+                process.account.status = ACTIVE
+                process.account.save()
