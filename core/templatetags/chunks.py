@@ -18,6 +18,9 @@ def chunks(value, chunk_length):
         else:
             break
 
+@register.filter
+def item_at(List, i):
+    return List[int(i)]
 
 @register.filter
 def split(value, arg):
