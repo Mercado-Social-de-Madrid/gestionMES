@@ -1,0 +1,15 @@
+
+  <div class="stepper active">
+    <div class="stepper-icon mr-3 {% if big %} big {% endif %}" style="background-color:#5fb743" >
+      <i class="material-icons">done_outline</i>
+    </div>
+    <span class="stepper-text">
+        {% if big %}
+        <h4>Completado!</h4>
+        <span class="font-weight-light">No quedan más tareas pendientes asociadas al proceso.</span>
+        {% else %}
+        <h5>Completado!</h5>
+        {% endif %}
+
+    </span>
+  </div>

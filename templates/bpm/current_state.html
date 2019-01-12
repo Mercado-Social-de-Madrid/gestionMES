@@ -1,0 +1,13 @@
+{% if workflow.completed %}
+
+{% else %}
+
+    {% if workflow.current_state %}
+    <span
+            {% if workflow.current_state.color %} style="background-color:{{workflow.current_state.color}}" {% endif %}
+            class="badge badge-pill text-light px-3 py-1"><i class="{{workflow.current_state.fa_icon}} mr-2"></i> {{ workflow.current_state.title }}</span>
+
+    {% else %}
+        No iniciado
+    {% endif %}
+{% endif %}

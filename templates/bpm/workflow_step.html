@@ -1,0 +1,24 @@
+
+  <div class="stepper active">
+    <div class="stepper-icon mr-3 {% if big %} big {% endif %}" {%if step.color %} style="background-color:{{step.color}}" {%endif%}>
+      <i class="{{step.fa_icon}}"></i>
+    </div>
+    <span class="stepper-text">
+        {% if big %}
+        <h4>{{step.title}}</h4>
+        <span class="font-weight-light"> {{step.description}}</span>
+        {% else %}
+        <h5>{{step.title}}</h5>
+        {% endif %}
+
+        {% if step.checklist.all %}
+            <p class="font-weight-light mt-2">
+            <strong><i class="material-icons">playlist_add_check</i> Tareas</strong>
+                </p>
+            {% for task in step.checklist.all %}
+            <p class="text-black-50 pl-3"> <i class="material-icons mr-2">check_box</i>{{task.description}}</p>
+            {% endfor %}
+        {% endif %}
+
+    </span>
+  </div>
