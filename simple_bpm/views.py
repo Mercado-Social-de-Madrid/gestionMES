@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.conf import settings
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import UpdateView, CreateView, DetailView
 from django_filters.views import FilterView
@@ -14,6 +15,8 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.FormsetView import FormsetView
 import core.forms
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+
+from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
 from simple_bpm.forms.process import ProcessForm, getStepsFormset
 from simple_bpm.models import Process, ProcessStepTask
 
@@ -83,5 +86,24 @@ class ProcessCreateView(CreateView, FormsetView):
 class ProcessDetailView(DetailView):
     model = Process
     template_name = 'bpm/detail.html'
+
+
+
+def add_workflow_event(request):
+
+    if request.method == "POST":
+        form = WorkflowEventForm(request.POST,)
+        if form.is_valid():
+            redirect_url = form.cleaned_data['redirect_to']
+            event = form.save(commit=False)
+
+            if 'add_comment' in request.POST:
+                event.workflow.add_comment(request.user, form.cleaned_data['comment'])
+            else:
+                event.workflow.complete_current_step(request.user)
+
+        return redirect(redirect_url)
+    else:
+        return False
 
 
