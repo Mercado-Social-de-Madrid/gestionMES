@@ -37,14 +37,15 @@ INSTALLED_APPS = [
     'accounts',
     'simple_bpm',
     'management',
+    'payments',
     'core',
     'jet',
-
+    'sermepa',
     'django_filters',
     'ckeditor',
     'sass_processor',
     'polymorphic',
-'imagekit',
+    'imagekit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -158,6 +159,10 @@ STATIC_URL = '/static/'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_EXEMPT_URLS = [
+    r'^accounts/signup/provider/',
+]
 
 INLINE_INPUT_SEPARATOR = '&&&'
 

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Nuevo usuario{% endblock %}
+
+
+{% block content %}
+
+
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h3 class="mb-0"><a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nueva entidad</h3>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post" class="mt-3 p-4" enctype="multipart/form-data">
+            {% csrf_token %}
+
+
+        {{form.as_p}}
+
+
+            <div class="row mt-5">
+                <div class="col-lg-5">
+                    <h4 class="text-primary">Cálculo de cuota</h4>
+
+                    La cuota anual para entidades se calcula en base al número de trabajadoras y el rango de ingresos aproximados del último año.
+                    <br><br>
+                    {% include "common/forms/field.html" with field=form.num_workers %}
+
+                {% include "common/forms/field.html" with field=form.aprox_income %}
+                <small>En miles de Euros</small><br><br>
+
+                    En la tabla a continuación puedes ver cuál será tu cuota anual para pertenecer al MES.
+          </div>
+                <div class="col-lg-7">
+                    {% include 'payments/fees.html' %}
+                </div>
+            </div>
+
+
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Crear usuario</button>
+        </div>
+
+        </form>
+    </div>
+
+{% endblock %}
