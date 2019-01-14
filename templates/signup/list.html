@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Procesos{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h3 class="mb-0">Procesos de acogida</h3>
+            </div>
+            <div class="col-sm-5 col-md-4 text-sm-right">
+                <a href="{% url 'accounts:add_signup' %}" class="btn btn-primary"><i class="material-icons mr-2">add</i> Nueva acogida</a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        {% include 'common/list/filter_form.html' %}
+        {% include 'common/list/ajax_wrapper.html' with query_template='signup/query.html' %}
+    </div>
+
+{% endblock %}

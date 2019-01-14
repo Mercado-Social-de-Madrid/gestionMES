@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% load settings_value %}
+{% block title %}Acogida{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-7">
+                <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Acogidas</a><i class="material-icons md-18 ">arrow_forward_ios</i> {{object.name}}</h4>
+            </div>
+            <div class="col-md-5">
+                <i class="material-icons mr-2 text-primary">account_circle</i>{{object.contact_person}}<br>
+                <i class="material-icons mr-2 text-primary">email</i>{{object.contact_email}}<br>
+                <i class="material-icons mr-2 text-primary">phone</i>{{object.contact_phone}}<br>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-md-6">
+
+
+                    <div class="card mb-4 pb-2 pr-2">
+                        <div class="card-body">
+
+                             {% if first_step %}
+                            <h5 class="card-title">Formulario de inscripción</h5>
+                            La entidad aún no ha rellenado el formulario de inscripción. Para facilitar el seguimiento del proceso,
+                            facilitar el enlace del formulario personalizado<br><small>
+                            {% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}</small>
+                            <div class="text-right mt-2">
+                            <a class="btn btn-light mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
+                            <a href="#" class="btn btn-secondary copy-clipboard" data-clipboard-text="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}"><i class="material-icons mr-2">link</i>Copiar enlace</a>
+                             </div>
+                            {% endif %}
+
+                            {% if object.account %}
+                                {% include 'account/simple_profile.html' with account=object.account %}
+                            <div class="text-right mt-2">
+                            <a class="btn btn-secondary mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
+                             </div>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+
+
+                <span class="badge badge-primary">Estado actual</span>
+<div class="process-stepper">
+{% if object.workflow.completed %}
+            {% include 'bpm/workflow_step_complete.html' with big=True %}
+    {% else %}
+                {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
+    {% endif %}
+</div>
+
+
+{% if not object.workflow.completed %}
+
+
+
+                <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
+                    {% if not first_step %}
+                    <input type="submit" name="complete_step" class="btn btn-lg btn-primary mr-3" value="Completar paso" />
+                    {% endif %}
+                    <button class="btn btn-light btn-lg" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
+    Añadir comentario
+  </button>
+</p>
+<div class="collapse" id="commentContainer">
+  {{comment_form.as_p}}
+                    <input type="submit" name="add_comment" class="btn btn-lg btn-light" value="Enviar" />
+</div>
+                    {% csrf_token %}
+
+                </form>
+{% endif %}
+            </div>
+
+            <div class="col-md-6">
+<h5>Historial</h5>
+<div class="stepper-vert process-stepper">
+        {% for event in object.workflow.history_events.all %}
+  <div class="stepper active">
+      {% if event.step %}
+    <div class="stepper-icon"  style="background-color:{%if event.step.color %}{{event.step.color}}{%endif%}" >
+      <i class="{{event.step.fa_icon}}"></i>
+
+        {% else %}
+
+        <div class="stepper-icon"  style="background-color:#fff" >
+      <i class="material-icons text-dark">comment</i>
+
+        {%endif%}
+
+    </div>
+    <span class="stepper-text">
+        {% if event.step %}
+        <h5>{{event.step.title}}</h5>
+        <span class="font-weight-light"> {{event.step.description}}</span>
+        {% else %}
+        <span class="font-weight-light"> {{event.comment}}</span>
+        {%endif%}
+        <br>{{event.timestamp}}
+
+    </span>
+  </div>
+        {% endfor %}
+
+      <div class="stepper active">
+
+        <div class="stepper-icon"  style="background-color:#ddd" >
+      <i class="material-icons text-dark">star</i>
+
+
+    </div>
+    <span class="stepper-text">
+        <span class="font-weight-light"> Inicio del proceso</span>
+        <br>{{object.workflow.start_time}}
+
+    </span>
+  </div>
+
+</div>
+
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+        {% block scripts %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript">
+            new ClipboardJS('.copy-clipboard');
+        </script>
+
+        {% endblock %}

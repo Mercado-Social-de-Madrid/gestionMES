@@ -70,7 +70,9 @@ class CurrentProcess(models.Model):
 # Class to define the concrete step inside a process
 class CurrentProcessStep(models.Model):
     process = models.ForeignKey(Process, verbose_name=_('Proceso asociado'))
-    shortname = models.CharField(primary_key=True, unique=True, verbose_name=_('Nombre corto'), max_length=50)
+    process_step = models.ForeignKey(ProcessStep, null=True, on_delete=models.CASCADE,
+                                     verbose_name=_('Paso del proceso'))
+    shortname = models.CharField(primary_key=True, unique=False, verbose_name=_('Nombre corto'), max_length=50)
 
     class Meta:
         verbose_name = _('Paso asignado del proceso')
@@ -80,12 +82,19 @@ class CurrentProcessStep(models.Model):
 class ProcessWorkflow(models.Model):
     process = models.ForeignKey(Process, verbose_name=_('Proceso que sigue'))
     start_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha de inicio'))
-    current_state = models.ForeignKey(ProcessStep, verbose_name=_('Paso actual'))
+    current_state = models.ForeignKey(ProcessStep, null=True, verbose_name=_('Paso actual'))
     completed = models.BooleanField(default=False, verbose_name=_('Completado'))
 
     class Meta:
         verbose_name = _('Workflow de Proceso')
         verbose_name_plural = _('Workflows de proceso')
+
+    def get_first_step(self):
+        return ProcessStep.objects.filter(process=self.process).order_by('order').first()
+
+
+    def is_first_step(self):
+        return self.current_state != None and self.get_first_step() == self.current_state
 
     def add_comment(self, user, comment):
 
@@ -96,9 +105,9 @@ class ProcessWorkflow(models.Model):
         event.comment = comment
         event.save()
 
-    def complete_current_step(self, user):
+    def complete_current_step(self, user=None):
         order = self.current_state.order if self.current_state != None else 0
-        next_step = ProcessStep.objects.filter(process=self.process, order__gt=order, order_by=order).first()
+        next_step = ProcessStep.objects.filter(process=self.process, order__gt=order).order_by('order').first()
 
         event = ProcessWorkflowEvent()
         event.workflow = self
@@ -120,13 +129,14 @@ class ProcessWorkflow(models.Model):
 class ProcessWorkflowEvent(models.Model):
     workflow = models.ForeignKey(ProcessWorkflow, verbose_name=_('Evento de un proceso'), related_name='history_events')
     step = models.ForeignKey(ProcessStep, null=True, verbose_name=_('Paso del proceso'))
-    completed_by = models.ForeignKey(User, verbose_name=_('Usuario'))
+    completed_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario'))
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comentario'))
 
     class Meta:
         verbose_name = _('Evento de Proceso')
         verbose_name_plural = _('Eventos de proceso')
+        ordering = ['-timestamp']
 
 
 class ProcessWorkflowTask(models.Model):

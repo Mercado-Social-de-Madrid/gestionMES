@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from simple_bpm.models import ProcessStepTask, ProcessStep, Process
+from simple_bpm.models import ProcessStepTask, ProcessStep, Process, CurrentProcess, CurrentProcessStep, ProcessWorkflow
 
 
 class ChecklistInline(admin.TabularInline):
@@ -19,3 +19,6 @@ class ProcessStepAdmin(admin.ModelAdmin):
 
 admin.site.register(ProcessStep, ProcessStepAdmin)
 admin.site.register(Process)
+admin.site.register(CurrentProcess)
+admin.site.register(CurrentProcessStep)
+admin.site.register(ProcessWorkflow)
