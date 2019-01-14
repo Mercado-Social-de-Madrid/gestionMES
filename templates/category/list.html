@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Comisiones{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h3 class="mb-0">Categorías</h3>
+            </div>
+            <div class="col-sm-5 col-md-4 text-sm-right">
+                <a href="{% url 'accounts:add_category' %}" class="btn btn-primary"><i class="material-icons mr-2">add</i> Nueva categoría</a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container mt-3">
+        {% include 'common/list/ajax_wrapper.html' with query_template='category/query.html' %}
+    </div>
+
+{% endblock %}

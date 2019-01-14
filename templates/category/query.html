@@ -1,0 +1,15 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Número de entidades</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td"> {% include 'category/tag.html' with tag=item big=True %} {{item.name}}</td>
+<td></td>
+
+
+{% endblock %}
