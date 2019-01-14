@@ -1,0 +1,9 @@
+{% load staticfiles %}
+<div class="profile">
+    <div class="profile-circle">
+      <img src="{% static 'imgs/consumer-icon.png' %}">
+  </div>
+
+  <h4 class="mb-0">{{account.first_name}} {{account.last_name}}</h4>
+  <span class="font-weight-light"> {{account.address}}</span>
+</div>

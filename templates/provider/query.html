@@ -1,0 +1,21 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Forma legal</th>
+    {% if not simple_list %}
+    <th scope="col">Fecha de alta</th>
+    <th scope="col">Asistió última feria</th>
+    {% endif %}
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.name}} {% include 'category/tag_list.html' with tags=item.categories.all %}</td>
+<td>{{item.legal_form}}</td>
+{% if not simple_list %}
+<td>{{item.registration_date|date:'d/m/Y'}}</td>
+<td><i class="material-icons">{%if item.assisted_last_fair %}check_box{% else %}check_box_outline_blank{% endif %}</i> </td>
+{% endif %}
+{% endblock %}

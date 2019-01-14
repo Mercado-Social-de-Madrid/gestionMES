@@ -1,0 +1,17 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Apellidos</th>
+    <th scope="col">Alta</th>
+
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.first_name}}</td>
+<td>{{item.last_name}}</td>
+<td>{{item.registration_date|date:'d/m/Y'}}</td>
+
+{% endblock %}

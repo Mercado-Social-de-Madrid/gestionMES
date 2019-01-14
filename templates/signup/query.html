@@ -1,0 +1,21 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Tipo</th>
+    <th scope="col">Estado</th>
+    <th scope="col">Última actualización</th>
+
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.name}}</td>
+<td>{{item.member_type}}</td>
+<td>
+    {% include 'bpm/current_state.html' with workflow=item.workflow %}
+</td>
+<td>{{item.last_update|date:'d/m/Y H:i'}}</td>
+
+{% endblock %}
