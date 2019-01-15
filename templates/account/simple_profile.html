@@ -1,0 +1,10 @@
+<div>
+
+    {% if account.template_prefix %}
+        {% with account.template_prefix|add:"/simple_profile.html" as template %}
+            {% include template with account=account %}
+        {% endwith %}
+    {% else %}
+        {{account}}
+    {% endif %}
+</div>

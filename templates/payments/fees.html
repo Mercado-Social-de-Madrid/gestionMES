@@ -1,0 +1,31 @@
+{% load chunks %}
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <td></td>
+        <th scope="col" colspan="{{income_ranges|length}}">Ingresos en miles de euros</th>
+    </tr>
+    <tr>
+        <th scope="col">Núm. trabajadoras</th>
+        {% for income in income_ranges %}
+
+        <th scope="col"> {{income.min_income}} {% if income.max_income == 9999 %} + {% else %} - {{income.max_income}} {% endif %} </th>
+        {% endfor %}
+    </tr>
+    </thead>
+    {% with worker_ranges|length as num_ranges %}
+
+
+    {% for row in fees|chunks:num_ranges %}
+    <tr>
+        {% with worker_ranges|item_at:forloop.counter0 as range %}
+        <th scope="row">{{range.min_num_workers}} {% if range.max_num_workers == 9999 %} + {% else %} - {{range.max_num_workers}} {% endif %}</th>
+        {% endwith %}
+        {% for fee in row %}
+        <td data-min-income="{{fee.min_income}}" data-max-income="{{fee.max_income}}" data-min-workers="{{fee.min_num_workers}}" data-max-workers="{{fee.max_num_workers}}"> {{fee.fee}} </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    {% endwith %}
+</table>
