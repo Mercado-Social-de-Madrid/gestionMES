@@ -24,8 +24,11 @@ from simple_bpm import urls as bpm_urls
 urlpatterns = [
     url(r'^', include(core_urls)),
     url(r'^bpm/', include(bpm_urls, namespace='bpm')),
+    url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^management/', include('management.urls', namespace='management')),
     url(r'^jet/', include('jet.urls', 'jet')),
+    url(r'^payments/', include('payments.urls')),
+    url(r'^pay/', include('sermepa.urls')),
     url(r'^admin/', admin.site.urls),
 ] + \
   static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \

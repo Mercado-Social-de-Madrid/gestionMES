@@ -22,6 +22,7 @@
       <div class="navdrawer-header">
         <a class="navbar-brand px-0" href="#">GestiónMES</a>
       </div>
+        <p class="navdrawer-subheader">Administración</p>
         <ul class="navdrawer-nav">
             <li class="nav-item">
             <a class="nav-link" href="{% url 'management:users_list' %}">
@@ -47,9 +48,65 @@
                 </a>
             </li>
             {% endif %}
+
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'accounts:category_list' %}">
+              <i class="material-icons mr-3">label</i>
+              Categorías
+            </a>
+          </li>
         </ul>
 
       <div class="navdrawer-divider"></div>
+
+        <p class="navdrawer-subheader">Socias</p>
+
+     <ul class="navdrawer-nav">
+
+         <li class="nav-item">
+        <a class="nav-link pl-4" href="{% url 'accounts:signup_list' %}">
+          <i class="material-icons mr-3">call_received</i>
+          Acogidas
+        </a>
+      </li>
+
+         <li class="nav-item">
+        <a class="nav-link pl-4" href="{% url 'accounts:providers_list' %}">
+          <i class="material-icons mr-3">store</i>
+          Entidades
+        </a>
+      </li>
+
+         <li class="nav-item">
+        <a class="nav-link pl-4" href="{% url 'accounts:consumers_list' %}">
+          <i class="material-icons mr-3">directions_walk</i>
+          Consumidoras
+        </a>
+      </li>
+
+     </ul>
+
+        <div class="navdrawer-divider"></div>
+
+        <p class="navdrawer-subheader">Contabilidad</p>
+
+        <ul class="navdrawer-nav">
+
+         <li class="nav-item">
+        <a class="nav-link pl-4" href="{% url 'accounts:signup_list' %}">
+          <i class="material-icons mr-3">receipt</i>
+          Pagos pendientes
+        </a>
+      </li>
+
+            <li class="nav-item">
+        <a class="nav-link pl-4" href="{% url 'accounts:signup_list' %}">
+          <i class="material-icons mr-3">credit_card</i>
+          Movimientos con tarjeta
+        </a>
+      </li>
+
+    </ul>
 
     </div>
   </div>
