@@ -1,0 +1,281 @@
+[
+{
+  "model": "payments.feerange",
+  "pk": 1,
+  "fields": {
+    "min_num_workers": 0,
+    "max_num_workers": 1,
+    "min_income": 0,
+    "max_income": 30,
+    "fee": 75.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 2,
+  "fields": {
+    "min_num_workers": 0,
+    "max_num_workers": 1,
+    "min_income": 30,
+    "max_income": 100,
+    "fee": 100.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 3,
+  "fields": {
+    "min_num_workers": 0,
+    "max_num_workers": 1,
+    "min_income": 100,
+    "max_income": 400,
+    "fee": 275.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 4,
+  "fields": {
+    "min_num_workers": 0,
+    "max_num_workers": 1,
+    "min_income": 400,
+    "max_income": 600,
+    "fee": 475.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 5,
+  "fields": {
+    "min_num_workers": 0,
+    "max_num_workers": 1,
+    "min_income": 600,
+    "max_income": 9999,
+    "fee": 850.0
+  }
+},
+
+{
+  "model": "payments.feerange",
+  "pk": 6,
+  "fields": {
+    "min_num_workers": 2,
+    "max_num_workers": 3,
+    "min_income": 0,
+    "max_income": 30,
+    "fee": 75.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 7,
+  "fields": {
+    "min_num_workers": 2,
+    "max_num_workers": 3,
+    "min_income": 30,
+    "max_income": 100,
+    "fee": 125.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 8,
+  "fields": {
+    "min_num_workers": 2,
+    "max_num_workers": 3,
+    "min_income": 100,
+    "max_income": 400,
+    "fee": 300.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 9,
+  "fields": {
+    "min_num_workers": 2,
+    "max_num_workers": 3,
+    "min_income": 400,
+    "max_income": 600,
+    "fee": 500.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 10,
+  "fields": {
+    "min_num_workers": 2,
+    "max_num_workers": 3,
+    "min_income": 600,
+    "max_income": 9999,
+    "fee": 850.0
+  }
+},
+
+{
+  "model": "payments.feerange",
+  "pk": 11,
+  "fields": {
+    "min_num_workers": 4,
+    "max_num_workers": 6,
+    "min_income": 0,
+    "max_income": 30,
+    "fee": 75.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 12,
+  "fields": {
+    "min_num_workers": 4,
+    "max_num_workers": 6,
+    "min_income": 30,
+    "max_income": 100,
+    "fee": 150.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 13,
+  "fields": {
+    "min_num_workers": 4,
+    "max_num_workers": 6,
+    "min_income": 100,
+    "max_income": 400,
+    "fee": 350.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 14,
+  "fields": {
+    "min_num_workers": 4,
+    "max_num_workers": 6,
+    "min_income": 400,
+    "max_income": 600,
+    "fee": 525.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 15,
+  "fields": {
+    "min_num_workers": 4,
+    "max_num_workers": 6,
+    "min_income": 600,
+    "max_income": 9999,
+    "fee": 850.0
+  }
+},
+
+{
+  "model": "payments.feerange",
+  "pk": 16,
+  "fields": {
+    "min_num_workers": 7,
+    "max_num_workers": 9,
+    "min_income": 0,
+    "max_income": 30,
+    "fee": 75.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 17,
+  "fields": {
+    "min_num_workers": 7,
+    "max_num_workers": 9,
+    "min_income": 30,
+    "max_income": 100,
+    "fee": 175.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 18,
+  "fields": {
+    "min_num_workers": 7,
+    "max_num_workers": 9,
+    "min_income": 100,
+    "max_income": 400,
+    "fee": 350.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 19,
+  "fields": {
+    "min_num_workers": 7,
+    "max_num_workers": 9,
+    "min_income": 400,
+    "max_income": 600,
+    "fee": 550.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 20,
+  "fields": {
+    "min_num_workers": 7,
+    "max_num_workers": 9,
+    "min_income": 600,
+    "max_income": 9999,
+    "fee": 850.0
+  }
+},
+
+{
+  "model": "payments.feerange",
+  "pk": 21,
+  "fields": {
+    "min_num_workers": 10,
+    "max_num_workers": 9999,
+    "min_income": 0,
+    "max_income": 30,
+    "fee": 75.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 22,
+  "fields": {
+    "min_num_workers": 10,
+    "max_num_workers": 9999,
+    "min_income": 30,
+    "max_income": 100,
+    "fee": 200.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 23,
+  "fields": {
+    "min_num_workers": 10,
+    "max_num_workers": 9999,
+    "min_income": 100,
+    "max_income": 400,
+    "fee": 375.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 24,
+  "fields": {
+    "min_num_workers": 10,
+    "max_num_workers": 9999,
+    "min_income": 400,
+    "max_income": 600,
+    "fee": 600.0
+  }
+},
+{
+  "model": "payments.feerange",
+  "pk": 25,
+  "fields": {
+    "min_num_workers": 10,
+    "max_num_workers": 9999,
+    "min_income": 600,
+    "max_income": 9999,
+    "fee": 850.0
+  }
+}
+]
