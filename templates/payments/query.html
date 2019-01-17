@@ -1,0 +1,18 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Apellidos</th>
+    <th scope="col">Alta</th>
+
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.account}}</td>
+<td>{{item.type}}</td>
+<td>{{item.amount}}</td>
+<td>{{item.added|date:'d/m/Y'}}</td>
+
+{% endblock %}

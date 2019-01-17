@@ -67,6 +67,7 @@ class PendingPayment(models.Model):
     added = models.DateTimeField(auto_now_add=True, verbose_name=_('Añadido'))
     completed = models.BooleanField(default=False, verbose_name=_('Realizado'))
     timestamp = models.DateTimeField(null=True, verbose_name=_('Fecha pago'))
+    comment = models.TextField(null=True, blank=True, verbose_name=_('Comentario'))
 
 
 class CardPayment(models.Model):

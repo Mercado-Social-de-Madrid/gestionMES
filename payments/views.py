@@ -25,6 +25,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
 from mes import settings
+from payments.models import PendingPayment
 from simple_bpm.custom_filters import WorkflowFilter
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -36,28 +37,28 @@ from sermepa.models import SermepaIdTPV
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
 
 
-class ProviderFilterForm(BootstrapForm):
+class PendingPaymentFilterForm(BootstrapForm):
     field_order = ['o', 'search', 'status', ]
 
 
-class ProviderFilter(django_filters.FilterSet):
+class PendingPaymentFilter(django_filters.FilterSet):
 
-    search = SearchFilter(names=['address', 'name', 'business_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['name', 'start_year', 'registration_date'])
+    search = SearchFilter(names=['concept', 'account__contact_email'], lookup_expr='in', label=_('Buscar...'))
+    o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
 
     class Meta:
-        model = Provider
-        form = ProviderFilterForm
-        fields = { 'status':['exact'], }
+        model = PendingPayment
+        form = PendingPaymentFilterForm
+        fields = { 'type':['exact'], 'completed':['exact'] }
 
 
 class PaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
-    queryset = Provider.objects.all()
-    objects_url_name = 'provider_detail'
-    template_name = 'provider/list.html'
-    ajax_template_name = 'provider/query.html'
-    filterset_class = ProviderFilter
+    queryset = PendingPayment.objects.all()
+    objects_url_name = 'payment_detail'
+    template_name = 'payments/list.html'
+    ajax_template_name = 'payments/query.html'
+    filterset_class = PendingPaymentFilter
     paginate_by = 15
 
 

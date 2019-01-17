@@ -27,7 +27,7 @@ urlpatterns = [
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^management/', include('management.urls', namespace='management')),
     url(r'^jet/', include('jet.urls', 'jet')),
-    url(r'^payments/', include('payments.urls')),
+    url(r'^payments/', include('payments.urls', namespace='payments')),
     url(r'^pay/', include('sermepa.urls')),
     url(r'^admin/', admin.site.urls),
 ] + \
