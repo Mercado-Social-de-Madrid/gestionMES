@@ -2,8 +2,9 @@
 
  {% block table_head %}
     <th scope="col">Cuenta</th>
-    <th scope="col">Tipo</th>
     <th scope="col">Cantidad</th>
+    <th scope="col">Concepto</th>
+    <th scope="col">Estado</th>
     <th scope="col">Fecha</th>
 {% endblock %}
 
@@ -11,8 +12,13 @@
 {% block item_row %}
 
 <td class="entity-td">{{item.account}}</td>
-<td>{{item.type}}</td>
-<td>{{item.amount}}</td>
+<td>{{item.amount}} €</td>
+<td>{{item.concept}}</td>
+<td>{% if item.completed %}
+                <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
+            {% else %}
+                <i class="material-icons">access_time</i> <small>Pendiente</small>
+            {% endif %}</td>
 <td>{{item.added|date:'d/m/Y'}}</td>
 
 {% endblock %}

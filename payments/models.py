@@ -104,7 +104,7 @@ class PendingPayment(models.Model):
     concept = models.TextField(null=True, blank=True, verbose_name=_('Concepto'))
     added = models.DateTimeField(auto_now_add=True, verbose_name=_('Añadido'))
     completed = models.BooleanField(default=False, verbose_name=_('Realizado'))
-    timestamp = models.DateTimeField(null=True, verbose_name=_('Fecha pago'))
+    timestamp = models.DateTimeField(null=True, blank=True, verbose_name=_('Fecha pago'))
     comment = models.TextField(null=True, blank=True, verbose_name=_('Comentario'))
     reference = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Referencia del pago'))
 

@@ -25,6 +25,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
 from mes import settings
+from payments.forms.payment import PaymentForm
 from payments.models import PendingPayment
 from simple_bpm.custom_filters import WorkflowFilter
 from django.http import HttpResponse
@@ -60,6 +61,26 @@ class PaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateRe
     ajax_template_name = 'payments/query.html'
     filterset_class = PendingPaymentFilter
     paginate_by = 15
+
+
+class PaymentDetailView(UpdateView):
+    template_name = 'payments/detail.html'
+    queryset = PendingPayment.objects.all()
+    form_class = PaymentForm
+    model = PendingPayment
+
+    def get_success_url(self):
+        return reverse('payments:payment_detail', kwargs={'pk': self.object.pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(PaymentDetailView, self).get_context_data(**kwargs)
+
+        form = WorkflowEventForm(initial={
+            'workflow':context['object'],
+            'redirect_to': reverse('accounts:signup_detail', kwargs={'pk': self.object.pk})
+        })
+        context['comment_form'] = form
+        return context
 
 
 class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
@@ -120,16 +141,7 @@ def form(request, trans_type='0'):
             "Ds_Merchant_Order": order,
             "Ds_Merchant_TransactionType": trans_type,
         })
-    elif trans_type == '3':  # Devolución
-        order = suscripcion.idreferencia  # Primer idtpv, 10 dígitos
-        sermepa_dict.update({
-            "Ds_Merchant_Order": order,
-            "Ds_Merchant_TransactionType": trans_type,
-            "Ds_Merchant_AuthorisationCode": pedido.Ds_AuthorisationCode,  # Este valor sale
-            # de la SermepaResponse obtenida del cobro que se quiere devolver.
-        })
 
-    print sermepa_dict
     form = SermepaPaymentForm(initial=sermepa_dict, merchant_parameters=sermepa_dict)
 
     return HttpResponse(render_to_response('payments/pay_form.html', {'form': form, 'debug': settings.DEBUG}))

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load settings_value %}
+
+{% block title %}Detalles de pago{% endblock %}
+
+
+{% block content %}
+
+<div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-7">
+                <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Ref. {{object.reference}}</h4>
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+<div class="container pt-2">
+    <div class="card mb-3">
+        <div class="card-body">
+        <div class="d-flex align-items-stretch">
+            <div class="pr-4 align-self-center text-center">
+                <h3 class="text-black-50">{{object.amount}}€</h3>
+                 {% if object.completed %}
+                    <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
+                {% else %}
+                    <i class="material-icons">access_time</i> <small>Pendiente</small>
+                {% endif %}
+            </div>
+            <div>
+                <small>Ref. {{object.reference}}</small><br>
+
+
+                Creado: {{object.added|date:'d/m/Y H:i'}}<br>
+                {{object.concept}}
+
+                <div class="mt-3 text-right">
+                    <a class="btn btn-light mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'payments:payment_detail' object.pk %}">Ver detalle</a>
+                    <a href="#" class="btn btn-secondary copy-clipboard" data-clipboard-text="{% settings_value 'BASESITE_URL' %}{% url 'payments:payment_form'  %}"><i class="material-icons mr-2">link</i>Copiar enlace pago</a>
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <form method="post" class="mt-3 p-4">
+            {% csrf_token %}
+
+    {{ form.as_p }}
+
+
+    <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+        </div>
+
+    </form>
+</div>
+
+
+{% endblock %}
