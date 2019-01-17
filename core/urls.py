@@ -18,7 +18,7 @@ urlpatterns = [
         auth_views.password_reset_confirm, name='password_reset_confirm'),
     url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
 
-
+    url(r'^$', views.edit_profile, name='home'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
 ]
 
