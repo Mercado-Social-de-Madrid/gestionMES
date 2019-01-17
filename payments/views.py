@@ -69,7 +69,7 @@ class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTempla
     template_name = 'card/list.html'
     ajax_template_name = 'card/query.html'
     paginate_by = 15
-
+    model = PendingPayment
 
 
 def form(request, trans_type='0'):
