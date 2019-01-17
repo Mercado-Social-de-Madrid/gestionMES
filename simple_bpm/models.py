@@ -42,6 +42,9 @@ class ProcessStep(models.Model):
     def __str__(self):
         return "{} - {}".format(self.process.title, self.title).encode('utf-8')
 
+    def is_named_step(self, shortname):
+        return CurrentProcessStep.objects.filter(process_step=self, shortname=shortname).exists()
+
 
 class ProcessStepTask(models.Model):
     process_step = models.ForeignKey(ProcessStep, null=False, on_delete=models.CASCADE, verbose_name=_('Tarea de un proceso'),
@@ -107,13 +110,8 @@ class ProcessWorkflow(models.Model):
 
     def complete_current_step(self, user=None):
         order = self.current_state.order if self.current_state != None else 0
+        current_step = self.current_state
         next_step = ProcessStep.objects.filter(process=self.process, order__gt=order).order_by('order').first()
-
-        event = ProcessWorkflowEvent()
-        event.workflow = self
-        event.step = self.current_state
-        event.completed_by = user
-        event.save()
 
         if next_step is None:
             # We are in the last step!
@@ -124,6 +122,11 @@ class ProcessWorkflow(models.Model):
             self.current_state = next_step
             self.save()
 
+        event = ProcessWorkflowEvent()
+        event.workflow = self
+        event.step = current_step
+        event.completed_by = user
+        event.save()
 
 
 class ProcessWorkflowEvent(models.Model):

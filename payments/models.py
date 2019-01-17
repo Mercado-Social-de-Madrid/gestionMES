@@ -14,7 +14,7 @@ from pilkit.processors import ResizeToFit, ResizeToFill
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
-from accounts.models import Account
+from accounts.models import Account, Provider, Consumer
 from core.models import User
 from helpers import RandomFileName
 from mes import settings
@@ -38,6 +38,11 @@ CARD_PAYMENT_TYPES = (
     (CURRENCY_BUY, 'Compra de Etics'),
 )
 
+DEFAULT_PROVIDER_FEE = 100.0
+DEFAULT_CONSUMER_FEE = 20.0
+
+DEFAULT_PROVIDER_SHARE = 20.0
+DEFAULT_CONSUMER_SHARE = 10.0
 
 class FeeRange(models.Model):
 
@@ -55,6 +60,39 @@ class FeeRange(models.Model):
     def __str__(self):
         return "{} - {}".format(self.min_num_workers, self.max_num_workers).encode('utf-8')
 
+    @staticmethod
+    def calculate_fee(account):
+
+        fee_range = FeeRange.objects.filter(
+            min_num_workers__lte=account.num_workers,
+            max_num_workers__gte=account.num_workers,
+            min_income__lte=account.aprox_income,
+            max_income__gte=account.aprox_income).first()
+
+        if fee_range:
+            return fee_range.fee
+        return DEFAULT_PROVIDER_FEE
+
+
+
+class PaymentsManager(models.Manager):
+
+    def create_initial_payment(self, account):
+        payment = PendingPayment(account=account, )
+
+        if account.get_real_instance_class() is Provider:
+            fee = FeeRange.calculate_fee(account)
+            share = DEFAULT_PROVIDER_SHARE
+        else:
+            fee = DEFAULT_CONSUMER_FEE
+            share = DEFAULT_CONSUMER_SHARE
+
+        print 'Creating initial payment!'
+        amount = fee + share
+        payment.concept = "Pago inicial: {}€ ({} capital social + {} cuota anual)".format(amount, share, fee)
+        payment.amount = amount
+        payment.save()
+
 
 class PendingPayment(models.Model):
 
@@ -62,15 +100,12 @@ class PendingPayment(models.Model):
     revised_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario que revisó'))
     type = models.CharField(null=True, blank=True, max_length=30, choices=PAYMENT_METHODS,
                                    verbose_name=_('Modo de pago'))
-    amount = models.FloatField(verbose_name=_('Cantidad'))
+    amount = models.FloatField(default=0, verbose_name=_('Cantidad'))
     concept = models.TextField(null=True, blank=True, verbose_name=_('Concepto'))
     added = models.DateTimeField(auto_now_add=True, verbose_name=_('Añadido'))
     completed = models.BooleanField(default=False, verbose_name=_('Realizado'))
     timestamp = models.DateTimeField(null=True, verbose_name=_('Fecha pago'))
     comment = models.TextField(null=True, blank=True, verbose_name=_('Comentario'))
+    reference = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Referencia del pago'))
 
-
-class CardPayment(models.Model):
-    type = models.CharField(null=True, blank=True, max_length=30, choices=CARD_PAYMENT_TYPES,
-                            verbose_name=_('Tipo'))
-    timestamp = models.DateTimeField(null=True, verbose_name=_('Fecha pago'))
+    objects = PaymentsManager()

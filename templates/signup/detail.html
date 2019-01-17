@@ -25,7 +25,7 @@
             <div class="col-md-6">
 
 
-                    <div class="card mb-4 pb-2 pr-2">
+                    <div class="mb-4 pb-2 pr-2">
                         <div class="card-body">
 
                              {% if first_step %}
@@ -33,7 +33,7 @@
                             La entidad aún no ha rellenado el formulario de inscripción. Para facilitar el seguimiento del proceso,
                             facilitar el enlace del formulario personalizado<br><small>
                             {% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}</small>
-                            <div class="text-right mt-2">
+                            <div class=" mt-2">
                             <a class="btn btn-light mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
                             <a href="#" class="btn btn-secondary copy-clipboard" data-clipboard-text="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}"><i class="material-icons mr-2">link</i>Copiar enlace</a>
                              </div>
@@ -41,7 +41,7 @@
 
                             {% if object.account %}
                                 {% include 'account/simple_profile.html' with account=object.account %}
-                            <div class="text-right mt-2">
+                            <div class="mt-2">
                             <a class="btn btn-secondary mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
                              </div>
                             {% endif %}
@@ -51,6 +51,10 @@
                     </div>
 
 
+    {% if payment_step and payment %}
+            <span class="badge badge-primary mb-2">Pago</span>
+            {% include 'payments/reference.html' with payment=payment %}
+    {% endif%}
 
 
                 <span class="badge badge-primary">Estado actual</span>
@@ -61,6 +65,8 @@
                 {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
     {% endif %}
 </div>
+
+
 
 
 {% if not object.workflow.completed %}

@@ -214,6 +214,10 @@ class SignupProcess(models.Model):
     def __str__(self):
         return "{}".format(self.uuid).encode('utf-8')
 
+
+    def is_in_payment_step(self):
+        return self.workflow.current_state.is_named_step(STEP_PAYMENT) or self.workflow.current_state.is_named_step(STEP_PAYMENT)
+
     def initialize(self):
 
         if self.member_type == settings.MEMBER_PROV:
@@ -266,6 +270,28 @@ def update_process_event(sender, instance, **kwargs):
         process.last_update = datetime.now()
         process.save()
 
+        print 'eeeey'
+
+        if instance.workflow.current_state:
+            print 'checkkk'
+            from payments.models import PendingPayment
+            payment_step = CurrentProcessStep.objects.filter(
+                shortname=STEP_PAYMENT).first().process_step
+            print payment_step.pk
+            print instance.workflow.current_state.pk
+            print 'step pay'
+            if instance.workflow.current_state == payment_step and process.account:
+                print "hhhaaaa"
+                PendingPayment.objects.create_initial_payment(process.account)
+
+            print 'step pay2'
+            payment_consumer = CurrentProcessStep.objects.filter(
+                shortname=STEP_CONSUMER_PAYMENT).first().process_step
+            if instance.workflow.current_state == payment_consumer and process.account:
+                PendingPayment.objects.create_initial_payment(process.account)
+
+        print 'bbbbb'
+
         if instance.step:
 
             form_step = CurrentProcessStep.objects.filter(
@@ -279,6 +305,7 @@ def update_process_event(sender, instance, **kwargs):
                                                           shortname=STEP_CONSUMER_FORM).first().process_step
             if instance.step == consumer_step and process.account:
                 process.account.status = INITIAL_PAYMENT
+                PendingPayment.objects.create_initial_payment(process.account)
                 process.account.registration_date = datetime.now()
                 process.account.save()
 

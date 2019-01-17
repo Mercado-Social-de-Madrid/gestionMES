@@ -25,7 +25,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
 from mes import settings
-from payments.models import FeeRange
+from payments.models import FeeRange, PendingPayment
 from simple_bpm.custom_filters import WorkflowFilter
 
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
@@ -237,6 +237,10 @@ class SignupDetailView(DetailView):
 
         if self.object.workflow.is_first_step():
             context['first_step'] = True
+
+        if self.object.is_in_payment_step():
+            context['payment_step'] = True
+            context['payment'] = PendingPayment.objects.filter(account=self.object.account).first()
 
         form = WorkflowEventForm(initial={
             'workflow':context['object'].workflow,
