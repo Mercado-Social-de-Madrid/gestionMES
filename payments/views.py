@@ -62,6 +62,13 @@ class PaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateRe
     paginate_by = 15
 
 
+class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+
+    queryset = PendingPayment.objects.all()
+    objects_url_name = 'payment_detail'
+    template_name = 'card/list.html'
+    ajax_template_name = 'card/query.html'
+    paginate_by = 15
 
 
 
