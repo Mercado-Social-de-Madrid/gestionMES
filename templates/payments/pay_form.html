@@ -1,9 +1,60 @@
-<html>
-<body>
-	{% if debug %}
+{% extends 'base.html' %}
+{% load settings_value %}
+
+{% block title %}Detalles de pago{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12">
+                <h4 class="mb-0">Realizar pago</h4>
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+<div class="container pt-4" style="max-width:500px;">
+
+
+
+            <div class="card mb-3">
+        <div class="card-body">
+        <div class="d-flex align-items-stretch">
+            <div class="pr-4 align-self-center text-center">
+                <h3 class="text-black-50">{{payment.amount}}€</h3>
+                 {% if payment.completed %}
+                    <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
+                {% else %}
+                    <i class="material-icons">access_time</i> <small>Pendiente</small>
+                {% endif %}
+            </div>
+            <div>
+				<strong>{{payment.account.display_name}}</strong><br>
+                <span class="badge badge-light">Ref. </span> <small>{{payment.reference}}</small><br>
+                <span class="badge badge-light">Creado</span> {{payment.added|date:'d/m/Y H:i'}}<br>
+				<hr>
+				<span class="badge badge-light">CONCEPTO</span><br>
+                {{payment.concept}}
+
+            </div>
+        </div>
+
+
+        </div>
+	<div class="card-footer text-center">
+		{% if debug %}
 		{{ form.sandbox }}
 	{% else %}
 		{{ form.render }}
 	{% endif %}
-</body>
-</html>
+
+	</div>
+
+    </div>
+</div>
+
+
+{% endblock %}

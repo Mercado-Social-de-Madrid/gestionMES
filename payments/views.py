@@ -15,7 +15,7 @@ from filters.views import FilterMixin
 from accounts.forms.consumer import ConsumerForm
 from accounts.forms.process import SignupProcessForm
 from accounts.forms.provider import ProviderForm
-from accounts.models import Provider, Consumer, SignupProcess
+from accounts.models import Provider, Consumer, SignupProcess, PENDING_PAYMENT
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
@@ -26,7 +26,7 @@ from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
 from mes import settings
 from payments.forms.payment import PaymentForm
-from payments.models import PendingPayment
+from payments.models import PendingPayment, CardPayment
 from simple_bpm.custom_filters import WorkflowFilter
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
@@ -85,7 +85,7 @@ class PaymentDetailView(UpdateView):
 
 class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
-    queryset = PendingPayment.objects.all()
+    queryset = PendingPayment.objects.filter(concept='aaaaaa')
     objects_url_name = 'payment_detail'
     template_name = 'card/list.html'
     ajax_template_name = 'card/query.html'
@@ -93,13 +93,25 @@ class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTempla
     model = PendingPayment
 
 
-def form(request, trans_type='0'):
+def form(request, uuid=None):
     site = Site.objects.get_current()
     amount = int(5.50 * 100)  # El precio es en céntimos de euro
 
+    merchant_data = 0
+    trans_type = '0'
+
+    if uuid:
+        payment = PendingPayment.objects.filter(reference=uuid).first()
+        if not payment.completed:
+            card_payment = CardPayment.objects.create(type=PENDING_PAYMENT)
+            payment.card_payment = card_payment
+            payment.save()
+            merchant_data = card_payment.pk
+            amount = int(payment.amount * 100)
+
     sermepa_dict = {
         "Ds_Merchant_Titular": 'John Doe',
-        "Ds_Merchant_MerchantData": 12345,  # id del Pedido o Carrito, para identificarlo en el mensaje de vuelta
+        "Ds_Merchant_MerchantData": merchant_data,  # id del Pedido o Carrito, para identificarlo en el mensaje de vuelta
         "Ds_Merchant_MerchantName": settings.SERMEPA_MERCHANT_NAME,
         "Ds_Merchant_ProductDescription": 'Pago inicial',
         "Ds_Merchant_Amount": amount,
@@ -107,8 +119,8 @@ def form(request, trans_type='0'):
         "Ds_Merchant_MerchantCode": settings.SERMEPA_MERCHANT_CODE,
         "Ds_Merchant_Currency": settings.SERMEPA_CURRENCY,
         "Ds_Merchant_MerchantURL": "http://%s%s" % (site.domain, reverse('sermepa_ipn')),
-        "Ds_Merchant_UrlOK": "http://%s%s" % (site.domain, reverse('end')),
-        "Ds_Merchant_UrlKO": "http://%s%s" % (site.domain, reverse('end')),
+        "Ds_Merchant_UrlOK": "http://%s%s" % (site.domain, reverse('payments:end')),
+        "Ds_Merchant_UrlKO": "http://%s%s" % (site.domain, reverse('payments:end')),
     }
 
     if trans_type == '0':  # Compra puntual
@@ -144,7 +156,7 @@ def form(request, trans_type='0'):
 
     form = SermepaPaymentForm(initial=sermepa_dict, merchant_parameters=sermepa_dict)
 
-    return HttpResponse(render_to_response('payments/pay_form.html', {'form': form, 'debug': settings.DEBUG}))
+    return HttpResponse(render_to_response('payments/pay_form.html', {'form': form, 'payment':payment, 'debug': settings.DEBUG}))
 
 
 def end(request):

@@ -32,13 +32,13 @@ class SermepaPaymentForm(SermepaMixin, forms.Form):
     def render(self):
         return mark_safe(u"""<form id="tpv_form" action="%s" method="post">
             %s
-            <input type="submit" name="submit" alt="Comprar ahora" value="Comprar ahora"/>
+            <input type="submit" name="submit" class="btn btn-primary" alt="Pagar con tarjeta" value="Pagar con tarjeta"/>
         </form>""" % (settings.SERMEPA_URL_PRO, self.as_p()))
 
     def sandbox(self):
         return mark_safe(u"""<form id="tpv_form" action="%s" method="post">
             %s
-            <input type="submit" name="submit" alt="Comprar ahora" value="Comprar ahora"/>
+            <input type="submit" name="submit" class="btn btn-primary" alt="Pagar con tarjeta" value="Pagar con tarjeta"/>
         </form>""" % (settings.SERMEPA_URL_TEST, self.as_p()))
 
 

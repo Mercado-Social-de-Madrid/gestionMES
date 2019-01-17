@@ -20,7 +20,7 @@
 
             <div class="mt-3 text-right">
                 <a class="btn btn-light mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'payments:payment_detail' payment.pk %}">Ver detalle</a>
-                <a href="#" class="btn btn-secondary copy-clipboard" data-clipboard-text="{% settings_value 'BASESITE_URL' %}{% url 'payments:payment_form'  %}"><i class="material-icons mr-2">link</i>Copiar enlace pago</a>
+                <a href="#" class="btn btn-secondary copy-clipboard" data-clipboard-text="{% settings_value 'BASESITE_URL' %}{% url 'payments:payment_form' payment.reference %}"><i class="material-icons mr-2">link</i>Copiar enlace pago</a>
             </div>
         </div>
     </div>

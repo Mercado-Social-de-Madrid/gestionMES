@@ -18,6 +18,7 @@ from accounts.models import Account, Provider, Consumer
 from core.models import User
 from helpers import RandomFileName
 from mes import settings
+from sermepa.models import SermepaResponse
 from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
 
 CREDIT_CARD = 'tarjeta'
@@ -94,6 +95,15 @@ class PaymentsManager(models.Manager):
         payment.save()
 
 
+class CardPayment(models.Model):
+
+    attempt = models.DateTimeField(auto_now_add=True, verbose_name=_('Añadido'))
+    bank_response = models.ForeignKey(SermepaResponse, null=True, verbose_name=_('Respuesta TPV'))
+    type = models.CharField(null=True, blank=True, max_length=30, choices=CARD_PAYMENT_TYPES,
+                            verbose_name=_('Tipo de pago'))
+
+
+
 class PendingPayment(models.Model):
 
     account = models.ForeignKey(Account, null=True, related_name='pending_payments', verbose_name=_('Socia'))
@@ -107,5 +117,8 @@ class PendingPayment(models.Model):
     timestamp = models.DateTimeField(null=True, blank=True, verbose_name=_('Fecha pago'))
     comment = models.TextField(null=True, blank=True, verbose_name=_('Comentario'))
     reference = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Referencia del pago'))
+    card_payment = models.ForeignKey(CardPayment, null=True, blank=True, verbose_name=_('Pago con tarjeta'))
 
     objects = PaymentsManager()
+
+
