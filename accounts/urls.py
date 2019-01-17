@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^categories/(?P<pk>[0-9a-f-]+)/$', views.CategoryDetailView.as_view(), name='category_detail'),
 
     url(r'^providers/$', views.ProvidersListView.as_view(), name='providers_list'),
-    url(r'^providers/(?P<pk>\d+)/$', views.ProvidersListView.as_view(), name='provider_detail'),
+    url(r'^providers/(?P<pk>\d+)/$', views.ProviderDetailView.as_view(), name='provider_detail'),
 
     url(r'^consumers/$', views.ConsumersListView.as_view(), name='consumers_list'),
     url(r'^consumers/(?P<pk>\d+)/$', views.ProvidersListView.as_view(), name='consumer_detail'),

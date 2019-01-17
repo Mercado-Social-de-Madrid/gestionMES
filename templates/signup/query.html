@@ -11,7 +11,7 @@
 
 {% block item_row %}
 
-<td class="entity-td">{{item.name}}</td>
+<td class="entity-td">{% if item.account %} {{item.account.display_name }} {% else %} {{item.name}} {% endif %} </td>
 <td>{{item.member_type}}</td>
 <td>
     {% include 'bpm/current_state.html' with workflow=item.workflow %}

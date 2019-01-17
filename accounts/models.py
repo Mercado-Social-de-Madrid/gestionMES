@@ -108,6 +108,10 @@ class Account(PolymorphicModel):
     def template_prefix(self):
         return 'account'
 
+    @property
+    def display_name(self):
+        return self.cif
+
     def __str__(self):
         return "{}".format(self.cif).encode('utf-8')
 
@@ -119,6 +123,11 @@ class Consumer(Account):
     @property
     def template_prefix(self):
         return 'consumer'
+
+    @property
+    def display_name(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
 
 class Entity(Account):
     name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
@@ -142,6 +151,10 @@ class Entity(Account):
                                 validators=[MinValueValidator(1900), MaxValueValidator(datetime.now().year)],
                                 verbose_name=_('Año de inicio del proyecto'))
     contact_person = models.TextField(null=True, blank=True, verbose_name=_('Persona de contacto'))
+
+    @property
+    def display_name(self):
+        return self.name
 
 
 class Colaborator(Entity):
@@ -171,6 +184,9 @@ class SignupsManager(models.Manager):
 
         if account.get_real_instance_class() is Provider:
             signup.name = account.name
+            signup.contact_phone = account.contact_phone
+            signup.contact_email = account.contact_email
+            signup.contact_person = account.contact_person
             signup.member_type = settings.MEMBER_PROV
             process = CurrentProcess.objects.filter(shortname='prov_signup').first().process
             step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_SIGNUP_FORM).first().process_step
@@ -183,7 +199,10 @@ class SignupsManager(models.Manager):
             signup.save()
 
         if account.get_real_instance_class() is Consumer:
-            signup.name = "{} {}".format(account.first_name, account.last_name)
+            signup.name = account.display_name
+            signup.contact_phone = account.contact_phone
+            signup.contact_email = account.contact_email
+            signup.contact_person = account.display_name
             signup.member_type = settings.MEMBER_CONSUMER
             process = CurrentProcess.objects.filter(shortname='cons_signup').first().process
             step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_CONSUMER_FORM).first().process_step
@@ -216,7 +235,11 @@ class SignupProcess(models.Model):
 
 
     def is_in_payment_step(self):
-        return self.workflow.current_state.is_named_step(STEP_PAYMENT) or self.workflow.current_state.is_named_step(STEP_PAYMENT)
+        print 'aaaa'
+        if self.workflow.current_state is None:
+            return False
+
+        return self.workflow.current_state.is_named_step(STEP_PAYMENT) or self.workflow.current_state.is_named_step(STEP_CONSUMER_PAYMENT)
 
     def initialize(self):
 
@@ -266,57 +289,24 @@ class SignupProcess(models.Model):
 @receiver(post_save, sender=ProcessWorkflowEvent)
 def update_process_event(sender, instance, **kwargs):
     process = SignupProcess.objects.filter(workflow=instance.workflow).first()
-    if process:
+    if process and process.account:
         process.last_update = datetime.now()
         process.save()
-
-        print 'eeeey'
-
-        if instance.workflow.current_state:
-            print 'checkkk'
-            from payments.models import PendingPayment
-            payment_step = CurrentProcessStep.objects.filter(
-                shortname=STEP_PAYMENT).first().process_step
-            print payment_step.pk
-            print instance.workflow.current_state.pk
-            print 'step pay'
-            if instance.workflow.current_state == payment_step and process.account:
-                print "hhhaaaa"
-                PendingPayment.objects.create_initial_payment(process.account)
-
-            print 'step pay2'
-            payment_consumer = CurrentProcessStep.objects.filter(
-                shortname=STEP_CONSUMER_PAYMENT).first().process_step
-            if instance.workflow.current_state == payment_consumer and process.account:
-                PendingPayment.objects.create_initial_payment(process.account)
-
-        print 'bbbbb'
-
         if instance.step:
-
-            form_step = CurrentProcessStep.objects.filter(
-                                                          shortname=STEP_SIGNUP_FORM).first().process_step
-            if instance.step == form_step and process.account:
-                process.account.status = INITIAL_PAYMENT
-                process.account.registration_date = datetime.now()
-                process.account.save()
-
-            consumer_step = CurrentProcessStep.objects.filter(
-                                                          shortname=STEP_CONSUMER_FORM).first().process_step
-            if instance.step == consumer_step and process.account:
-                process.account.status = INITIAL_PAYMENT
+            print 'bbbbb'
+            if process.is_in_payment_step():
+                print 'ccccc'
+                # If we just advanced steps and is in the payment step, we create the payment order
+                from payments.models import PendingPayment
                 PendingPayment.objects.create_initial_payment(process.account)
+
+            print 'dddddd'
+            if instance.step.is_named_step(STEP_SIGNUP_FORM) or instance.step.is_named_step(STEP_CONSUMER_FORM):
+                process.account.status = INITIAL_PAYMENT
                 process.account.registration_date = datetime.now()
                 process.account.save()
 
-            payment_step = CurrentProcessStep.objects.filter(
-                                                             shortname=STEP_PAYMENT).first().process_step
-            if instance.step == payment_step and process.account:
+            if instance.step.is_named_step(STEP_PAYMENT) or instance.step.is_named_step(STEP_CONSUMER_PAYMENT):
                 process.account.status = ACTIVE
                 process.account.save()
 
-            payment_consumer = CurrentProcessStep.objects.filter(
-                shortname=STEP_CONSUMER_PAYMENT).first().process_step
-            if instance.step == payment_consumer and process.account:
-                process.account.status = ACTIVE
-                process.account.save()

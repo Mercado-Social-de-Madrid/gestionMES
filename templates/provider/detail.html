@@ -1,10 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load chunks %}
 
-</body>
-</html>
+{% block title %}{{object.group}} | Comisiones{% endblock %}
+
+{% block bodyattrs %} id="login-page" class="main-bg" {% endblock%}
+
+{% block content %}
+
+
+ <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h4 class="mb-0 breadcrumbs"><a href="{% url 'accounts:providers_list' %}">Proveedoras</a><i class="material-icons md-18 ">arrow_forward_ios</i>{{object.name}}</h4>
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+
+     <ul class="nav nav-justified nav-tabs" id="tabs-content" role="tablist">
+      <li class="nav-item">
+        <a aria-controls="profile" aria-selected="true" class="nav-link {%if details_tab%}active{%endif%}" data-toggle="tab" href="#data-form" id="data-tab" role="tab">Datos de entidad</a>
+      </li>
+      <li class="nav-item">
+        <a aria-controls="payments" aria-selected="false" class="nav-link {%if payments_tab%} active{%endif%}" data-toggle="tab" href="#payments-form" id="payments-tab" role="tab">Contabilidad</a>
+      </li>
+    </ul>
+
+<div class="tab-content">
+  <div aria-labelledby="data-tab" class="tab-pane p-4 px-5 {%if details_tab%}show active{%endif%}" id="data-form" role="tabpanel">
+
+        <form method="post" class="mt-3 p-4">
+            {% csrf_token %}
+            {{form.media}}
+
+        <div class="">
+
+          {{ form.as_p }}
+        </div>
+
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
+        </div>
+
+        </form>
+    </div>
+
+    <div aria-labelledby="payments-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="payments-form" role="tabpanel">
+
+        <h3 class="text-primary"><i class="material-icons mr-1">receipt</i> Pagos</h3>
+
+       {% include 'common/list/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments object_url_name='payments:payment_detail' %}
+
+
+
+    </div>
+
+  </div>
+
+{% endblock %}
+
+
+{% block extra_styles %}
+<link rel='stylesheet' href="{% static 'css/libs/jquery.spectrum.css' %}" />
+{% endblock extra_styles %}
+
+{% block scripts %}
+<script src="{% static 'js/jquery.spectrum.js' %}"></script>
+<script type="text/javascript">
+    $(function(){
+
+    });
+</script>
+{% endblock scripts %}

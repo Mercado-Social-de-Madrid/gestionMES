@@ -23,6 +23,7 @@ from core.forms.password import PasswordForm
 from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.models import User
 from mes import settings
 from payments.models import FeeRange, PendingPayment
@@ -56,6 +57,30 @@ class ProvidersListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateR
     paginate_by = 15
 
 
+class ProviderDetailView(TabbedViewMixin, UpdateView):
+    template_name = 'provider/detail.html'
+    default_tab = 'details'
+    available_tabs = ['details', 'payments']
+    form_class = ProviderForm
+    model = Provider
+
+    def get_success_url(self):
+        return reverse('accounts:provider_detail', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        response = super(ProviderDetailView, self).form_valid(form)
+        messages.success(self.request, _('Datos actualizados correctamente.'))
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super(ProviderDetailView, self).get_context_data(**kwargs)
+
+        context['payments'] = PendingPayment.objects.filter(account=self.object)
+        context['profile_tab'] = True
+        return context
+
+
+
 class ConsumerFilterForm(BootstrapForm):
     field_order = ['o', 'search', 'status', ]
 
@@ -79,58 +104,6 @@ class ConsumersListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateR
     ajax_template_name = 'consumer/query.html'
     filterset_class = ConsumerFilter
     paginate_by = 15
-
-
-class UserDetailView(UpdateView):
-    template_name = 'user/detail.html'
-    password_form = PasswordForm
-    form_class = ProfileForm
-    profile_form = ProfileForm
-    success_url = '/dashboard'
-    model = User
-
-    def get_context_data(self, **kwargs):
-        context = super(UserDetailView, self).get_context_data(**kwargs)
-        user = self.get_object()
-        if 'password_form' not in context:
-            context['password_form'] = self.password_form(user=user)
-        if 'profile_form' not in context:
-            context['profile_form'] = self.profile_form(instance=user)
-        if 'form_focus' not in context:
-            context['form_focus'] = 'profile_form'
-
-        context['profile_tab'] = True
-        return context
-
-    def form_invalid(self, **kwargs):
-        return self.render_to_response(self.get_context_data(**kwargs))
-
-    def get_simple_kwargs(self):
-        kwargs = {
-            'initial': self.get_initial(),
-            'prefix': self.get_prefix(),
-        }
-
-        if self.request.method in ('POST', 'PUT'):
-            kwargs.update({
-                'data': self.request.POST,
-                'files': self.request.FILES,
-            })
-        return kwargs
-
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if 'profile_form' in request.POST:
-            form_name = 'profile_form'
-            form = self.profile_form(**self.get_form_kwargs())
-        else:
-            form_name = 'password_form'
-            form = self.password_form(user=self.object, **self.get_simple_kwargs())
-
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(**{'form_focus': form_name, form_name: form})
 
 
 class ProviderSignup(CreateView):

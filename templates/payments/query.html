@@ -11,7 +11,7 @@
 
 {% block item_row %}
 
-<td class="entity-td">{{item.account}}</td>
+<td class="entity-td">{{item.account.display_name}}</td>
 <td>{{item.amount}} €</td>
 <td>{{item.concept}}</td>
 <td>{% if item.completed %}
