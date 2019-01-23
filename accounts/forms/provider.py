@@ -16,6 +16,9 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
     class Meta:
         model = Provider
         exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date']
+        widgets = {
+            'contact_person': forms.TextInput()
+        }
 
     # Overriding __init__ here allows us to provide initial data for permissions
     def __init__(self, *args, **kwargs):

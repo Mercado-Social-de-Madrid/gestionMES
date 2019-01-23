@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
+{% load settings_value %}
+{% load l10n %}
 
 {% block title %}Nuevo usuario{% endblock %}
 
@@ -12,7 +14,7 @@
         <div class="container">
             <div class="row">
             <div class="col-sm-12">
-                <h3 class="mb-0"><a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nueva entidad</h3>
+                <h3 class="mb-0">{% if request.user.is_authenticated %} <a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i> {% endif %}Nueva entidad</h3>
             </div>
         </div>
         </div>
@@ -23,8 +25,99 @@
             {% csrf_token %}
 
 
-        {{form.as_p}}
+            <h4 class="text-primary">Datos fiscales</h4>
 
+            <div class="row ">
+                <div class="col-md-5">
+                        {% include "common/forms/field.html" with field=form.cif %}
+
+                </div>
+                <div class="col-md-7">
+                    {% include "common/forms/field.html" with field=form.name %}
+                </div>
+                <div class="col-md-5">
+                        {% include "common/forms/field.html" with field=form.legal_form not_floating=True %}
+                </div>
+                <div class="col-md-7">
+                    {% include "common/forms/field.html" with field=form.business_name %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.postalcode %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.city %}
+                </div>
+
+
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.province %}
+                </div>
+
+                <div class="col-lg-12">
+                        {% include "common/forms/field.html" with field=form.address %}
+                        {% include "common/forms/field.html" with field=form.iban_code %}
+
+                </div>
+
+
+                <div class="col-lg-12">
+                    <h4 class="text-primary mt-5">Datos de contacto</h4>
+                        {% include "common/forms/field.html" with field=form.contact_person %}
+                        {% include "common/forms/field.html" with field=form.contact_email %}
+                    {% include "common/forms/field.html" with field=form.contact_phone %}
+
+                    <h4 class="text-primary mt-5">Datos de entidad </h4>
+                </div>
+                <div class="col-md-6">
+                    {% include "common/forms/field.html" with field=form.territory not_floating=True %}
+                    {% include "common/forms/field.html" with field=form.start_year %}
+                    {% include "common/forms/checkbox.html" with field=form.assisted_last_fair %}
+                </div>
+                <div class="col-md-6">
+                    {% include "common/forms/field.html" with field=form.categories not_floating=True %}
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card mb-4 ">
+                    <div id="map" class="map no-resize loading-container">
+                        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw loading-spinner"></i>
+                        <span class="sr-only">Loading...</span>
+                    </div>
+
+                    <div class="card-body px-3 pb-0">
+                            <h4 class="card-title"><i class="material-icons">edit_location</i> Geolocalización</h4>
+                            <p class="card-text">Mueve el pin por el mapa hasta posicionarlo en la localización correcta.</p>
+                            <div class="form-group">
+                                <label>Latitud</label>
+                                {{ form.latitude }}
+                                {% if form.latitude.errors %} <div class="alert alert-danger"> {{form.latitude.errors}}</div> {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label>Longitud</label>
+                                {{ form.longitude }}
+                                {% if form.longitude.errors %} <div class="alert alert-danger"> {{form.longitude.errors}}</div> {% endif %}
+                            </div>
+                    </div>
+
+                    <div class="card-footer">
+                      <small class="text-muted">Puedes hacer zoom en los controles del mapa para ajustar al máximo la posición, o entrar en la vista de pantalla completa.</small>
+                    </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+
+                    {% include "common/forms/field.html" with field=form.latitude %}
+                    {% include "common/forms/field.html" with field=form.longitude %}
+                    {% include "common/forms/field.html" with field=form.logo %}
+                    {% include "common/forms/field.html" with field=form.banner %}
+
+
+                </div>
+            </div>
 
             <div class="row mt-5">
                 <div class="col-lg-5">
@@ -51,5 +144,56 @@
 
         </form>
     </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>
+{% include 'common/include_gmaps.html' %}
+<script type="text/javascript">
+
+
+  function initMap() {
+{% if entity %}
+    var entityPosition = new google.maps.LatLng({{ entity.latitude|unlocalize }}, {{ entity.longitude|unlocalize }});
+{% else %}
+    var entityPosition = new google.maps.LatLng({% settings_value "INITIAL_LATITUDE"|unlocalize %}, {% settings_value "INITIAL_LONGITUDE"|unlocalize %});
+{% endif %}
+
+    console.log("AAAAA");
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: entityPosition,
+        zoomControl: true,
+        scaleControl: true,
+        streetViewControl: false,
+        mapTypeControl:false
+    });
+
+    $('#map').removeClass('loading-container');
+
+    var marker = new RichMarker({
+      position: entityPosition,
+      map: map,
+      draggable:true,
+      content: '<div class="marker-wrapper"><div class="marker"><img src="' + '{%if entity.first_photo_url %}{{entity.first_photo_url}}{%else%}{% static "img/venue-icon.png" %}{%endif%}' + '"></div></div>'
+    });
+
+    var latInput = $('[name="latitude"]');
+    var lngInput = $('[name="longitude"]');
+
+    google.maps.event.addListener(
+        marker,
+        'drag',
+        function() {
+            latInput.val( marker.position.lat() );
+            lngInput.val( marker.position.lng() );
+        }
+    );
+  }
+
+</script>
 
 {% endblock %}

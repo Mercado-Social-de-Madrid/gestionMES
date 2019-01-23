@@ -1,0 +1,48 @@
+.map{
+    width:100%;
+    background:#ddd;
+    min-height:280px;
+}
+
+.marker-wrapper{
+    position:absolute;
+}
+.marker-wrapper:before{
+    width: 0;
+    height: 0;
+    content:'';
+    border-color: inherit;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 14px solid;
+    position:absolute;
+    top:-10px;
+    left:-9px;
+    z-index:5;
+}
+.marker{
+    height:50px;
+    width:50px;
+    border:2px solid #912991;
+    border-color:inherit;
+    border-radius:100%;
+    position:absolute;
+    overflow:hidden;
+    text-align:center;
+    background-color:#ddd;
+    margin-left:-25px;
+    margin-top:-62px;
+    box-shadow: 0 3px 4px rgba(0,0,0,0.4);
+
+    img{
+        height:100%;
+        width:auto;
+        min-width: 100%;
+        top: 50%;
+        left: 50%;
+        position: relative;
+        -webkit-transform: translate(-50%, -50%);
+          -ms-transform: translate(-50%, -50%);
+              transform: translate(-50%, -50%);
+    }
+}
