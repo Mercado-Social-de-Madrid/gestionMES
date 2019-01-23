@@ -12,12 +12,17 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
 
     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.filter())
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
+    check_conditions = forms.BooleanField(required=True, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
 
     class Meta:
         model = Provider
         exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date']
         widgets = {
-            'contact_person': forms.TextInput()
+            'contact_person': forms.TextInput(),
+            'address': forms.Textarea(attrs={'rows': 3}),
+            'short_description': forms.Textarea(attrs={'rows': 3}),
+            'latitude': forms.NumberInput(attrs={'readonly': True}),
+            'longitude': forms.NumberInput(attrs={'readonly': True}),
         }
 
     # Overriding __init__ here allows us to provide initial data for permissions

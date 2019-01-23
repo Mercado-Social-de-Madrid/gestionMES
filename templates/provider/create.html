@@ -42,6 +42,12 @@
                     {% include "common/forms/field.html" with field=form.business_name %}
                 </div>
 
+                <div class="col-lg-12">
+
+                        {% include "common/forms/field.html" with field=form.iban_code %}
+                        {% include "common/forms/field.html" with field=form.address not_floating=True %}
+                </div>
+
                 <div class="col-md-4">
                     {% include "common/forms/field.html" with field=form.postalcode %}
                 </div>
@@ -50,18 +56,13 @@
                     {% include "common/forms/field.html" with field=form.city %}
                 </div>
 
-
-
                 <div class="col-md-4">
                     {% include "common/forms/field.html" with field=form.province %}
                 </div>
 
-                <div class="col-lg-12">
-                        {% include "common/forms/field.html" with field=form.address %}
-                        {% include "common/forms/field.html" with field=form.iban_code %}
+            </div>
 
-                </div>
-
+            <div class="row">
 
                 <div class="col-lg-12">
                     <h4 class="text-primary mt-5">Datos de contacto</h4>
@@ -69,19 +70,38 @@
                         {% include "common/forms/field.html" with field=form.contact_email %}
                     {% include "common/forms/field.html" with field=form.contact_phone %}
 
-                    <h4 class="text-primary mt-5">Datos de entidad </h4>
+                    <h4 class="text-primary mt-5">Datos de entidad</h4>
                 </div>
+                <div class="col-md-7 col-lg-5 mb-4">
+                    Aquí puedes introducir todos los datos de tu perfil que serán mostrados públicamente en la aplicación de moneda social, y que podrás editar fácilmente desde la aplicación una se complete el proceso de alta.
+                </div>
+                <div class="col-md-5 col-lg-7"></div>
+
+
+                <div class="col-md-6 ">
+
+                    {% include "common/forms/field.html" with field=form.description not_floating=True%}
+                    {% include "common/forms/field.html" with field=form.short_description not_floating=True%}
+
+
+                    <h5 class="text-primary mt-5">Redes sociales</h5>
+                    {% include "common/forms/field.html" with field=form.facebook_link %}
+                    {% include "common/forms/field.html" with field=form.webpage_link %}
+                    {% include "common/forms/field.html" with field=form.twitter_link %}
+                    {% include "common/forms/field.html" with field=form.telegram_link %}
+                    {% include "common/forms/field.html" with field=form.instagram_link %}
+
+                </div>
+
                 <div class="col-md-6">
                     {% include "common/forms/field.html" with field=form.territory not_floating=True %}
                     {% include "common/forms/field.html" with field=form.start_year %}
-                    {% include "common/forms/checkbox.html" with field=form.assisted_last_fair %}
-                </div>
-                <div class="col-md-6">
                     {% include "common/forms/field.html" with field=form.categories not_floating=True %}
-                </div>
 
-                <div class="col-md-12">
-                    <div class="card mb-4 ">
+                    <div class="mb-3">
+                    {% include "common/forms/checkbox.html" with field=form.assisted_last_fair %}</div>
+
+                    <div class="card mt-4 ">
                     <div id="map" class="map no-resize loading-container">
                         <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw loading-spinner"></i>
                         <span class="sr-only">Loading...</span>
@@ -108,12 +128,59 @@
                     </div>
                 </div>
 
+            </div>
+
+            <h5 class="text-primary mt-5">Moneda social</h5>
+            <div class="row mt-3">
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label for="{{ form.max_percent_payment.id_for_label }}">Máximo pago en etics</label>
+                                    <div class="input-group">
+                                            {{ form.max_percent_payment }}
+                                            <span class="input-group-addon"><i class="fa fa-percent" aria-hidden="true"></i></span>
+                                    </div>
+                                    {% if form.max_percent_payment.errors %} <div class="alert alert-danger"> {{form.max_percent_payment.errors}}</div> {% endif %}
+                                    <small class="form-text ">
+                                    Porcentaje máximo sobre el valor de la venta que se acepta cobrar en etics. Recomendamos aceptar el 100% ya que el MESM garantiza a los proveedores la convertibilidad a €.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Porcentaje de bonificación general</label>
+                                    <div class="input-group">
+                                        {{ form.bonus_percent_general }}
+                                        <span class="input-group-addon"><i class="fa fa-percent" aria-hidden="true"></i></span>
+                                    </div>
+                                    {% if form.bonus_percent_general.errors %} <div class="alert alert-danger"> {{form.bonus_percent_general.errors}}</div> {% endif %}
+                                    <small class="form-text ">
+                                    Porcentaje aplicable sobre el valor total de la venta, que obtendrá como bonificación en etics la compradora (se sugiere un 3%)
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                    <label>Porcentaje de bonificación a entidades</label>
+                                    <div class="input-group">
+                                        {{ form.bonus_percent_entity }}
+                                        <span class="input-group-addon"><i class="fa fa-percent" aria-hidden="true"></i></span>
+                                    </div>
+                                    {% if form.bonus_percent_entity.errors %} <div class="alert alert-danger"> {{form.bonus_percent_entity.errors}}</div> {% endif %}
+                                    <small class="form-text ">
+                                    Porcentaje aplicable sobre el valor total de la venta, que obtendrán como bonificación en etics las compradoras que sean entidades proveedoras del mercado social.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+            <div class="row mt-3">
                 <div class="col-md-12">
 
-                    {% include "common/forms/field.html" with field=form.latitude %}
-                    {% include "common/forms/field.html" with field=form.longitude %}
-                    {% include "common/forms/field.html" with field=form.logo %}
-                    {% include "common/forms/field.html" with field=form.banner %}
+                    {% include "common/forms/field.html" with field=form.logo not_floating=True %}
+                    {% include "common/forms/field.html" with field=form.banner not_floating=True %}
 
 
                 </div>
@@ -137,9 +204,25 @@
                 </div>
             </div>
 
+        <h4 class="text-primary mt-4">Aceptación de principios y compromisos del MES</h4>
 
+            <a href="http://www.idealoga.org/wp-content/uploads/2016/03/Firma-de-principios-y-compromisos.pdf" target="_blank">Firma de principios y compromisos del MESM</a>
+            <div class="row">
+                <div class="col-md-12 col-lg-8">
+            <div class="custom-control custom-switch mt-3">
+                {{form.check_conditions}}
+  <span class="custom-control-track"></span>
+  <label class="custom-control-label" for="{{form.check_conditions.id_for_label}}">
+        Las personas que conformamos la entidad hemos leído el documento "Firma de principios y compromisos del MESM". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
+</label>
+
+                {% if form.longitude.errors %} <div class="valid-feedback"> {{form.longitude.errors}}</div> {% endif %}
+</div>
+
+                    </div>
+            </div>
         <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary btn-lg">Crear usuario</button>
+            <button type="submit" class="btn btn-primary btn-lg">Enviar socilitud</button>
         </div>
 
         </form>

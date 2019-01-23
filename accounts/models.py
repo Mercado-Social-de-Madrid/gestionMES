@@ -15,7 +15,7 @@ from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
 from helpers import RandomFileName
-from mes import settings
+from django.conf import settings
 from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
 
 TERR_LOCAL = 'local'
@@ -136,8 +136,8 @@ class Entity(Account):
     territory = models.CharField(null=False, default=TERR_LOCAL, max_length=20, choices=TERRITORY_OPTIONS,
                                  verbose_name=_('Ámbito'))
     assisted_last_fair = models.BooleanField(default=False, verbose_name=_('Asistió a la última feria'))
-    latitude = models.FloatField(null=False, verbose_name='Latitud', default=0)
-    longitude = models.FloatField(null=False, verbose_name='Longitud', default=0)
+    latitude = models.FloatField(null=False, verbose_name='Latitud', default=settings.INITIAL_LATITUDE)
+    longitude = models.FloatField(null=False, verbose_name='Longitud', default=settings.INITIAL_LONGITUDE)
 
     logo = ProcessedImageField(null=True, blank=True, upload_to=RandomFileName('entities/'),
                                verbose_name='Logo en alta resolución',
