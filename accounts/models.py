@@ -152,6 +152,23 @@ class Entity(Account):
                                 verbose_name=_('Año de inicio del proyecto'))
     contact_person = models.TextField(null=True, blank=True, verbose_name=_('Persona de contacto'))
 
+    description = models.TextField(null=True, blank=True, verbose_name='Descripción')
+    short_description = models.TextField(null=True, blank=True, verbose_name='Descripción corta')
+
+    bonus_percent_entity = models.FloatField(default=0, verbose_name='Porcentaje de bonificación a entidades',
+                                             validators=[MinValueValidator(0), MaxValueValidator(100)])
+    bonus_percent_general = models.FloatField(default=0, verbose_name='Porcentaje de bonificación general',
+                                              validators=[MinValueValidator(0), MaxValueValidator(100)])
+    max_percent_payment = models.FloatField(default=0, verbose_name='Máximo porcentaje de pago aceptado',
+                                            validators=[MinValueValidator(0), MaxValueValidator(100)])
+
+    # Social links
+    facebook_link = models.CharField(null=True, blank=True, verbose_name='Página de Facebook', max_length=250)
+    webpage_link = models.CharField(null=True, blank=True, verbose_name='Página web', max_length=250)
+    twitter_link = models.CharField(null=True, blank=True, verbose_name='Perfil de Twitter', max_length=250)
+    telegram_link = models.CharField(null=True, blank=True, verbose_name='Canal de Telegram', max_length=250)
+    instagram_link = models.CharField(null=True, blank=True, verbose_name='Perfil de Instagram', max_length=250)
+
     @property
     def display_name(self):
         return self.name
