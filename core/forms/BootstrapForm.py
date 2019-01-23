@@ -2,6 +2,7 @@ from django import forms
 
 text_widget_class = 'form-control'
 select_widget_class = 'custom-select'
+checkbox_widget_class = 'custom-control-input'
 
 class BootstrapForm(forms.Form):
 
@@ -11,6 +12,8 @@ class BootstrapForm(forms.Form):
         for field_name, field in self.fields.items():
 
             widget_class = select_widget_class if hasattr(field.widget, 'input_type') and field.widget.input_type == 'select' else text_widget_class
+            if hasattr(field.widget, 'input_type') and field.widget.input_type == 'checkbox':
+                widget_class = checkbox_widget_class
 
             if 'class' in field.widget.attrs:
                 if widget_class not in field.widget.attrs['class']:
