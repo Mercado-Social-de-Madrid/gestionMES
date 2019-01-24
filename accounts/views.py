@@ -268,7 +268,7 @@ class ProviderUpdateView(UpdateView):
 
 
 class ConsumerUpdateView(UpdateView):
-    template_name = 'provider/edit.html'
+    template_name = 'consumer/edit.html'
     form_class = ConsumerForm
     model = Consumer
 
