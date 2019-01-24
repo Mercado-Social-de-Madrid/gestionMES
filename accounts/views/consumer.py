@@ -17,6 +17,8 @@ from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from core.mixins.TabbedViewMixin import TabbedViewMixin
+from payments.models import PendingPayment
 
 
 class ConsumerFilterForm(BootstrapForm):
@@ -98,3 +100,27 @@ class ConsumerUpdateView(UpdateView):
         if process != None: #and process.member_type == :
             account = process.account
             return account
+
+
+
+class ConsumerDetailView(TabbedViewMixin, UpdateView):
+    template_name = 'consumer/detail.html'
+    default_tab = 'details'
+    available_tabs = ['details', 'payments']
+    form_class = ConsumerForm
+    model = Consumer
+
+    def get_success_url(self):
+        return reverse('accounts:consumer_detail', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        response = super(ConsumerDetailView, self).form_valid(form)
+        messages.success(self.request, _('Datos actualizados correctamente.'))
+        return response
+
+    def get_context_data(self, **kwargs):
+        context = super(ConsumerDetailView, self).get_context_data(**kwargs)
+
+        context['payments'] = PendingPayment.objects.filter(account=self.object)
+        context['profile_tab'] = True
+        return context
