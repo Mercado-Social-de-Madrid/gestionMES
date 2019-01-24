@@ -96,6 +96,7 @@ class Account(PolymorphicModel):
     iban_code = models.CharField(null=True, blank=True, max_length=50, verbose_name=_('Cuenta bancaria (IBAN)'))
     registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
     cr_member = models.BooleanField(default=False, verbose_name=_('Miembro Consejo Rector'))
+    pay_by_debit = models.BooleanField(default=False, verbose_name=_('Domiciliar la cuota'))
 
     class Meta:
         verbose_name = _('Socia')
