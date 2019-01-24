@@ -206,15 +206,19 @@ class SignupsManager(models.Manager):
             signup.contact_email = account.contact_email
             signup.contact_person = account.contact_person
             signup.member_type = settings.MEMBER_PROV
+
             process = CurrentProcess.objects.filter(shortname='prov_signup').first().process
             step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_SIGNUP_FORM).first().process_step
+
             workflow = ProcessWorkflow()
             workflow.process = process
             workflow.current_state = step
             workflow.save()
-            workflow.add_comment(user=None, comment='La entidad completa el formulario')
             signup.workflow = workflow
             signup.save()
+
+            workflow.add_comment(user=None, comment='La entidad completa el formulario')
+
 
         if account.get_real_instance_class() is Consumer:
             signup.name = account.display_name
@@ -222,15 +226,19 @@ class SignupsManager(models.Manager):
             signup.contact_email = account.contact_email
             signup.contact_person = account.display_name
             signup.member_type = settings.MEMBER_CONSUMER
+
             process = CurrentProcess.objects.filter(shortname='cons_signup').first().process
             step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_CONSUMER_FORM).first().process_step
+
             workflow = ProcessWorkflow()
             workflow.process = process
             workflow.current_state = step
             workflow.save()
-            workflow.add_comment(user=None, comment='La consumidora completa el formulario')
             signup.workflow = workflow
             signup.save()
+
+            workflow.add_comment(user=None, comment='La consumidora completa el formulario')
+
 
 
 class SignupProcess(models.Model):
@@ -253,7 +261,6 @@ class SignupProcess(models.Model):
 
 
     def is_in_payment_step(self):
-        print 'aaaa'
         if self.workflow.current_state is None:
             return False
 
@@ -310,15 +317,15 @@ def update_process_event(sender, instance, **kwargs):
     if process and process.account:
         process.last_update = datetime.now()
         process.save()
-        if instance.step:
-            print 'bbbbb'
-            if process.is_in_payment_step():
-                print 'ccccc'
-                # If we just advanced steps and is in the payment step, we create the payment order
-                from payments.models import PendingPayment
-                PendingPayment.objects.create_initial_payment(process.account)
 
-            print 'dddddd'
+        print 'asgagdsgdasg'
+        if process.is_in_payment_step():
+            print 'pringdsgdsg'
+            # If we just advanced steps and is in the payment step, we create the payment order
+            from payments.models import PendingPayment
+            PendingPayment.objects.create_initial_payment(process.account)
+
+        if instance.step:
             if instance.step.is_named_step(STEP_SIGNUP_FORM) or instance.step.is_named_step(STEP_CONSUMER_FORM):
                 process.account.status = INITIAL_PAYMENT
                 process.account.registration_date = datetime.now()
