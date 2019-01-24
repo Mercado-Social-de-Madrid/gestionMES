@@ -170,6 +170,20 @@ class Entity(Account):
     telegram_link = models.CharField(null=True, blank=True, verbose_name='Canal de Telegram', max_length=250)
     instagram_link = models.CharField(null=True, blank=True, verbose_name='Perfil de Instagram', max_length=250)
 
+    num_workers_male_partners = models.IntegerField(null=True, blank=True, verbose_name=_('Núm. hombres socios trabajadores'))
+    num_workers_female_partners = models.IntegerField(null=True, blank=True,
+                                                    verbose_name=_('Núm. mujeres socias trabajadoras'))
+    num_workers_male_non_partners = models.IntegerField(null=True, blank=True,
+                                                    verbose_name=_('Núm. hombres no socios trabajadores'))
+    num_workers_female_non_partners = models.IntegerField(null=True, blank=True,
+                                                    verbose_name=_('Núm. mujeres no socias trabajadoras'))
+
+    highest_salary = models.FloatField(null=True, blank=True, verbose_name=_('Salario más alto'))
+    lowest_salary = models.FloatField(null=True, blank=True, verbose_name=_('Salario más bajo'))
+    benefits_destination = models.TextField(blank=True, verbose_name=_('A qué se destinan los beneficios de la entidad (si los hay)'))
+    apportations = models.TextField(blank=True, verbose_name=_('Qué trata de aportar vuestro proyecto a la transformación social'))
+    networking = models.TextField(blank=True, verbose_name=_('Redes/organizaciones/iniciativas de transformación social de las que la entidad forma parte'))
+
     @property
     def display_name(self):
         return self.name

@@ -185,6 +185,40 @@
                 </div>
             </div>
 
+
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <h4 class="text-primary mt-5">Compromiso social</h4>
+                </div>
+
+                <div class="col-md-6">
+                    {% include "common/forms/field.html" with field=form.benefits_destination not_floating=True %}
+                </div>
+                <div class="col-md-6">
+                    {% include "common/forms/field.html" with field=form.apportations not_floating=True %}
+                </div>
+
+                <div class="col-md-12">
+                     {% include "common/forms/field.html" with field=form.networking not_floating=True %}
+                    Rellena los siguientes campos únicamente en caso de entidades colectivas. No contestar si eres una entidad individual.
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.num_workers_female_partners  %}
+                    {% include "common/forms/field.html" with field=form.num_workers_female_non_partners  %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.num_workers_male_partners  %}
+                    {% include "common/forms/field.html" with field=form.num_workers_male_non_partners  %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.highest_salary  %}
+                    {% include "common/forms/field.html" with field=form.lowest_salary  %}
+                </div>
+            </div>
+
             <div class="row mt-5">
                 <div class="col-lg-5">
                     <h4 class="text-primary">Cálculo de cuota</h4>

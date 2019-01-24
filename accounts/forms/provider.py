@@ -23,6 +23,7 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
             'short_description': forms.Textarea(attrs={'rows': 3}),
             'latitude': forms.NumberInput(attrs={'readonly': True}),
             'longitude': forms.NumberInput(attrs={'readonly': True}),
+            'networking': forms.Textarea(attrs={'rows': 4}),
         }
 
     # Overriding __init__ here allows us to provide initial data for permissions
