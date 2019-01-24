@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Nuevo usuario{% endblock %}
+{% block title %}Nueva socia consumidora{% endblock %}
 
 
 {% block content %}
@@ -9,7 +9,7 @@
         <div class="container">
             <div class="row">
             <div class="col-sm-12">
-                <h3 class="mb-0"><a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nueva socia consumidora</h3>
+                <h3 class="mb-0">{% if request.user.is_authenticated %}<a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i>{% endif %} Nueva socia consumidora</h3>
             </div>
         </div>
         </div>
@@ -19,10 +19,57 @@
         <form method="post" class="mt-3 p-4">
             {% csrf_token %}
 
+            <div class="row ">
+                <div class="col-md-5">
+                    {% include "common/forms/field.html" with field=form.cif %}
+                </div>
+                <div class="col-md-7"></div>
+                <div class="col-md-5">
+                    {% include "common/forms/field.html" with field=form.first_name %}
+                </div>
 
-        {{form.as_p}}
-        <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary btn-lg">Enviar formulario</button>
+                <div class="col-md-7">
+                    {% include "common/forms/field.html" with field=form.last_name %}
+                </div>
+
+                <div class="col-md-5">
+                    {% include "common/forms/field.html" with field=form.contact_phone %}
+                </div>
+
+                <div class="col-md-7">
+                    {% include "common/forms/field.html" with field=form.contact_email %}
+                </div>
+
+
+                <div class="col-md-8">
+                    {% include "common/forms/field.html" with field=form.iban_code %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/checkbox.html" with field=form.pay_by_debit %}
+                </div>
+
+                <div class="col-lg-12">
+
+                        {% include "common/forms/field.html" with field=form.address not_floating=True %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.postalcode %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.city %}
+                </div>
+
+                <div class="col-md-4">
+                    {% include "common/forms/field.html" with field=form.province %}
+                </div>
+
+            </div>
+
+        <div class="text-center mt-3 mb-5">
+            <button type="submit" class="btn btn-primary btn-lg">Enviar solicitud</button>
         </div>
 
         </form>
