@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
+from django.http import HttpResponseNotFound
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -94,9 +95,13 @@ class SignupDetailView(DetailView):
 def signup_form_redirect(request, uuid):
 
     process = SignupProcess.objects.filter(uuid=uuid).first()
+
+    if not process:
+        return HttpResponseNotFound('<h1>Proceso de acogida no encontrado...</h1>')
     if process.member_type == settings.MEMBER_PROV:
         return redirect('accounts:provider_edit_form',uuid=uuid )
 
     elif process.member_type == settings.MEMBER_CONSUMER:
         return redirect('accounts:consumer_edit_form', uuid=uuid )
+
 
