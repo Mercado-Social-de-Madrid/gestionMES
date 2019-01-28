@@ -12,7 +12,9 @@
                 <h3 class="mb-0">Usuarios</h3>
             </div>
             <div class="col-sm-5 col-md-4 text-sm-right">
+                {% if perms.core.mespermission_can_create_users %}
                 <a href="{% url 'management:user_add' %}" class="btn btn-primary"><i class="material-icons mr-2">add</i> Añadir usuario</a>
+                {% endif %}
             </div>
         </div>
         </div>

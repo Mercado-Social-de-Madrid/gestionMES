@@ -18,6 +18,16 @@ class User(AbstractUser):
         verbose_name = _('Usuario')
         verbose_name_plural = _('Usuarios')
 
+        permissions = (
+            ("mespermission_can_manage_users", _("Puede ver la lista de usuarios")),
+            ("mespermission_can_change_passwords", _("Puede cambiar la contraseña de un usuario")),
+            ("mespermission_can_view_user_history", _("Puede consultar el historial de un usuario")),
+            ("mespermission_can_update_users", _("Puede modificar usuarios")),
+            ("mespermission_can_view_user_detail", _("Puede ver los detalles de un usuario")),
+            ("mespermission_can_create_users", _("Puede añadir usuarios")),
+
+        )
+
 
 class Gallery(models.Model):
 

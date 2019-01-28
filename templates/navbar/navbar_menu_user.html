@@ -22,14 +22,18 @@
       <div class="navdrawer-header">
         <a class="navbar-brand px-0" href="#">GestiónMES</a>
       </div>
+
+        {% if perms.core.mespermission_can_manage_users or perms.management.mespermission_can_manage_commissions or perms.bpm.mespermission_can_manage_processes or perms.accounts.mespermission_can_manage_categories %}
         <p class="navdrawer-subheader">Administración</p>
         <ul class="navdrawer-nav">
+             {% if perms.core.mespermission_can_manage_users %}
             <li class="nav-item">
             <a class="nav-link" href="{% url 'management:users_list' %}">
               <i class="material-icons mr-3">face</i>
               Usuarios
             </a>
           </li>
+            {% endif %}
 
             {% if perms.management.mespermission_can_manage_commissions %}
             <li class="nav-item">
@@ -60,6 +64,7 @@
         </ul>
 
       <div class="navdrawer-divider"></div>
+{% endif %}
 
         <p class="navdrawer-subheader">Socias</p>
 

@@ -17,7 +17,9 @@
             </div>
 
             <div class="col-sm-5 col-md-4 text-sm-right">
+                 {% if perms.core.mespermission_can_change_passwords %}
                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#password-modal"><i class="material-icons mr-2">add</i> Modificar contraseña</a>
+                {% endif %}
             </div>
         </div>
         </div>
@@ -31,17 +33,20 @@
       <li class="nav-item">
         <a aria-controls="groups" aria-selected="false" class="nav-link {%if group_tab %} active{%endif%}" data-toggle="tab" href="#group-form" id="group-tab" role="tab">Comisiones</a>
       </li>
-
+    {% if perms.core.mespermission_can_view_user_history %}
     <li class="nav-item">
         <a aria-controls="groups" aria-selected="false" class="nav-link {%if group_tab %} active{%endif%}" data-toggle="tab" href="#history-form" id="history-tab" role="tab">Historial</a>
       </li>
+    {%endif%}
 </ul>
 
 <div class="tab-content" id="profile-password-tabs">
   <div aria-labelledby="profile-tab" class="tab-pane p-5 {%if profile_tab%}show active{%endif%}" id="profile-form" role="tabpanel">
 
   <form method="post" class="edit-form" >
+      {% if perms.core.mespermission_can_update_users %}
     {% csrf_token %}
+      {% endif %}
         <h4><i class="material-icons mr-3">account_circle</i> Datos de perfil</h4>
       <div class="row mt-4">
           <div class="col-sm-12">
@@ -62,7 +67,9 @@
 
       </div>
       <p class="text-center">
+          {% if perms.core.mespermission_can_update_users %}
           <button type="submit" name="profile_form" class="btn btn-primary btn-lg">Guardar cambios</button>
+          {% endif %}
       </p>
   </form>
 
@@ -89,12 +96,14 @@
 
     </div>
 
+    {% if perms.core.mespermission_can_view_user_history %}
     <div aria-labelledby="history-tab" class="tab-pane p-4 p-5 {% if history_tab%}show active{% endif %}" id="history-form" role="tabpanel">
 
         <h4><i class="material-icons mr-3 mb-4">group</i> Historial de acciones</h4>
         Próximamente...
 
     </div>
+    {% endif %}
 </div>
 
 
