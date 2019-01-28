@@ -92,6 +92,8 @@ class PaymentsManager(models.Manager):
         amount = fee + share
         payment.concept = "Pago inicial: {}€ ({} capital social + {} cuota anual)".format(amount, share, fee)
         payment.amount = amount
+        if account.pay_by_debit == True:
+            payment.type = DEBIT
         payment.save()
 
 
@@ -121,4 +123,14 @@ class PendingPayment(models.Model):
 
     objects = PaymentsManager()
 
+    @property
+    def icon_name(self):
+        if not self.type:
+            return ''
+        elif self.type == CREDIT_CARD:
+            return 'credit_card'
+        elif self.type == DEBIT:
+            return 'receipt'
+        elif self.type == TRANSFER:
+            return 'local_atm'
 

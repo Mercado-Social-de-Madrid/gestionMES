@@ -60,6 +60,7 @@ class PaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateRe
     template_name = 'payments/list.html'
     ajax_template_name = 'payments/query.html'
     filterset_class = PendingPaymentFilter
+    ordering = ['-added']
     paginate_by = 15
 
 
@@ -90,6 +91,7 @@ class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTempla
     template_name = 'card/list.html'
     ajax_template_name = 'card/query.html'
     paginate_by = 15
+
     model = PendingPayment
 
 

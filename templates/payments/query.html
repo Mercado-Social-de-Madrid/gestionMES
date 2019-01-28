@@ -3,6 +3,7 @@
  {% block table_head %}
     <th scope="col">Cuenta</th>
     <th scope="col">Cantidad</th>
+    <th scope="col">Tipo</th>
     <th scope="col">Concepto</th>
     <th scope="col">Estado</th>
     <th scope="col">Fecha</th>
@@ -13,12 +14,17 @@
 
 <td class="entity-td">{{item.account.display_name}}</td>
 <td>{{item.amount}} €</td>
+<td>
+    {% if item.type %}
+        <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="{{item.get_type_display}}">{{item.icon_name}}</i>
+    {% endif %}
+</td>
 <td>{{item.concept}}</td>
 <td>{% if item.completed %}
                 <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
             {% else %}
-                <i class="material-icons">access_time</i> <small>Pendiente</small>
+                <i class="material-icons">access_time</i> <small>Pend.</small>
             {% endif %}</td>
-<td>{{item.added|date:'d/m/Y'}}</td>
+<td>{{item.added|date:'d/m/Y H:i'}}</td>
 
 {% endblock %}
