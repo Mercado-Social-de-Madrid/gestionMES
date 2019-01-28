@@ -11,6 +11,7 @@ django-js-asset==1.1.0
 django-polymorphic==2.0.3
 django-qrcode==0.3
 django-sass-processor==0.7.1
+django-tastypie==0.14.0
 fcm-django==0.2.13
 idna==2.7
 libsass==0.15.0

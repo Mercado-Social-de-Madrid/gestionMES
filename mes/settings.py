@@ -163,6 +163,8 @@ LOGOUT_REDIRECT_URL = '/'
 LOGIN_EXEMPT_URLS = [
     r'^accounts/signup/provider/',
     r'^accounts/signup/consumer/',
+    r'^api/*',
+
 ]
 
 INLINE_INPUT_SEPARATOR = '&&&'

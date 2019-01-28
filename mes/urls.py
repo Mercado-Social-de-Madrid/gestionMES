@@ -18,6 +18,7 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
+from api.urls import get_api
 from core import urls as core_urls
 from simple_bpm import urls as bpm_urls
 
@@ -30,6 +31,8 @@ urlpatterns = [
     url(r'^payments/', include('payments.urls', namespace='payments')),
     url(r'^pay/', include('sermepa.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^api/', include(get_api('v1').urls)),
+
 ] + \
   static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + \
   static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
