@@ -97,10 +97,9 @@ class ConsumerUpdateView(UpdateView):
     def get_object(self, queryset=None):
 
         process = self.getSignup()
-        if process != None: #and process.member_type == :
+        if process != None: # and process.member_type == :
             account = process.account
             return account
-
 
 
 class ConsumerDetailView(TabbedViewMixin, UpdateView):
@@ -124,3 +123,4 @@ class ConsumerDetailView(TabbedViewMixin, UpdateView):
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['profile_tab'] = True
         return context
+

@@ -60,7 +60,7 @@ class ProvidersListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateR
 class ProviderDetailView(TabbedViewMixin, UpdateView):
     template_name = 'provider/detail.html'
     default_tab = 'details'
-    available_tabs = ['details', 'payments']
+    available_tabs = ['details', 'payments', 'currency']
     form_class = ProviderForm
     model = Provider
 

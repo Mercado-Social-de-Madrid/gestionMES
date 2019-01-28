@@ -332,9 +332,7 @@ def update_process_event(sender, instance, **kwargs):
         process.last_update = datetime.now()
         process.save()
 
-        print 'asgagdsgdasg'
         if process.is_in_payment_step():
-            print 'pringdsgdsg'
             # If we just advanced steps and is in the payment step, we create the payment order
             from payments.models import PendingPayment
             PendingPayment.objects.create_initial_payment(process.account)

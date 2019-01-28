@@ -1,30 +1,16 @@
-{% extends 'base.html' %}
-{% load staticfiles %}
-{% load settings_value %}
-{% load l10n %}
+<div class="list-group" id="entity-data">
+  <div class="expansion-panel list-group-item">
+    <a aria-controls="fiscal" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#fiscal" id="headingOne">
+      Datos fiscales
+      <div class="expansion-panel-icon ml-3 text-black-secondary">
+        <i class="collapsed-show material-icons">keyboard_arrow_down</i>
+        <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
+      </div>
+    </a>
+    <div aria-labelledby="headingOne" class="collapse" data-parent="#entity-data" id="fiscal">
+      <div class="expansion-panel-body">
 
-{% block title %}Nueva socia proveedora{% endblock %}
-
-{% block content %}
-
-    <div class="jumbotron py-4 px-2">
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12">
-                    <h3 class="mb-0">{% if request.user.is_authenticated %} <a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i> {% endif %}Nueva entidad</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <form method="post" class="mt-3 p-4" enctype="multipart/form-data">
-            {% csrf_token %}
-
-
-            <h4 class="text-primary">Datos fiscales</h4>
-
-            <div class="row ">
+        <div class="row ">
                 <div class="col-md-5">
                     {% include "common/forms/field.html" with field=form.cif %}
 
@@ -56,29 +42,57 @@
                     {% include "common/forms/field.html" with field=form.province %}
                 </div>
 
+            <div class="col-md-12 my-4">
+             <h5 class="text-primary">Cálculo de cuota</h5>
+                    La cuota anual para entidades se calcula en base al número de trabajadoras y el rango de ingresos aproximados del último año.
+                    <br>
             </div>
+            <div class="col-sm-6 col-md-3">{% include "common/forms/field.html" with field=form.num_workers %}</div>
 
-            <div class="row">
+<div class="col-sm-6 col-md-3">{% include "common/forms/field.html" with field=form.aprox_income %}</div>
 
-                <div class="col-lg-12">
-                    <h4 class="text-primary mt-5">Datos de contacto</h4>
-                        {% include "common/forms/field.html" with field=form.contact_person %}
-                        {% include "common/forms/field.html" with field=form.contact_email %}
-                    {% include "common/forms/field.html" with field=form.contact_phone %}
-
-                    <h4 class="text-primary mt-5">Datos de entidad</h4>
-                </div>
-                <div class="col-md-7 col-lg-5 mb-4">
-                    Aquí puedes introducir todos los datos de tu perfil que serán mostrados públicamente en la aplicación de moneda social, y que podrás editar fácilmente desde la aplicación una se complete el proceso de alta.
-                </div>
-                <div class="col-md-5 col-lg-7"></div>
+            </div>
+        </div>
 
 
-                <div class="col-md-6 ">
+             </div>
+    </div>
+  </div>
+
+  <div class="expansion-panel list-group-item">
+    <a aria-controls="contact" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#contact" id="contact-heading">
+      Datos de contacto
+      <div class="expansion-panel-icon ml-3 text-black-secondary">
+        <i class="collapsed-show material-icons">keyboard_arrow_down</i>
+        <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
+      </div>
+    </a>
+    <div aria-labelledby="contact-heading" class="collapse" data-parent="#entity-data" id="contact">
+      <div class="expansion-panel-body">
+        {% include "common/forms/field.html" with field=form.contact_person %}
+        {% include "common/forms/field.html" with field=form.contact_email %}
+        {% include "common/forms/field.html" with field=form.contact_phone %}
+
+         </div>
+    </div>
+  </div>
+  <div class="expansion-panel list-group-item">
+    <a aria-controls="Datos de perfil" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#profile-data" id="headingThree">
+      Datos de entidad
+      <div class="expansion-panel-icon ml-3 text-black-secondary">
+        <i class="collapsed-show material-icons">keyboard_arrow_down</i>
+        <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
+      </div>
+    </a>
+    <div aria-labelledby="headingThree" class="collapse" data-parent="#entity-data" id="profile-data">
+      <div class="expansion-panel-body">
+
+        <div class="row">
+        <div class="col-md-6 ">
 
                     {% include "common/forms/field.html" with field=form.description not_floating=True%}
                     {% include "common/forms/field.html" with field=form.short_description not_floating=True%}
-
+                    {% include "common/forms/field.html" with field=form.territory not_floating=True %}
                     <h5 class="text-primary mt-5">Redes sociales</h5>
                     {% include "common/forms/field.html" with field=form.facebook_link %}
                     {% include "common/forms/field.html" with field=form.webpage_link %}
@@ -89,21 +103,21 @@
                 </div>
 
                 <div class="col-md-6">
-                    {% include "common/forms/field.html" with field=form.territory not_floating=True %}
+
                     {% include "common/forms/field.html" with field=form.start_year %}
                     {% include "common/forms/field.html" with field=form.categories not_floating=True %}
 
                     <div class="mb-3">
                     {% include "common/forms/checkbox.html" with field=form.assisted_last_fair %}</div>
 
-                    <div class="card mt-4 ">
+                    <div class=" mt-4 ">
                     <div id="map" class="map no-resize loading-container">
                         <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw loading-spinner"></i>
                         <span class="sr-only">Loading...</span>
                     </div>
 
                     <div class="card-body px-3 pb-0">
-                            <h4 class="card-title"><i class="material-icons">edit_location</i> Geolocalización</h4>
+                            <h5 class="text-primary">Geolocalización</h5>
                             <p class="card-text">Mueve el pin por el mapa hasta posicionarlo en la localización correcta.</p>
                             <div class="form-group">
                                 <label>Latitud</label>
@@ -123,10 +137,25 @@
                     </div>
                 </div>
 
-            </div>
 
-            <h5 class="text-primary mt-5">Moneda social</h5>
-            <div class="row mt-3">
+        </div>
+              </div>
+    </div>
+  </div>
+
+
+  <div class="expansion-panel list-group-item">
+    <a aria-controls="contact" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#currency" id="contact-heading">
+      Datos de moneda social
+      <div class="expansion-panel-icon ml-3 text-black-secondary">
+        <i class="collapsed-show material-icons">keyboard_arrow_down</i>
+        <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
+      </div>
+    </a>
+    <div aria-labelledby="contact-heading" class="collapse" data-parent="#entity-data" id="currency">
+      <div class="expansion-panel-body">
+
+          <div class="row mt-3">
 
                             <div class="col-sm-4">
                                 <div class="form-group">
@@ -171,20 +200,24 @@
                             </div>
                         </div>
 
-            <div class="row mt-3">
-                <div class="col-md-12">
-
-                    {% include "common/forms/field.html" with field=form.logo not_floating=True %}
-                    {% include "common/forms/field.html" with field=form.banner not_floating=True %}
-
-                </div>
-            </div>
+         </div>
+    </div>
+  </div>
 
 
-            <div class="row mt-3">
-                <div class="col-md-12">
-                    <h4 class="text-primary mt-5">Compromiso social</h4>
-                </div>
+      <div class="expansion-panel list-group-item">
+    <a aria-controls="contact" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#commitment" id="commitment-heading">
+      Compromiso social
+      <div class="expansion-panel-icon ml-3 text-black-secondary">
+        <i class="collapsed-show material-icons">keyboard_arrow_down</i>
+        <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
+      </div>
+    </a>
+    <div aria-labelledby="commitment-heading" class="collapse" data-parent="#entity-data" id="commitment">
+      <div class="expansion-panel-body pb-5">
+
+          <div class="row">
+
 
                 <div class="col-md-6">
                     {% include "common/forms/field.html" with field=form.benefits_destination not_floating=True %}
@@ -214,97 +247,8 @@
                 </div>
             </div>
 
-            <div class="row mt-5">
-                <div class="col-lg-5">
-                    <h4 class="text-primary">Cálculo de cuota</h4>
 
-                    La cuota anual para entidades se calcula en base al número de trabajadoras y el rango de ingresos aproximados del último año.
-                    <br><br>
-                    {% include "common/forms/field.html" with field=form.num_workers %}
-
-                {% include "common/forms/field.html" with field=form.aprox_income %}
-                <small>En miles de Euros</small><br><br>
-
-                    En la tabla a continuación puedes ver cuál será tu cuota anual para pertenecer al MES.
-          </div>
-                <div class="col-lg-7">
-                    {% include 'payments/fees.html' %}
-                </div>
-            </div>
-
-        <h4 class="text-primary mt-4">Aceptación de principios y compromisos del MES</h4>
-
-            <a href="http://www.idealoga.org/wp-content/uploads/2016/03/Firma-de-principios-y-compromisos.pdf" target="_blank">Firma de principios y compromisos del MESM</a>
-            <div class="row">
-                <div class="col-md-12 col-lg-8">
-            <div class="custom-control custom-switch mt-3">
-                {{form.check_conditions}}
-                  <span class="custom-control-track"></span>
-                  <label class="custom-control-label" for="{{form.check_conditions.id_for_label}}">
-                        Las personas que conformamos la entidad hemos leído el documento "Firma de principios y compromisos del MESM". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
-                </label>
-
-                {% if form.longitude.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
-                </div>
-
-                    </div>
-            </div>
-        <div class="text-center mt-3 mb-5">
-            <button type="submit" class="btn btn-primary btn-lg">Enviar socilitud</button>
-        </div>
-
-        </form>
+         </div>
     </div>
+  </div>
 
-{% endblock %}
-
-
-{% block scripts %}
-<script type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>
-{% include 'common/include_gmaps.html' %}
-<script type="text/javascript">
-
-
-  function initMap() {
-{% if entity %}
-    var entityPosition = new google.maps.LatLng({{ entity.latitude|unlocalize }}, {{ entity.longitude|unlocalize }});
-{% else %}
-    var entityPosition = new google.maps.LatLng({% settings_value "INITIAL_LATITUDE"|unlocalize %}, {% settings_value "INITIAL_LONGITUDE"|unlocalize %});
-{% endif %}
-
-    console.log("AAAAA");
-
-    var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: entityPosition,
-        zoomControl: true,
-        scaleControl: true,
-        streetViewControl: false,
-        mapTypeControl:false
-    });
-
-    $('#map').removeClass('loading-container');
-
-    var marker = new RichMarker({
-      position: entityPosition,
-      map: map,
-      draggable:true,
-      content: '<div class="marker-wrapper"><div class="marker"><img src="' + '{%if entity.first_photo_url %}{{entity.first_photo_url}}{%else%}{% static "img/venue-icon.png" %}{%endif%}' + '"></div></div>'
-    });
-
-    var latInput = $('[name="latitude"]');
-    var lngInput = $('[name="longitude"]');
-
-    google.maps.event.addListener(
-        marker,
-        'drag',
-        function() {
-            latInput.val( marker.position.lat() );
-            lngInput.val( marker.position.lng() );
-        }
-    );
-  }
-
-</script>
-
-{% endblock %}

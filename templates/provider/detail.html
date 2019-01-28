@@ -28,6 +28,10 @@
       <li class="nav-item">
         <a aria-controls="payments" aria-selected="false" class="nav-link {%if payments_tab%} active{%endif%}" data-toggle="tab" href="#payments-form" id="payments-tab" role="tab">Contabilidad</a>
       </li>
+
+     <li class="nav-item">
+        <a aria-controls="currency" aria-selected="false" class="nav-link {%if currency_tab%} active{%endif%}" data-toggle="tab" href="#currency-form" id="currency-tab" role="tab">Moneda social</a>
+      </li>
     </ul>
 
 <div class="tab-content">
@@ -36,10 +40,11 @@
         <form method="post" class="mt-3 p-4">
             {% csrf_token %}
             {{form.media}}
+            {% include 'provider/form.html' %}
+
 
         <div class="">
 
-          {{ form.as_p }}
         </div>
 
         <div class="text-center mt-3">
@@ -55,6 +60,13 @@
 
        {% include 'common/list/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments object_url_name='payments:payment_detail' %}
 
+    </div>
+
+    <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
+
+        <h3 class="text-primary"><i class="material-icons mr-1">receipt</i> Etics</h3>
+
+        Próximamente...
 
 
     </div>
