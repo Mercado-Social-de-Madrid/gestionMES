@@ -68,6 +68,9 @@ class Category(models.Model):
         verbose_name = 'Categoría'
         verbose_name_plural = 'Categorías'
         ordering = ['name']
+        permissions = (
+            ("mespermission_can_manage_categories", _("Puede gestionar las categorías")),
+        )
 
     def __unicode__(self):
         return self.name if self.name else ''
@@ -269,6 +272,17 @@ class SignupProcess(models.Model):
     last_update = models.DateTimeField(auto_now=True, verbose_name=_('Última actualización'))
 
     objects = SignupsManager()
+
+
+    class Meta:
+        verbose_name = _('Proceso de acogida')
+        verbose_name_plural = _('Procesos de acogida')
+        permissions = (
+            ("mespermission_can_view_signups", _("Puede ver los procesos de acogida pendientes")),
+            ("mespermission_can_create_signups", _("Puede añadir nuevos procesos de acogida")),
+            ("mespermission_can_comment_signups", _("Puede añadir comentarios a un proceso de acogida")),
+            ("mespermission_can_update_signups", _("Puede actualizar el estado de un proceso de acogida")),
+        )
 
     def __str__(self):
         return "{}".format(self.uuid).encode('utf-8')

@@ -75,8 +75,12 @@
 
                 <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
                     {% if not first_step %}
+                    {% if perms.accounts.mespermission_can_update_signups %}
                     <input type="submit" name="complete_step" class="btn btn-lg btn-primary mr-3" value="Completar paso" />
                     {% endif %}
+                    {% endif %}
+
+                    {% if perms.accounts.mespermission_can_comment_signups %}
                     <button class="btn btn-light btn-lg" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
     Añadir comentario
   </button>
@@ -85,6 +89,7 @@
   {{comment_form.as_p}}
                     <input type="submit" name="add_comment" class="btn btn-lg btn-light" value="Enviar" />
 </div>
+                    {% endif %}
                     {% csrf_token %}
 
                 </form>
@@ -114,9 +119,14 @@
         <span class="font-weight-light"> {{event.step.description}}</span>
         {% else %}
         <span class="font-weight-light"> {{event.comment}}</span>
+
         {%endif%}
         <br>{{event.timestamp}}
+        {% if event.completed_by %}
+        <br>
+        {% include 'user/simple_profile.html' with user=event.completed_by %}
 
+        {% endif %}
     </span>
   </div>
         {% endfor %}

@@ -49,12 +49,14 @@
             </li>
             {% endif %}
 
+            {% if perms.accounts.mespermission_can_manage_categories %}
             <li class="nav-item">
             <a class="nav-link" href="{% url 'accounts:category_list' %}">
               <i class="material-icons mr-3">label</i>
               Categorías
             </a>
           </li>
+            {% endif %}
         </ul>
 
       <div class="navdrawer-divider"></div>
@@ -63,11 +65,13 @@
 
      <ul class="navdrawer-nav">
 
+         {% if perms.accounts.mespermission_can_view_signups %}
          <li class="nav-item">
         <a class="nav-link pl-4" href="{% url 'accounts:signup_list' %}">
           <i class="material-icons mr-3">call_received</i>
           Acogidas
         </a>
+             {% endif %}
       </li>
 
          <li class="nav-item">

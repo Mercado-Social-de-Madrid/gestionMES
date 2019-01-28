@@ -1,0 +1,7 @@
+
+<span class="typography-caption">
+    <span class="mr-1"> {{user}} </span>
+    {% for group in user.groups.all %}
+            {% include 'commission/_symbol.html' with commission=group.comission inline=True %}
+    {% endfor %}
+</span>
