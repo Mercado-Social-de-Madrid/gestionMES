@@ -33,7 +33,7 @@
     <span class="stepper-text">
         <h5>{{step.title}}</h5>
         <span class="font-weight-light"> {{step.description}}</span>
-        {% if step.checklist %}
+        {% if step.checklist.count > 0 %}
             <p class="font-weight-light mt-2">
             <strong><i class="material-icons">playlist_add_check</i> Tareas</strong>
                 </p>
