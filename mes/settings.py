@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'management',
     'payments',
     'core',
+    'currency',
     'jet',
     'sermepa',
     'django_filters',

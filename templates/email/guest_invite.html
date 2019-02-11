@@ -1,0 +1,22 @@
+{% load settings_value %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Bienvenid@ al Mercado Social!</h1>
+
+Recibes este email porque "{{invited_by}}" te invita a crearte una cuenta temporal con la que poder probar el nuevo
+sistema de bonificación, los etics.<br>
+
+Rellena tu registro aquí: <a href="{% settings_value 'BASESITE_URL' %}{% url 'currency:invite' token %}">{% settings_value 'BASESITE_URL' %}{% url 'currency:invite' token %}</a> <br>
+
+<h2>Aplicación móvil</h2>
+¿Sabías que hay una app desde la que gestionar tus movimientos con la moneda social de forma más cómoda? ¡Pruébala!<br>
+Enlace a la app: <a href="https://play.google.com/store/apps/details?id=net.mercadosocial.moneda"> https://play.google.com/store/apps/details?id=net.mercadosocial.moneda</a>
+
+</body>
+</html>

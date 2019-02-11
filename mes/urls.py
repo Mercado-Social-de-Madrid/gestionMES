@@ -24,6 +24,7 @@ from simple_bpm import urls as bpm_urls
 
 urlpatterns = [
     url(r'^', include(core_urls)),
+    url(r'^', include('currency.urls', namespace='currency')),
     url(r'^bpm/', include(bpm_urls, namespace='bpm')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^management/', include('management.urls', namespace='management')),

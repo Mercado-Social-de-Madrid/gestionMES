@@ -1,0 +1,12 @@
+{% load settings_value %}
+
+Bienvenid@ al Mercado Social!
+
+Recibes este email porque "{{invited_by}}" te invita a crearte una cuenta temporal con la que poder probar el nuevo
+sistema de bonificación, los etics.
+
+Rellena tu registro aquí:{% settings_value 'BASESITE_URL' %}{% url 'currency:invite' token %}
+
+Aplicación móvil
+¿Sabías que hay una app desde la que gestionar tus movimientos con la moneda social de forma más cómoda? ¡Pruébala!
+Enlace a la app: https://play.google.com/store/apps/details?id=net.mercadosocial.moneda
