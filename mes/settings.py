@@ -163,6 +163,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_EXEMPT_URLS = [
     r'^accounts/signup/provider/',
+    r'^accounts/signup/success/',
     r'^accounts/signup/consumer/',
     r'^api/*',
     r'^invite/[0-9a-f-]+/',

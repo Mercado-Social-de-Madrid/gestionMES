@@ -7,7 +7,7 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, TemplateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -91,6 +91,9 @@ class SignupDetailView(DetailView):
         context['comment_form'] = form
         return context
 
+
+class SignupSuccessView(TemplateView):
+    template_name = "signup/success.html"
 
 def signup_form_redirect(request, uuid):
 
