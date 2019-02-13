@@ -1,0 +1,16 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Invitación</th>
+    <th scope="col">Alta</th>
+    <th scope="col">Fecha expiración</th>
+{% endblock %}
+
+{% block item_row %}
+
+<td class="entity-td">{{item.display_name}}</td>
+<td>{{item.invited_by.display_name}}</td>
+<td>{{item.registration_date|date:'d/m/Y'}}</td>
+<td>{{item.expiration_date|date:'d/m/Y'}}</td>
+{% endblock %}

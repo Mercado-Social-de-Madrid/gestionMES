@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 
 from accounts.models import Category, Provider
 from core.forms.BootstrapForm import BootstrapForm
-from currency.models import GuestInvitation, INVITE_DURATION_MONTHS
+from currency.models import GuestInvitation, INVITE_DURATION_MONTHS, GuestAccount
 from management.models import Comission
 from mes.settings import MEMBER_PROV
 
@@ -18,7 +18,7 @@ class GuestInviteForm(forms.ModelForm, BootstrapForm):
     invite_token = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
 
     class Meta:
-        model = Provider
+        model = GuestAccount
         exclude = ['active', 'expiration_date', 'registration_date', 'invited_by']
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
@@ -36,9 +36,9 @@ class GuestInviteForm(forms.ModelForm, BootstrapForm):
 
     def save(self, commit=True):
 
-        invited_by = GuestInvitation.objects.filter(self.cleaned_data.get('invite_token')).first().invited_by
+        invitation = GuestInvitation.objects.filter(token=self.cleaned_data.get('invite_token')).first()
         instance = forms.ModelForm.save(self, False)
-        instance.invited_by = invited_by
+        instance.invited_by = invitation.invited_by
         instance.registration_date = datetime.now()
         instance.expiration_date = datetime.now() + dateutil.relativedelta.relativedelta(months=INVITE_DURATION_MONTHS)
 
@@ -46,5 +46,8 @@ class GuestInviteForm(forms.ModelForm, BootstrapForm):
         if commit:
             instance.save()
             self.save_m2m()
+
+            invitation.used = True
+            invitation.save()
 
         return instance
