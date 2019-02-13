@@ -165,7 +165,7 @@ LOGIN_EXEMPT_URLS = [
     r'^accounts/signup/provider/',
     r'^accounts/signup/consumer/',
     r'^api/*',
-
+    r'^invite/[0-9a-f-]+/',
 ]
 
 INLINE_INPUT_SEPARATOR = '&&&'

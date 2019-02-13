@@ -6,7 +6,7 @@ from tastypie.resources import ModelResource
 from tastypie.utils import trailing_slash
 
 from accounts.models import Account, INITIAL_PAYMENT, ACTIVE, PENDING_PAYMENT
-from currency.models import GuestInvitation
+from currency.models import GuestInvitation, GuestAccount
 
 
 class AccountResource(ModelResource):
@@ -14,6 +14,7 @@ class AccountResource(ModelResource):
         queryset = Account.objects.all()
         resource_name = 'account'
         list_allowed_methods = []
+        excludes = ['iban_code', 'pay_by_debit']
         detail_allowed_methods = ['get', 'post']
 
     def prepend_urls(self):
@@ -47,15 +48,17 @@ class AccountResource(ModelResource):
 
 
 
-
-
     def obj_get(self, bundle, **kwargs):
         pk = kwargs['pk']
         account = Account.objects.filter(cif=pk)
         if account.exists():
             return account.first()
         else:
-            raise NotFound
+            account = GuestAccount.objects.filter(cif=pk)
+            if account.exists():
+                return account.first()
+            else:
+                raise NotFound
 
 
     def dehydrate(self, bundle):
