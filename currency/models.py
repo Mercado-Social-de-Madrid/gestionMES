@@ -10,8 +10,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
 
-from accounts.models import Account
+from accounts.models import Account, Provider, Consumer
 from currency.exceptions import AllInvitesSent
+from currency_server import create_account
 from helpers import send_template_email
 from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
 
@@ -104,3 +105,49 @@ class GuestAccount(models.Model):
     def __str__(self):
         return self.display_name
 
+
+class CurrencyAppUsersManager(models.Manager):
+
+    def create_app_invited_user(self, guest_account):
+
+        user = self.create(is_guest=True, cif=guest_account.cif, guest_account=guest_account)
+        result = create_account.post_guest(guest_account)
+        user.is_pushed = result
+        user.save()
+
+    def create_app_user(self, account):
+
+        user = self.create(cif=account.cif, account=account)
+
+        if account.get_real_instance_class() is Provider:
+            result = create_account.post_entity(account)
+            user.is_pushed = result
+            user.save()
+
+        if account.get_real_instance_class() is Consumer:
+            result = create_account.post_consumer(account)
+            user.is_pushed = result
+            user.save()
+
+
+class CurrencyAppUser(models.Model):
+    is_guest = models.BooleanField(default=False, verbose_name=_('Es invitada'))
+    is_pushed = models.BooleanField(default=False, verbose_name=_('Actualizado en el servidor'))
+    cif = models.CharField(max_length=30, verbose_name=_('NIF/CIF'))
+    username = models.CharField(null=True, max_length=50, verbose_name=_('Nombre de usuario'))
+    uuid = models.UUIDField(null=True, verbose_name=_('Identificador único'))
+
+    account = models.ForeignKey(Account, null=True, verbose_name=_('Socia'), related_name='app_user')
+    guest_account = models.ForeignKey(GuestAccount, null=True, verbose_name=_('Invitada'), related_name='app_user')
+
+    objects = CurrencyAppUsersManager()
+
+
+
+# Method to add every user with a related person to the persons group
+@receiver(post_save, sender=GuestAccount)
+def add_user_to_group(sender, instance, created, **kwargs):
+
+    if created:
+        print 'Creating app user'
+        CurrencyAppUser.objects.create_app_invited_user(instance)

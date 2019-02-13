@@ -361,3 +361,7 @@ def update_process_event(sender, instance, **kwargs):
                 process.account.status = ACTIVE
                 process.account.save()
 
+
+        if instance.workflow.completed:
+            from currency.models import CurrencyAppUser
+            CurrencyAppUser.objects.create_app_user(process.account)
