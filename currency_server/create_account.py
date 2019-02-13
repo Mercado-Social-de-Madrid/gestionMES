@@ -43,7 +43,7 @@ def post_entity(entity):
 
 
 def post_consumer(consumer):
-    api_url = '{}api/v1/preregister/'.format(settings.SERVER_BASE_URL)
+    api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
     consumer_dict = {
         "address": consumer.address,
         "nif": consumer.cif,
@@ -67,7 +67,7 @@ def post_consumer(consumer):
 
 
 def post_guest(guest):
-    api_url = '{}api/v1/preregister/'.format(settings.SERVER_BASE_URL)
+    api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
     guest_dict = {
         "address": guest.address,
         "nif": guest.cif,
