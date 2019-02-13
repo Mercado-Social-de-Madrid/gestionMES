@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^signup/provider/(?P<uuid>[0-9a-f-]+)/$', views.ProviderUpdateView.as_view(), name='provider_edit_form'),
     url(r'^signup/consumer/(?P<uuid>[0-9a-f-]+)/$', views.ConsumerUpdateView.as_view(), name='consumer_edit_form'),
 
-    url(r'^signup/success/$', views.ConsumerSignup.as_view(), name='signup_success'),
+    url(r'^signup/success/$', views.SignupSuccessView.as_view(), name='signup_success'),
     url(r'^signup/processes/$', views.SignupListView.as_view(), name='signup_list'),
     url(r'^signup/processes/(?P<pk>\d+)/$', views.SignupDetailView.as_view(), name='signup_detail'),
 ]

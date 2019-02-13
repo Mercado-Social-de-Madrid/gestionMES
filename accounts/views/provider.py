@@ -128,6 +128,15 @@ class ProviderUpdateView(UpdateView):
         else:
             return reverse('accounts:signup_success')
 
+    def get_context_data(self, **kwargs):
+        context = super(ProviderUpdateView, self).get_context_data(**kwargs)
+
+        context['worker_ranges'] = FeeRange.objects.order_by('min_num_workers').values('min_num_workers', 'max_num_workers').distinct()
+        context['income_ranges'] = FeeRange.objects.order_by('min_income').values('min_income', 'max_income').distinct()
+        context['fees'] = FeeRange.objects.all()
+
+        return context
+
     def form_valid(self, form):
         response = super(ProviderUpdateView, self).form_valid(form)
         process = self.getSignup()

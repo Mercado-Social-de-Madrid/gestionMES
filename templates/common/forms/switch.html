@@ -1,0 +1,10 @@
+<div class="custom-control custom-switch mt-3">
+    {{field}}
+      <span class="custom-control-track"></span>
+      <label class="custom-control-label" for="{{field.id_for_label}}">
+            {{field.label}}
+    </label>
+
+    {% if field.errors %} <div class="valid-feedback"> {{field.errors}}</div> {% endif %}
+    </div>
+
