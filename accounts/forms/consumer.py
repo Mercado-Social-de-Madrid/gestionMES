@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import Permission, Group
 from django.utils.translation import gettext as _
+from localflavor.es.forms import ESIdentityCardNumberField
+from localflavor.generic.forms import IBANFormField
 
 from accounts.models import Category, Provider, Consumer
 from core.forms.BootstrapForm import BootstrapForm
@@ -11,6 +13,9 @@ from mes.settings import MEMBER_CONSUMER
 class ConsumerForm(forms.ModelForm, BootstrapForm):
 
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
+    cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
+    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=False, widget=forms.TextInput(
+        attrs={'class': 'iban-code', 'placeholder': 'ES0000000000000000000000'}))
 
     class Meta:
         model = Consumer

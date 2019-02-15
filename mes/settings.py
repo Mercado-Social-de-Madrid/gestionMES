@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'sass_processor',
     'polymorphic',
+    'localflavor',
     'imagekit',
     'django.contrib.admin',
     'django.contrib.auth',

@@ -8,6 +8,7 @@ django-filter==1.1.0
 django-filters-mixin==0.1.4
 django-jet==1.0.7
 django-js-asset==1.1.0
+django-localflavor==2.1
 django-polymorphic==2.0.3
 django-qrcode==0.3
 django-sass-processor==0.7.1

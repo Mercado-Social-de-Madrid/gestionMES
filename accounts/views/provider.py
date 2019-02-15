@@ -75,6 +75,7 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ProviderDetailView, self).get_context_data(**kwargs)
 
+        context['fee'] = FeeRange.calculate_fee(self.object)
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['profile_tab'] = True
         return context

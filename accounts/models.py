@@ -99,7 +99,9 @@ class Account(PolymorphicModel):
     iban_code = models.CharField(null=True, blank=True, max_length=50, verbose_name=_('Cuenta bancaria (IBAN)'))
     registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
     cr_member = models.BooleanField(default=False, verbose_name=_('Miembro Consejo Rector'))
-    pay_by_debit = models.BooleanField(default=False, verbose_name=_('Domiciliar la cuota'))
+    pay_by_debit = models.BooleanField(default=False, verbose_name=_('Domiciliar la cuota'),
+                                       help_text=_(
+                                           'Permito que el MES domicilie en mi cuenta bancaria mi cuota anual y el capital social'))
 
     class Meta:
         verbose_name = _('Socia')
@@ -181,8 +183,8 @@ class Entity(Account):
     num_workers_female_non_partners = models.IntegerField(null=True, blank=True,
                                                     verbose_name=_('Núm. mujeres no socias trabajadoras'))
 
-    highest_salary = models.FloatField(null=True, blank=True, verbose_name=_('Salario más alto'))
-    lowest_salary = models.FloatField(null=True, blank=True, verbose_name=_('Salario más bajo'))
+    highest_salary = models.FloatField(null=True, blank=True, verbose_name=_('Salario bruto anual más alto'))
+    lowest_salary = models.FloatField(null=True, blank=True, verbose_name=_('Salario bruto anual más bajo'))
     benefits_destination = models.TextField(blank=True, verbose_name=_('A qué se destinan los beneficios de la entidad (si los hay)'))
     apportations = models.TextField(blank=True, verbose_name=_('Qué trata de aportar vuestro proyecto a la transformación social'))
     networking = models.TextField(blank=True, verbose_name=_('Redes/organizaciones/iniciativas de transformación social de las que la entidad forma parte'))

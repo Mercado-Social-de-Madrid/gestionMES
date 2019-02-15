@@ -26,7 +26,8 @@
                 </div>
 
                 <div class="col-lg-12">
-                        {% include "common/forms/field.html" with field=form.iban_code %}
+                        {% include "common/forms/field.html" with field=form.iban_code not_floating=True %}
+                        {% include "common/forms/switch.html" with field=form.pay_by_debit %}
                         {% include "common/forms/field.html" with field=form.address not_floating=True %}
                 </div>
 
@@ -51,6 +52,7 @@
 
 <div class="col-sm-6 col-md-3">{% include "common/forms/field.html" with field=form.aprox_income %}</div>
 
+            <div class="col-sm-6 col-md-3">{% if fee %} {% include "common/forms/display_value.html" with value=fee label='Cuota anual' %} {% endif %}</div>
             </div>
         </div>
 
@@ -146,7 +148,7 @@
 
   <div class="expansion-panel list-group-item">
     <a aria-controls="contact" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#currency" id="contact-heading">
-      Datos de moneda social
+      Datos de Etics
       <div class="expansion-panel-icon ml-3 text-black-secondary">
         <i class="collapsed-show material-icons">keyboard_arrow_down</i>
         <i class="collapsed-hide material-icons">keyboard_arrow_up</i>

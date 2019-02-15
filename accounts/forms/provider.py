@@ -1,3 +1,5 @@
+from localflavor.es.forms import ESIdentityCardNumberField
+from localflavor.generic.forms import IBANFormField
 from django import forms
 from django.contrib.auth.models import Permission, Group
 from django.utils.translation import gettext as _
@@ -13,6 +15,9 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.filter())
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
     check_conditions = forms.BooleanField(required=True, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+    cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
+    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=False, widget=forms.TextInput(
+        attrs={'class':'iban-code', 'placeholder':'ES0000000000000000000000'}))
 
     class Meta:
         model = Provider
@@ -24,6 +29,11 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
             'latitude': forms.NumberInput(attrs={'readonly': True}),
             'longitude': forms.NumberInput(attrs={'readonly': True}),
             'networking': forms.Textarea(attrs={'rows': 4}),
+            'num_workers_male_partners':forms.NumberInput(attrs={'min':0}),
+            'num_workers_female_partners':forms.NumberInput(attrs={'min':0}),
+            'num_workers_male_non_partners':forms.NumberInput(attrs={'min':0}),
+            'num_workers_female_non_partners':forms.NumberInput(attrs={'min':0}),
+
         }
 
     # Overriding __init__ here allows us to provide initial data for permissions
