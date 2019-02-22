@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
+{% load settings_value %}
+{% load l10n %}
 {% load chunks %}
 
 {% block title %}{{object.group}} | Comisiones{% endblock %}
@@ -63,12 +65,9 @@
     </div>
 
     <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
-
-        <h3 class="text-primary"><i class="material-icons mr-1">receipt</i> Etics</h3>
-
-        Próximamente...
-
-
+        <h3 class="text-primary"> Etics</h3>
+        <label class="text-secondary">Antiguo usuario de Cyclos</label><br>
+        {{ object.cyclos_user }}
     </div>
 
   </div>
@@ -82,9 +81,47 @@
 
 {% block scripts %}
 <script src="{% static 'js/jquery.spectrum.js' %}"></script>
+{% include 'common/include_gmaps.html' %}
 <script type="text/javascript">
-    $(function(){
 
+
+  function initMap() {
+{% if object %}
+    var entityPosition = new google.maps.LatLng({{ object.latitude|unlocalize }}, {{ object.longitude|unlocalize }});
+{% else %}
+    var entityPosition = new google.maps.LatLng({% settings_value "INITIAL_LATITUDE"|unlocalize %}, {% settings_value "INITIAL_LONGITUDE"|unlocalize %});
+{% endif %}
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: entityPosition,
+        zoomControl: true,
+        scaleControl: true,
+        streetViewControl: false,
+        mapTypeControl:false
     });
+
+    $('#map').removeClass('loading-container');
+
+    var marker = new RichMarker({
+      position: entityPosition,
+      map: map,
+      draggable:true,
+      content: '<div class="marker-wrapper"><div class="marker"><img src="' + '{%if entity.first_photo_url %}{{entity.first_photo_url}}{%else%}{% static "img/venue-icon.png" %}{%endif%}' + '"></div></div>'
+    });
+
+    var latInput = $('[name="latitude"]');
+    var lngInput = $('[name="longitude"]');
+
+    google.maps.event.addListener(
+        marker,
+        'drag',
+        function() {
+            latInput.val( marker.position.lat() );
+            lngInput.val( marker.position.lng() );
+        }
+    );
+  }
+
 </script>
 {% endblock scripts %}
