@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 import django_filters
+import polymorphic
 from django.contrib import messages
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -54,17 +55,24 @@ class ConsumerSignup(CreateView):
     template_name = 'consumer/create.html'
 
     def form_valid(self, form):
-        response = super(ConsumerSignup, self).form_valid(form)
+        super(ConsumerSignup, self).form_valid(form)
         SignupProcess.objects.create_process(account=self.object)
 
-        return response
+        return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         if self.request.user.is_authenticated:
             messages.success(self.request, _('Usuario añadido correctamente.'))
             return reverse('accounts:signup_list')
         else:
-            return reverse('accounts:signup_success')
+            print self.object
+            process = SignupProcess.objects.filter(account=self.object).first()
+            if process and process.should_show_payment():
+
+                payment = PendingPayment.objects.filter(account=self.object).first()
+                return reverse('payments:payment_form', kwargs={'uuid': payment.reference} )
+            else:
+                return reverse('accounts:signup_success')
 
 
 

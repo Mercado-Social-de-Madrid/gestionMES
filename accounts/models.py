@@ -103,6 +103,8 @@ class Account(PolymorphicModel):
                                        help_text=_(
                                            'Permito que el MES domicilie en mi cuenta bancaria mi cuota anual y el capital social'))
 
+    cyclos_user = models.CharField(null=True, blank=True, max_length=150, verbose_name=_('Antiguo usuario en Cyclos'))
+
     class Meta:
         verbose_name = _('Socia')
         verbose_name_plural = _('Socias')
@@ -153,7 +155,7 @@ class Entity(Account):
                                verbose_name='Banner alta resolución',
                                processors=[ResizeToFit(1024, 1024, upscale=False)], format='JPEG', options={'quality': 80})
 
-    start_year = models.PositiveSmallIntegerField(blank=True, null=True, default=datetime.now,
+    start_year = models.PositiveSmallIntegerField(blank=True, null=True, default=datetime.now().year,
                                 validators=[MinValueValidator(1900), MaxValueValidator(datetime.now().year)],
                                 verbose_name=_('Año de inicio del proyecto'))
     contact_person = models.TextField(null=True, blank=True, verbose_name=_('Persona de contacto'))
@@ -167,6 +169,7 @@ class Entity(Account):
                                               validators=[MinValueValidator(0), MaxValueValidator(100)])
     max_percent_payment = models.FloatField(default=0, verbose_name='Máximo porcentaje de pago aceptado',
                                             validators=[MinValueValidator(0), MaxValueValidator(100)])
+    payment_conditions = models.TextField(null=True, blank=True, verbose_name=_('Condiciones uso Etics'))
 
     # Social links
     facebook_link = models.CharField(null=True, blank=True, verbose_name='Página de Facebook', max_length=250)
@@ -311,6 +314,10 @@ class SignupProcess(models.Model):
         self.workflow = workflow
         self.save()
 
+    def should_show_payment(self):
+        if self.account.get_real_instance_class() is Consumer:
+            if self.is_in_payment_step():
+                return self.account.pay_by_debit == False
 
     def form_filled(self, account):
 
