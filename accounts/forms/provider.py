@@ -12,7 +12,7 @@ from mes.settings import MEMBER_PROV
 
 class ProviderForm(forms.ModelForm, BootstrapForm):
 
-    categories = forms.ModelMultipleChoiceField(queryset=Category.objects.filter())
+    categories = forms.ModelMultipleChoiceField(queryset=Category.objects.filter(), required=False)
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
     check_conditions = forms.BooleanField(required=True, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
     cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
