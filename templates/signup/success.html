@@ -3,6 +3,7 @@
 {% block title %}Boniatos-server{% endblock%}
 
 {% block content %}
+{% if not 'from_app' in request.GET %}
 <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
@@ -12,6 +13,7 @@
         </div>
         </div>
     </div>
+{% endif %}
 
     <div class="container py-5">
         <h4>Tu solicitud se ha registrado correctamente!</h4>

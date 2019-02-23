@@ -27,11 +27,18 @@
   </head>
   <body {% block bodyattrs %}{% endblock%}>
 
-{%if user.is_authenticated %}
-    {% include 'navbar/navbar_menu_user.html' %}
-{% else %}
-    {% include 'navbar/navbar_menu_anon.html' %}
+
+{% url 'currency:invite' token as link %}
+
+
+{% if not 'from_app' in request.GET %}
+    {%if user.is_authenticated %}
+        {% include 'navbar/navbar_menu_user.html' %}
+    {% else %}
+        {% include 'navbar/navbar_menu_anon.html' %}
+    {% endif %}
 {% endif %}
+
 
 <div id="main-content">
 {% block content %}{% endblock content %}
