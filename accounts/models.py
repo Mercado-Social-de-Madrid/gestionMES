@@ -128,6 +128,10 @@ class Consumer(Account):
     first_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
     last_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Apellidos'))
 
+    class Meta:
+        verbose_name = _('Consumidora')
+        verbose_name_plural = _('Consumidoras')
+
     @property
     def template_prefix(self):
         return 'consumer'
@@ -140,7 +144,7 @@ class Consumer(Account):
 class Entity(Account):
     name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
     business_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Razón social'))
-    categories = models.ManyToManyField(Category, blank=True, verbose_name='Categorías', related_name='entities')
+    categories = models.ManyToManyField(Category, null=True, blank=True, verbose_name='Categorías', related_name='entities')
     territory = models.CharField(null=False, default=TERR_LOCAL, max_length=20, choices=TERRITORY_OPTIONS,
                                  verbose_name=_('Ámbito'))
     assisted_last_fair = models.BooleanField(default=False, verbose_name=_('Asistió a la última feria'))
@@ -192,6 +196,10 @@ class Entity(Account):
     apportations = models.TextField(blank=True, verbose_name=_('Qué trata de aportar vuestro proyecto a la transformación social'))
     networking = models.TextField(blank=True, verbose_name=_('Redes/organizaciones/iniciativas de transformación social de las que la entidad forma parte'))
 
+    class Meta:
+        verbose_name = _('Entidad')
+        verbose_name_plural = _('Entidades')
+
     @property
     def display_name(self):
         return self.name
@@ -205,6 +213,10 @@ class Provider(Entity):
     is_physical_store = models.BooleanField(default=False, verbose_name=_('Es tienda física'))
     num_workers = models.IntegerField(default=1, verbose_name=_('Número de trabajadoras'))
     aprox_income = models.IntegerField(default=0, verbose_name=_('Facturación último año'))
+
+    class Meta:
+        verbose_name = _('Proveedora')
+        verbose_name_plural = _('Proveedoras')
 
     @property
     def template_prefix(self):
