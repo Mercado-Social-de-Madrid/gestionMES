@@ -121,7 +121,7 @@ class Account(PolymorphicModel):
         return self.cif
 
     def __str__(self):
-        return "{}".format(self.cif).encode('utf-8')
+        return self.display_name
 
 
 class Consumer(Account):
@@ -139,6 +139,7 @@ class Consumer(Account):
     @property
     def display_name(self):
         return "{} {}".format(self.first_name, self.last_name)
+
 
 
 class Entity(Account):
@@ -199,6 +200,7 @@ class Entity(Account):
     class Meta:
         verbose_name = _('Entidad')
         verbose_name_plural = _('Entidades')
+        ordering = ['name']
 
     @property
     def display_name(self):

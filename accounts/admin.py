@@ -6,8 +6,14 @@ from django.contrib import admin
 # Register your models here.
 from accounts.models import LegalForm, Category, SignupProcess, Provider, Consumer
 
+class ProviderAdmin(admin.ModelAdmin):
+    list_display = ('cif', 'name', 'business_name')
+    search_fields = (
+        'name',
+    )
+
 admin.site.register(LegalForm)
 admin.site.register(Category)
 admin.site.register(SignupProcess)
 admin.site.register(Consumer)
-admin.site.register(Provider)
+admin.site.register(Provider, ProviderAdmin)
