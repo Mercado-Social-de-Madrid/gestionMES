@@ -6,9 +6,8 @@
 {% endif %}
 
 <div>
-{% if account.app_user.first %}
-
     <label class="text-secondary mt-3">Nombre de usuario</label><br>
+{% if account.app_user.first %}
         {{account.app_user.first.username|default:'-'}} <br>
 
     <label class="text-secondary mt-3">UUID</label><br>
@@ -20,8 +19,8 @@
     {% endif %}
 
 {% else %}
-Esta socia no tiene aún un usuario creado en la app del Mercado social
-<btn class="btn btn-primary" data-toggle="modal" data-target="#create-currency-user">Crear usuario</btn>
+Esta socia no tiene aún un usuario creado en la app del Mercado social<br>
+<btn class="btn btn-primary mt-2" data-toggle="modal" data-target="#create-currency-user">Crear usuario</btn>
 
  <form method="post" action="{% url 'currency:add_app_user' %}">
      {% csrf_token %}

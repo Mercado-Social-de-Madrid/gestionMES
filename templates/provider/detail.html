@@ -67,8 +67,13 @@
     <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
         <h3 class="text-primary"> Etics</h3>
 
+        <div class="row">
+            <div class="col-md-4">
+                {% include 'currency/app_user.html' with account=object %}
+            </div>
+        </div>
 
-        {% include 'currency/app_user.html' with account=object %}
+
     </div>
 
   </div>
