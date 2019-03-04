@@ -14,7 +14,7 @@ from filters.views import FilterMixin
 from accounts.forms.category import CategoryForm
 from accounts.forms.consumer import ConsumerForm
 from accounts.forms.process import SignupProcessForm
-from accounts.forms.provider import ProviderForm
+from accounts.forms.provider import ProviderForm, ProviderSignupForm
 from accounts.models import Provider, Consumer, SignupProcess, Category
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
@@ -83,7 +83,7 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
 
 class ProviderSignup(CreateView):
 
-    form_class = ProviderForm
+    form_class = ProviderSignupForm
     model = Provider
     template_name = 'provider/create.html'
 
@@ -112,7 +112,7 @@ class ProviderSignup(CreateView):
 
 class ProviderUpdateView(UpdateView):
     template_name = 'provider/edit.html'
-    form_class = ProviderForm
+    form_class = ProviderSignupForm
     model = Provider
 
     def getSignup(self):

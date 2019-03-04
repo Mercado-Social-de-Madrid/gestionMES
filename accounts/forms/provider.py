@@ -14,7 +14,6 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
 
     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.filter(), required=False)
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
-    check_conditions = forms.BooleanField(required=True, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
     cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
     iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=False, widget=forms.TextInput(
         attrs={'class':'iban-code', 'placeholder':'ES0000000000000000000000'}))
@@ -70,3 +69,7 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
             self.save_m2m()
 
         return instance
+
+
+class ProviderSignupForm(ProviderForm):
+    check_conditions = forms.BooleanField(required=True, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
