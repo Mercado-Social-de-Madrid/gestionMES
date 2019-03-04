@@ -24,7 +24,6 @@ class WorkflowFilter(django_filters.ChoiceFilter):
         django_filters.ChoiceFilter.__init__(self, choices=choices, *args,**kwargs)
 
     def filter(self,qs,value):
-        print value
         if value not in (None,''):
             return qs.filter(workflow__current_state=value)
 

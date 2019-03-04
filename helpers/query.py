@@ -29,7 +29,6 @@ def get_query(query_string, search_fields):
     query = None  # Query to search for every search term
     terms = normalize_query(query_string)
 
-    print terms
     for term in terms:
         if len(term)<3:
             continue

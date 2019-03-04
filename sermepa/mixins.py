@@ -37,9 +37,6 @@ class SermepaMixin(object):
 
     @staticmethod
     def encrypt_3des(message, key):
-        print(message)
-        print "aaaaaaaa"
-        print(key)
         des3 = pyDes.triple_des(key, mode=pyDes.CBC, IV='\0' * 8, pad='\0', padmode=pyDes.PAD_NORMAL)
         encrypted = des3.encrypt(str(message))
         return encrypted

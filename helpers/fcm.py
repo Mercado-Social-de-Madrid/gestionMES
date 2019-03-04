@@ -20,8 +20,6 @@ if is_package_installed('fcm_django'):
         if message and silent:
             data['message'] = message
 
-        print data
-
         device = FCMDevice.objects.filter(user=user).first()
         if device is None:
             return
@@ -29,7 +27,6 @@ if is_package_installed('fcm_django'):
             result = device.send_message(data=data)
         else:
             result = device.send_message(title=title, body=message, data=data)
-        print result
 
 
     def broadcast_notification(users=None, data=None, title=None, body=None, silent=True):

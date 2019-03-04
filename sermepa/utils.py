@@ -13,7 +13,6 @@ from django.conf import settings
 """
 def redsys_generate_request(merchant_parameters):
     Ds_MerchantParameters = encode_parameters(merchant_parameters)
-    print merchant_parameters
     order_encrypted = encrypt_order_with_3DES(merchant_parameters['Ds_Merchant_Order'])
     Ds_Signature = sign_hmac256(order_encrypted, Ds_MerchantParameters)
 

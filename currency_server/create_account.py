@@ -38,9 +38,7 @@ def post_entity(entity):
 
     if r.ok:
         result = r.json()
-        print result
         uuid = result['entity']['id']
-        print uuid
         return True, uuid
     else:
         return False, None
@@ -62,13 +60,10 @@ def post_consumer(consumer):
         'email': consumer.contact_email,
         'person': consumer_dict
     })
-    print r.status_code
 
     if r.ok:
         result = r.json()
-        print result
         uuid = result['person']['id']
-        print uuid
         return True, uuid
     else:
         return False, None
@@ -94,9 +89,7 @@ def post_guest(guest):
 
     if r.ok:
         result = r.json()
-        print result
         uuid = result['person']['id']
-        print uuid
         return True, uuid
     else:
         return False, None

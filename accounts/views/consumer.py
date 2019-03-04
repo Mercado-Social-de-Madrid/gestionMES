@@ -65,7 +65,6 @@ class ConsumerSignup(CreateView):
             messages.success(self.request, _('Usuario añadido correctamente.'))
             return reverse('accounts:signup_list')
         else:
-            print self.object
             process = SignupProcess.objects.filter(account=self.object).first()
             if process and process.should_show_payment():
 
