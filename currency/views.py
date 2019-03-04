@@ -3,18 +3,15 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.http import HttpResponseNotFound, Http404
+from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, UpdateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
-from accounts.forms.process import SignupProcessForm
-from accounts.models import SignupProcess
+from accounts.models import Account
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
@@ -22,11 +19,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from currency.forms.guest import GuestAccountForm
 from currency.forms.invite import GuestInviteForm
-from currency.models import GuestInvitation, GuestAccount
-from mes import settings
-from payments.models import PendingPayment
-from simple_bpm.custom_filters import WorkflowFilter
-from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
+from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
 
 
 class  InvitesFilterForm(BootstrapForm):
@@ -93,7 +86,22 @@ class GuestAccountDetailView(UpdateView):
 
         return context
 
+def add_app_user(request):
 
+    if request.method == "POST":
+        redirect_url = request.POST.get('redirect_to', '')
+        account_pk = request.POST.get('account', None)
+
+        if redirect_url and account_pk:
+            account = Account.objects.filter(pk=account_pk).first()
+            if account:
+                CurrencyAppUser.objects.create_app_user(account)
+
+            return redirect(redirect_url)
+
+    return False
+
+#
 
 
 

@@ -66,8 +66,9 @@
 
     <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
         <h3 class="text-primary"> Etics</h3>
-        <label class="text-secondary">Antiguo usuario de Cyclos</label><br>
-        {{ object.cyclos_user }}
+
+
+        {% include 'currency/app_user.html' with account=object %}
     </div>
 
   </div>

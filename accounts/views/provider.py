@@ -78,6 +78,7 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
         context['fee'] = FeeRange.calculate_fee(self.object)
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['profile_tab'] = True
+
         return context
 
 class ProviderSignup(CreateView):

@@ -1,0 +1,51 @@
+{% load qr_tags %}
+
+{% if account.cyclos_user %}
+    <label class="text-secondary">Antiguo usuario de Cyclos</label><br>
+    {{ account.cyclos_user }}
+{% endif %}
+
+<div>
+{% if account.app_user.first %}
+
+    <label class="text-secondary mt-3">Nombre de usuario</label><br>
+        {{account.app_user.first.username|default:'-'}} <br>
+
+    <label class="text-secondary mt-3">UUID</label><br>
+    <small>{{account.app_user.first.uuid|default:'-'}}</small> <br>
+    {% if account.app_user.first.uuid %}
+        <div class="qr-container mt-2 shadow-sm" style="max-width:200px;">
+            {% qr_from_text account.app_user.first.uuid "l" %}
+        </div>
+    {% endif %}
+
+{% else %}
+Esta socia no tiene aún un usuario creado en la app del Mercado social
+<btn class="btn btn-primary" data-toggle="modal" data-target="#create-currency-user">Crear usuario</btn>
+
+ <form method="post" action="{% url 'currency:add_app_user' %}">
+     {% csrf_token %}
+    <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
+    <input type="hidden" name="account" value="{{account.pk}}">
+<div class="modal fade" id="create-currency-user" tabindex="-1" role="dialog" aria-labelledby="create-currency-user-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="create-currency-user-label">Crear usuario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+{% endif %}
+    </div>

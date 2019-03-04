@@ -111,23 +111,29 @@ class CurrencyAppUsersManager(models.Manager):
     def create_app_invited_user(self, guest_account):
 
         user = self.create(is_guest=True, cif=guest_account.cif, guest_account=guest_account)
-        result = create_account.post_guest(guest_account)
-        user.is_pushed = result
-        user.save()
+        result, uuid = create_account.post_guest(guest_account)
+        if result:
+            user.is_pushed = result
+            user.uuid = uuid
+            user.save()
 
     def create_app_user(self, account):
 
         user = self.create(cif=account.cif, account=account)
+        action = None
 
         if account.get_real_instance_class() is Provider:
-            result = create_account.post_entity(account)
+            action = create_account.post_entity
+        elif account.get_real_instance_class() is Consumer:
+            action = create_account.post_consumer
+
+        if action:
+            result, uuid = action(account)
             user.is_pushed = result
+            if result:
+                user.uuid = uuid
             user.save()
 
-        if account.get_real_instance_class() is Consumer:
-            result = create_account.post_consumer(account)
-            user.is_pushed = result
-            user.save()
 
 
 class CurrencyAppUser(models.Model):
