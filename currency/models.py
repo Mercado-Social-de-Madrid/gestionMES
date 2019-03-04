@@ -143,8 +143,8 @@ class CurrencyAppUser(models.Model):
     username = models.CharField(null=True, max_length=50, verbose_name=_('Nombre de usuario'))
     uuid = models.UUIDField(null=True, verbose_name=_('Identificador único'))
 
-    account = models.ForeignKey(Account, null=True, verbose_name=_('Socia'), related_name='app_user')
-    guest_account = models.ForeignKey(GuestAccount, null=True, verbose_name=_('Invitada'), related_name='app_user')
+    account = models.ForeignKey(Account, null=True, blank=True, verbose_name=_('Socia'), related_name='app_user')
+    guest_account = models.ForeignKey(GuestAccount, null=True, blank=True, verbose_name=_('Invitada'), related_name='app_user')
 
     objects = CurrencyAppUsersManager()
 

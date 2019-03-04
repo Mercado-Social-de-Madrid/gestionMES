@@ -145,7 +145,7 @@ class Consumer(Account):
 class Entity(Account):
     name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
     business_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Razón social'))
-    categories = models.ManyToManyField(Category, null=True, blank=True, verbose_name='Categorías', related_name='entities')
+    categories = models.ManyToManyField(Category, verbose_name='Categorías', related_name='entities')
     territory = models.CharField(null=False, default=TERR_LOCAL, max_length=20, choices=TERRITORY_OPTIONS,
                                  verbose_name=_('Ámbito'))
     assisted_last_fair = models.BooleanField(default=False, verbose_name=_('Asistió a la última feria'))
