@@ -121,7 +121,7 @@ class Account(PolymorphicModel):
         return self.cif
 
     def __str__(self):
-        return self.display_name
+        return self.display_name.encode('utf-8')
 
 
 class Consumer(Account):
@@ -304,7 +304,10 @@ class SignupProcess(models.Model):
         )
 
     def __str__(self):
-        return "{}".format(self.uuid).encode('utf-8')
+        if self.account:
+            return self.account.display_name.encode('utf-8')
+        else:
+            return "{}".format(self.uuid).encode('utf-8')
 
 
     def is_in_payment_step(self):
