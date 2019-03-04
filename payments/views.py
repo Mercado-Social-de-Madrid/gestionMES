@@ -95,21 +95,19 @@ class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTempla
     model = PendingPayment
 
 
-def form(request, uuid=None):
+def form(request, uuid):
     site = Site.objects.get_current()
-    amount = int(5.50 * 100)  # El precio es en céntimos de euro
 
     merchant_data = 0
     trans_type = '0'
 
-    if uuid:
-        payment = PendingPayment.objects.filter(reference=uuid).first()
-        if not payment.completed:
-            card_payment = CardPayment.objects.create(type=PENDING_PAYMENT)
-            payment.card_payment = card_payment
-            payment.save()
-            merchant_data = card_payment.pk
-            amount = int(payment.amount * 100)
+    payment = PendingPayment.objects.filter(reference=uuid).first()
+    if not payment.completed:
+        card_payment = CardPayment.objects.create(type=PENDING_PAYMENT)
+        payment.card_payment = card_payment
+        payment.save()
+        merchant_data = card_payment.pk
+        amount = int(payment.amount * 100)
 
     sermepa_dict = {
         "Ds_Merchant_Titular": 'John Doe',
@@ -166,15 +164,16 @@ def end(request):
 
 
 def payment_ok(sender, **kwargs):
-    pass
+    print 'Payment ok!'
+
 
 
 def payment_ko(sender, **kwargs):
-    pass
+    print 'Payment bad!'
 
 
 def sermepa_ipn_error(sender, **kwargs):
-    pass
+    print 'ipn error!'
 
 
 payment_was_successful.connect(payment_ok)

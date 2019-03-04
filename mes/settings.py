@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'sermepa',
     'django_filters',
     'ckeditor',
+    'qrcode',
     'sass_processor',
     'polymorphic',
     'localflavor',
@@ -167,6 +168,8 @@ LOGIN_EXEMPT_URLS = [
     r'^accounts/signup/success/',
     r'^accounts/signup/consumer/',
     r'^api/*',
+    r'^payments/pay/*',
+    r'^payments/end/*',
     r'^invite/[0-9a-f-]+/',
 ]
 
