@@ -25,6 +25,7 @@ from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
+from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from core.models import User
 from mes import settings
 from payments.models import FeeRange, PendingPayment
@@ -82,8 +83,7 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
 
         return context
 
-@xframe_options_exempt
-class ProviderSignup(CreateView):
+class ProviderSignup(XFrameOptionsExemptMixin, CreateView):
 
     form_class = ProviderSignupForm
     model = Provider

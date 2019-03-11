@@ -18,6 +18,7 @@ from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from currency.forms.guest import GuestAccountForm
 from currency.forms.invite import GuestInviteForm
 from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
@@ -46,8 +47,8 @@ class InvitesListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateRes
     filterset_class = InvitesFilter
     paginate_by = 15
 
-@xframe_options_exempt
-class NewInvite(CreateView):
+
+class NewInvite(XFrameOptionsExemptMixin, CreateView):
 
     form_class = GuestInviteForm
     model = GuestAccount

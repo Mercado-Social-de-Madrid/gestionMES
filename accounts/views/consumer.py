@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import UpdateView, CreateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
@@ -20,6 +19,7 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
+from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from payments.models import PendingPayment
 
 
@@ -48,8 +48,7 @@ class ConsumersListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateR
     paginate_by = 15
 
 
-@xframe_options_exempt
-class ConsumerSignup(CreateView):
+class ConsumerSignup(XFrameOptionsExemptMixin, CreateView):
 
     form_class = ConsumerForm
     model = Consumer
