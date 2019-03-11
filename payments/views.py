@@ -8,6 +8,7 @@ from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import UpdateView, CreateView, DetailView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
@@ -95,6 +96,7 @@ class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTempla
     model = PendingPayment
 
 
+@xframe_options_exempt
 def form(request, uuid):
     site = Site.objects.get_current()
 
@@ -158,7 +160,7 @@ def form(request, uuid):
 
     return HttpResponse(render_to_response('payments/pay_form.html', {'form': form, 'payment':payment, 'debug': settings.DEBUG}))
 
-
+@xframe_options_exempt
 def end(request):
     return HttpResponse(render_to_response('end.html', {}))
 
