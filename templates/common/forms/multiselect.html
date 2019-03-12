@@ -1,0 +1,15 @@
+<div class="enhanced-select form-group">
+    {% include 'common/tags_declaration.html' with tags=tags %}
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
+    {{ field }}
+
+    {% if field.errors %}
+    <div class="d-block invalid-feedback">
+        {% for error in field.errors %} {{error}}<br> {%endfor%}
+    </div>
+    {% endif %}
+
+    {% if field.help_text%}
+      <small class="text-muted mt-2 d-block">{{ field.help_text|safe  }}</small>
+    {% endif %}
+</div>

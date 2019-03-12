@@ -95,7 +95,7 @@
                 <div class="col-md-6">
                     {% include "common/forms/field.html" with field=form.territory not_floating=True %}
                     {% include "common/forms/field.html" with field=form.start_year %}
-                    {% include "common/forms/field.html" with field=form.categories not_floating=True %}
+                    {% include "common/forms/multiselect.html" with field=form.categories tags=categories %}
 
                     <div class="mb-3">
                     {% include "common/forms/checkbox.html" with field=form.assisted_last_fair %}</div>

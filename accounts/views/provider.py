@@ -78,6 +78,7 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
         context = super(ProviderDetailView, self).get_context_data(**kwargs)
 
         context['fee'] = FeeRange.calculate_fee(self.object)
+        context['categories'] = Category.objects.all()
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['profile_tab'] = True
 
@@ -102,6 +103,7 @@ class ProviderSignup(XFrameOptionsExemptMixin, CreateView):
         context['worker_ranges'] = FeeRange.objects.order_by('min_num_workers').values('min_num_workers', 'max_num_workers').distinct()
         context['income_ranges'] = FeeRange.objects.order_by('min_income').values('min_income', 'max_income').distinct()
         context['fees'] = FeeRange.objects.all()
+        context['categories'] = Category.objects.all()
 
         return context
 
@@ -138,6 +140,7 @@ class ProviderUpdateView(UpdateView):
         context['worker_ranges'] = FeeRange.objects.order_by('min_num_workers').values('min_num_workers', 'max_num_workers').distinct()
         context['income_ranges'] = FeeRange.objects.order_by('min_income').values('min_income', 'max_income').distinct()
         context['fees'] = FeeRange.objects.all()
+        context['categories'] = Category.objects.all()
 
         return context
 
