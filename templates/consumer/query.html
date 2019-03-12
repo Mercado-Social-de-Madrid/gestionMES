@@ -2,16 +2,14 @@
 
  {% block table_head %}
     <th scope="col">Nombre</th>
-    <th scope="col">Apellidos</th>
     <th scope="col">Alta</th>
-
+    <th scope="col">Consejo Rector</th>
 {% endblock %}
 
 
 {% block item_row %}
 
-<td class="entity-td">{{item.first_name}}</td>
-<td>{{item.last_name}}</td>
+<td class="entity-td">{{item.display_name}}</td>
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
-
+<td><i class="material-icons">{%if item.cr_member %}check_box{% else %}check_box_outline_blank{% endif %}</i> </td>
 {% endblock %}

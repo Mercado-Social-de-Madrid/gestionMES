@@ -32,7 +32,7 @@
       </li>
 
      <li class="nav-item">
-        <a aria-controls="currency" aria-selected="false" class="nav-link {%if currency_tab%} active{%endif%}" data-toggle="tab" href="#currency-form" id="currency-tab" role="tab">Moneda social</a>
+        <a aria-controls="currency" aria-selected="false" class="nav-link {%if currency_tab%} active{%endif%}" data-toggle="tab" href="#currency-form" id="currency-tab" role="tab">Etics</a>
       </li>
     </ul>
 
@@ -43,7 +43,6 @@
             {% csrf_token %}
             {{form.media}}
             {% include 'provider/form.html' %}
-
 
         <div class="">
 
@@ -57,22 +56,17 @@
     </div>
 
     <div aria-labelledby="payments-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="payments-form" role="tabpanel">
-
-        <h3 class="text-primary"><i class="material-icons mr-1">receipt</i> Pagos</h3>
-
+       <h3 class="text-primary"><i class="material-icons mr-1">receipt</i> Pagos</h3>
        {% include 'common/list/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments object_url_name='payments:payment_detail' %}
 
     </div>
 
     <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
-        <h3 class="text-primary"> Etics</h3>
-
         <div class="row">
             <div class="col-md-4">
                 {% include 'currency/app_user.html' with account=object %}
             </div>
         </div>
-
 
     </div>
 
@@ -90,8 +84,7 @@
 {% include 'common/include_gmaps.html' %}
 <script type="text/javascript">
 
-
-  function initMap() {
+function initMap() {
 {% if object %}
     var entityPosition = new google.maps.LatLng({{ object.latitude|unlocalize }}, {{ object.longitude|unlocalize }});
 {% else %}

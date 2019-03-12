@@ -28,6 +28,10 @@
       <li class="nav-item">
         <a aria-controls="payments" aria-selected="false" class="nav-link {%if payments_tab%} active{%endif%}" data-toggle="tab" href="#payments-form" id="payments-tab" role="tab">Contabilidad</a>
       </li>
+
+         <li class="nav-item">
+        <a aria-controls="currency" aria-selected="false" class="nav-link {%if currency_tab%} active{%endif%}" data-toggle="tab" href="#currency-form" id="currency-tab" role="tab">Etics</a>
+      </li>
     </ul>
 
 <div class="tab-content">
@@ -56,6 +60,15 @@
        {% include 'common/list/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments object_url_name='payments:payment_detail' %}
 
 
+
+    </div>
+
+    <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
+        <div class="row">
+            <div class="col-md-4">
+                {% include 'currency/app_user.html' with account=object %}
+            </div>
+        </div>
 
     </div>
 

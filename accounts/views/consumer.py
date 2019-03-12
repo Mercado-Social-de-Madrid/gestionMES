@@ -112,7 +112,7 @@ class ConsumerUpdateView(UpdateView):
 class ConsumerDetailView(TabbedViewMixin, UpdateView):
     template_name = 'consumer/detail.html'
     default_tab = 'details'
-    available_tabs = ['details', 'payments']
+    available_tabs = ['details', 'payments', 'currency']
     form_class = ConsumerForm
     model = Consumer
 
