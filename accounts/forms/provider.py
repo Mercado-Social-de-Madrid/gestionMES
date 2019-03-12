@@ -24,6 +24,7 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
         widgets = {
             'contact_person': forms.TextInput(),
             'address': forms.Textarea(attrs={'rows': 3}),
+            'public_address': forms.Textarea(attrs={'rows': 3}),
             'short_description': forms.Textarea(attrs={'rows': 3}),
             'latitude': forms.NumberInput(attrs={'readonly': True}),
             'longitude': forms.NumberInput(attrs={'readonly': True}),

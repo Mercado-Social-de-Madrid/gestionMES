@@ -151,7 +151,7 @@ class Entity(Account):
     assisted_last_fair = models.BooleanField(default=False, verbose_name=_('Asistió a la última feria'))
     latitude = models.FloatField(null=False, verbose_name='Latitud', default=settings.INITIAL_LATITUDE)
     longitude = models.FloatField(null=False, verbose_name='Longitud', default=settings.INITIAL_LONGITUDE)
-
+    public_address = models.TextField(null=True, blank=True, verbose_name=_('Dirección pública'), help_text='Dirección que aparece en el perfil de la entidad en la app del MES')
     logo = ProcessedImageField(null=True, blank=True, upload_to=RandomFileName('entities/'),
                                verbose_name='Logo en alta resolución',
                                processors=[ResizeToFit(1024, 1024, upscale=False)], format='JPEG', options={'quality': 80})
