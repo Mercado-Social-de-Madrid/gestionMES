@@ -48,12 +48,14 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
 
         forms.ModelForm.__init__(self, *args, **kwargs)
 
-    # Overriding save allows us to process the value of 'toppings' field
     def save(self, commit=True):
 
         is_new = self.instance.pk is None
         instance = forms.ModelForm.save(self, False)
         instance.member_type = MEMBER_PROV
+
+        if not instance.public_address or instance.public_address == '':
+            instance.public_address = instance.address
 
         # Prepare a 'save_m2m' method for the form,
         old_save_m2m = self.save_m2m

@@ -109,7 +109,7 @@
 
                     <div class="card-body px-3 pb-0">
                             <h4 class="card-title"><i class="material-icons">edit_location</i> Geolocalización</h4>
-                            <p class="card-text">Mueve el pin por el mapa hasta posicionarlo en la localización correcta.</p>
+                            <p class="card-text">Arrastra el pin por el mapa hasta posicionarlo en la localización correcta. También puedes hacer click sobre la posición en la que quieras situarlo.</p>
                             <div class="form-group">
                                 <label>Latitud</label>
                                 {{ form.latitude }}
@@ -315,6 +315,19 @@
             lngInput.val( marker.position.lng() );
         }
     );
+
+    var update_timeout = null;
+    google.maps.event.addListener(map, 'click', function(event){
+        update_timeout = setTimeout(function(){
+            marker.setPosition(event.latLng);
+            latInput.val( marker.position.lat() );
+            lngInput.val( marker.position.lng() );
+        }, 200);
+    });
+
+    google.maps.event.addListener(map, 'dblclick', function(event) {
+        clearTimeout(update_timeout);
+    });
   }
 
 </script>

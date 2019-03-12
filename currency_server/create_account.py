@@ -1,14 +1,11 @@
 import requests
 from django.conf import settings
 
-# TODO: Definir la ciudad concreta de otra forma
-CITY_ID = 'mad'
-
 def post_entity(entity):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
 
     entity_dict = {
-        "address": entity.address,
+        "address": entity.public_address,
 	    "bonus_percent_entity": entity.bonus_percent_entity,
         "bonus_percent_general": entity.bonus_percent_general,
 	    "cif": entity.cif,
@@ -26,7 +23,7 @@ def post_entity(entity):
 	    "telegram_link": entity.telegram_link,
 	    "twitter_link": entity.twitter_link,
 	    "webpage_link": entity.webpage_link,
-        "city": CITY_ID,
+        "city": settings.CITY_ID,
     }
 
 
@@ -53,7 +50,7 @@ def post_consumer(consumer):
         "name": consumer.first_name,
         "surname": consumer.last_name,
         "is_guest_account": False,
-        "city": CITY_ID,
+        "city": settings.CITY_ID,
     }
 
     r = requests.post(api_url, json={
@@ -78,7 +75,7 @@ def post_guest(guest):
         "name": guest.first_name,
         "surname": guest.last_name,
         "is_guest_account": True,
-        "city": CITY_ID,
+        "city": settings.CITY_ID,
     }
 
     r = requests.post(api_url, json={
