@@ -171,6 +171,8 @@ LOGIN_EXEMPT_URLS = [
     r'^payments/pay/*',
     r'^payments/end/*',
     r'^invite/[0-9a-f-]+/',
+    r'^password_reset/*',
+    r'^reset/*',
 ]
 
 INLINE_INPUT_SEPARATOR = '&&&'
