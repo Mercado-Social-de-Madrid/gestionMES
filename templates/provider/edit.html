@@ -242,17 +242,16 @@
             <a href="http://www.idealoga.org/wp-content/uploads/2016/03/Firma-de-principios-y-compromisos.pdf" target="_blank">Firma de principios y compromisos del MESM</a>
             <div class="row">
                 <div class="col-md-12 col-lg-8">
-            <div class="custom-control custom-switch mt-3">
-                {{form.check_conditions}}
-                  <span class="custom-control-track"></span>
-                  <label class="custom-control-label" for="{{form.check_conditions.id_for_label}}">
-                        Las personas que conformamos la entidad hemos leído el documento "Firma de principios y compromisos del MESM". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
-                </label>
-
-                {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
+                <div class="custom-control custom-switch mt-3">
+                    {{form.check_conditions}}
+                      <span class="custom-control-track"></span>
+                      <label class="custom-control-label" for="{{form.check_conditions.id_for_label}}">
+                            Las personas que conformamos la entidad hemos leído el documento "Firma de principios y compromisos del MESM". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
+                    </label>
+                    {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
                 </div>
 
-                    </div>
+                </div>
             </div>
 
             {% if perms.accounts.mespermission_can_update_signups %}
@@ -284,8 +283,6 @@
     var entityPosition = new google.maps.LatLng({% settings_value "INITIAL_LATITUDE"|unlocalize %}, {% settings_value "INITIAL_LONGITUDE"|unlocalize %});
 {% endif %}
 
-    console.log("AAAAA");
-
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
         center: entityPosition,
@@ -306,6 +303,13 @@
 
     var latInput = $('[name="latitude"]');
     var lngInput = $('[name="longitude"]');
+
+    function updateMarker(){
+        marker.setPosition( new google.maps.LatLng( latInput.val(), lngInput.val() ) );
+        map.setCenter(marker.getPosition());
+    }
+    latInput.on('change',  updateMarker);
+    lngInput.on('change',  updateMarker);
 
     google.maps.event.addListener(
         marker,

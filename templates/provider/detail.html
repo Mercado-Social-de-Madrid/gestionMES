@@ -112,6 +112,13 @@ function initMap() {
     var latInput = $('[name="latitude"]');
     var lngInput = $('[name="longitude"]');
 
+    function updateMarker(){
+        marker.setPosition( new google.maps.LatLng( latInput.val(), lngInput.val() ) );
+        map.setCenter(marker.getPosition());
+    }
+    latInput.on('change',  updateMarker);
+    lngInput.on('change',  updateMarker);
+
     google.maps.event.addListener(
         marker,
         'drag',
