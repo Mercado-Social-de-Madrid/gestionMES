@@ -170,7 +170,7 @@ LOGIN_EXEMPT_URLS = [
     r'^api/*',
     r'^payments/pay/*',
     r'^payments/end/*',
-    r'^invite/[0-9a-f-]+/',
+    r'^invite/[0-9a-zA-Z\-]+/',
     r'^password_reset/*',
     r'^reset/*',
 ]
