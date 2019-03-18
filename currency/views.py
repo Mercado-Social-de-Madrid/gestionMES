@@ -57,13 +57,13 @@ class NewInvite(XFrameOptionsExemptMixin, CreateView):
     def get_initial(self):
         return {'invite_token': self.kwargs.get('uuid')}
 
-    def dispatch(self, request, *args, **kwargs):
-        """ Making sure that only authors can update stories """
+    def get_context_data(self, **kwargs):
         uuid = self.kwargs.get('uuid')
+        context = super(NewInvite, self).get_context_data(**kwargs)
         if not GuestInvitation.objects.is_valid_token(uuid):
-            raise Http404("Token de invitación no válido")
+            context['invalid_token'] = True
 
-        return super(NewInvite, self).dispatch(request, *args, **kwargs)
+        return context
 
     def get_success_url(self):
         if self.request.user.is_authenticated:
