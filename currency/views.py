@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, TemplateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -67,10 +67,14 @@ class NewInvite(XFrameOptionsExemptMixin, CreateView):
 
     def get_success_url(self):
         if self.request.user.is_authenticated:
-            messages.success(self.request, _('Proceso de acogida añadido correctamente.'))
+            messages.success(self.request, _('Invitada creada correctamente.'))
             return reverse('currency:guest_user_list')
         else:
             return reverse('currency:invite_success')
+
+
+class InviteSuccessView(TemplateView, XFrameOptionsExemptMixin):
+    template_name = "invite/success.html"
 
 
 class GuestAccountDetailView(UpdateView):

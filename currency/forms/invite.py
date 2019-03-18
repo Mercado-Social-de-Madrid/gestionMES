@@ -39,6 +39,7 @@ class GuestInviteForm(forms.ModelForm, BootstrapForm):
         invitation = GuestInvitation.objects.filter(token=self.cleaned_data.get('invite_token')).first()
         instance = forms.ModelForm.save(self, False)
         instance.invited_by = invitation.invited_by
+        instance.token_used = invitation
         instance.registration_date = datetime.now()
         instance.expiration_date = datetime.now() + dateutil.relativedelta.relativedelta(months=INVITE_DURATION_MONTHS)
 

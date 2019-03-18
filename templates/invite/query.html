@@ -10,7 +10,7 @@
 {% block item_row %}
 
 <td class="entity-td">{{item.display_name}}</td>
-<td>{{item.invited_by.display_name}}</td>
+<td>{% if item.invited_by %} {{item.invited_by.display_name}} {% else %} <span class="text-monospace">{{item.token_used}}</span> {% endif %}</td>
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
 <td>{{item.expiration_date|date:'d/m/Y'}}</td>
 {% endblock %}

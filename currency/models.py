@@ -43,7 +43,7 @@ class InvitationsManager(models.Manager):
 
 class GuestInvitation(models.Model):
 
-    invited_by = models.ForeignKey(Account, null=False, related_name='invitations', verbose_name=_('Invitado por'))
+    invited_by = models.ForeignKey(Account, null=True, blank=True, related_name='invitations', verbose_name=_('Invitado por'))
     token = models.CharField(max_length=40, verbose_name=_('Token'))
     used = models.BooleanField(default=False, verbose_name=_('Utilizado'))
     single_use = models.BooleanField(default=True, verbose_name=_('De un solo uso'))
@@ -70,7 +70,8 @@ class GuestInvitation(models.Model):
 
 class GuestAccount(models.Model):
 
-    invited_by = models.ForeignKey(Account, null=False, related_name='invited_guests', verbose_name=_('Invitada por'))
+    invited_by = models.ForeignKey(Account, null=True, blank=True, related_name='invited_guests', verbose_name=_('Invitada por'))
+    token_used = models.ForeignKey(GuestInvitation, null=True, blank=True, related_name='invited_guests', verbose_name=_('Token utilizado'))
     active = models.BooleanField(default=True, verbose_name=_('Activa'))
     cif = models.CharField(max_length=30, null=False, blank=False, verbose_name=_('NIF/CIF'), unique=True)
     first_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
