@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
-{% block title %}Boniatos-server{% endblock%}
+{% block title %}Mercado Social{% endblock%}
 
 {% block content %}
 {% if not 'from_app' in request.GET %}
@@ -16,7 +16,7 @@
 {% endif %}
 
     <div class="container py-5">
-        <h4>Tu solicitud se ha registrado correctamente!</h4>
+        <h4>¡Tu solicitud se ha registrado correctamente!</h4>
         En breve recibirás información en tu correo para completar el alta como invitada en la aplicación del Mercado Social.
         <div class="text-center">
             <img src="{% static 'imgs/people-success.png' %}" class="img-fluid">
