@@ -117,6 +117,10 @@ class Account(PolymorphicModel):
         return 'account'
 
     @property
+    def detail_url(self):
+        return 'accounts:provider_detail'
+
+    @property
     def display_name(self):
         return self.cif
 
@@ -135,6 +139,10 @@ class Consumer(Account):
     @property
     def template_prefix(self):
         return 'consumer'
+
+    @property
+    def detail_url(self):
+        return 'accounts:consumer_detail'
 
     @property
     def display_name(self):
@@ -219,6 +227,10 @@ class Provider(Entity):
     class Meta:
         verbose_name = _('Proveedora')
         verbose_name_plural = _('Proveedoras')
+
+    @property
+    def detail_url(self):
+        return 'accounts:provider_detail'
 
     @property
     def template_prefix(self):

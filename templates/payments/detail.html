@@ -25,7 +25,7 @@
          <div class="col-md-5 mb-3">
             {% include 'account/simple_profile.html' with account=object.account %}
              <div class="mt-2 pl-4">
-             <a class="btn btn-secondary" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:provider_detail' object.account.pk %}">Ver perfil</a>
+             <a class="btn btn-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
              </div>
         </div>
 

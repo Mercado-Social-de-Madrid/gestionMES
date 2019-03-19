@@ -79,6 +79,8 @@ class FeeRange(models.Model):
 class PaymentsManager(models.Manager):
 
     def create_initial_payment(self, account):
+        payment, created =  PendingPayment.objects.get_or_create(account=account)
+
         payment = PendingPayment(account=account, )
 
         if account.get_real_instance_class() is Provider:
@@ -94,6 +96,7 @@ class PaymentsManager(models.Manager):
         payment.amount = amount
         if account.pay_by_debit == True:
             payment.type = DEBIT
+
         payment.save()
 
         return payment
