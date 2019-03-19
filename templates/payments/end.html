@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load settings_value %}
+
+{% block title %}Detalles de pago{% endblock %}
+
+
+{% block content %}
+
+{% if not 'from_app' in request.GET %}
+<div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12">
+                <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Ref. {{object.reference}}</h4>
+            </div>
+
+        </div>
+        </div>
+    </div>
+{% endif %}
+
+<div class="container pt-4">
+    <h3>Pago completado!</h3>
+</div>
+
+
+{% endblock %}

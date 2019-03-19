@@ -25,7 +25,7 @@ from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.models import User
-from mes import settings
+
 from payments.forms.payment import PaymentForm
 from payments.models import PendingPayment, CardPayment
 from simple_bpm.custom_filters import WorkflowFilter
@@ -102,67 +102,43 @@ def form(request, uuid):
 
     merchant_data = 0
     trans_type = '0'
+    card_payment = PendingPayment.objects.get_card_payment(reference=uuid)
 
-    payment = PendingPayment.objects.filter(reference=uuid).first()
-    if not payment.completed:
-        card_payment = CardPayment.objects.create(type=PENDING_PAYMENT)
-        payment.card_payment = card_payment
-        payment.save()
+    if card_payment:
         merchant_data = card_payment.pk
-        amount = int(payment.amount * 100)
+        amount = int(card_payment.amount * 100)
+    else:
+        return Http404()
+
+    # print "http://%s%s" % (site.domain, reverse('sermepa_ipn'))
+    params = '' if not 'from_app' in request.GET else '?from_app=true'
 
     sermepa_dict = {
         "Ds_Merchant_Titular": 'John Doe',
         "Ds_Merchant_MerchantData": merchant_data,  # id del Pedido o Carrito, para identificarlo en el mensaje de vuelta
         "Ds_Merchant_MerchantName": settings.SERMEPA_MERCHANT_NAME,
-        "Ds_Merchant_ProductDescription": 'Pago inicial',
+        "Ds_Merchant_ProductDescription": card_payment.concept,
         "Ds_Merchant_Amount": amount,
         "Ds_Merchant_Terminal": settings.SERMEPA_TERMINAL,
         "Ds_Merchant_MerchantCode": settings.SERMEPA_MERCHANT_CODE,
         "Ds_Merchant_Currency": settings.SERMEPA_CURRENCY,
         "Ds_Merchant_MerchantURL": "http://%s%s" % (site.domain, reverse('sermepa_ipn')),
-        "Ds_Merchant_UrlOK": "http://%s%s" % (site.domain, reverse('payments:end')),
-        "Ds_Merchant_UrlKO": "http://%s%s" % (site.domain, reverse('payments:end')),
+        "Ds_Merchant_UrlOK": "http://%s%s" % (site.domain, reverse('payments:end')) + params,
+        "Ds_Merchant_UrlKO": "http://%s%s" % (site.domain, reverse('payments:end')) + params,
     }
 
-    if trans_type == '0':  # Compra puntual
-        order = SermepaIdTPV.objects.new_idtpv()  # Tiene que ser un número único cada vez
-        sermepa_dict.update({
-            "Ds_Merchant_Order": order,
-            "Ds_Merchant_TransactionType": trans_type,
-        })
-    elif trans_type == 'L':  # Compra recurrente por fichero. Cobro inicial
-        order = SermepaIdTPV.objects.new_idtpv()  # Tiene que ser un número único cada vez
-        sermepa_dict.update({
-            "Ds_Merchant_Order": order,
-            "Ds_Merchant_TransactionType": trans_type,
-        })
-    elif trans_type == 'M':  # Compra recurrente por fichero. Cobros sucesivos
-        order = suscripcion.idtpv  # Primer idtpv, 10 dígitos
-        sermepa_dict.update({
-            "Ds_Merchant_Order": order,
-            "Ds_Merchant_TransactionType": trans_type,
-        })
-    elif trans_type == '0':  # Compra recurrente por Referencia. Cobro inicial
-        order = 'REQUIRED'
-        sermepa_dict.update({
-            "Ds_Merchant_Order": order,
-            "Ds_Merchant_TransactionType": trans_type,
-        })
-    elif trans_type == '0':  # Compra recurrente por Referencia. Cobros sucesivos
-        order = suscripcion.idreferencia  # Primer idtpv, 10 dígitos
-        sermepa_dict.update({
-            "Ds_Merchant_Order": order,
-            "Ds_Merchant_TransactionType": trans_type,
-        })
-
+    order = SermepaIdTPV.objects.new_idtpv()  # Tiene que ser un número único cada vez
+    sermepa_dict.update({
+        "Ds_Merchant_Order": order,
+        "Ds_Merchant_TransactionType": trans_type,
+    })
     form = SermepaPaymentForm(initial=sermepa_dict, merchant_parameters=sermepa_dict)
 
-    return HttpResponse(render_to_response('payments/pay_form.html', {'form': form, 'payment':payment, 'debug': settings.DEBUG}))
+    return HttpResponse(render_to_response('payments/pay_form.html', {'request':request, 'form': form, 'payment':card_payment, 'debug': settings.DEBUG}))
 
 @xframe_options_exempt
 def end(request):
-    return HttpResponse(render_to_response('end.html', {}))
+    return HttpResponse(render_to_response('payments/end.html', {}))
 
 
 def payment_ok(sender, **kwargs):

@@ -2,6 +2,7 @@
 import json
 from django.http import HttpResponse
 import dateutil.parser
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 
 from sermepa.signals import payment_was_successful, refund_was_successful, payment_was_error, signature_error
@@ -13,7 +14,11 @@ from sermepa.mixins import SermepaMixin
 @csrf_exempt
 def sermepa_ipn(request):
     smp_mxn = SermepaMixin()
-    form = SermepaResponseForm(request.POST)
+    if request.method == 'GET':
+        form = SermepaResponseForm(request.GET)
+    else:
+        form = SermepaResponseForm(request.POST)
+
     if form.is_valid():
         # Get parameters from decoded Ds_MerchantParameters object
         binary_merchant_parameters = smp_mxn.decode_base64(form.cleaned_data['Ds_MerchantParameters'])
@@ -75,4 +80,4 @@ def sermepa_ipn(request):
                 payment_was_error.send(sender=sermepa_resp)  # signal
         else:
             signature_error.send(sender=sermepa_resp)  # signal
-    return HttpResponse()
+    return redirect('payments:end')

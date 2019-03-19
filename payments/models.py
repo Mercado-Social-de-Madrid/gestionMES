@@ -96,14 +96,39 @@ class PaymentsManager(models.Manager):
             payment.type = DEBIT
         payment.save()
 
+        return payment
 
-class CardPayment(models.Model):
+    def get_card_payment(self, reference):
 
-    attempt = models.DateTimeField(auto_now_add=True, verbose_name=_('Añadido'))
-    bank_response = models.ForeignKey(SermepaResponse, null=True, verbose_name=_('Respuesta TPV'))
-    type = models.CharField(null=True, blank=True, max_length=30, choices=CARD_PAYMENT_TYPES,
-                            verbose_name=_('Tipo de pago'))
+        card_payment = CardPayment.objects.filter(reference=reference)
+        if card_payment.exists():
+            return card_payment.first()
 
+        # If the reference is related to a payment, we create a new card payment
+        payment = self.filter(reference=reference)
+        if payment.exists():
+            payment = payment.first()
+            if not payment.completed:
+                card_payment = CardPayment.objects.create(
+                    account=payment.account,
+                    type=PENDING_PAYMENT,
+                    pending_payment=payment,
+                    amount=payment.amount
+                )
+                return card_payment
+
+        return None
+
+
+    def currency_purchase(self, account, amount):
+
+        card_payment = CardPayment.objects.create(
+            account=account,
+            amount=amount,
+            type = CURRENCY_BUY
+        )
+
+        return card_payment
 
 
 class PendingPayment(models.Model):
@@ -119,9 +144,13 @@ class PendingPayment(models.Model):
     timestamp = models.DateTimeField(null=True, blank=True, verbose_name=_('Fecha pago'))
     comment = models.TextField(null=True, blank=True, verbose_name=_('Comentario'))
     reference = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Referencia del pago'))
-    card_payment = models.ForeignKey(CardPayment, null=True, blank=True, verbose_name=_('Pago con tarjeta'))
 
     objects = PaymentsManager()
+
+    class Meta:
+        verbose_name = _('Pago pendiente')
+        verbose_name_plural = _('Pagos pendientes')
+        ordering = ['added']
 
     @property
     def icon_name(self):
@@ -134,3 +163,27 @@ class PendingPayment(models.Model):
         elif self.type == TRANSFER:
             return 'local_atm'
 
+
+
+class CardPayment(models.Model):
+    account = models.ForeignKey(Account, null=True, related_name='card_payments', verbose_name=_('Socia'))
+    attempt = models.DateTimeField(auto_now_add=True, verbose_name=_('Añadido'))
+    amount = models.FloatField(default=0, verbose_name=_('Cantidad'))
+    reference = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Referencia del pago'))
+    bank_response = models.ForeignKey(SermepaResponse, null=True, verbose_name=_('Respuesta TPV'))
+    pending_payment = models.ForeignKey(PendingPayment, null=True, blank=True, verbose_name=_('Pago pendiente'))
+    type = models.CharField(null=True, blank=True, max_length=30, choices=CARD_PAYMENT_TYPES, verbose_name=_('Tipo de pago'))
+
+    class Meta:
+        verbose_name = _('Pago con tarjeta')
+        verbose_name_plural = _('Pagos con tarjeta')
+        ordering = ['attempt']
+
+    @property
+    def concept(self):
+        if self.type == PENDING_PAYMENT:
+            return self.pending_payment.concept
+        elif self.type == CURRENCY_BUY:
+            return  'Compra ({} etics)'.format(self.amount)
+        else:
+            return ''

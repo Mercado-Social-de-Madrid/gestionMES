@@ -5,6 +5,7 @@
 
 {% block content %}
 
+{% if not 'from_app' in request.GET %}
 <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
@@ -15,6 +16,7 @@
         </div>
         </div>
     </div>
+{% endif %}
 
 <div class="container pt-4" style="max-width:500px;">
 
@@ -45,11 +47,19 @@
 
         </div>
 	<div class="card-footer text-center">
-		{% if debug %}
+
+        <div class="alert alert-warning mt-4" role="alert">
+              <strong>TPV en entorno de pruebas!</strong><br><br>
+
+            {% if debug %}
 		{{ form.sandbox }}
 	{% else %}
 		{{ form.render }}
 	{% endif %}
+
+        </div>
+
+
 
 	</div>
 
