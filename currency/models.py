@@ -73,7 +73,8 @@ class GuestAccount(models.Model):
     invited_by = models.ForeignKey(Account, null=True, blank=True, related_name='invited_guests', verbose_name=_('Invitada por'))
     token_used = models.ForeignKey(GuestInvitation, null=True, blank=True, related_name='invited_guests', verbose_name=_('Token utilizado'))
     active = models.BooleanField(default=True, verbose_name=_('Activa'))
-    cif = models.CharField(max_length=30, null=False, blank=False, verbose_name=_('NIF/CIF'), unique=True)
+    guest_reference = models.CharField(default=uuid.uuid4, null=True, blank=True, max_length=50, verbose_name=_('Referencia invitado'))
+    cif = models.CharField(max_length=30, null=True, blank=True, verbose_name=_('NIF/CIF'), unique=True)
     first_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
     last_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Apellidos'))
 
@@ -111,7 +112,7 @@ class CurrencyAppUsersManager(models.Manager):
 
     def create_app_invited_user(self, guest_account):
 
-        user = self.create(is_guest=True, cif=guest_account.cif, guest_account=guest_account)
+        user = self.create(is_guest=True, cif=guest_account.guest_reference, guest_account=guest_account)
         result, uuid = create_account.post_guest(guest_account)
         if result:
             user.is_pushed = result
@@ -140,7 +141,7 @@ class CurrencyAppUsersManager(models.Manager):
 class CurrencyAppUser(models.Model):
     is_guest = models.BooleanField(default=False, verbose_name=_('Es invitada'))
     is_pushed = models.BooleanField(default=False, verbose_name=_('Actualizado en el servidor'))
-    cif = models.CharField(max_length=30, verbose_name=_('NIF/CIF'))
+    cif = models.CharField(max_length=50, verbose_name=_('NIF/CIF'))
     username = models.CharField(null=True, max_length=50, verbose_name=_('Nombre de usuario'))
     uuid = models.UUIDField(null=True, verbose_name=_('Identificador único'))
 

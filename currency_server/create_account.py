@@ -69,14 +69,15 @@ def post_consumer(consumer):
 def post_guest(guest):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
     guest_dict = {
-        "address": guest.address,
-        "nif": guest.cif,
+        "nif": str(guest.guest_reference),
         "email": guest.contact_email,
         "name": guest.first_name,
         "surname": guest.last_name,
         "is_guest_account": True,
         "city": settings.CITY_ID,
     }
+    if guest.address:
+        guest_dict["address"] = guest.address
 
     r = requests.post(api_url, json={
         'email': guest.contact_email,

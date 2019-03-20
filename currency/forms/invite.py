@@ -19,7 +19,7 @@ class GuestInviteForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = GuestAccount
-        exclude = ['active', 'expiration_date', 'registration_date', 'invited_by']
+        exclude = ['active', 'expiration_date', 'registration_date', 'invited_by', 'address', 'province', 'postalcode', 'guest_reference', 'cif', 'contact_phone']
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
         }
