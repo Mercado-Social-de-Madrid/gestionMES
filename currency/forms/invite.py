@@ -28,6 +28,11 @@ class GuestInviteForm(forms.ModelForm, BootstrapForm):
     def clean(self):
         data = self.cleaned_data
 
+        email = self.cleaned_data.get('contact_email', '')
+        if GuestAccount.objects.filter(contact_email=email).exists():
+            self.add_error('contact_email',_('Ya hay una invitación con este email. Revisa tu email para acceder con tu usuario a la app'))
+    
+
         invite_token = data.get('invite_token', '')
         if not GuestInvitation.objects.is_valid_token(invite_token):
             raise ValidationError(_('Token de invitación no válido'))
