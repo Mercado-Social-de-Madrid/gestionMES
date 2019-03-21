@@ -1,7 +1,10 @@
 {% load query_string %}
 
-{% if page.has_previous or page.has_next %}
-<nav class="text-center">
+
+<nav class="row">
+    <div class="col-md-3 d-sm-none d-xs-none d-md-block pt-4 pl-5"><small>{{paginator.count}} elementos</small></div>
+    <div class="col-md-6">
+        {% if page.has_previous or page.has_next %}
   <ul class="pagination justify-content-center">
       {% if page.has_previous %}
           <li class="page-item">
@@ -36,5 +39,12 @@
          </li>
       {% endif %}
   </ul>
+        {% endif %}
+        </div>
+    <div class="col-md-3">
+        {% include 'common/list/export_csv.html' %}
+
+    </div>
+
+
 </nav>
-{% endif %}
