@@ -23,6 +23,7 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.forms.password import PasswordForm
 from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
@@ -49,14 +50,20 @@ class ProviderFilter(django_filters.FilterSet):
         fields = { 'status':['exact'], }
 
 
-class ProvidersListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class ProvidersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
+    model = Provider
     queryset = Provider.objects.all()
     objects_url_name = 'provider_detail'
     template_name = 'provider/list.html'
     ajax_template_name = 'provider/query.html'
     filterset_class = ProviderFilter
     paginate_by = 15
+
+    csv_filename = 'proveedoras'
+    available_fields = ['cif', 'name', 'business_name', 'public_address', 'address',  'contact_email', 'contact_phone',
+                        'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'is_physical_store',
+                        'bonus_percent_entity', 'bonus_percent_general', 'max_percent_payment', 'start_year']
 
 
 class ProviderDetailView(TabbedViewMixin, UpdateView):

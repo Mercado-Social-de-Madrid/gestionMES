@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import codecs
+import csv
+
+import datetime
 import django_filters
 import polymorphic
 from django.contrib import messages
-from django.http import Http404, HttpResponseRedirect
+from django.core.exceptions import FieldDoesNotExist
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -17,6 +22,7 @@ from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
@@ -38,14 +44,20 @@ class ConsumerFilter(django_filters.FilterSet):
         fields = { 'status':['exact'], }
 
 
-class ConsumersListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class ConsumersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
+    model = Consumer
     queryset = Consumer.objects.all()
     objects_url_name = 'consumer_detail'
     template_name = 'consumer/list.html'
     ajax_template_name = 'consumer/query.html'
     filterset_class = ConsumerFilter
     paginate_by = 15
+
+    csv_filename = 'consumidoras'
+    available_fields = ['cif', 'first_name', 'last_name', 'address', 'display_name', 'contact_email', 'contact_phone',
+                        'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date',]
+    field_labels = {'display_name': 'Nombre completo'}
 
 
 class ConsumerSignup(XFrameOptionsExemptMixin, CreateView):

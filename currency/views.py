@@ -17,6 +17,7 @@ from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from currency.forms.guest import GuestAccountForm
@@ -38,14 +39,19 @@ class InvitesFilter(django_filters.FilterSet):
         form = InvitesFilterForm
         fields = { 'active':['exact'], }
 
-class InvitesListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class InvitesListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
+    model = GuestAccount
     queryset = GuestAccount.objects.all().order_by('-registration_date')
     objects_url_name = 'guest_detail'
     template_name = 'invite/list.html'
     ajax_template_name = 'invite/query.html'
     filterset_class = InvitesFilter
     paginate_by = 15
+
+    csv_filename = 'invitadas'
+    available_fields = ['cif', 'invited_by', 'token_used', 'first_name', 'last_name', 'contact_email',
+                        'registration_date', 'expiration_date', ]
 
 
 class NewInvite(XFrameOptionsExemptMixin, CreateView):
