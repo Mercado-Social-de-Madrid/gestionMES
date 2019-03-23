@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 import uuid
-from datetime import datetime
+import datetime
 
 from django.conf import settings
 from django.db import models
@@ -103,6 +103,10 @@ class GuestAccount(models.Model):
     @property
     def display_name(self):
         return "{} {}".format(self.first_name, self.last_name)
+
+    @property
+    def is_active(self):
+        return datetime.date.today() < self.expiration_date
 
     def __str__(self):
         return self.display_name

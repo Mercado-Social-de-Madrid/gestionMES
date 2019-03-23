@@ -83,15 +83,37 @@ class AccountResource(ModelResource):
         account = Account.objects.filter(cif=pk)
         if account.exists():
             return account.first()
-        else:
-            account = GuestAccount.objects.filter(cif=pk)
-            if account.exists():
-                return account.first()
-            else:
-                raise NotFound
+
+        raise NotFound
 
 
     def dehydrate(self, bundle):
         user = bundle.obj
-        bundle.data['is_active'] = user.status == ACTIVE or user.status == INITIAL_PAYMENT or user.status == PENDING_PAYMENT
+        bundle.data['is_active'] = user.is_active
+        return bundle
+
+
+class GuestAccountResource(ModelResource):
+    class Meta:
+        queryset = GuestAccount.objects.all()
+        resource_name = 'guest'
+        list_allowed_methods = []
+        excludes = ['iban_code', 'pay_by_debit']
+        detail_allowed_methods = ['get']
+
+    def obj_get(self, bundle, **kwargs):
+        pk = kwargs['pk']
+        account = GuestAccount.objects.filter(cif=pk)
+        if account.exists():
+            return account.first()
+
+        account = GuestAccount.objects.filter(guest_reference=pk)
+        if account.exists():
+            return account.first()
+
+        raise NotFound
+
+    def dehydrate(self, bundle):
+        user = bundle.obj
+        bundle.data['is_active'] = user.is_active
         return bundle
