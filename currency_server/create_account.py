@@ -72,6 +72,7 @@ def post_guest(guest):
         "nif": str(guest.guest_reference),
         "email": guest.contact_email,
         "name": guest.first_name,
+        "expiration_date": guest.expiration_date.strftime("%Y-%m-%d %H:%M:%S"),
         "surname": guest.last_name,
         "is_guest_account": True,
         "city": settings.CITY_ID,
