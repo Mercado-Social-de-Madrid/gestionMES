@@ -80,9 +80,6 @@ class PaymentsManager(models.Manager):
 
     def create_initial_payment(self, account):
         payment, created =  PendingPayment.objects.get_or_create(account=account)
-
-        payment = PendingPayment(account=account, )
-
         if account.get_real_instance_class() is Provider:
             fee = FeeRange.calculate_fee(account)
             share = DEFAULT_PROVIDER_SHARE
@@ -166,6 +163,8 @@ class PendingPayment(models.Model):
         elif self.type == TRANSFER:
             return 'local_atm'
 
+    def __str__(self):
+        return '{}:{}'.format(self.account.display_name, self.amount)
 
 
 class CardPayment(models.Model):
