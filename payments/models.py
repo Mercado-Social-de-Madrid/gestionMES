@@ -164,7 +164,8 @@ class PendingPayment(models.Model):
             return 'local_atm'
 
     def __str__(self):
-        return '{}:{}'.format(self.account.display_name, self.amount)
+        print 'aaaaaa'
+        return '{}:{}'.format(self.account.display_name, self.amount).encode('utf-8')
 
 
 class CardPayment(models.Model):
