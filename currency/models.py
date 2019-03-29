@@ -109,7 +109,7 @@ class GuestAccount(models.Model):
         return datetime.date.today() < self.expiration_date
 
     def __str__(self):
-        return self.display_name
+        return self.display_name.encode('utf-8')
 
 
 class CurrencyAppUsersManager(models.Manager):
