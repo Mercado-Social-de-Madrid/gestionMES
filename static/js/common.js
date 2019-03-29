@@ -97,12 +97,6 @@ function getCookie(name) {
 
 }( jQuery ));
 
-function showToast(message, messageClasses){
-    var toast = $('<div class="toast"></div>').text(message).addClass(messageClasses);
-    toast.appendTo('#main-toasts');
-    setTimeout(function(){ toast.fadeOut(); }, TOAST_DELAY);
-}
-
 $.ajaxSetup({
     beforeSend: function(xhr, settings) {
         if (!(/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) && !this.crossDomain) {
@@ -239,3 +233,23 @@ function showToast(message, messageClasses){
     setTimeout(function(){ toast.fadeOut(); }, TOAST_DELAY);
 }
 
+function show_fees(numWorkers, aproxIncome){
+    var fees = $('#fees-table td[data-min-income]');
+
+    function updateFee(){
+        var workers = numWorkers.val();
+        var income = aproxIncome.val();
+
+        fees.each(function(i, elem){
+            var fee = $(elem).removeClass('assigned-fee');
+            if ((income >= fee.data('min-income')) && (income <= fee.data('max-income')) &&
+                (workers >= fee.data('min-workers')) && (workers <= fee.data('max-workers'))){
+                fee.addClass('assigned-fee');
+            }
+        });
+    }
+
+    numWorkers.on('input', updateFee);
+    aproxIncome.on('input', updateFee);
+    updateFee();
+}

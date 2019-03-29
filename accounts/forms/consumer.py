@@ -4,17 +4,18 @@ from django.utils.translation import gettext as _
 from localflavor.es.forms import ESIdentityCardNumberField
 from localflavor.generic.forms import IBANFormField
 
+from accounts.forms.signup import BaseSignupForm
 from accounts.models import Category, Provider, Consumer
 from core.forms.BootstrapForm import BootstrapForm
 from management.models import Comission
 from mes.settings import MEMBER_CONSUMER
 
 
-class ConsumerForm(forms.ModelForm, BootstrapForm):
+class ConsumerForm(BaseSignupForm):
 
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
     cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
-    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=False, widget=forms.TextInput(
+    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=True, widget=forms.TextInput(
         attrs={'class': 'iban-code', 'placeholder': 'ES0000000000000000000000'}))
 
     class Meta:

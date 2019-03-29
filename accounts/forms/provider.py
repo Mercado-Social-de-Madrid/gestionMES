@@ -4,18 +4,19 @@ from django import forms
 from django.contrib.auth.models import Permission, Group
 from django.utils.translation import gettext as _
 
+from accounts.forms.signup import BaseSignupForm
 from accounts.models import Category, Provider
 from core.forms.BootstrapForm import BootstrapForm
 from management.models import Comission
 from mes.settings import MEMBER_PROV
 
 
-class ProviderForm(forms.ModelForm, BootstrapForm):
+class ProviderForm(BaseSignupForm):
 
     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.filter(), required=False)
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
     cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
-    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=False, widget=forms.TextInput(
+    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=True, widget=forms.TextInput(
         attrs={'class':'iban-code', 'placeholder':'ES0000000000000000000000'}))
 
     class Meta:

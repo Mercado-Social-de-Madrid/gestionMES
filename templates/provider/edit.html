@@ -332,6 +332,11 @@
     google.maps.event.addListener(map, 'dblclick', function(event) {
         clearTimeout(update_timeout);
     });
+
+    show_fees(
+        $('#{{form.num_workers.id_for_label}}'),
+        $('#{{form.aprox_income.id_for_label}}')
+    );
   }
 
 </script>

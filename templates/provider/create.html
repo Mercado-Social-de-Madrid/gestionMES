@@ -248,10 +248,15 @@
                         Las personas que conformamos la entidad hemos leído el documento "Firma de principios y compromisos del MESM". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
                 </label>
 
-                {% if form.longitude.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
+                {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
                 </div>
 
                     </div>
+
+                <div class="col-md-12 col-lg-12">
+                    <hr class="my-4">
+                    {% include 'signup/privacy_policy_check.html' %}
+                </div>
             </div>
         <div class="text-center mt-3 mb-5">
             <button type="submit" class="btn btn-primary btn-lg">Enviar socilitud</button>
@@ -326,6 +331,10 @@
         clearTimeout(update_timeout);
     });
 
+    show_fees(
+        $('#{{form.num_workers.id_for_label}}'),
+        $('#{{form.aprox_income.id_for_label}}')
+    );
   }
 
 </script>
