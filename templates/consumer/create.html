@@ -21,6 +21,7 @@
         <form method="post" class="mt-3 p-4">
             {% csrf_token %}
 
+            Los campos marcados con <span class="text-primary lead">*</span> son obligatorios.
             <div class="row ">
                 <div class="col-md-5">
                     {% include "common/forms/field.html" with field=form.cif %}
@@ -76,9 +77,14 @@
                     {% include "common/forms/field.html" with field=form.province %}
                 </div>
 
+                <div class="col-md-12 col-lg-12">
+                    <hr class="my-4">
+                    {% include 'signup/privacy_policy_check.html' %}
+                </div>
+
             </div>
 
-        <div class="text-center mt-3 mb-5">
+        <div class="text-center mt-5 mb-5">
             <button type="submit" class="btn btn-primary btn-lg">Enviar solicitud</button>
         </div>
 

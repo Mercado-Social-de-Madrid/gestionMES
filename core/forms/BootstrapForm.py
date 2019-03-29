@@ -15,6 +15,10 @@ class BootstrapForm(forms.Form):
             if hasattr(field.widget, 'input_type') and field.widget.input_type == 'checkbox':
                 widget_class = checkbox_widget_class
 
+
+            if hasattr(self,'required_fields') and field_name in self.required_fields:
+                field.required = True
+
             if 'class' in field.widget.attrs:
                 if widget_class not in field.widget.attrs['class']:
                    field.widget.attrs['class'] += ' ' + widget_class

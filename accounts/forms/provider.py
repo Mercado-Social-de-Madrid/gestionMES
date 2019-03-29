@@ -19,9 +19,12 @@ class ProviderForm(BaseSignupForm):
     iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=True, widget=forms.TextInput(
         attrs={'class':'iban-code', 'placeholder':'ES0000000000000000000000'}))
 
+    required_fields = ['name', 'business_name', 'pay_by_debit']
+
     class Meta:
         model = Provider
         exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date']
+
         widgets = {
             'contact_person': forms.TextInput(),
             'address': forms.Textarea(attrs={'rows': 3}),
