@@ -11,7 +11,7 @@ from management.models import Comission
 from mes.settings import MEMBER_CONSUMER
 
 
-class ConsumerForm(BaseSignupForm):
+class ConsumerForm(forms.ModelForm, BootstrapForm):
 
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
     cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
@@ -20,7 +20,7 @@ class ConsumerForm(BaseSignupForm):
 
     class Meta:
         model = Consumer
-        exclude = ['group', 'status', 'legal_form', 'member_type', 'cr_member', 'registration_date']
+        exclude = ['group', 'status', 'legal_form', 'member_type', 'cr_member', 'registration_date', 'cyclos_user']
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
         }
@@ -35,3 +35,6 @@ class ConsumerForm(BaseSignupForm):
             instance.save()
 
         return instance
+
+class ConsumerSignupForm(BaseSignupForm, ConsumerForm):
+    pass

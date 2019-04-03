@@ -1,7 +1,10 @@
-<div class="list-group" id="entity-data">
+<div class="list-group check-onload-form-errors" id="entity-data">
   <div class="expansion-panel list-group-item">
     <a aria-controls="fiscal" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#fiscal" id="headingOne">
-      Datos fiscales
+      <span>
+          Datos fiscales
+          <i class="invisible material-icons text-warning md-18 mb-2">report_problem</i>
+      </span>
       <div class="expansion-panel-icon ml-3 text-black-secondary">
         <i class="collapsed-show material-icons">keyboard_arrow_down</i>
         <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
@@ -9,7 +12,6 @@
     </a>
     <div aria-labelledby="headingOne" class="collapse" data-parent="#entity-data" id="fiscal">
       <div class="expansion-panel-body">
-
         <div class="row ">
                 <div class="col-md-5">
                     {% include "common/forms/field.html" with field=form.cif %}
@@ -48,11 +50,9 @@
                     La cuota anual para entidades se calcula en base al número de trabajadoras y el rango de ingresos aproximados del último año.
                     <br>
             </div>
-            <div class="col-sm-6 col-md-3">{% include "common/forms/field.html" with field=form.num_workers %}</div>
-
-<div class="col-sm-6 col-md-3">{% include "common/forms/field.html" with field=form.aprox_income %}</div>
-
-            <div class="col-sm-6 col-md-3">{% if fee %} {% include "common/forms/display_value.html" with value=fee label='Cuota anual' %} {% endif %}</div>
+            <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.num_workers %}</div>
+            <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.aprox_income %}</div>
+            <div class="col-sm-6 col-md-4">{% if fee %} {% include "common/forms/display_value.html" with value=fee label='Cuota anual' %} {% endif %}</div>
             </div>
         </div>
 
@@ -63,7 +63,10 @@
 
   <div class="expansion-panel list-group-item">
     <a aria-controls="contact" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#contact" id="contact-heading">
-      Datos de contacto
+      <span>
+        Datos de contacto
+          <i class="invisible material-icons text-danger">report_problem</i>
+      </span>
       <div class="expansion-panel-icon ml-3 text-black-secondary">
         <i class="collapsed-show material-icons">keyboard_arrow_down</i>
         <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
@@ -80,7 +83,10 @@
   </div>
   <div class="expansion-panel list-group-item">
     <a aria-controls="Datos de perfil" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#profile-data" id="headingThree">
-      Datos de entidad
+      <span>
+        Datos de entidad
+          <i class="invisible material-icons text-warning md-18 mb-2">report_problem</i>
+      </span>
       <div class="expansion-panel-icon ml-3 text-black-secondary">
         <i class="collapsed-show material-icons">keyboard_arrow_down</i>
         <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
@@ -148,7 +154,10 @@
 
   <div class="expansion-panel list-group-item">
     <a aria-controls="contact" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#currency" id="contact-heading">
-      Datos de Etics
+      <span>
+        Datos de Etics
+          <i class="invisible material-icons text-warning md-18 mb-2">report_problem</i>
+      </span>
       <div class="expansion-panel-icon ml-3 text-black-secondary">
         <i class="collapsed-show material-icons">keyboard_arrow_down</i>
         <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
@@ -209,7 +218,10 @@
 
       <div class="expansion-panel list-group-item">
     <a aria-controls="contact" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#commitment" id="commitment-heading">
-      Compromiso social
+      <span>
+        Compromiso social
+          <i class="invisible material-icons text-warning md-18 mb-2">report_problem</i>
+      </span>
       <div class="expansion-panel-icon ml-3 text-black-secondary">
         <i class="collapsed-show material-icons">keyboard_arrow_down</i>
         <i class="collapsed-hide material-icons">keyboard_arrow_up</i>

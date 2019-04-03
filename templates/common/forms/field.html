@@ -10,7 +10,7 @@
 {% endif %}
 
     {% if field.errors %}
-    <div class="d-block invalid-feedback">
+    <div class="d-block invalid-feedback form-errors">
         {% for error in field.errors %} {{error}}<br> {%endfor%}
     </div>
     {% endif %}

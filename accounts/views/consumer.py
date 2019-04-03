@@ -16,7 +16,7 @@ from django.views.generic import UpdateView, CreateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
-from accounts.forms.consumer import ConsumerForm
+from accounts.forms.consumer import ConsumerForm, ConsumerSignupForm
 from accounts.models import Consumer, SignupProcess
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
@@ -62,7 +62,7 @@ class ConsumersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMi
 
 class ConsumerSignup(XFrameOptionsExemptMixin, CreateView):
 
-    form_class = ConsumerForm
+    form_class = ConsumerSignupForm
     model = Consumer
     template_name = 'consumer/create.html'
 
@@ -89,7 +89,7 @@ class ConsumerSignup(XFrameOptionsExemptMixin, CreateView):
 
 class ConsumerUpdateView(UpdateView):
     template_name = 'consumer/edit.html'
-    form_class = ConsumerForm
+    form_class = ConsumerSignupForm
     model = Consumer
 
     def getSignup(self):

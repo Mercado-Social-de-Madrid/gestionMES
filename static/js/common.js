@@ -152,6 +152,14 @@ $(function(){
         });
     });
 
+    $('.check-onload-form-errors .form-errors').each(function(i,elem){
+        var error = $(elem);
+        console.log(error);
+        var container = error.parents('.expansion-panel');
+        var header = container.find('.expansion-panel-toggler .text-warning').removeClass('invisible');
+
+    });
+
      $(".gallery-form").on('change', '.form-photo > input', function(){
         var input = this;
         var target = $(input).siblings('.thumb');

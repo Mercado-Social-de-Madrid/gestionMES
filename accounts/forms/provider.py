@@ -11,7 +11,7 @@ from management.models import Comission
 from mes.settings import MEMBER_PROV
 
 
-class ProviderForm(BaseSignupForm):
+class ProviderForm(forms.ModelForm, BootstrapForm):
 
     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.filter(), required=False)
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
@@ -23,7 +23,7 @@ class ProviderForm(BaseSignupForm):
 
     class Meta:
         model = Provider
-        exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date']
+        exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date', 'cyclos_user']
 
         widgets = {
             'contact_person': forms.TextInput(),
@@ -78,5 +78,5 @@ class ProviderForm(BaseSignupForm):
         return instance
 
 
-class ProviderSignupForm(ProviderForm):
+class ProviderSignupForm(BaseSignupForm, ProviderForm):
     check_conditions = forms.BooleanField(required=True, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))

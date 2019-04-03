@@ -40,10 +40,9 @@
         <form method="post" class="mt-3 p-4">
             {% csrf_token %}
             {{form.media}}
-
         <div class="">
+            {% include 'consumer/form.html' with form=form %}
 
-          {{ form.as_p }}
         </div>
 
         <div class="text-center mt-3">
