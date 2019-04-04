@@ -16,10 +16,10 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
     categories = forms.ModelMultipleChoiceField(queryset=Category.objects.filter(), required=False)
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
     cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
-    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=True, widget=forms.TextInput(
+    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=False, widget=forms.TextInput(
         attrs={'class':'iban-code', 'placeholder':'ES0000000000000000000000'}))
 
-    required_fields = ['name', 'business_name', 'pay_by_debit']
+    required_fields = ['name', 'business_name',]
 
     class Meta:
         model = Provider
@@ -80,3 +80,5 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
 
 class ProviderSignupForm(BaseSignupForm, ProviderForm):
     check_conditions = forms.BooleanField(required=True, widget=forms.CheckboxInput(attrs={'class':'custom-control-input'}))
+
+    required_fields = ['name', 'business_name', 'pay_by_debit', 'iban_code']

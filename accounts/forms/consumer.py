@@ -15,11 +15,11 @@ class ConsumerForm(forms.ModelForm, BootstrapForm):
 
     signup_ref = forms.CharField(required=False, max_length=150, widget=forms.HiddenInput())
     cif = ESIdentityCardNumberField(label=_('NIF/CIF'))
-    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=True, widget=forms.TextInput(
+    iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=False, widget=forms.TextInput(
         attrs={'class': 'iban-code', 'placeholder': 'ES0000000000000000000000'}))
 
 
-    required_fields = ['first_name', 'last_name', 'pay_by_debit']
+    required_fields = ['first_name', 'last_name', ]
 
     class Meta:
         model = Consumer
@@ -40,4 +40,5 @@ class ConsumerForm(forms.ModelForm, BootstrapForm):
         return instance
 
 class ConsumerSignupForm(BaseSignupForm, ConsumerForm):
-    pass
+
+    required_fields = ['first_name', 'last_name', 'pay_by_debit', 'iban_code']
