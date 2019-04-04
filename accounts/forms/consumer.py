@@ -18,6 +18,9 @@ class ConsumerForm(forms.ModelForm, BootstrapForm):
     iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=True, widget=forms.TextInput(
         attrs={'class': 'iban-code', 'placeholder': 'ES0000000000000000000000'}))
 
+
+    required_fields = ['first_name', 'last_name', 'pay_by_debit']
+
     class Meta:
         model = Consumer
         exclude = ['group', 'status', 'legal_form', 'member_type', 'cr_member', 'registration_date', 'cyclos_user']
