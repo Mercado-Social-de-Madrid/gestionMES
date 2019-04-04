@@ -1,0 +1,14 @@
+{
+    "name": "MES Madrid",
+    "short_name": "MES Madrid",
+    "icons": [
+        {
+            "src": "/android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#653776",
+    "background_color": "#653776",
+    "display": "standalone"
+}

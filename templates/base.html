@@ -22,13 +22,17 @@
     <link href="{% static 'css/libs/jquery.fontawesome-iconpicker.min.css' %}" rel="stylesheet" />
     <link href="{% static 'css/libs/jquery.spectrum.css' %}" rel="stylesheet" />
 
+    <link rel="apple-touch-icon" sizes="144x144" href="{% static 'icons/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'icons/site.webmanifest' %}">
+    <link rel="mask-icon" href="{% static 'icons/safari-pinned-tab.svg' %}" color="#653776">
+    <meta name="msapplication-TileColor" content="#653776">
+    <meta name="theme-color" content="#653776">
 
     {% block extra_styles %}{% endblock extra_styles %}
   </head>
   <body {% block bodyattrs %}{% endblock%}>
-
-
-{% url 'currency:invite' token as link %}
 
 
 {% if not 'from_app' in request.GET %}
