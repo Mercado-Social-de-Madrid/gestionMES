@@ -122,9 +122,9 @@ def form(request, uuid):
         "Ds_Merchant_Terminal": settings.SERMEPA_TERMINAL,
         "Ds_Merchant_MerchantCode": settings.SERMEPA_MERCHANT_CODE,
         "Ds_Merchant_Currency": settings.SERMEPA_CURRENCY,
-        "Ds_Merchant_MerchantURL": "http://%s%s" % (site.domain, reverse('sermepa_ipn')),
-        "Ds_Merchant_UrlOK": "http://%s%s" % (site.domain, reverse('payments:end')) + params,
-        "Ds_Merchant_UrlKO": "http://%s%s" % (site.domain, reverse('payments:end')) + params,
+        "Ds_Merchant_MerchantURL": "https://%s%s" % (site.domain, reverse('sermepa_ipn')),
+        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse('sermepa_ipn')) + params,
+        "Ds_Merchant_UrlKO": "https://%s%s" % (site.domain, reverse('payments:end')) + params,
     }
 
     order = SermepaIdTPV.objects.new_idtpv()  # Tiene que ser un número único cada vez
@@ -143,7 +143,6 @@ def end(request):
 
 def payment_ok(sender, **kwargs):
     print 'Payment ok!'
-
 
 
 def payment_ko(sender, **kwargs):
