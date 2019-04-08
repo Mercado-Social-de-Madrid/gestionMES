@@ -21,60 +21,7 @@
             {% csrf_token %}
             {% endif %}
 
-            <div class="row ">
-                <div class="col-md-5">
-                    {% include "common/forms/field.html" with field=form.cif %}
-                </div>
-                <div class="col-md-7"></div>
-                <div class="col-md-5">
-                    {% include "common/forms/field.html" with field=form.first_name %}
-                </div>
-
-                <div class="col-md-7">
-                    {% include "common/forms/field.html" with field=form.last_name %}
-                </div>
-
-                <div class="col-md-5">
-                    {% include "common/forms/field.html" with field=form.contact_phone %}
-                </div>
-
-                <div class="col-md-7">
-                    {% include "common/forms/field.html" with field=form.contact_email %}
-                </div>
-
-
-                <div class="col-md-5">
-                    <h4 class="text-primary">Pago de cuota</h4>
-
-                    Si eliges domiciliar la cuota, el importe será cargado en tu cuenta automáticamente. Si no
-                    quieres domiciliar o no introduces tus datos bancarios, podrás pagar con tarjeta una vez
-                    completado el formulario de registro.
-                </div>
-
-                <div class="col-md-7">
-                    {% include "common/forms/field.html" with field=form.iban_code %}
-                    {% include "common/forms/switch.html" with field=form.pay_by_debit %}
-                </div>
-
-
-                <div class="col-lg-12">
-
-                        {% include "common/forms/field.html" with field=form.address not_floating=True %}
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.postalcode %}
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.city %}
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.province %}
-                </div>
-
-            </div>
+            {% include "consumer/signup.html" %}
 
         <div class="text-center mt-3 mb-5">
             {% if perms.accounts.mespermission_can_update_signups %}

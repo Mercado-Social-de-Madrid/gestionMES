@@ -1,0 +1,60 @@
+Los campos marcados con <span class="text-primary lead">*</span> son obligatorios.
+<div class="row ">
+    <div class="col-md-5">
+        {% include "common/forms/field.html" with field=form.cif %}
+    </div>
+    <div class="col-md-7"></div>
+    <div class="col-md-5">
+        {% include "common/forms/field.html" with field=form.first_name %}
+    </div>
+
+    <div class="col-md-7">
+        {% include "common/forms/field.html" with field=form.last_name %}
+    </div>
+
+    <div class="col-md-5">
+        {% include "common/forms/field.html" with field=form.contact_phone %}
+    </div>
+
+    <div class="col-md-7">
+        {% include "common/forms/field.html" with field=form.contact_email %}
+    </div>
+
+    <div class="col-md-5 mb-2">
+        <h4 class="text-primary">Pago de cuota</h4>
+        Te solicitamos tus datos bancarios para poder domiciliar tu cuota anualmente. Para agilizar el proceso de acogida, podrás pagar con tarjeta
+        el primer pago una vez completado este formulario.
+    </div>
+
+    <div class="col-md-7">
+        {% include "common/forms/field.html" with field=form.iban_code not_floating=True %}
+        {% include "common/forms/switch.html" with field=form.pay_by_debit %}
+    </div>
+
+
+    <div class="col-md-4">
+
+    </div>
+
+    <div class="col-lg-12 mt-md-4">
+        {% include "common/forms/field.html" with field=form.address not_floating=True %}
+    </div>
+
+    <div class="col-md-4">
+        {% include "common/forms/field.html" with field=form.postalcode %}
+    </div>
+
+    <div class="col-md-4">
+        {% include "common/forms/field.html" with field=form.city %}
+    </div>
+
+    <div class="col-md-4">
+        {% include "common/forms/field.html" with field=form.province %}
+    </div>
+
+    <div class="col-md-12 col-lg-12">
+        <hr class="my-4">
+        {% include 'signup/privacy_policy_check.html' %}
+    </div>
+
+</div>
