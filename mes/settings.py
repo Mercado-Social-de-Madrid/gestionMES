@@ -168,6 +168,7 @@ LOGIN_EXEMPT_URLS = [
     r'^accounts/signup/success/',
     r'^accounts/signup/consumer/',
     r'^api/*',
+    r'^pay/*',
     r'^payments/pay/*',
     r'^payments/end/*',
     r'^invite/[0-9a-zA-Z\-]+/',
