@@ -102,7 +102,11 @@ def form(request, uuid):
 
     merchant_data = 0
     trans_type = '0'
-    card_payment = PendingPayment.objects.get_card_payment(reference=uuid)
+    card_payment, already_paid = PendingPayment.objects.get_card_payment(reference=uuid)
+
+    if already_paid:
+        return HttpResponse(render_to_response('payments/pay_form_paid.html',
+                                               {'request': request, 'uuid': uuid, 'payment': card_payment }))
 
     if card_payment:
         merchant_data = card_payment.pk
@@ -122,9 +126,9 @@ def form(request, uuid):
         "Ds_Merchant_Terminal": settings.SERMEPA_TERMINAL,
         "Ds_Merchant_MerchantCode": settings.SERMEPA_MERCHANT_CODE,
         "Ds_Merchant_Currency": settings.SERMEPA_CURRENCY,
-        "Ds_Merchant_MerchantURL": "https://%s%s" % (site.domain, reverse('sermepa_ipn')),
-        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse('sermepa_ipn')) + params,
-        "Ds_Merchant_UrlKO": "https://%s%s" % (site.domain, reverse('payments:end')) + params,
+        "Ds_Merchant_MerchantURL": "http://%s%s" % (site.domain, reverse('sermepa_ipn')),
+        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse('payments:payment_success')) + params,
+        "Ds_Merchant_UrlKO": "http://%s%s" % (site.domain, reverse('payments:payment_error')) + params,
     }
 
     order = SermepaIdTPV.objects.new_idtpv()  # Tiene que ser un número único cada vez
@@ -134,15 +138,20 @@ def form(request, uuid):
     })
     form = SermepaPaymentForm(initial=sermepa_dict, merchant_parameters=sermepa_dict)
 
-    return HttpResponse(render_to_response('payments/pay_form.html', {'request':request, 'form': form, 'payment':card_payment, 'debug': settings.DEBUG}))
+    return HttpResponse(render_to_response('payments/pay_form.html', {'request':request, 'form': form, 'uuid':uuid, 'payment':card_payment, 'debug': settings.DEBUG}))
 
 @xframe_options_exempt
-def end(request):
+def payment_success(request):
     return HttpResponse(render_to_response('payments/end.html', {}))
+
+@xframe_options_exempt
+def payment_error(request):
+    return HttpResponse(render_to_response('payments/error.html', {}))
 
 
 def payment_ok(sender, **kwargs):
     print 'Payment ok!'
+    PendingPayment.objects.process_sermepa_payment(sender)
 
 
 def payment_ko(sender, **kwargs):

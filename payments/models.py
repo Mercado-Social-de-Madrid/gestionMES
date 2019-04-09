@@ -102,7 +102,7 @@ class PaymentsManager(models.Manager):
 
         card_payment = CardPayment.objects.filter(reference=reference)
         if card_payment.exists():
-            return card_payment.first()
+            return card_payment.first(), False
 
         # If the reference is related to a payment, we create a new card payment
         payment = self.filter(reference=reference)
@@ -115,9 +115,25 @@ class PaymentsManager(models.Manager):
                     pending_payment=payment,
                     amount=payment.amount
                 )
-                return card_payment
+                return card_payment, False
+            else:
+                return payment, True
 
-        return None
+        return None, True
+
+
+    def process_sermepa_payment(self, sermepa_response):
+        card_payment = CardPayment.objects.get(pk=sermepa_response.Ds_MerchantData)
+        card_payment.bank_response = sermepa_response
+        card_payment.paid = True
+        card_payment.save()
+
+        if card_payment.type == CURRENCY_BUY:
+            # We are buying new currency, should process it accordingly
+            pass
+        elif card_payment.type == PENDING_PAYMENT and card_payment.pending_payment:
+            # The card payment was related to a pending payment, so we set it as paid
+            card_payment.pending_payment.paid_by_card()
 
 
     def currency_purchase(self, account, amount):
@@ -163,8 +179,15 @@ class PendingPayment(models.Model):
         elif self.type == TRANSFER:
             return 'local_atm'
 
+    def paid_by_card(self):
+        self.completed = True
+        self.type = CREDIT_CARD
+        self.timestamp = datetime.now()
+        self.save()
+
+        #TODO: Notify/update signup process...
+
     def __str__(self):
-        print 'aaaaaa'
         return '{}:{}'.format(self.account.display_name, self.amount).encode('utf-8')
 
 
@@ -176,6 +199,7 @@ class CardPayment(models.Model):
     bank_response = models.ForeignKey(SermepaResponse, null=True, verbose_name=_('Respuesta TPV'))
     pending_payment = models.ForeignKey(PendingPayment, null=True, blank=True, verbose_name=_('Pago pendiente'))
     type = models.CharField(null=True, blank=True, max_length=30, choices=CARD_PAYMENT_TYPES, verbose_name=_('Tipo de pago'))
+    paid = models.BooleanField(default=False, verbose_name=_('Pago completado'))
 
     class Meta:
         verbose_name = _('Pago con tarjeta')

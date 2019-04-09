@@ -13,8 +13,7 @@
             <div class="col-md-12">
                 <h4 class="mb-0">
                     {% if request.user.is_authenticated %}<a href="{% url 'admin_payments' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> {% endif %}
-                    Pago finalizado
-                </h4>
+                    Pago finalizado</h4>
             </div>
 
         </div>
@@ -23,7 +22,7 @@
 {% endif %}
 
 <div class="container pt-4">
-    <h3>Pago completado!</h3>
+    <h3>Ha habido un error procesando el pago...</h3>
 </div>
 
 

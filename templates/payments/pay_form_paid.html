@@ -10,7 +10,7 @@
         <div class="container">
             <div class="row">
             <div class="col-md-12">
-                <h4 class="mb-0">Realizar pago</h4>
+                <h4 class="mb-0">Pago realizado</h4>
             </div>
 
         </div>
@@ -20,9 +20,7 @@
 
 <div class="container pt-4" style="max-width:500px;">
 
-
-
-            <div class="card mb-3">
+    <div class="card mb-3">
         <div class="card-body">
         <div class="d-flex align-items-stretch">
             <div class="pr-4 align-self-center text-center">
@@ -46,22 +44,6 @@
 
 
         </div>
-	<div class="card-footer text-center">
-
-        <div class="alert alert-warning mt-4" role="alert">
-              <strong>TPV en entorno de pruebas!</strong><br><br>
-
-            {% if debug %}
-		{{ form.sandbox }}
-	{% else %}
-		{{ form.render }}
-	{% endif %}
-
-        </div>
-
-
-
-	</div>
 
     </div>
 </div>
