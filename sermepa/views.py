@@ -80,4 +80,5 @@ def sermepa_ipn(request):
                 payment_was_error.send(sender=sermepa_resp)  # signal
         else:
             signature_error.send(sender=sermepa_resp)  # signal
-    return redirect('payments:end')
+
+    return redirect('payments:payment_success')
