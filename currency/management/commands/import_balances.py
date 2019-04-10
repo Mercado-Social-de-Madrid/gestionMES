@@ -50,6 +50,7 @@ class Command(BaseCommand):
                                 added = True
                             else:
                                 account['cause'] = uuid
+                                added = True #to not count it as missing
                                 failed.append(account)
 
                 if not added:
