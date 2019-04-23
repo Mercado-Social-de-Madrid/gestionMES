@@ -25,6 +25,8 @@ class InvitationsManager(models.Manager):
         return query.filter(workflow__completed=False)
 
     def is_valid_token(self, token):
+        if not token:
+            return False
         invite = GuestInvitation.objects.filter(token=token).first()
         return invite is not None and (invite.used == False or invite.single_use == False)
 

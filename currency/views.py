@@ -60,11 +60,17 @@ class NewInvite(XFrameOptionsExemptMixin, CreateView):
     model = GuestAccount
     template_name = 'invite/create.html'
 
+    def get_clean_token(self):
+        invite_token = self.kwargs.get('uuid')
+        if invite_token and invite_token.startswith('#'):
+            invite_token = invite_token[1:]
+        return invite_token
+
     def get_initial(self):
-        return {'invite_token': self.kwargs.get('uuid')}
+        return {'invite_token': self.get_clean_token()}
 
     def get_context_data(self, **kwargs):
-        uuid = self.kwargs.get('uuid')
+        uuid = self.get_clean_token()
         context = super(NewInvite, self).get_context_data(**kwargs)
         if not GuestInvitation.objects.is_valid_token(uuid):
             context['invalid_token'] = True
