@@ -48,16 +48,18 @@
         </div>
 	<div class="card-footer text-center">
 
-        <div class="alert alert-warning mt-4" role="alert">
-              <strong>TPV en entorno de pruebas!</strong><br><br>
+
 
     {% if debug %}
-		{{ form.sandbox }}
+        <div class="alert alert-warning mt-4" role="alert">
+              <strong>TPV en entorno de pruebas!</strong><br><br>
+		    {{ form.sandbox }}
+        </div>
 	{% else %}
 		{{ form.render }}
 	{% endif %}
 
-        </div>
+
 
 
 
