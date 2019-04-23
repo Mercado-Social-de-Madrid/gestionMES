@@ -6,10 +6,10 @@ from currency.models import GuestAccount
 
 
 def account_id(account):
-    if type(account) is Account:
-        return account.cif
-    elif type(account) is GuestAccount:
+    if type(account) is GuestAccount:
         return account.guest_reference
+    else:
+        return account.cif
 
 def add_transaction(account, amount, concept=None):
     api_url = '{}api/v1/wallet/currency_purchased/'.format(settings.CURRENCY_SERVER_BASE_URL)
