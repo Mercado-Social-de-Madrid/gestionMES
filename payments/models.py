@@ -16,6 +16,7 @@ from polymorphic.models import PolymorphicModel
 
 from accounts.models import Account, Provider, Consumer
 from core.models import User
+from currency_server import wallet_transaction
 from helpers import RandomFileName
 from mes import settings
 from sermepa.models import SermepaResponse
@@ -130,7 +131,14 @@ class PaymentsManager(models.Manager):
 
         if card_payment.type == CURRENCY_BUY:
             # We are buying new currency, should process it accordingly
-            pass
+            success, uuid = wallet_transaction.add_transaction(
+                account=card_payment.account,
+                amount=float(card_payment.amount),
+                concept='Compra de etics')
+
+            if success:
+                print uuid
+
         elif card_payment.type == PENDING_PAYMENT and card_payment.pending_payment:
             # The card payment was related to a pending payment, so we set it as paid
             card_payment.pending_payment.paid_by_card()
