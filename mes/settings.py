@@ -199,5 +199,7 @@ CKEDITOR_CONFIGS = {
     },
 }
 
+SERMEPA_DEBUG = True
+
 # Import secret settings (see settings_secret.py.template for reference)
 from settings_secret import *

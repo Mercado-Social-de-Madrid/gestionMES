@@ -138,7 +138,7 @@ def form(request, uuid):
     })
     form = SermepaPaymentForm(initial=sermepa_dict, merchant_parameters=sermepa_dict)
 
-    return HttpResponse(render_to_response('payments/pay_form.html', {'request':request, 'form': form, 'uuid':uuid, 'payment':card_payment, 'debug': settings.DEBUG}))
+    return HttpResponse(render_to_response('payments/pay_form.html', {'request':request, 'form': form, 'uuid':uuid, 'payment':card_payment, 'debug': settings.SERMEPA_DEBUG }))
 
 @xframe_options_exempt
 def payment_success(request):
