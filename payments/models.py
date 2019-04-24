@@ -204,7 +204,7 @@ class CardPayment(models.Model):
     attempt = models.DateTimeField(auto_now_add=True, verbose_name=_('Añadido'))
     amount = models.FloatField(default=0, verbose_name=_('Cantidad'))
     reference = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Referencia del pago'))
-    bank_response = models.ForeignKey(SermepaResponse, null=True, verbose_name=_('Respuesta TPV'))
+    bank_response = models.ForeignKey(SermepaResponse, null=True, blank=True, verbose_name=_('Respuesta TPV'))
     pending_payment = models.ForeignKey(PendingPayment, null=True, blank=True, verbose_name=_('Pago pendiente'))
     type = models.CharField(null=True, blank=True, max_length=30, choices=CARD_PAYMENT_TYPES, verbose_name=_('Tipo de pago'))
     paid = models.BooleanField(default=False, verbose_name=_('Pago completado'))

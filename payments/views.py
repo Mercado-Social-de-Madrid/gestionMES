@@ -118,7 +118,7 @@ def form(request, uuid):
     params = '' if not 'from_app' in request.GET else '?from_app=true'
 
     sermepa_dict = {
-        "Ds_Merchant_Titular": 'John Doe',
+        "Ds_Merchant_Titular": card_payment.account.display_name,
         "Ds_Merchant_MerchantData": merchant_data,  # id del Pedido o Carrito, para identificarlo en el mensaje de vuelta
         "Ds_Merchant_MerchantName": settings.SERMEPA_MERCHANT_NAME,
         "Ds_Merchant_ProductDescription": card_payment.concept,
