@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 if 'cif' in account:
                     already_user = Account.objects.filter(cif=account['cif']).exists()
                     if already_user:
-                        print '{}({}) exists already!'.format(account['name'], account['cif'])
+                        print '{} exists already!'.format(account['cif'])
                     else:
                         guest.cif = account['cif']
 
