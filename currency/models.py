@@ -2,8 +2,9 @@
 from __future__ import unicode_literals
 
 import uuid
-import datetime
+from datetime import datetime
 
+import dateutil
 from django.conf import settings
 from django.db import models
 from django.db.models.signals import post_save
@@ -90,6 +91,8 @@ class GuestAccount(models.Model):
     registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
     expiration_date = models.DateField(verbose_name=_('Fecha de caducidad'), null=True, blank=True)
 
+    cyclos_user = models.CharField(null=True, blank=True, max_length=150, verbose_name=_('Antiguo usuario en Cyclos'))
+
 
     class Meta:
         verbose_name = _('Invitada')
@@ -158,10 +161,13 @@ class CurrencyAppUser(models.Model):
 
 
 
-# Method to add every user with a related person to the persons group
+# Method to create the app user of a guest account
 @receiver(post_save, sender=GuestAccount)
-def add_user_to_group(sender, instance, created, **kwargs):
+def create_user_in_app(sender, instance, created, **kwargs):
 
     if created:
-        print 'Creating app user'
+        instance.registration_date = datetime.now()
+        instance.expiration_date = datetime.now() + dateutil.relativedelta.relativedelta(months=INVITE_DURATION_MONTHS)
         CurrencyAppUser.objects.create_app_invited_user(instance)
+        instance.save()
+
