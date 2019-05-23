@@ -298,7 +298,7 @@ class SignupProcess(models.Model):
     workflow = models.ForeignKey(ProcessWorkflow, null=True, verbose_name=_('Seguimiento del proceso'))
     member_type = models.CharField(null=True, blank=True, max_length=30, choices=settings.MEMBER_TYPES,
                                    verbose_name=_('Tipo de socia'))
-    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'))
+    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='signup_process')
     name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
     contact_person = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Persona de contacto'))
     contact_phone = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('Teléfono de contacto'))

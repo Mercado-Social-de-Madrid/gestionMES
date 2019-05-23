@@ -12,7 +12,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h3 class="mb-0">{% if request.user.is_authenticated %} <a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i> {% endif %}Nueva entidad</h3>
+                    <h3 class="mb-0">{% if request.user.is_authenticated %} <a href="{% url 'accounts:providers_list' %}">Entidades</a><i class="material-icons md-18 ">arrow_forward_ios</i> {% endif %}Nueva entidad</h3>
                 </div>
             </div>
         </div>
@@ -23,218 +23,7 @@
         <form method="post" class="mt-3 p-4" enctype="multipart/form-data">
             {% csrf_token %}
 
-
-            <h4 class="text-primary">Datos fiscales</h4>
-
-            <div class="row ">
-                <div class="col-md-5">
-                    {% include "common/forms/field.html" with field=form.cif %}
-
-                </div>
-                <div class="col-md-7">
-                    {% include "common/forms/field.html" with field=form.name %}
-                </div>
-                <div class="col-md-5">
-                        {% include "common/forms/field.html" with field=form.legal_form not_floating=True %}
-                </div>
-                <div class="col-md-7">
-                    {% include "common/forms/field.html" with field=form.business_name %}
-                </div>
-
-                <div class="col-lg-12">
-                        {% include "common/forms/field.html" with field=form.iban_code not_floating=True %}
-                    {% include "common/forms/switch.html" with field=form.pay_by_debit %}
-                        {% include "common/forms/field.html" with field=form.address not_floating=True %}
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.postalcode %}
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.city %}
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.province %}
-                </div>
-
-            </div>
-
-            <div class="row">
-
-                <div class="col-lg-12">
-                    <h4 class="text-primary mt-5">Datos de contacto</h4>
-                        {% include "common/forms/field.html" with field=form.contact_person %}
-                        {% include "common/forms/field.html" with field=form.contact_email %}
-                    {% include "common/forms/field.html" with field=form.contact_phone %}
-
-                    <h4 class="text-primary mt-5">Datos de entidad</h4>
-                </div>
-                <div class="col-md-7 col-lg-5 mb-4">
-                    Aquí puedes introducir todos los datos de tu perfil que serán mostrados públicamente en la aplicación de moneda social, y que podrás editar fácilmente desde la aplicación una se complete el proceso de alta.
-                </div>
-                <div class="col-md-5 col-lg-7"></div>
-
-
-                <div class="col-md-6 ">
-
-                    {% include "common/forms/field.html" with field=form.description not_floating=True%}
-                    {% include "common/forms/field.html" with field=form.short_description not_floating=True%}
-                    {% include "common/forms/field.html" with field=form.public_address not_floating=True %}
-
-                    <h5 class="text-primary mt-5">Redes sociales</h5>
-                    {% include "common/forms/field.html" with field=form.facebook_link %}
-                    {% include "common/forms/field.html" with field=form.webpage_link %}
-                    {% include "common/forms/field.html" with field=form.twitter_link %}
-                    {% include "common/forms/field.html" with field=form.telegram_link %}
-                    {% include "common/forms/field.html" with field=form.instagram_link %}
-
-                </div>
-
-                <div class="col-md-6">
-                    {% include "common/forms/field.html" with field=form.territory not_floating=True %}
-                    {% include "common/forms/field.html" with field=form.start_year %}
-                    {% include "common/forms/multiselect.html" with field=form.categories tags=categories %}
-
-                    <div class="mb-3">
-                    {% include "common/forms/checkbox.html" with field=form.assisted_last_fair %}</div>
-
-                    <div class="card mt-4 ">
-                    <div id="map" class="map no-resize loading-container">
-                        <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw loading-spinner"></i>
-                        <span class="sr-only">Loading...</span>
-                    </div>
-
-                    <div class="card-body px-3 pb-0">
-                            <h4 class="card-title"><i class="material-icons">edit_location</i> Geolocalización</h4>
-                            <p class="card-text">Mueve el pin por el mapa hasta posicionarlo en la localización correcta. También puedes hacer click sobre la posición en la que quieras situarlo.</p>
-                            <div class="form-group">
-                                <label>Latitud</label>
-                                {{ form.latitude }}
-                                {% if form.latitude.errors %} <div class="alert alert-danger"> {{form.latitude.errors}}</div> {% endif %}
-                            </div>
-                            <div class="form-group">
-                                <label>Longitud</label>
-                                {{ form.longitude }}
-                                {% if form.longitude.errors %} <div class="alert alert-danger"> {{form.longitude.errors}}</div> {% endif %}
-                            </div>
-                    </div>
-
-                    <div class="card-footer">
-                      <small class="text-muted">Puedes hacer zoom en los controles del mapa para ajustar al máximo la posición, o entrar en la vista de pantalla completa.</small>
-                    </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <h5 class="text-primary mt-5">Etics</h5>
-            <div class="row mt-3">
-
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label for="{{ form.max_percent_payment.id_for_label }}">Máximo pago en etics</label>
-                                    <div class="input-group">
-                                            {{ form.max_percent_payment }}
-                                            <span class="input-group-addon"><i class="fa fa-percent" aria-hidden="true"></i></span>
-                                    </div>
-                                    {% if form.max_percent_payment.errors %} <div class="alert alert-danger"> {{form.max_percent_payment.errors}}</div> {% endif %}
-                                    <small class="form-text ">
-                                    Porcentaje máximo sobre el valor de la venta que se acepta cobrar en etics. Recomendamos aceptar el 100% ya que el MESM garantiza a los proveedores la convertibilidad a €.
-                                    </small>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Porcentaje de bonificación general</label>
-                                    <div class="input-group">
-                                        {{ form.bonus_percent_general }}
-                                        <span class="input-group-addon"><i class="fa fa-percent" aria-hidden="true"></i></span>
-                                    </div>
-                                    {% if form.bonus_percent_general.errors %} <div class="alert alert-danger"> {{form.bonus_percent_general.errors}}</div> {% endif %}
-                                    <small class="form-text ">
-                                    Porcentaje aplicable sobre el valor total de la venta, que obtendrá como bonificación en etics la compradora (se sugiere un 3%)
-                                    </small>
-                                </div>
-                            </div>
-
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label>Porcentaje de bonificación a entidades</label>
-                                    <div class="input-group">
-                                        {{ form.bonus_percent_entity }}
-                                        <span class="input-group-addon"><i class="fa fa-percent" aria-hidden="true"></i></span>
-                                    </div>
-                                    {% if form.bonus_percent_entity.errors %} <div class="alert alert-danger"> {{form.bonus_percent_entity.errors}}</div> {% endif %}
-                                    <small class="form-text ">
-                                    Porcentaje aplicable sobre el valor total de la venta, que obtendrán como bonificación en etics las compradoras que sean entidades proveedoras del mercado social.
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-
-            <div class="row mt-3">
-                <div class="col-md-12">
-
-                    {% include "common/forms/field.html" with field=form.logo not_floating=True %}
-                    {% include "common/forms/field.html" with field=form.banner not_floating=True %}
-
-                </div>
-            </div>
-
-
-            <div class="row mt-3">
-                <div class="col-md-12">
-                    <h4 class="text-primary mt-5">Compromiso social</h4>
-                </div>
-
-                <div class="col-md-6">
-                    {% include "common/forms/field.html" with field=form.benefits_destination not_floating=True %}
-                </div>
-                <div class="col-md-6">
-                    {% include "common/forms/field.html" with field=form.apportations not_floating=True %}
-                </div>
-
-                <div class="col-md-12">
-                     {% include "common/forms/field.html" with field=form.networking not_floating=True %}
-                    Rellena los siguientes campos únicamente en caso de entidades colectivas. No contestar si eres una entidad individual.
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.num_workers_female_partners  %}
-                    {% include "common/forms/field.html" with field=form.num_workers_female_non_partners  %}
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.num_workers_male_partners  %}
-                    {% include "common/forms/field.html" with field=form.num_workers_male_non_partners  %}
-                </div>
-
-                <div class="col-md-4">
-                    {% include "common/forms/field.html" with field=form.highest_salary  %}
-                    {% include "common/forms/field.html" with field=form.lowest_salary  %}
-                </div>
-            </div>
-
-            <div class="row mt-5">
-                <div class="col-lg-5">
-                    <h4 class="text-primary">Cálculo de cuota</h4>
-
-                    La cuota anual para entidades se calcula en base al número de trabajadoras y el rango de ingresos aproximados del último año.
-                    <br><br>
-                    {% include "common/forms/field.html" with field=form.num_workers %}
-
-                {% include "common/forms/field.html" with field=form.aprox_income %}
-                <small>En miles de Euros</small><br><br>
-
-                    En la tabla a continuación puedes ver cuál será tu cuota anual para pertenecer al MES.
-          </div>
-                <div class="col-lg-7">
-                    {% include 'payments/fees.html' %}
-                </div>
-            </div>
+            {% include 'provider/signup.html' %}
 
         <h4 class="text-primary mt-4">Aceptación de principios y compromisos del MES</h4>
 
@@ -256,6 +45,7 @@
                 <div class="col-md-12 col-lg-12">
                     <hr class="my-4">
                     {% include 'signup/privacy_policy_check.html' %}
+
                 </div>
             </div>
         <div class="text-center mt-3 mb-5">

@@ -135,8 +135,8 @@ class ProviderUpdateView(UpdateView):
             return process
 
     def get_success_url(self):
+        messages.success(self.request, _('Proceso de acogida actualizado correctamente.'))
         if self.request.user.is_authenticated:
-            messages.success(self.request, _('Proceso de acogida añadido correctamente.'))
             return reverse('accounts:signup_detail', kwargs={'pk': self.getSignup().pk})
         else:
             return reverse('accounts:signup_success')
@@ -157,9 +157,15 @@ class ProviderUpdateView(UpdateView):
         process.form_filled(self.object)
         return response
 
-    def get_object(self, queryset=None):
+    def get_initial(self):
+        initial = super(ProviderUpdateView, self).get_initial()
+        initial['check_privacy_policy'] = True
+        initial['check_conditions'] = True
+        return initial
 
+    def get_object(self, queryset=None):
         process = self.getSignup()
-        if process != None: #and process.member_type == :
+        if process != None:
             account = process.account
+            account.process = process
             return account
