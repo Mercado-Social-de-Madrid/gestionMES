@@ -1,16 +1,16 @@
 from django.db.models import ManyToOneRel
-from django.urls import resolve
+
 
 
 class ModelFieldsViewMixin(object):
     """
-    A mixin to add the detail url for an object, constructing it with its namespace
+    A mixin to add all the model fields as a dictionary to the context
     """
 
     objects_url_name = None
     __fields = None
 
-    # Method to only load CSV fields and inspect class once
+    # Method to only fields and inspect class once
     @classmethod
     def load_fields(cls, instance):
         if not cls.__fields:
@@ -34,5 +34,4 @@ class ModelFieldsViewMixin(object):
                 })
 
         context['obj_field_values'] = values
-        print values
         return context

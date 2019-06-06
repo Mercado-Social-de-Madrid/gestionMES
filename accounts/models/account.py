@@ -1,22 +1,19 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import uuid
 from datetime import datetime
+
+from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from imagekit import ImageSpec, register
 from imagekit.models import ProcessedImageField
-from pilkit.processors import ResizeToFit, ResizeToFill
-from polymorphic.managers import PolymorphicManager
+from pilkit.processors import ResizeToFit
 from polymorphic.models import PolymorphicModel
 
+from accounts.models import Category, LegalForm
 from helpers import RandomFileName
-from django.conf import settings
-from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
 
 TERR_LOCAL = 'local'
 TERR_COUNTRY = 'estatal'
@@ -41,39 +38,6 @@ ACCOUNT_STATUSES = (
     (OPTED_OUT, 'Baja'),
 )
 
-STEP_SIGNUP_FORM = 'signup_form'
-STEP_CONSUMER_FORM = 'consumer_form'
-STEP_PAYMENT_RULES = 'payment_rules'
-STEP_PAYMENT = 'payment'
-STEP_CONSUMER_PAYMENT = 'consumer_payment'
-
-class LegalForm(models.Model):
-
-    title = models.CharField(null=False, max_length=250,  verbose_name=_('Nombre'))
-    class Meta:
-        verbose_name = _('Forma legal')
-        verbose_name_plural = _('Formas legales')
-
-    def __unicode__(self):
-        return self.title if self.title else ''
-
-class Category(models.Model):
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(null=True, blank=True, verbose_name='Nombre', max_length=250)
-    description = models.TextField(null=True, blank=True, verbose_name='Descripción')
-    color = models.CharField(null=True, blank=True, verbose_name='Color de etiqueta (código hexadecimal)', max_length=30)
-
-    class Meta:
-        verbose_name = 'Categoría'
-        verbose_name_plural = 'Categorías'
-        ordering = ['name']
-        permissions = (
-            ("mespermission_can_manage_categories", _("Puede gestionar las categorías")),
-        )
-
-    def __unicode__(self):
-        return self.name if self.name else ''
 
 
 class MaxResize(ImageSpec):
@@ -241,169 +205,4 @@ class Provider(Entity):
         return 'provider'
 
 
-class SignupsManager(models.Manager):
 
-    def pending(query, entity=None):
-        return query.filter(workflow__completed=False)
-
-    def create_process(self, account):
-        signup = self.create(account=account)
-
-        account.status = SIGNUP
-        account.save()
-
-        if account.get_real_instance_class() is Provider:
-            signup.name = account.name
-            signup.contact_phone = account.contact_phone
-            signup.contact_email = account.contact_email
-            signup.contact_person = account.contact_person
-            signup.member_type = settings.MEMBER_PROV
-
-            process = CurrentProcess.objects.filter(shortname='prov_signup').first().process
-            step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_SIGNUP_FORM).first().process_step
-
-            workflow = ProcessWorkflow()
-            workflow.process = process
-            workflow.current_state = step
-            workflow.save()
-            signup.workflow = workflow
-            signup.save()
-
-            workflow.add_comment(user=None, comment='La entidad completa el formulario')
-
-
-        if account.get_real_instance_class() is Consumer:
-            signup.name = account.display_name
-            signup.contact_phone = account.contact_phone
-            signup.contact_email = account.contact_email
-            signup.contact_person = account.display_name
-            signup.member_type = settings.MEMBER_CONSUMER
-
-            process = CurrentProcess.objects.filter(shortname='cons_signup').first().process
-            step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_CONSUMER_FORM).first().process_step
-
-            workflow = ProcessWorkflow()
-            workflow.process = process
-            workflow.current_state = step
-            workflow.save()
-            signup.workflow = workflow
-            signup.save()
-
-            workflow.add_comment(user=None, comment='La consumidora completa el formulario')
-
-
-
-class SignupProcess(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Identificador proceso'))
-    workflow = models.ForeignKey(ProcessWorkflow, null=True, verbose_name=_('Seguimiento del proceso'))
-    member_type = models.CharField(null=True, blank=True, max_length=30, choices=settings.MEMBER_TYPES,
-                                   verbose_name=_('Tipo de socia'))
-    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='signup_process')
-    name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
-    contact_person = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Persona de contacto'))
-    contact_phone = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('Teléfono de contacto'))
-    contact_email = models.EmailField(null=False, verbose_name=_('Email de contacto'))
-
-    last_update = models.DateTimeField(auto_now=True, verbose_name=_('Última actualización'))
-
-    objects = SignupsManager()
-
-
-    class Meta:
-        verbose_name = _('Proceso de acogida')
-        verbose_name_plural = _('Procesos de acogida')
-        permissions = (
-            ("mespermission_can_view_signups", _("Puede ver los procesos de acogida pendientes")),
-            ("mespermission_can_create_signups", _("Puede añadir nuevos procesos de acogida")),
-            ("mespermission_can_comment_signups", _("Puede añadir comentarios a un proceso de acogida")),
-            ("mespermission_can_update_signups", _("Puede actualizar el estado de un proceso de acogida")),
-        )
-
-    def __str__(self):
-        if self.account:
-            return self.account.display_name.encode('utf-8')
-        else:
-            return "{}".format(self.uuid).encode('utf-8')
-
-
-    def is_in_payment_step(self):
-        if self.workflow.current_state is None:
-            return False
-
-        return self.workflow.current_state.is_named_step(STEP_PAYMENT) or self.workflow.current_state.is_named_step(STEP_CONSUMER_PAYMENT)
-
-    def initialize(self):
-
-        if self.member_type == settings.MEMBER_PROV:
-            process = CurrentProcess.objects.filter(shortname='prov_signup').first().process
-
-        if self.member_type == settings.MEMBER_CONSUMER:
-            process = CurrentProcess.objects.filter(shortname='cons_signup').first().process
-
-        workflow = ProcessWorkflow()
-        workflow.process = process
-        workflow.current_state = workflow.get_first_step()
-        workflow.save()
-        self.workflow = workflow
-        self.save()
-
-    def should_show_payment(self):
-        if self.account.get_real_instance_class() is Consumer:
-            if self.is_in_payment_step():
-                return self.account.pay_by_debit == False
-
-    def form_filled(self, account):
-
-        account.status = SIGNUP
-        account.save()
-
-        self.account = account
-        self.save()
-
-        if account.get_real_instance_class() is Provider:
-            process = CurrentProcess.objects.filter(shortname='prov_signup').first().process
-            step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_SIGNUP_FORM).first().process_step
-
-            if self.workflow.is_first_step():
-                self.workflow.complete_current_step()
-                self.workflow.current_state = step
-                self.workflow.add_comment(user=None, comment='La entidad completa el formulario')
-
-
-        if account.get_real_instance_class() is Consumer:
-            process = CurrentProcess.objects.filter(shortname='cons_signup').first().process
-            step = CurrentProcessStep.objects.filter(process=process, shortname=STEP_CONSUMER_FORM).first().process_step
-
-            if self.workflow.is_first_step():
-                self.workflow.complete_current_step()
-                self.workflow.current_state = step
-                self.workflow.add_comment(user=None, comment='La consumidora completa el formulario')
-
-
-
-@receiver(post_save, sender=ProcessWorkflowEvent)
-def update_process_event(sender, instance, **kwargs):
-    process = SignupProcess.objects.filter(workflow=instance.workflow).first()
-    if process and process.account:
-        process.last_update = datetime.now()
-        process.save()
-
-        if process.is_in_payment_step():
-            # If we just advanced steps and is in the payment step, we create the payment order
-            from payments.models import PendingPayment
-            PendingPayment.objects.create_initial_payment(process.account)
-
-        if instance.step:
-            if instance.step.is_named_step(STEP_SIGNUP_FORM) or instance.step.is_named_step(STEP_CONSUMER_FORM):
-                process.account.status = INITIAL_PAYMENT
-                process.account.registration_date = datetime.now()
-                process.account.save()
-
-            if instance.step.is_named_step(STEP_PAYMENT) or instance.step.is_named_step(STEP_CONSUMER_PAYMENT):
-                process.account.status = ACTIVE
-                process.account.save()
-
-
-        if instance.workflow.completed:
-            from currency.models import CurrencyAppUser
-            CurrencyAppUser.objects.create_app_user(process.account)
