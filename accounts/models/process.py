@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from django.utils.translation import gettext as _
 
 from accounts.models import Provider, Consumer, Account, INITIAL_PAYMENT, ACTIVE, OPTED_OUT, SIGNUP
+from payments.models import PendingPayment
 from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
 
 STEP_SIGNUP_FORM = 'signup_form'
@@ -26,6 +27,7 @@ class AccountProcess(models.Model):
     last_update = models.DateTimeField(auto_now=True, verbose_name=_('Última actualización'))
     member_type = models.CharField(null=True, blank=True, max_length=30, choices=settings.MEMBER_TYPES,
                                    verbose_name=_('Tipo de socia'))
+    cancelled = models.BooleanField(default=False, verbose_name=_('Cancelado'))
 
     provider_process = None
     consumer_process = None
@@ -199,12 +201,15 @@ class SignupProcess(AccountProcess):
 
     def cancel(self):
         self.last_update = datetime.now()
+        self.cancelled = True
         self.save()
-        self.workflow.completed = True
-        self.workflow.save()
+
         if self.account:
             self.account.status = OPTED_OUT
             self.account.save()
+
+            # Remove any pending payments as well
+            PendingPayment.objects.filter(account=self.account).delete()
 
 
 class DeletionProcess(AccountProcess):

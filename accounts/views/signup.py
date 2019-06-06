@@ -80,7 +80,7 @@ class SignupDetailView(DetailView):
         if self.object.workflow.is_first_step():
             context['first_step'] = True
 
-        if self.object.is_in_payment_step():
+        if not self.object.cancelled and self.object.is_in_payment_step():
             context['payment_step'] = True
             context['payment'] = PendingPayment.objects.filter(account=self.object.account).first()
 
@@ -106,5 +106,25 @@ def signup_form_redirect(request, uuid):
 
     elif process.member_type == settings.MEMBER_CONSUMER:
         return redirect('accounts:consumer_edit_form', uuid=uuid )
+
+
+def cancel_signup(request):
+    print 'aaaa'
+    if request.method == "POST":
+        print 'post'
+        redirect_url = request.POST.get('redirect_to', '')
+        process_pk = request.POST.get('process', None)
+
+        print redirect_url
+        print process_pk
+        if redirect_url and process_pk:
+            process = SignupProcess.objects.filter(pk=process_pk).first()
+            if process:
+                process.cancel()
+            return redirect(redirect_url)
+
+    return False
+
+#
 
 

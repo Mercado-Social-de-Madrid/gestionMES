@@ -26,17 +26,19 @@ Esta socia no tiene aún un usuario creado en la app del Mercado social<br>
      {% csrf_token %}
     <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
     <input type="hidden" name="account" value="{{account.pk}}">
-<div class="modal fade" id="create-currency-user" tabindex="-1" role="dialog" aria-labelledby="create-currency-user-label" aria-hidden="true">
+
+ <div class="modal fade" id="create-currency-user" tabindex="-1" role="dialog" aria-labelledby="create-currency-user-label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="create-currency-user-label">Crear usuario</h5>
+
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-
+        Esta acción creará un perfil de usuario en la app móvil y mandará un email de invitación a la socia para que complete el registro.
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

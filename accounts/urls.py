@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^signup/success/$', views.SignupSuccessView.as_view(), name='signup_success'),
     url(r'^signup/processes/$', views.SignupListView.as_view(), name='signup_list'),
     url(r'^signup/processes/(?P<pk>\d+)/$', views.SignupDetailView.as_view(), name='signup_detail'),
+
+    url(r'^signup/processes/cancel/$', views.cancel_signup, name='cancel_signup'),
 ]
 
 

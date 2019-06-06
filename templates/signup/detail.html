@@ -8,13 +8,19 @@
     <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-6">
                 <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Acogidas</a><i class="material-icons md-18 ">arrow_forward_ios</i> {{object.name}}</h4>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-3">
                 <i class="material-icons mr-2 text-primary">account_circle</i>{{object.contact_person}}<br>
                 <i class="material-icons mr-2 text-primary">email</i>{{object.contact_email}}<br>
                 <i class="material-icons mr-2 text-primary">phone</i>{{object.contact_phone}}<br>
+            </div>
+
+            <div class="col-md-3 text-sm-right">
+                {% if perms.accounts.mespermission_can_update_signups and not object.workflow.completed and not object.cancelled %}
+                <a href="#" data-toggle="modal" data-target="#cancel-process" class="btn btn-primary"><i class="material-icons mr-2">block</i> Cancelar proceso</a>
+                {% endif %}
             </div>
         </div>
         </div>
@@ -24,10 +30,8 @@
         <div class="row mt-4">
             <div class="col-md-6">
 
-
                     <div class="mb-4 pb-2 pr-2">
                         <div class="card-body">
-
                              {% if first_step %}
                             <h5 class="card-title">Formulario de inscripción</h5>
                             La entidad aún no ha rellenado el formulario de inscripción. Para facilitar el seguimiento del proceso,
@@ -45,11 +49,8 @@
                             <a class="btn btn-secondary mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
                              </div>
                             {% endif %}
-
                         </div>
-
                     </div>
-
 
     {% if payment_step and payment %}
             <span class="badge badge-primary mb-2">Pago</span>
@@ -57,62 +58,87 @@
     {% endif%}
 
 
-                <span class="badge badge-primary">Estado actual</span>
+<span class="badge badge-primary">Estado actual</span>
 <div class="process-stepper">
-{% if object.workflow.completed %}
+{% if object.cancelled %}
+    {% include 'bpm/workflow_step_cancelled.html' with big=True %}
+{% else %}
+    {% if object.workflow.completed %}
             {% include 'bpm/workflow_step_complete.html' with big=True %}
     {% else %}
                 {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
     {% endif %}
-</div>
-
-
-
-
-{% if not object.workflow.completed %}
-
-
-
-                <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
-                    {% if not first_step %}
-                    {% if perms.accounts.mespermission_can_update_signups %}
-                    <input type="submit" name="complete_step" class="btn btn-lg btn-primary mr-3" value="Completar paso" />
-                    {% endif %}
-                    {% endif %}
-
-                    {% if perms.accounts.mespermission_can_comment_signups %}
-                    <button class="btn btn-light btn-lg" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
-    Añadir comentario
-  </button>
-</p>
-<div class="collapse" id="commentContainer">
-  {{comment_form.as_p}}
-                    <input type="submit" name="add_comment" class="btn btn-lg btn-light" value="Enviar" />
-</div>
-                    {% endif %}
-                    {% csrf_token %}
-
-                </form>
 {% endif %}
-            </div>
+</div>
 
-            <div class="col-md-6">
+
+{% if not object.workflow.completed and not object.cancelled%}
+    <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
+        {% if not first_step %}
+        {% if perms.accounts.mespermission_can_update_signups %}
+        <input type="submit" name="complete_step" class="btn btn-lg btn-primary mr-3" value="Completar paso" />
+        {% endif %}
+        {% endif %}
+
+        {% if perms.accounts.mespermission_can_comment_signups %}
+        <button class="btn btn-light btn-lg" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
+        Añadir comentario
+        </button>
+
+        <div class="collapse" id="commentContainer">
+            {{comment_form.as_p}}<
+            <input type="submit" name="add_comment" class="btn btn-lg btn-light" value="Enviar" />
+        </div>
+        {% endif %}
+        {% csrf_token %}
+
+    </form>
+
+     <form method="post" action="{% url 'accounts:cancel_signup' %}">
+         {% csrf_token %}
+         <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
+        <input type="hidden" name="process" value="{{object.pk}}">
+
+        <div class="modal fade" id="cancel-process" tabindex="-1" role="dialog" aria-labelledby="cancel-process-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancel-process-label">Cancelar proceso</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+              <div class="mb-4 display-2 text-muted"> <i class="material-icons">error_outline</i></div>
+              <p class="lead">¿Estás segura de que deseas cancelar el proceso?</p>
+               Esta acción cerrará el proceso de acogida en negativo.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     </form>
+
+{% endif %}
+    </div>
+
+<div class="col-md-6">
 <h5>Historial</h5>
 <div class="stepper-vert process-stepper">
-        {% for event in object.workflow.history_events.all %}
+{% for event in object.workflow.history_events.all %}
   <div class="stepper active">
-      {% if event.step %}
-    <div class="stepper-icon"  style="background-color:{%if event.step.color %}{{event.step.color}}{%endif%}" >
-      <i class="{{event.step.fa_icon}}"></i>
-
-        {% else %}
-
+    {% if event.step %}
+        <div class="stepper-icon"  style="background-color:{%if event.step.color %}{{event.step.color}}{%endif%}" >
+        <i class="{{event.step.fa_icon}}"></i>
+    {% else %}
         <div class="stepper-icon"  style="background-color:#fff" >
-      <i class="material-icons text-dark">comment</i>
-
-        {%endif%}
-
-    </div>
+        <i class="material-icons text-dark">comment</i>
+    {%endif%}
+  </div>
     <span class="stepper-text">
         {% if event.step %}
         <h5>{{event.step.title}}</h5>
@@ -129,26 +155,21 @@
         {% endif %}
     </span>
   </div>
-        {% endfor %}
+{% endfor %}
 
       <div class="stepper active">
-
         <div class="stepper-icon"  style="background-color:#ddd" >
       <i class="material-icons text-dark">star</i>
-
-
     </div>
     <span class="stepper-text">
         <span class="font-weight-light"> Inicio del proceso</span>
         <br>{{object.workflow.start_time}}
-
     </span>
   </div>
 
 </div>
 
-            </div>
-
+</div>
         </div>
     </div>
 
