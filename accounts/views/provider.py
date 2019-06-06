@@ -87,6 +87,8 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
         context['fee'] = FeeRange.calculate_fee(self.object)
         context['categories'] = Category.objects.all()
         context['payments'] = PendingPayment.objects.filter(account=self.object)
+        context['signup'] = self.object.signup_process.first()
+        print self.object.signup_process.all()
         context['profile_tab'] = True
 
         return context
@@ -167,5 +169,6 @@ class ProviderUpdateView(UpdateView):
         process = self.getSignup()
         if process != None:
             account = process.account
-            account.process = process
+            if account:
+                account.process = process
             return account

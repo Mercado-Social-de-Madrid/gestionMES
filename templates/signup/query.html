@@ -14,7 +14,11 @@
 <td class="entity-td">{% if item.account %} {{item.account.display_name }} {% else %} {{item.name}} {% endif %} </td>
 <td>{{item.member_type}}</td>
 <td>
-    {% include 'bpm/current_state.html' with workflow=item.workflow %}
+    {% if item.cancelled %}
+        {% include 'bpm/current_state.html' with cancelled=True %}
+    {% else %}
+        {% include 'bpm/current_state.html' with workflow=item.workflow %}
+    {% endif %}
 </td>
 <td>{{item.last_update|date:'d/m/Y H:i'}}</td>
 
