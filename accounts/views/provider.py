@@ -88,7 +88,6 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
         context['categories'] = Category.objects.all()
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['signup'] = self.object.signup_process.first()
-        print self.object.signup_process.all()
         context['profile_tab'] = True
 
         return context
@@ -104,7 +103,6 @@ class ProviderSignup(XFrameOptionsExemptMixin, CreateView):
         SignupProcess.objects.create_process(account=self.object)
 
         return response
-
 
     def get_context_data(self, **kwargs):
         context = super(ProviderSignup, self).get_context_data(**kwargs)

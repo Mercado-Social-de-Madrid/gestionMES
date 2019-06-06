@@ -37,6 +37,79 @@
 <div class="tab-content">
   <div aria-labelledby="data-tab" class="tab-pane p-4 px-5 {%if details_tab%}show active{%endif%}" id="data-form" role="tabpanel">
 
+      <div class="row px-4">
+          <div class="col-md-3">
+              <div class="card">
+                  <div class="card-body">
+                       <div class="float-left lead p-2 mb-2 mr-2">
+                      {% if object.is_active %}
+                        <i class="material-icons">check</i>
+                      {% else %}
+                        <i class="material-icons">clear</i>
+                      {% endif %}
+                           </div>
+                      <div class="float-left">
+                          <label>Estado</label><br>
+                            {{object.get_status_display}}
+                      </div>
+
+                      </div>
+              </div>
+          </div>
+          <div class="col-md-4">
+              <div class="card">
+                  <div class="card-body">
+              <label>Acogida</label><br>
+                 {% if signup %}
+                     <p class="pb-1"><a class="text-primary" href="{% url 'accounts:signup_detail' signup.pk %}"> {% include 'bpm/current_state.html' with workflow=signup.workflow %} <i class="material-icons mx-2">visibility</i></a></p>
+                  {% else %}
+                    <p class="pb-3"> Importada (previa a 2019)</p>
+                  {% endif %}
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-3">
+              {% if object.is_active %}
+                <a class="btn btn-secondary text-light mb-2" data-toggle="modal" data-target="#cancel-process">Dar de baja</a><br>
+              {% endif %}
+                <a class="btn btn-light disabled mb-2">Consultar historial</a><br>
+          </div>
+      </div>
+
+
+      {% if object.is_active %}
+
+      <form method="post" action="{% url 'accounts:consumer_delete' object.pk %}">
+         {% csrf_token %}
+         <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
+        <input type="hidden" name="process" value="{{object.pk}}">
+
+        <div class="modal fade" id="cancel-process" tabindex="-1" role="dialog" aria-labelledby="cancel-process-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancel-process-label">Baja de entidad</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+              <div class="mb-4 display-2 text-muted"> <i class="material-icons">error_outline</i></div>
+               Esta acción creará un proceso de baja para la entidad actual.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     </form>
+
+      {% endif %}
+
+
         <form method="post" class="mt-3 p-4">
             {% csrf_token %}
             {{form.media}}
