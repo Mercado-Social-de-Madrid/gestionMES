@@ -8,13 +8,8 @@
     <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
-            <div class="col-md-6">
-                <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Acogidas</a><i class="material-icons md-18 ">arrow_forward_ios</i> {{object.name}}</h4>
-            </div>
-            <div class="col-md-3">
-                <i class="material-icons mr-2 text-primary">account_circle</i>{{object.contact_person}}<br>
-                <i class="material-icons mr-2 text-primary">email</i>{{object.contact_email}}<br>
-                <i class="material-icons mr-2 text-primary">phone</i>{{object.contact_phone}}<br>
+            <div class="col-md-9">
+                <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Bajas</a><i class="material-icons md-18 ">arrow_forward_ios</i> {{object.account.display_name}}</h4>
             </div>
 
             <div class="col-md-3 text-sm-right">
@@ -32,21 +27,10 @@
 
                     <div class="mb-4 pb-2 pr-2">
                         <div class="card-body">
-                             {% if first_step %}
-                            <h5 class="card-title">Formulario de inscripción</h5>
-                            La entidad aún no ha rellenado el formulario de inscripción. Para facilitar el seguimiento del proceso,
-                            facilitar el enlace del formulario personalizado<br><small>
-                            {% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}</small>
-                            <div class=" mt-2">
-                            <a class="btn btn-light mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
-                            <a href="#" class="btn btn-secondary copy-clipboard" data-clipboard-text="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}"><i class="material-icons mr-2">link</i>Copiar enlace</a>
-                             </div>
-                            {% endif %}
-
                             {% if object.account %}
                                 {% include 'account/simple_profile.html' with account=object.account %}
                             <div class="mt-2">
-                            <a class="btn btn-secondary mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
+                            <a class="btn btn-secondary mr-2" href="">Ver detalle de socia</a>
                              </div>
                             {% endif %}
                         </div>
@@ -72,12 +56,11 @@
 </div>
 
 
-{% if not object.workflow.completed and not object.cancelled%}
+{% if not object.workflow.completed and not object.cancelled %}
     <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
-        {% if not first_step %}
+
         {% if perms.accounts.mespermission_can_update_signups %}
         <input type="submit" name="complete_step" class="btn btn-lg btn-primary mr-3" value="Completar paso" />
-        {% endif %}
         {% endif %}
 
         {% if perms.accounts.mespermission_can_comment_signups %}

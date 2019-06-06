@@ -109,14 +109,10 @@ def signup_form_redirect(request, uuid):
 
 
 def cancel_signup(request):
-    print 'aaaa'
     if request.method == "POST":
-        print 'post'
         redirect_url = request.POST.get('redirect_to', '')
         process_pk = request.POST.get('process', None)
 
-        print redirect_url
-        print process_pk
         if redirect_url and process_pk:
             process = SignupProcess.objects.filter(pk=process_pk).first()
             if process:

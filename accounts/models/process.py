@@ -212,6 +212,17 @@ class SignupProcess(AccountProcess):
             PendingPayment.objects.filter(account=self.account).delete()
 
 
+class DeletionManager(models.Manager):
+
+    def pending(query, entity=None):
+        return query.filter(workflow__completed=False)
+
+    def create_process(self, account):
+        deletion = self.create(account=account, member_type=account.member_type)
+        deletion.initialize()
+        return deletion
+
+
 class DeletionProcess(AccountProcess):
     account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='deletion_process')
 
@@ -227,6 +238,13 @@ class DeletionProcess(AccountProcess):
             ("mespermission_can_update_deletions", _("Puede actualizar el estado de un proceso de baja")),
         )
 
+    objects = DeletionManager()
+
+    def update(self, event):
+
+        if event.workflow.completed:
+            self.account.status = OPTED_OUT
+            self.account.save()
 
 @receiver(post_save, sender=ProcessWorkflowEvent)
 def update_process_event(sender, instance, **kwargs):
