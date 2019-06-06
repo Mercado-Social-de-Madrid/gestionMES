@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^signup/processes/(?P<pk>\d+)/$', views.SignupDetailView.as_view(), name='signup_detail'),
     url(r'^signup/processes/cancel/$', views.cancel_signup, name='cancel_signup'),
 
+    url(r'^deletion/processes/$', views.DeletionListView.as_view(), name='deletion_list'),
     url(r'^deletion/processes/(?P<pk>\d+)/$', views.DeletionDetailView.as_view(), name='deletion_detail'),
 ]
 

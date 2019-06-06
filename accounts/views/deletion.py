@@ -32,6 +32,34 @@ def delete_account(request, pk):
 
     return False
 
+
+
+class DeletionFilterForm(BootstrapForm):
+    field_order = ['o', 'search', 'status', ]
+
+
+class DeletionFilter(django_filters.FilterSet):
+
+    search = SearchFilter(names=['name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
+    o = LabeledOrderingFilter(fields=['name', 'last_update'], field_labels={'name':'Nombre', 'last_update':'Última actualización'})
+    status = WorkflowFilter(['prov_signup'], label='Estado')
+
+    class Meta:
+        model = SignupProcess
+        form = DeletionFilterForm
+        fields = { 'member_type':['exact'], }
+
+
+class DeletionListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+
+    queryset = DeletionProcess.objects.pending().order_by('-last_update')
+    objects_url_name = 'deletion_detail'
+    template_name = 'deletion/list.html'
+    ajax_template_name = 'deletion/query.html'
+    filterset_class = DeletionFilter
+    paginate_by = 15
+
+
 class DeletionDetailView(DetailView):
     template_name = 'deletion/detail.html'
     queryset = DeletionProcess.objects.all()
