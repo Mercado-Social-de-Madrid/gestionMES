@@ -218,8 +218,9 @@ class DeletionManager(models.Manager):
         return query.filter(workflow__completed=False)
 
     def create_process(self, account):
-        deletion = self.create(account=account, member_type=account.member_type)
-        deletion.initialize()
+        deletion, created = self.get_or_create(account=account, member_type=account.member_type)
+        if created:
+            deletion.initialize()
         return deletion
 
 
