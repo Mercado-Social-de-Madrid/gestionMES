@@ -4,7 +4,9 @@ from django.http import HttpResponse
 import dateutil.parser
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import DetailView
 
+from core.mixins.ModelFieldsViewMixin import ModelFieldsViewMixin
 from sermepa.signals import payment_was_successful, refund_was_successful, payment_was_error, signature_error
 from sermepa.forms import SermepaResponseForm
 from sermepa.models import OPER_REFUND, SermepaResponse
@@ -82,3 +84,10 @@ def sermepa_ipn(request):
             signature_error.send(sender=sermepa_resp)  # signal
 
     return redirect('payments:payment_success')
+
+
+class SermepaResponseDetailView(ModelFieldsViewMixin, DetailView):
+    template_name = 'payments/sermepa_response.html'
+    queryset = SermepaResponse.objects.all()
+    form_class = SermepaResponse
+    model = SermepaResponse

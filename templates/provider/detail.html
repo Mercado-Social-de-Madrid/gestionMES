@@ -57,7 +57,7 @@
 
     <div aria-labelledby="payments-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="payments-form" role="tabpanel">
        <h3 class="text-primary"><i class="material-icons mr-1">receipt</i> Pagos</h3>
-       {% include 'common/list/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments object_url_name='payments:payment_detail' %}
+       {% include 'common/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments object_url_name='payments:payment_detail' %}
 
     </div>
 

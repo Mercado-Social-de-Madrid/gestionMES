@@ -1,0 +1,9 @@
+<div class="data-columns">
+{% for field in obj_field_values %}
+    <div class="field mb-2">
+        <label>{{field.label}}</label><br>
+    {{field.value|default_if_none:'-'}}
+    </div>
+
+{% endfor %}
+</div>

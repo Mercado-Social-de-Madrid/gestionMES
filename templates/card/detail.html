@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load settings_value %}
+
+{% block title %}Detalles de pago{% endblock %}
+
+
+{% block content %}
+
+
+<div class="jumbotron py-4 px-2">
+    <div class="container">
+        <div class="row">
+        <div class="col-md-12">
+            <h4 class="mb-0"><a href="{% url 'payments:card_payments_list' %}">Movimientos de tarjeta</a><i class="material-icons md-18 ">arrow_forward_ios</i> Ref. {{object.reference}}</h4>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+
+<div class="container pt-4">
+
+    <div class="row">
+         <div class="col-md-5 mb-3">
+            {% include 'account/simple_profile.html' with account=object.account %}
+             <div class="mt-2 pl-4">
+             <a class="btn btn-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
+             </div>
+        </div>
+
+        <div class="col-md-7">
+            {% if object.pending_payment %}
+                {% include 'payments/detail_card.html' with payment=object.pending_payment %}
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% if object.bank_response %}
+        <div class="card p-4 mt-3">
+            <div class="card-body">
+                <h4 class="card-title text-primary">Datos del TPV</h4>
+                {% url 'sermepa_response' object.bank_response.pk as bank_response %}
+                {% include 'common/ajax_wrapper.html' with data_initial=bank_response %}
+            </div>
+        </div>
+
+
+        {% endif %}
+
+
+</div>
+
+
+{% endblock %}

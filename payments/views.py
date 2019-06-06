@@ -24,6 +24,7 @@ from core.forms.password import PasswordForm
 from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from core.mixins.ModelFieldsViewMixin import ModelFieldsViewMixin
 from core.models import User
 
 from payments.forms.payment import PaymentForm
@@ -74,27 +75,24 @@ class PaymentDetailView(UpdateView):
     def get_success_url(self):
         return reverse('payments:payment_detail', kwargs={'pk': self.object.pk})
 
-    def get_context_data(self, **kwargs):
-        context = super(PaymentDetailView, self).get_context_data(**kwargs)
-
-        form = WorkflowEventForm(initial={
-            'workflow':context['object'],
-            'redirect_to': reverse('accounts:signup_detail', kwargs={'pk': self.object.pk})
-        })
-        context['comment_form'] = form
-        return context
 
 
 class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
-    queryset = PendingPayment.objects.filter(concept='aaaaaa')
-    objects_url_name = 'payment_detail'
+    queryset = CardPayment.objects.filter(paid=True).order_by('-attempt')
+    objects_url_name = 'card_payment_detail'
     template_name = 'card/list.html'
     ajax_template_name = 'card/query.html'
     paginate_by = 15
 
-    model = PendingPayment
+    model = CardPayment
 
+
+class CardPaymentDetailView(ModelFieldsViewMixin, UpdateView):
+    template_name = 'card/detail.html'
+    queryset = CardPayment.objects.all()
+    form_class = PaymentForm
+    model = CardPayment
 
 @xframe_options_exempt
 def form(request, uuid):
