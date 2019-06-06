@@ -91,7 +91,7 @@ class Migration(migrations.Migration):
                 ('longitude', models.FloatField(default=0, verbose_name='Longitud')),
                 ('logo', imagekit.models.fields.ProcessedImageField(blank=True, null=True, upload_to=helpers.filesystem.RandomFileName('entities/'), verbose_name='Logo en alta resoluci\xf3n')),
                 ('banner', imagekit.models.fields.ProcessedImageField(blank=True, null=True, upload_to=helpers.filesystem.RandomFileName('entities/'), verbose_name='Banner alta resoluci\xf3n')),
-                ('start_year', models.PositiveSmallIntegerField(blank=True, default=datetime.datetime.now, null=True, validators=[django.core.validators.MinValueValidator(1900), django.core.validators.MaxValueValidator(2019)], verbose_name='A\xf1o de inicio del proyecto')),
+                ('start_year', models.PositiveSmallIntegerField(blank=True, default=2019, null=True, validators=[django.core.validators.MinValueValidator(1900), django.core.validators.MaxValueValidator(2019)], verbose_name='A\xf1o de inicio del proyecto')),
                 ('contact_person', models.TextField(blank=True, null=True, verbose_name='Persona de contacto')),
             ],
             options={
