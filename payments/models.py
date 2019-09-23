@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 
 import uuid
 from datetime import datetime
+
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models.signals import post_save
@@ -100,27 +102,30 @@ class PaymentsManager(models.Manager):
         return payment
 
     def get_card_payment(self, reference):
+        try:
+            card_payment = CardPayment.objects.filter(reference=reference)
+            if card_payment.exists():
+                return card_payment.first(), False
 
-        card_payment = CardPayment.objects.filter(reference=reference)
-        if card_payment.exists():
-            return card_payment.first(), False
+            # If the reference is related to a payment, we create a new card payment
+            payment = self.filter(reference=reference)
+            if payment.exists():
+                payment = payment.first()
+                if not payment.completed:
+                    card_payment = CardPayment.objects.create(
+                        account=payment.account,
+                        type=PENDING_PAYMENT,
+                        pending_payment=payment,
+                        amount=payment.amount
+                    )
+                    return card_payment, False
+                else:
+                    return payment, True
+        except ValidationError:
+            # In case a wrong UUID format is passed
+            pass
 
-        # If the reference is related to a payment, we create a new card payment
-        payment = self.filter(reference=reference)
-        if payment.exists():
-            payment = payment.first()
-            if not payment.completed:
-                card_payment = CardPayment.objects.create(
-                    account=payment.account,
-                    type=PENDING_PAYMENT,
-                    pending_payment=payment,
-                    amount=payment.amount
-                )
-                return card_payment, False
-            else:
-                return payment, True
-
-        return None, True
+        return None, False
 
 
     def process_sermepa_payment(self, sermepa_response):

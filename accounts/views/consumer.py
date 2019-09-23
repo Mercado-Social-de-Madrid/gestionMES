@@ -79,9 +79,8 @@ class ConsumerSignup(XFrameOptionsExemptMixin, CreateView):
         else:
             process = SignupProcess.objects.filter(account=self.object).first()
             if process and process.should_show_payment():
-
                 payment = PendingPayment.objects.filter(account=self.object).first()
-                return reverse('payments:payment_form', kwargs={'uuid': payment.reference} )
+                return reverse('accounts:signup_success')+'?payment='+payment.uuid
             else:
                 return reverse('accounts:signup_success')
 

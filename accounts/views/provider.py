@@ -61,9 +61,11 @@ class ProvidersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMi
     paginate_by = 15
 
     csv_filename = 'proveedoras'
-    available_fields = ['cif', 'name', 'business_name', 'public_address', 'address',  'contact_email', 'contact_phone',
+    available_fields = ['cif', 'name', 'business_name', 'public_address', 'address',  'contact_email', 'contact_phone', 'contact_person', 'territory',
+                        'description', 'short_description',
                         'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'is_physical_store',
-                        'bonus_percent_entity', 'bonus_percent_general', 'max_percent_payment', 'start_year']
+                        'bonus_percent_entity', 'bonus_percent_general', 'max_percent_payment', 'start_year', 'facebook_link', 'webpage_link', 'twitter_link', 'instagram_link',
+                        'telegram_link', ]
 
 
 class ProviderDetailView(TabbedViewMixin, UpdateView):

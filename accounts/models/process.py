@@ -145,8 +145,7 @@ class SignupProcess(AccountProcess):
 
     def should_show_payment(self):
         if self.account.get_real_instance_class() is Consumer:
-            if self.is_in_payment_step():
-                return self.account.pay_by_debit == False
+            return self.is_in_payment_step()
 
 
     def update(self, event):

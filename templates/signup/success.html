@@ -22,5 +22,13 @@
         <div class="text-center mt-3">
             <img src="{% static 'imgs/people-success.png' %}" class="img-fluid">
         </div>
+
+        {% if payment %}
+            <h4>Pago de cuota</h4>
+            Si quieres, puedes realizar el pago de tu cuota con tarjeta en este momento en vez de esperar
+            a que se te domicilie.
+
+            {% include 'payments/payment_form_card.html' %}
+        {% endif %}
     </div>
 {% endblock content %}

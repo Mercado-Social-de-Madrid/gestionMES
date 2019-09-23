@@ -20,6 +20,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from mes import settings
 from payments.models import PendingPayment
+from payments.views import generate_payment_form
 from simple_bpm.custom_filters import WorkflowFilter
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
 
@@ -94,6 +95,20 @@ class SignupDetailView(DetailView):
 
 class SignupSuccessView(TemplateView):
     template_name = "signup/success.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(SignupSuccessView, self).get_context_data(**kwargs)
+        payment_uuid = self.request.GET.get('payment', None)
+
+        if payment_uuid:
+            paid, card_payment, form = generate_payment_form(payment_uuid)
+            if not paid and card_payment:
+                context['payment'] = True
+                context['uuid'] = payment_uuid
+                context['form'] = form
+                context['card_payment'] = card_payment
+
+        return context
 
 def signup_form_redirect(request, uuid):
 

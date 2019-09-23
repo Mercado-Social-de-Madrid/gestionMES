@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.contrib import messages
 from django.contrib.sites.models import Site
+from django.core.exceptions import ValidationError
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -94,30 +95,26 @@ class CardPaymentDetailView(ModelFieldsViewMixin, UpdateView):
     form_class = PaymentForm
     model = CardPayment
 
-@xframe_options_exempt
-def form(request, uuid):
-    site = Site.objects.get_current()
 
+def generate_payment_form(payment_uuid, URL_params=''):
+    site = Site.objects.get_current()
     merchant_data = 0
     trans_type = '0'
-    card_payment, already_paid = PendingPayment.objects.get_card_payment(reference=uuid)
+    card_payment, already_paid = PendingPayment.objects.get_card_payment(reference=payment_uuid)
 
     if already_paid:
-        return HttpResponse(render_to_response('payments/pay_form_paid.html',
-                                               {'request': request, 'uuid': uuid, 'payment': card_payment }))
+        return True, None, None
 
     if card_payment:
         merchant_data = card_payment.pk
         amount = int(card_payment.amount * 100)
     else:
-        return Http404()
-
-    # print "http://%s%s" % (site.domain, reverse('sermepa_ipn'))
-    params = '' if not 'from_app' in request.GET else '?from_app=true'
+        return False, None, None
 
     sermepa_dict = {
         "Ds_Merchant_Titular": card_payment.account.display_name,
-        "Ds_Merchant_MerchantData": merchant_data,  # id del Pedido o Carrito, para identificarlo en el mensaje de vuelta
+        "Ds_Merchant_MerchantData": merchant_data,
+    # id del Pedido o Carrito, para identificarlo en el mensaje de vuelta
         "Ds_Merchant_MerchantName": settings.SERMEPA_MERCHANT_NAME,
         "Ds_Merchant_ProductDescription": card_payment.concept,
         "Ds_Merchant_Amount": amount,
@@ -125,8 +122,8 @@ def form(request, uuid):
         "Ds_Merchant_MerchantCode": settings.SERMEPA_MERCHANT_CODE,
         "Ds_Merchant_Currency": settings.SERMEPA_CURRENCY,
         "Ds_Merchant_MerchantURL": "https://%s%s" % (site.domain, reverse('sermepa_ipn')),
-        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse('payments:payment_success')) + params,
-        "Ds_Merchant_UrlKO": "https://%s%s" % (site.domain, reverse('payments:payment_error')) + params,
+        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse('payments:payment_success')) + URL_params,
+        "Ds_Merchant_UrlKO": "https://%s%s" % (site.domain, reverse('payments:payment_error')) + URL_params,
     }
 
     order = SermepaIdTPV.objects.new_idtpv()  # Tiene que ser un número único cada vez
@@ -136,7 +133,28 @@ def form(request, uuid):
     })
     form = SermepaPaymentForm(initial=sermepa_dict, merchant_parameters=sermepa_dict)
 
-    return HttpResponse(render_to_response('payments/pay_form.html', {'request':request, 'form': form, 'uuid':uuid, 'payment':card_payment, 'debug': settings.SERMEPA_DEBUG }))
+    return False, card_payment, form
+
+@xframe_options_exempt
+def form(request, uuid):
+
+    # print "http://%s%s" % (site.domain, reverse('sermepa_ipn'))
+    params = '' if not 'from_app' in request.GET else '?from_app=true'
+
+    payment = PendingPayment.objects.filter(reference=uuid).first()
+    if payment and payment.completed:
+        return HttpResponse(render_to_response('payments/pay_form_paid.html',
+                                               {'request': request, 'uuid': uuid, 'payment': payment}))
+
+    paid, card_payment, form = generate_payment_form(uuid, URL_params=params)
+    if paid:
+        return HttpResponse(render_to_response('payments/pay_form_paid.html',
+                                               {'request': request, 'uuid': uuid, 'payment': payment,
+                                                'card_payment': card_payment}))
+
+    return HttpResponse(render_to_response('payments/pay_form.html',
+                                           {'request': request, 'uuid': uuid, 'payment': payment, 'form': form,
+                                            'card_payment': card_payment, 'debug': settings.SERMEPA_DEBUG}))
 
 @xframe_options_exempt
 def payment_success(request):

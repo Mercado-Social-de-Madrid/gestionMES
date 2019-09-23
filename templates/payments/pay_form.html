@@ -18,55 +18,6 @@
     </div>
 {% endif %}
 
-<div class="container pt-4" style="max-width:500px;">
-
-
-
-            <div class="card mb-3">
-        <div class="card-body">
-        <div class="d-flex align-items-stretch">
-            <div class="pr-4 align-self-center text-center">
-                <h3 class="text-black-50">{{payment.amount}}€</h3>
-                 {% if payment.completed %}
-                    <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
-                {% else %}
-                    <i class="material-icons">access_time</i> <small>Pendiente</small>
-                {% endif %}
-            </div>
-            <div>
-				<strong>{{payment.account.display_name}}</strong><br>
-                <span class="badge badge-light">Ref. </span> <small>{{uuid}}</small><br>
-                <span class="badge badge-light">Creado</span> {{payment.added|date:'d/m/Y H:i'}}<br>
-				<hr>
-				<span class="badge badge-light">CONCEPTO</span><br>
-                {{payment.concept}}
-
-            </div>
-        </div>
-
-
-        </div>
-	<div class="card-footer text-center">
-
-
-
-    {% if debug %}
-        <div class="alert alert-warning mt-4" role="alert">
-              <strong>TPV en entorno de pruebas!</strong><br><br>
-		    {{ form.sandbox }}
-        </div>
-	{% else %}
-		{{ form.render }}
-	{% endif %}
-
-
-
-
-
-	</div>
-
-    </div>
-</div>
-
+{% include 'payments/payment_form_card.html' %}
 
 {% endblock %}
