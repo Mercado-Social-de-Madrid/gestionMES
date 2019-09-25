@@ -173,6 +173,7 @@ class Entity(Account):
     apportations = models.TextField(blank=True, verbose_name=_('Qué trata de aportar vuestro proyecto a la transformación social'))
     networking = models.TextField(blank=True, verbose_name=_('Redes/organizaciones/iniciativas de transformación social de las que la entidad forma parte'))
 
+
     class Meta:
         verbose_name = _('Entidad')
         verbose_name_plural = _('Entidades')

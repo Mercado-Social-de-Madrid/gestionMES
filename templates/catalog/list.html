@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Proovedoras{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    {% include 'common/list/filter_form.html' %}
+    {% include 'common/ajax_wrapper.html' with query_template='catalog/query.html' %}
+</div>
+
+{% endblock %}

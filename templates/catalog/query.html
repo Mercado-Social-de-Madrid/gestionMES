@@ -1,0 +1,48 @@
+{% extends 'common/list/base.html' %}
+{% load staticfiles %}
+
+ {% block table_head %}
+    <th scope="col"></th>
+
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">
+   {% with item.social_balances.all.0 as balance %}
+   <div class="row py-4">
+      <div class="col-md-2 px-3 text-center">
+         <img class="rounded img-fluid mb-3" src="{% if item.logo %}{{item.logo.url}}{% else %}{% static 'imgs/provider-icon.png' %}{% endif %}">
+      </div>
+      <div class="col-md-5">
+
+         <h3>{{item.display_name}}</h3>
+         {{item.short_description}}<br>
+         {{item.public_address}}
+         {% include 'common/social_links.html' with obj=item %}
+      </div>
+      <div class="col-md-5">
+         <h4 class="text-primary">Balance social</h4>
+         <div class="text-center">
+         {% if balance.is_exempt %}
+            <img class="img-fluid" src="https://madrid.mercadosocial.net/balance/img/2016/exenta_265.jpg">
+         {% else %}
+            {% if balance.done %}
+               {% if balance.is_public %}
+               <a href="https://madrid.mercadosocial.net/balance/balances_2018/{{balance.external_id}}.pdf" target="_blank">
+                  {% endif %}
+               <img class="img-fluid" src="https://madrid.mercadosocial.net/balance/img/entidades/{{balance.external_id}}.jpg">
+                {% if balance.is_public %}</a>{% endif %}
+            {% else %}
+               <img class="img-fluid" src="https://madrid.mercadosocial.net/balance/img/no_hecho_265.png">
+            {% endif %}
+         {% endif %}
+         </div>
+      </div>
+   </div>
+
+   {% endwith %}
+</td>
+
+{% endblock %}
