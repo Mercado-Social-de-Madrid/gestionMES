@@ -41,7 +41,7 @@ class ProviderFilter(django_filters.FilterSet):
 class ProvidersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     model = Provider
-    queryset = Provider.objects.all()
+    queryset = Provider.objects.all().prefetch_related('app_user')
     objects_url_name = 'provider_detail'
     template_name = 'provider/list.html'
     ajax_template_name = 'provider/query.html'

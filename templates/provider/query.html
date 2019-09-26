@@ -5,7 +5,7 @@
     <th scope="col">Forma legal</th>
     {% if not simple_list %}
     <th scope="col">Fecha de alta</th>
-    <th scope="col">Asistió última feria</th>
+    <th scope="col">Sincr. en app</th>
     {% endif %}
 {% endblock %}
 
@@ -16,6 +16,18 @@
 <td>{% if item.legal_form %} {{item.legal_form}} {% else %} - {% endif %}</td>
 {% if not simple_list %}
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
-<td><i class="material-icons">{%if item.assisted_last_fair %}check_box{% else %}check_box_outline_blank{% endif %}</i> </td>
+<td>
+   {%if item.app_user.exists %}
+      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
+      {% if item.app_user.first.username %}
+         <i class="material-icons text-success" data-toggle="tooltip" data-placement="bottom" title="Registrada">done_all</i>
+      {% endif %}
+
+      {% if item.logo %}
+         <i class="material-icons text-primary" data-toggle="tooltip" data-placement="bottom" title="Logo">image</i>
+      {% endif %}
+
+   {% endif %}
+</td>
 {% endif %}
 {% endblock %}
