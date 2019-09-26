@@ -6,7 +6,7 @@ from io import BytesIO
 import requests
 from urllib3.util import url
 
-from accounts.models import Account, Consumer, Provider
+from accounts.models import Account, Consumer, Provider, Category
 from currency.models import GuestAccount, CurrencyAppUser
 
 
@@ -26,6 +26,12 @@ def download_entity_logo(account, logo):
 
         with open(tmp.name, 'rb') as f:
             account.logo.save(file_name, f)
+
+def update_categories(account, data):
+    if not 'categories' in data or len(data['categories'])==0:
+        return
+    
+    account.categories = Category.objects.filter(pk__in=data['categories'])
 
 
 def fetch_account(account):
@@ -110,6 +116,8 @@ def fetch_account(account):
 
             if 'logo' in account_data and account_data['logo']:
                 download_entity_logo(account, account_data['logo'] )
+
+            update_categories(account, account_data)
 
             uuid = account_data['id']
             account.save()
