@@ -22,4 +22,4 @@ class EntitySocialBalance(models.Model):
 
 
     def __unicode__(self):
-        return '{}: {}'.format(str(self.entity), self.year)
+        return '{}: {}'.format(str(self.entity), self.year).encode('utf-8')
