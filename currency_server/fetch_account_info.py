@@ -1,8 +1,31 @@
-import requests
+import tempfile
+
 from django.conf import settings
+from django.core import files
+from io import BytesIO
+import requests
+from urllib3.util import url
 
 from accounts.models import Account, Consumer, Provider
 from currency.models import GuestAccount, CurrencyAppUser
+
+
+def download_entity_logo(account, logo):
+    if account.logo:
+        print 'Image already exists'
+        return
+
+    logo_url = settings.CURRENCY_SERVER_BASE_URL + logo[1:]
+    resp = requests.get(logo_url, stream=True)
+
+    if resp.status_code == requests.codes.ok:
+        file_name = logo_url.split("/")[-1]
+        tmp = tempfile.NamedTemporaryFile(mode='wb', delete=False)
+        tmp.write(resp.raw.read())
+        tmp.close()
+
+        with open(tmp.name, 'rb') as f:
+            account.logo.save(file_name, f)
 
 
 def fetch_account(account):
@@ -84,6 +107,10 @@ def fetch_account(account):
                 account.bonus_percent_general = account_data['bonus_percent_general']
             if 'bonus_percent_entity' in account_data and account_data['bonus_percent_entity']:
                 account.bonus_percent_entity = account_data['bonus_percent_entity']
+
+            if 'logo' in account_data and account_data['logo']:
+                download_entity_logo(account, account_data['logo'] )
+
             uuid = account_data['id']
             account.save()
 
