@@ -30,8 +30,8 @@ class Command(BaseCommand):
 
                 consumer = Consumer()
                 if not 'cif' in account:
-                    print account['full_name']
-                    print 'CIF missing!'
+                    print(account['full_name'])
+                    print('CIF missing!')
                     continue
 
                 consumer.cif = account['cif']
@@ -50,7 +50,7 @@ class Command(BaseCommand):
                     if legal.exists():
                         consumer.legal_form = legal.first()
                     else:
-                        print account['legal_form']
+                        print(account['legal_form'])
 
                 consumer.contact_email = account['contact_email']
                 if 'contact_phone' in account:
@@ -63,11 +63,11 @@ class Command(BaseCommand):
                     consumer.cyclos_user = account['username']
 
 
-                print 'saving {}'.format(consumer.cif)
+                print('saving {}'.format(consumer.cif))
                 try:
                     consumer.save()
                 except IntegrityError as e:
-                    print e
+                    print(e)
                 except Exception as e:
-                    print e
+                    print(e)
 

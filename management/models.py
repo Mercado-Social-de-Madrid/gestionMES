@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 
 class Comission(models.Model):
 
-    group = models.OneToOneField(Group, unique=True)
+    group = models.OneToOneField(Group, unique=True, on_delete=models.CASCADE)
     label_color = models.CharField(max_length=20, blank=True, default="#FFFFFF")
 
     class Meta:

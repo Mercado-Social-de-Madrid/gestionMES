@@ -27,7 +27,7 @@ def register(request):
             login(request, user)
             return redirect('dashboard')
         else:
-            print form.errors
+            print(form.errors)
 
     return render(request, 'registration/signup.html', {'form': form})
 
@@ -43,7 +43,7 @@ def edit_profile(request):
         if profile_form.is_valid():
             profile_form.save()
         else:
-            print profile_form.errors
+            print(profile_form.errors)
     else:
         profile_form = ProfileForm(instance=request.user)
     password_form = PasswordForm(user=request.user)
@@ -64,7 +64,7 @@ def profile_password(request):
             messages.success(request, 'Contraseña actualizada correctamente')
             return redirect('edit_profile')
         else:
-            print password_form.errors
+            print(password_form.errors)
     else:
         password_form = PasswordForm(user=request.user)
 

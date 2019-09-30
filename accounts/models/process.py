@@ -23,7 +23,7 @@ STEP_CONSUMER_PAYMENT = 'consumer_payment'
 
 class AccountProcess(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Identificador proceso'))
-    workflow = models.ForeignKey(ProcessWorkflow, null=True, verbose_name=_('Seguimiento del proceso'))
+    workflow = models.ForeignKey(ProcessWorkflow, null=True, verbose_name=_('Seguimiento del proceso'), on_delete=models.CASCADE)
     last_update = models.DateTimeField(auto_now=True, verbose_name=_('Última actualización'))
     member_type = models.CharField(null=True, blank=True, max_length=30, choices=settings.MEMBER_TYPES,
                                    verbose_name=_('Tipo de socia'))
@@ -114,7 +114,7 @@ class SignupsManager(models.Manager):
 
 class SignupProcess(AccountProcess):
 
-    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='signup_process')
+    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='signup_process', on_delete=models.CASCADE)
     name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
     contact_person = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Persona de contacto'))
     contact_phone = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('Teléfono de contacto'))
@@ -224,7 +224,7 @@ class DeletionManager(models.Manager):
 
 
 class DeletionProcess(AccountProcess):
-    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='deletion_process')
+    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='deletion_process', on_delete=models.CASCADE)
 
     general_process = 'account_deletion'
 

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import operator
+from functools import reduce
 
 import django_filters
 from django.db.models import Q
@@ -10,7 +11,7 @@ from django.db.models import Q
 class SearchFilter(django_filters.Filter):
     def __init__(self,names,*args,**kwargs):
         if len(args) == 0:
-            kwargs['name'] = names[0]
+            kwargs['field_name'] = names[0]
         self.token_prefix = kwargs.pop('token_prefix','')
         self.token_suffix = kwargs.pop('token_suffix','')
         self.token_reducer = kwargs.pop('token_reducer',operator.and_)

@@ -35,7 +35,7 @@ class InvitationsManager(models.Manager):
 
         invitations_used = GuestInvitation.objects.filter(invited_by=account, used=True).count()
         if invitations_used >= MAX_INVITATIONS_PER_USER:
-            print 'User used all her invites!'
+            print('User used all her invites!')
             raise AllInvitesSent(invitations_used)
         else:
             invitation = self.create(invited_by=account, token=uuid.uuid4())
@@ -46,7 +46,7 @@ class InvitationsManager(models.Manager):
 
 class GuestInvitation(models.Model):
 
-    invited_by = models.ForeignKey(Account, null=True, blank=True, related_name='invitations', verbose_name=_('Invitado por'))
+    invited_by = models.ForeignKey(Account, null=True, blank=True, related_name='invitations', verbose_name=_('Invitado por'), on_delete=models.CASCADE)
     token = models.CharField(max_length=40, verbose_name=_('Token'))
     used = models.BooleanField(default=False, verbose_name=_('Utilizado'))
     single_use = models.BooleanField(default=True, verbose_name=_('De un solo uso'))
@@ -73,8 +73,8 @@ class GuestInvitation(models.Model):
 
 class GuestAccount(models.Model):
 
-    invited_by = models.ForeignKey(Account, null=True, blank=True, related_name='invited_guests', verbose_name=_('Invitada por'))
-    token_used = models.ForeignKey(GuestInvitation, null=True, blank=True, related_name='invited_guests', verbose_name=_('Token utilizado'))
+    invited_by = models.ForeignKey(Account, null=True, blank=True, related_name='invited_guests', verbose_name=_('Invitada por'), on_delete=models.SET_NULL)
+    token_used = models.ForeignKey(GuestInvitation, null=True, blank=True, related_name='invited_guests', verbose_name=_('Token utilizado'), on_delete=models.SET_NULL)
     active = models.BooleanField(default=True, verbose_name=_('Activa'))
     guest_reference = models.CharField(default=uuid.uuid4, null=True, blank=True, max_length=50, verbose_name=_('Referencia invitado'))
     cif = models.CharField(max_length=30, null=True, blank=True, verbose_name=_('NIF/CIF'), unique=True)
@@ -154,8 +154,8 @@ class CurrencyAppUser(models.Model):
     username = models.CharField(null=True, max_length=50, verbose_name=_('Nombre de usuario'))
     uuid = models.UUIDField(null=True, verbose_name=_('Identificador único'))
 
-    account = models.ForeignKey(Account, null=True, blank=True, verbose_name=_('Socia'), related_name='app_user')
-    guest_account = models.ForeignKey(GuestAccount, null=True, blank=True, verbose_name=_('Invitada'), related_name='app_user')
+    account = models.ForeignKey(Account, null=True, blank=True, verbose_name=_('Socia'), related_name='app_user', on_delete=models.CASCADE)
+    guest_account = models.ForeignKey(GuestAccount, null=True, blank=True, verbose_name=_('Invitada'), related_name='app_user', on_delete=models.CASCADE)
 
     objects = CurrencyAppUsersManager()
 

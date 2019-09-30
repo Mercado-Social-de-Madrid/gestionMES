@@ -56,17 +56,17 @@ class Command(BaseCommand):
                 if not added:
                     missing.append(account)
 
-        print 'Process completed!'
+        print('Process completed!')
 
-        print '{} missing:'.format(len(missing))
+        print('{} missing:'.format(len(missing)))
         for consumer in missing:
-            print consumer
+            print(consumer)
         print '---------------------------------'
-        print '{} fails:'.format(len(failed))
+        print('{} fails:'.format(len(failed)))
         for consumer in failed:
-            print consumer
+            print(consumer)
 
-        print '---------------------------------'
-        print '{} successes:'.format(len(successes))
+        print('---------------------------------')
+        print('{} successes:'.format(len(successes)))
         for consumer in successes:
-            print consumer
+            print (consumer)

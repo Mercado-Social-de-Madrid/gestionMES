@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 if 'cif' in account:
                     already_user = Account.objects.filter(cif=account['cif']).exists()
                     if already_user:
-                        print '{} exists already!'.format(account['cif'])
+                        print('{} exists already!'.format(account['cif']))
                     else:
                         guest.cif = account['cif']
 
@@ -52,7 +52,7 @@ class Command(BaseCommand):
                     if legal.exists():
                         guest.legal_form = legal.first()
                     else:
-                        print account['legal_form']
+                        print(account['legal_form'])
 
                 guest.contact_email = account['email']
                 if 'phone' in account:
@@ -65,11 +65,11 @@ class Command(BaseCommand):
                     guest.cyclos_user = account['cyclos_user']
 
 
-                print 'saving {}'.format(guest)
+                print('saving {}'.format(guest))
                 try:
                     guest.save()
                 except IntegrityError as e:
-                    print e
+                    print(e)
                 except Exception as e:
-                    print e
+                    print(e)
 

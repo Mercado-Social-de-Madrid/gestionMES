@@ -23,11 +23,11 @@ class Command(BaseCommand):
             try:
                 create_account.post_entity(provider)
             except:
-                print '{}: Failed!'.format(provider)
+                print('{}: Failed!'.format(provider))
                 failed.append(provider)
 
 
-        print 'Process completed!'
-        print '{} fails'.format(len(failed))
+        print('Process completed!')
+        print('{} fails'.format(len(failed)))
         for consumer in failed:
-            print consumer
+            print(consumer)

@@ -61,7 +61,7 @@ class CurrentProcess(models.Model):
 
     shortname = models.CharField(primary_key=True, unique=True, verbose_name=_('Nombre corto'), max_length=50)
     title = models.CharField(null=True, blank=True, verbose_name=_('Título'), max_length=250)
-    process = models.ForeignKey(Process, null=True, verbose_name=_('Proceso asociado'))
+    process = models.ForeignKey(Process, null=True, verbose_name=_('Proceso asociado'), on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = _('Proceso asignado')
@@ -72,7 +72,7 @@ class CurrentProcess(models.Model):
 
 # Class to define the concrete step inside a process
 class CurrentProcessStep(models.Model):
-    process = models.ForeignKey(Process, verbose_name=_('Proceso asociado'))
+    process = models.ForeignKey(Process, verbose_name=_('Proceso asociado'), on_delete=models.CASCADE)
     process_step = models.ForeignKey(ProcessStep, null=True, on_delete=models.CASCADE,
                                      verbose_name=_('Paso del proceso'))
     shortname = models.CharField(primary_key=True, unique=False, verbose_name=_('Nombre corto'), max_length=50)
@@ -83,9 +83,9 @@ class CurrentProcessStep(models.Model):
 
 
 class ProcessWorkflow(models.Model):
-    process = models.ForeignKey(Process, verbose_name=_('Proceso que sigue'))
+    process = models.ForeignKey(Process, verbose_name=_('Proceso que sigue'), on_delete=models.CASCADE)
     start_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha de inicio'))
-    current_state = models.ForeignKey(ProcessStep, null=True, verbose_name=_('Paso actual'))
+    current_state = models.ForeignKey(ProcessStep, null=True, verbose_name=_('Paso actual'), on_delete=models.CASCADE)
     completed = models.BooleanField(default=False, verbose_name=_('Completado'))
 
     class Meta:
@@ -130,9 +130,9 @@ class ProcessWorkflow(models.Model):
 
 
 class ProcessWorkflowEvent(models.Model):
-    workflow = models.ForeignKey(ProcessWorkflow, verbose_name=_('Evento de un proceso'), related_name='history_events')
-    step = models.ForeignKey(ProcessStep, null=True, verbose_name=_('Paso del proceso'))
-    completed_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario'))
+    workflow = models.ForeignKey(ProcessWorkflow, verbose_name=_('Evento de un proceso'), related_name='history_events', on_delete=models.CASCADE)
+    step = models.ForeignKey(ProcessStep, null=True, verbose_name=_('Paso del proceso'), on_delete=models.CASCADE)
+    completed_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario'), on_delete=models.SET_NULL)
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comentario'))
 
@@ -143,9 +143,9 @@ class ProcessWorkflowEvent(models.Model):
 
 
 class ProcessWorkflowTask(models.Model):
-    workflow = models.ForeignKey(ProcessWorkflow, verbose_name=_('Evento de un proceso'), related_name='completed_checklist')
-    task = models.ForeignKey(ProcessStepTask, null=True, verbose_name=_('Tarea completada'))
-    completed_by = models.ForeignKey(User, verbose_name=_('Usuario'))
+    workflow = models.ForeignKey(ProcessWorkflow, verbose_name=_('Evento de un proceso'), related_name='completed_checklist', on_delete=models.CASCADE)
+    task = models.ForeignKey(ProcessStepTask, null=True, verbose_name=_('Tarea completada'), on_delete=models.CASCADE)
+    completed_by = models.ForeignKey(User, verbose_name=_('Usuario'), null=True, on_delete=models.SET_NULL)
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha'))
 
     class Meta:

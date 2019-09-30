@@ -20,12 +20,11 @@ from django.contrib import admin
 
 from api.urls import get_api
 from core import urls as core_urls
-from simple_bpm import urls as bpm_urls
 
 urlpatterns = [
     url(r'^', include(core_urls)),
     url(r'^', include('currency.urls', namespace='currency')),
-    url(r'^bpm/', include(bpm_urls, namespace='bpm')),
+    url(r'^bpm/', include('simple_bpm.urls', namespace='bpm')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
     url(r'^management/', include('management.urls', namespace='management')),
     url(r'^jet/', include('jet.urls', 'jet')),

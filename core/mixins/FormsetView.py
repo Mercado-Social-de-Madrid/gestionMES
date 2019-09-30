@@ -23,8 +23,8 @@ class FormsetView(FormMixin):
             formset_instance = formset(self.request.POST, self.request.FILES)
             if not formset_instance.is_valid():
                 errors = formset_instance.errors
-                print errors
-                print 'invalid formset!!'
+                print(errors)
+                print('invalid formset!!')
                 return self.form_invalid(form)
 
 

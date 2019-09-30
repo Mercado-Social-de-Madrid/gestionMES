@@ -84,7 +84,7 @@ def post_guest(guest):
         'email': guest.contact_email,
         'person': guest_dict
     })
-    print r.status_code
+    print(r.status_code)
 
     if r.ok:
         result = r.json()

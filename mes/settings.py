@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'currency',
     'jet',
     'sermepa',
-
     'core',
     'django_filters',
     'ckeditor',
@@ -206,4 +205,4 @@ CKEDITOR_CONFIGS = {
 SERMEPA_DEBUG = True
 
 # Import secret settings (see settings_secret.py.template for reference)
-from settings_secret import *
+from mes.settings_secret import *

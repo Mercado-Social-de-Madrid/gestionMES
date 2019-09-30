@@ -32,4 +32,4 @@ class Command(BaseCommand):
 
         print('Completed fetching info from {} accounts! Missing {} accounts'.format(accounts.count(), len(notfound)) )
         for account in notfound:
-            print account
+            print(account)

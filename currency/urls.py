@@ -3,6 +3,7 @@ from django.conf.urls import url
 
 from . import views
 
+app_name='currency'
 
 urlpatterns = [
     url(r'^invite/success/$', views.InviteSuccessView.as_view(), name='invite_success'),

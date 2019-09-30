@@ -9,7 +9,7 @@ from accounts.models import Entity
 
 class EntitySocialBalance(models.Model):
 
-    entity = models.ForeignKey(Entity, null=False, blank=False, related_name='social_balances', verbose_name=_('Realizado por'))
+    entity = models.ForeignKey(Entity, null=False, blank=False, related_name='social_balances', verbose_name=_('Realizado por'), on_delete=models.CASCADE)
     is_exempt = models.BooleanField(default=False, verbose_name=_('Está exenta'))
     is_public = models.BooleanField(default=True, verbose_name=_('Informe público'))
     done = models.BooleanField(default=False, verbose_name=_('Realizado'))

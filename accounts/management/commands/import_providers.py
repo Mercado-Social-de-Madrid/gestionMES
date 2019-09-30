@@ -47,7 +47,7 @@ class Command(BaseCommand):
                     if legal.exists():
                         provider.legal_form = legal.first()
                     else:
-                        print account['legal_form']
+                        print(account['legal_form'])
 
                 if 'conditions' in account:
                     provider.payment_conditions = account['conditions']
@@ -97,10 +97,10 @@ class Command(BaseCommand):
                     for inst in instagram:
                         provider.instagram_link = 'https://instagram.com/{}'.format(inst)
 
-                print 'saving {}'.format(provider.cif)
+                print('saving {}'.format(provider.cif))
                 try:
                     provider.save()
                 except IntegrityError as e:
-                    print e
+                    print (e)
                 except Exception as e:
-                    print e
+                    print (e)

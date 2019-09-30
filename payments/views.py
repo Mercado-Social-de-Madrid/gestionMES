@@ -2,43 +2,28 @@
 from __future__ import unicode_literals
 
 import django_filters
-from django.contrib import messages
+from django.conf import settings
 from django.contrib.sites.models import Site
-from django.core.exceptions import ValidationError
-from django.http import Http404
-from django.shortcuts import redirect
+from django.http import HttpResponse
+from django.shortcuts import render_to_response
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.generic import UpdateView, CreateView, DetailView
+from django.views.generic import UpdateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
-from accounts.forms.consumer import ConsumerForm
-from accounts.forms.process import SignupProcessForm
-from accounts.forms.provider import ProviderForm
-from accounts.models import Provider, Consumer, SignupProcess, PENDING_PAYMENT
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
-from core.forms.password import PasswordForm
-from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.ModelFieldsViewMixin import ModelFieldsViewMixin
-from core.models import User
-
 from payments.forms.payment import PaymentForm
 from payments.models import PendingPayment, CardPayment
-from simple_bpm.custom_filters import WorkflowFilter
-from django.http import HttpResponse
-from django.shortcuts import render_to_response
-from django.core.urlresolvers import reverse
-from django.conf import settings
 from sermepa.forms import SermepaPaymentForm
-from sermepa.signals import payment_was_successful, payment_was_error, signature_error
 from sermepa.models import SermepaIdTPV
-from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
+from sermepa.signals import payment_was_successful, payment_was_error, signature_error
 
 
 class PendingPaymentFilterForm(BootstrapForm):
@@ -166,16 +151,16 @@ def payment_error(request):
 
 
 def payment_ok(sender, **kwargs):
-    print 'Payment ok!'
+    print('Payment ok!')
     PendingPayment.objects.process_sermepa_payment(sender)
 
 
 def payment_ko(sender, **kwargs):
-    print 'Payment bad!'
+    print('Payment bad!')
 
 
 def sermepa_ipn_error(sender, **kwargs):
-    print 'ipn error!'
+    print('ipn error!')
 
 
 payment_was_successful.connect(payment_ok)

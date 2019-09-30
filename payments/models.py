@@ -90,7 +90,7 @@ class PaymentsManager(models.Manager):
             fee = DEFAULT_CONSUMER_FEE
             share = DEFAULT_CONSUMER_SHARE
 
-        print 'Creating initial payment!'
+        print('Creating initial payment!')
         amount = fee + share
         payment.concept = "Pago inicial: {}€ ({} capital social + {} cuota anual)".format(amount, share, fee)
         payment.amount = amount
@@ -142,7 +142,7 @@ class PaymentsManager(models.Manager):
                 concept='Compra de etics')
 
             if success:
-                print uuid
+                print(uuid)
 
         elif card_payment.type == PENDING_PAYMENT and card_payment.pending_payment:
             # The card payment was related to a pending payment, so we set it as paid
@@ -162,8 +162,8 @@ class PaymentsManager(models.Manager):
 
 class PendingPayment(models.Model):
 
-    account = models.ForeignKey(Account, null=True, related_name='pending_payments', verbose_name=_('Socia'))
-    revised_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario que revisó'))
+    account = models.ForeignKey(Account, null=True, related_name='pending_payments', verbose_name=_('Socia'), on_delete=models.CASCADE)
+    revised_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario que revisó'), on_delete=models.SET_NULL)
     type = models.CharField(null=True, blank=True, max_length=30, choices=PAYMENT_METHODS,
                                    verbose_name=_('Modo de pago'))
     amount = models.FloatField(default=0, verbose_name=_('Cantidad'))
@@ -205,12 +205,12 @@ class PendingPayment(models.Model):
 
 
 class CardPayment(models.Model):
-    account = models.ForeignKey(Account, null=True, related_name='card_payments', verbose_name=_('Socia'))
+    account = models.ForeignKey(Account, null=True, related_name='card_payments', verbose_name=_('Socia'), on_delete=models.CASCADE)
     attempt = models.DateTimeField(auto_now_add=True, verbose_name=_('Añadido'))
     amount = models.FloatField(default=0, verbose_name=_('Cantidad'))
     reference = models.UUIDField(default=uuid.uuid4, auto_created=True, verbose_name=_('Referencia del pago'))
-    bank_response = models.ForeignKey(SermepaResponse, null=True, blank=True, verbose_name=_('Respuesta TPV'))
-    pending_payment = models.ForeignKey(PendingPayment, null=True, blank=True, verbose_name=_('Pago pendiente'))
+    bank_response = models.ForeignKey(SermepaResponse, null=True, blank=True, verbose_name=_('Respuesta TPV'), on_delete=models.SET_NULL)
+    pending_payment = models.ForeignKey(PendingPayment, null=True, blank=True, verbose_name=_('Pago pendiente'), on_delete=models.SET_NULL)
     type = models.CharField(null=True, blank=True, max_length=30, choices=CARD_PAYMENT_TYPES, verbose_name=_('Tipo de pago'))
     paid = models.BooleanField(default=False, verbose_name=_('Pago completado'))
 

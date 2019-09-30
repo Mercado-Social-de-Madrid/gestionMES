@@ -23,11 +23,11 @@ class Command(BaseCommand):
             try:
                 create_account.post_consumer(consumer)
             except:
-                print '{}: Failed!'.format(consumer)
+                print('{}: Failed!'.format(consumer))
                 failed.append(consumer)
 
 
-        print 'Process completed!'
-        print '{} fails'.format(len(failed))
+        print('Process completed!')
+        print('{} fails'.format(len(failed)))
         for consumer in failed:
-            print consumer
+            print(consumer)

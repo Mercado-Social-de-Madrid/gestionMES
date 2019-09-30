@@ -52,4 +52,4 @@ if is_package_installed('fcm_django'):
         else:
             result = devices.send_message(title=title, body=body, data=data)
 
-        print result
+        print(result)

@@ -39,7 +39,7 @@ class Gallery(models.Model):
 
 class GalleryPhoto(models.Model):
 
-    gallery = models.ForeignKey(Gallery, null=True, related_name='photos')
+    gallery = models.ForeignKey(Gallery, null=True, related_name='photos', on_delete=models.CASCADE)
     order = models.IntegerField(verbose_name=_('Orden'), default=0)
     title = models.CharField(null=True, blank=True, verbose_name=_('Título'), max_length=250)
     image = ProcessedImageField(null=True, blank=True, upload_to=RandomFileName('photos/'),

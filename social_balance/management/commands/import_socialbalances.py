@@ -55,5 +55,5 @@ class Command(BaseCommand):
                     balance.save()
 
                 else:
-                    print "{} does not exist.".format(cyclos_user)
+                    print("{} does not exist.".format(cyclos_user))
 

@@ -8,9 +8,9 @@ def is_package_installed(package_name):
     packages = [package.project_name for package in installed_packages]
     return package_name in packages
 
-from decorators import *
-from fcm import *
-from filesystem import *
-from query import *
-from mailing import *
+from helpers.decorators import *
+from helpers.fcm import *
+from helpers.filesystem import *
+from helpers.query import *
+from helpers.mailing import *
 

@@ -72,7 +72,7 @@ class ProcessCreateView(CreateView, FormsetView):
                 checklist_items = step.cleaned_data.get('checklist_tasks')
                 checklist = checklist_items.split(settings.INLINE_INPUT_SEPARATOR)
 
-                print process_step.pk
+                print(process_step.pk)
 
                 for order, description in enumerate(checklist, start=1):
                     if not description:

@@ -4,6 +4,8 @@ from django.conf.urls import url
 from . import views
 
 
+app_name = 'bpm'
+
 urlpatterns = [
 
     url(r'^$', views.ProcessesListView.as_view(), name='list'),
