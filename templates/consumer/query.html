@@ -4,6 +4,7 @@
     <th scope="col">Nombre</th>
     <th scope="col">Alta</th>
     <th scope="col">Consejo Rector</th>
+    <th scope="col">Sincr. en app</th>
 {% endblock %}
 
 
@@ -12,4 +13,17 @@
 <td class="entity-td">{{item.display_name}}</td>
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
 <td><i class="material-icons">{%if item.cr_member %}check_box{% else %}check_box_outline_blank{% endif %}</i> </td>
+<td>
+   {%if item.app_user.exists %}
+      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
+      {% if item.app_user.first.username %}
+         <i class="material-icons text-success" data-toggle="tooltip" data-placement="bottom" title="Registrada">done_all</i>
+      {% endif %}
+
+      {% if item.logo %}
+         <i class="material-icons text-primary" data-toggle="tooltip" data-placement="bottom" title="Logo">image</i>
+      {% endif %}
+
+   {% endif %}
+</td>
 {% endblock %}

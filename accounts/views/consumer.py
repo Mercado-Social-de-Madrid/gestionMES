@@ -47,7 +47,7 @@ class ConsumerFilter(django_filters.FilterSet):
 class ConsumersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     model = Consumer
-    queryset = Consumer.objects.all()
+    queryset = Consumer.objects.all().prefetch_related('app_user')
     objects_url_name = 'consumer_detail'
     template_name = 'consumer/list.html'
     ajax_template_name = 'consumer/query.html'

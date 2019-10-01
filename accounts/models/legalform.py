@@ -12,5 +12,8 @@ class LegalForm(models.Model):
         verbose_name = _('Forma legal')
         verbose_name_plural = _('Formas legales')
 
+    def __str__(self):
+        return self.title if self.title else ''
+
     def __unicode__(self):
         return self.title if self.title else ''
