@@ -32,7 +32,7 @@
                {% if balance.is_public %}
                <a href="https://madrid.mercadosocial.net/balance/balances_2018/{{balance.external_id}}.pdf" target="_blank">
                   {% endif %}
-               <img class="img-fluid" src="https://madrid.mercadosocial.net/balance/img/entidades/{{balance.external_id}}.jpg">
+               <img class="img-fluid" style="max-width:400px;" src="https://madrid.mercadosocial.net/balance/img/entidades/{{balance.external_id}}.jpg">
                 {% if balance.is_public %}</a>{% endif %}
             {% else %}
                <img class="img-fluid" src="https://madrid.mercadosocial.net/balance/img/no_hecho_265.png">
