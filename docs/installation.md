@@ -195,8 +195,3 @@ Una vez hecho esto, lo añadimos al sistema y lo ejecutamos:
 sudo systemctl enable uwsgi
 sudo systemctl start uwsig
 ```
-
-
-```
-/usr/local/bin/uwsgi --emperor /etc/uwsgi/vassals --uid www-data --gid www-data --daemonize /var/log/uwsgi-emperor.log
-```
