@@ -19,10 +19,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 
 from api.urls import get_api
-from core import urls as core_urls
 
 urlpatterns = [
-    url(r'^', include(core_urls)),
+    url(r'^', include('core.urls')),
     url(r'^', include('currency.urls', namespace='currency')),
     url(r'^bpm/', include('simple_bpm.urls', namespace='bpm')),
     url(r'^accounts/', include('accounts.urls', namespace='accounts')),
