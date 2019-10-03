@@ -31,7 +31,7 @@ def update_categories(account, data):
     if not 'categories' in data or len(data['categories'])==0:
         return
 
-    account.categories = Category.objects.filter(pk__in=data['categories'])
+    account.categories.set( Category.objects.filter(pk__in=data['categories']))
 
 
 def fetch_account(account):

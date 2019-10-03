@@ -180,6 +180,10 @@ class PendingPayment(models.Model):
         verbose_name = _('Pago pendiente')
         verbose_name_plural = _('Pagos pendientes')
         ordering = ['added']
+        permissions = (
+            ("mespermission_can_view_payments", _("Puede ver los pagos de cada socia")),
+            ("mespermission_can_edit_payments", _("Puede editar el estado de los pagos")),
+        )
 
     @property
     def icon_name(self):
@@ -218,6 +222,9 @@ class CardPayment(models.Model):
         verbose_name = _('Pago con tarjeta')
         verbose_name_plural = _('Pagos con tarjeta')
         ordering = ['attempt']
+        permissions = (
+            ("mespermission_can_view_card_payments", _("Puede ver los pagos con tarjeta")),
+        )
 
     @property
     def concept(self):

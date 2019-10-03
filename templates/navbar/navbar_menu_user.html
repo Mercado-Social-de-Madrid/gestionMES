@@ -44,7 +44,7 @@
             </li>
             {% endif %}
 
-            {% if perms.bpm.mespermission_can_manage_processes %}
+            {% if perms.simple_bpm.mespermission_can_manage_processes %}
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.namespace == 'bpm' %} active {% endif %}" href="{% url 'bpm:list' %}">
                   <i class="material-icons mr-3">dns</i>
@@ -92,7 +92,7 @@
           Consumidoras
         </a>
 
-         {% if perms.accounts.mespermission_can_view_guests %}
+         {% if perms.currency.mespermission_can_view_guests %}
         <li class="nav-item">
         <a class="nav-link pl-4" href="{% url 'currency:guest_user_list' %}">
           <i class="material-icons mr-3">card_membership</i>
@@ -101,6 +101,7 @@
 
          {% endif %}
 
+         {% if perms.accounts.mespermission_can_view_deletions %}
 
          <li class="nav-item">
         <a class="nav-link pl-4" href="{% url 'accounts:deletion_list' %}">
@@ -109,6 +110,7 @@
         </a>
 
       </li>
+         {% endif %}
 
      </ul>
 

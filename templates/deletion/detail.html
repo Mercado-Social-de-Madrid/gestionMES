@@ -13,7 +13,7 @@
             </div>
 
             <div class="col-md-3 text-sm-right">
-                {% if perms.accounts.mespermission_can_update_signups and not object.workflow.completed and not object.cancelled %}
+                {% if perms.accounts.mespermission_can_update_deletions and not object.workflow.completed and not object.cancelled %}
                 <a href="#" data-toggle="modal" data-target="#cancel-process" class="btn btn-primary"><i class="material-icons mr-2">block</i> Cancelar proceso</a>
                 {% endif %}
             </div>
@@ -59,11 +59,11 @@
 {% if not object.workflow.completed and not object.cancelled %}
     <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
 
-        {% if perms.accounts.mespermission_can_update_signups %}
+        {% if perms.accounts.mespermission_can_update_deletions %}
         <input type="submit" name="complete_step" class="btn btn-lg btn-primary mr-3" value="Completar paso" />
         {% endif %}
 
-        {% if perms.accounts.mespermission_can_comment_signups %}
+        {% if perms.accounts.mespermission_can_comment_deletions %}
         <button class="btn btn-light btn-lg" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
         Añadir comentario
         </button>
