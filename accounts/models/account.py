@@ -93,7 +93,7 @@ class Account(PolymorphicModel):
         return self.status == ACTIVE or self.status == INITIAL_PAYMENT or self.status == PENDING_PAYMENT
 
     def __str__(self):
-        return self.display_name.encode('utf-8')
+        return self.display_name
 
 
 class Consumer(Account):

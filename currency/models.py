@@ -66,6 +66,9 @@ class GuestInvitation(models.Model):
             template_params={ 'token':self.token, 'invited_by':self.invited_by.display_name }
         )
 
+    def __str__(self):
+        return self.token
+
     def __unicode__(self):
         return self.token
 

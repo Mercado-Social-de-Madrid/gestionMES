@@ -20,6 +20,8 @@ class EntitySocialBalance(models.Model):
         verbose_name = _('Informe de balance social')
         verbose_name_plural = _('Informes de balance social')
 
+    def __str__(self):
+        return '{}: {}'.format(self.entity.cif, self.year)
 
     def __unicode__(self):
         return '{}: {}'.format(self.entity.cif, self.year)
