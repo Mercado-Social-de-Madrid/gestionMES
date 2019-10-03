@@ -1,5 +1,5 @@
 """
-WSGI config for vicci project.
+WSGI config for gestionMES project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

@@ -114,28 +114,35 @@
 
      </ul>
 
+        {% if perms.payments.mespermission_can_view_payments or perms.payments.mespermission_can_view_card_payments %}
         <div class="navdrawer-divider"></div>
 
         <p class="navdrawer-subheader">Contabilidad</p>
 
         <ul class="navdrawer-nav">
 
+            {% if perms.payments.mespermission_can_view_payments %}
          <li class="nav-item">
         <a class="nav-link pl-4" href="{% url 'payments:payments_list' %}">
           <i class="material-icons mr-3">receipt</i>
           Pagos pendientes
         </a>
       </li>
+            {% endif %}
 
+            {% if perms.payments.mespermission_can_view_card_payments %}
             <li class="nav-item">
         <a class="nav-link pl-4" href="{% url 'payments:card_payments_list' %}">
           <i class="material-icons mr-3">credit_card</i>
           Movimientos de tarjeta
         </a>
       </li>
+        {% endif %}
 
     </ul>
+    {% endif %}
 
     </div>
+
   </div>
 </div>
