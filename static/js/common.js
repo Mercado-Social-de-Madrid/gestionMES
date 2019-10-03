@@ -204,8 +204,9 @@ function initElems(container){
     });
 
     container.find('.enhanced-select').each(function(){
-        var select = $(this).find('select').addClass('form-control');
-        $(this).find('.tags_declaration > li').each(function(){
+        var control = $(this);
+        var select = control.find('select').addClass('form-control');
+        control.find('.tags_declaration > li').each(function(){
             var tag = $(this);
             select.find('option[value="' + tag.attr('data-pk') + '"]').attr('data-color', tag.attr('data-color'));
         })
@@ -232,7 +233,9 @@ function initElems(container){
             }
         });
 
-        $(this).find('.select2').addClass('form-control').css('width','100%');
+        control.find('.select2').addClass('form-control input-group').css('width','100%').css('height','auto');
+        control.find('.select2-search__field').css('width', '100%');
+        setTimeout( function(){ control.css('width', '500px;'); }, 200);
    });
 }
 

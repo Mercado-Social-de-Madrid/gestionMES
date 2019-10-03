@@ -1,6 +1,11 @@
-<div class="enhanced-select form-group">
-    {% include 'common/tags_declaration.html' with tags=tags %}
-    <label for="{{ field.id_for_label }}">{{ field.label }}</label><br>
+<div class="enhanced-select form-group" style="min-width:120px;max-width:280px;">
+    {% if tags %}
+        {% include 'common/tags_declaration.html' with tags=tags %}
+    {% else %}
+        {% include 'common/tags_declaration.html' with tags=field from_field=True %}
+    {% endif %}
+
+    {% if not hide_label %} <label for="{{ field.id_for_label }}">{{ field.label }}</label><br> {% endif %}
     {{ field }}
 
     {% if field.errors %}
@@ -10,6 +15,6 @@
     {% endif %}
 
     {% if field.help_text%}
-      <small class="text-muted mt-2 d-block">{{ field.help_text|safe  }}</small>
+      <small class="text-muted mt-2 d-block">{{ field.help_text|safe }}</small>
     {% endif %}
 </div>

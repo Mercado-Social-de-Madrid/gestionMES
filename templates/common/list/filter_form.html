@@ -3,11 +3,11 @@
         {{ hidden }}
     {% endfor %}
 
-    <div class="d-md-flex filter-panel">
+    <div class="d-md-flex align-items-center filter-panel">
     {% for field in filter.form.visible_fields %}
 
         {% if field.field.widget.input_type == 'text' %}
-            <div class="input-group align-self-stretch mb-2 flex-fill mr-md-3">
+            <div class="input-group align-self-center mb-2 flex-fill mr-md-3">
                 {{field}}
                 <div class="input-group-append">
                 <button class="btn btn-outline" type="submit"><i class="material-icons">search</i></button>
@@ -23,10 +23,22 @@
                 </div>
 
             {% else %}
-                <div class="d-flex align-self-stretch mb-2 flex-fill mr-md-3">
+                {% if field.field.widget.allow_multiple_selected %}
+                <div class="align-self-start mb-2 mr-md-3">
+                    <label class="mr-1 align-self-center">{{ field.label }}</label>
+                    <div class="tag-select">
+                        {% include "common/forms/multiselect.html" with field=field hide_label=True %}
+                        </div>
+                </div>
+                {% else %}
+                    <div class="d-flex align-self-stretch mb-2 flex-fill mr-md-3">
                     <label class="mr-1 align-self-center">{{ field.label }}</label>
                     {{ field }}
                 </div>
+                {% endif %}
+
+
+
             {% endif %}
 
 
