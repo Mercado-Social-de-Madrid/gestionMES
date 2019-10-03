@@ -14,7 +14,7 @@ sudo apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite
 Si no tenemos Python (por defecto en el sistema deberíamos tenerlo disponible, debemos instalar una versión de Python >3.5
 A continuación podemos instalar virtualenv para crear entornos virtuales de python en el que instalar las dependencias de nuestro proyecto.
 ```
-sudo python3-pip
+sudo apt-get install python3-pip
 pip install virtualenvwrapper
 ```
 

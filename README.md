@@ -1,5 +1,7 @@
 # gestionMES
 
+![Mercado Social de Madrid](/static/imgs/brand.png?raw=true "MES")
+
 Herramienta de gestión del Mercado Social.
 
 ## Requisitos del sistema
