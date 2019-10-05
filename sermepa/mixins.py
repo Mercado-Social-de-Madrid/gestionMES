@@ -37,8 +37,9 @@ class SermepaMixin(object):
 
     @staticmethod
     def encrypt_3des(message, key):
+
         des3 = pyDes.triple_des(key, mode=pyDes.CBC, IV='\0' * 8, pad='\0', padmode=pyDes.PAD_NORMAL)
-        encrypted = des3.encrypt(str(message))
+        encrypted = des3.encrypt(str(message).encode('utf8'))
         return encrypted
 
     def hmac256(self, data, key):
