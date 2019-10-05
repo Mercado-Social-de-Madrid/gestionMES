@@ -22,7 +22,7 @@ class ExportAsCSVMixin(FilterView):
             for field_name in cls.available_fields:
                 label = instance.get_field_label(field_name)
                 if label:
-                    cls.__csv_fields[field_name] = label
+                    cls.__csv_fields[field_name] = str(label)
 
     def __init__(self, *args, **kwargs):
         super(ExportAsCSVMixin, self).__init__(*args, **kwargs)
@@ -32,7 +32,7 @@ class ExportAsCSVMixin(FilterView):
     def get_field_label(self, field_name):
         if hasattr(self.model, field_name):
             try:
-                label = self.model._meta.get_field(field_name).verbose_name.encode('utf-8').strip()
+                label = self.model._meta.get_field(field_name).verbose_name.strip()
                 if field_name in self.field_labels:
                     return self.field_labels[field_name]
                 else:
@@ -72,7 +72,7 @@ class ExportAsCSVMixin(FilterView):
             results = []
             for field in final_fields:
                 value = getattr(elem, field)
-                value = unicode(value).encode('utf-8', errors='ignore').strip() if value else ''
+                value = str(value).strip() if value else ''
                 results.append( value )
             writer.writerow(results)
 
