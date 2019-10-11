@@ -20,7 +20,7 @@
 {% endif %}
 
     <div class="container">
-        <form method="post" class="mt-3 p-4" enctype="multipart/form-data">
+        <form method="post" class="mt-3 p-4" enctype="multipart/form-data" target="_parent">
             {% csrf_token %}
 
             {% include 'provider/signup.html' %}
@@ -30,17 +30,18 @@
             <a href="http://www.idealoga.org/wp-content/uploads/2016/03/Firma-de-principios-y-compromisos.pdf" target="_blank">Firma de principios y compromisos del MESM</a>
             <div class="row">
                 <div class="col-md-12 col-lg-8">
-            <div class="custom-control custom-switch mt-3">
-                {{form.check_conditions}}
-                  <span class="custom-control-track"></span>
-                  <label class="custom-control-label" for="{{form.check_conditions.id_for_label}}">
-                        Las personas que conformamos la entidad hemos leído el documento "Firma de principios y compromisos del MESM". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
-                </label>
 
-                {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
-                </div>
+                    <div class="custom-control custom-switch mt-3">
+                        {{form.check_conditions}}
+                          <span class="custom-control-track"></span>
+                          <label class="custom-control-label" for="{{form.check_conditions.id_for_label}}">
+                                Las personas que conformamos la entidad hemos leído el documento "Firma de principios y compromisos del MESM". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
+                        </label>
 
+                        {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
                     </div>
+
+                </div>
 
                 <div class="col-md-12 col-lg-12">
                     <hr class="my-4">

@@ -18,7 +18,7 @@
 {% endif %}
 
     <div class="container">
-        <form method="post" class="mt-3 p-4">
+        <form method="post" class="mt-3 p-4" target="_parent">
             {% csrf_token %}
             {% include "consumer/signup.html" %}
         <div class="text-center mt-5 mb-5">
