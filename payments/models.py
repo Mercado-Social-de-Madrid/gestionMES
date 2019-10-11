@@ -205,7 +205,7 @@ class PendingPayment(models.Model):
         #TODO: Notify/update signup process...
 
     def __str__(self):
-        return '{}:{}'.format(self.account.display_name, self.amount).encode('utf-8')
+        return '{}:{}'.format(self.account.display_name, self.amount)
 
 
 class CardPayment(models.Model):
