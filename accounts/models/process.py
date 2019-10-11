@@ -55,9 +55,9 @@ class AccountProcess(models.Model):
 
     def __str__(self):
         if hasattr(self, 'account') and self.account:
-            return self.account.display_name.encode('utf-8')
+            return self.account.display_name
         else:
-            return "{}".format(self.uuid).encode('utf-8')
+            return "{}".format(self.uuid)
 
 
 
@@ -120,6 +120,8 @@ class SignupProcess(AccountProcess):
     contact_phone = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('Teléfono de contacto'))
     contact_email = models.EmailField(null=False, verbose_name=_('Email de contacto'))
 
+    newsletter_check = models.BooleanField(default=False, verbose_name=_('Acepta alta en listas de correo'))
+
     objects = SignupsManager()
 
     provider_process = 'prov_signup'
@@ -170,7 +172,15 @@ class SignupProcess(AccountProcess):
             CurrencyAppUser.objects.create_app_user(self.account)
 
 
-    def form_filled(self, account):
+    def form_filled(self, account, form):
+
+        if form.is_valid():
+            self.newsletter_check = form.cleaned_data['newsletter_check']
+            self.save()
+
+        # Only advance in the signup process if it is the first time the form is filled
+        if self.account is not None:
+            return
 
         account.status = SIGNUP
         account.save()
