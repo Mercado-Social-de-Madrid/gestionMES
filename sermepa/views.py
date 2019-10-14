@@ -75,12 +75,15 @@ def sermepa_ipn(request):
 
         if valid_signature:
             if int(sermepa_resp.Ds_Response) < 100:
+                print('Payment successfull!')
                 payment_was_successful.send(sender=sermepa_resp)  # signal
             elif sermepa_resp.Ds_Response == '0900' and sermepa_resp.Ds_TransactionType == OPER_REFUND:
                 refund_was_successful.send(sender=sermepa_resp)  # signal
             else:
+                print('Payment errr!')
                 payment_was_error.send(sender=sermepa_resp)  # signal
         else:
+            print('Signature err!')
             signature_error.send(sender=sermepa_resp)  # signal
 
     return redirect('payments:payment_success')

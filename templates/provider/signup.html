@@ -2,7 +2,11 @@
 {% load settings_value %}
 {% load l10n %}
 
-<h4 class="text-primary">Datos fiscales</h4>
+{{form.from_app}}
+
+Los campos marcados con <span class="text-primary lead">*</span> son obligatorios.
+
+<h4 class="text-primary mt-3">Datos fiscales</h4>
 
             <div class="row ">
                 <div class="col-md-5">
@@ -212,4 +216,14 @@
                 <div class="col-lg-7">
                     {% include 'payments/fees.html' %}
                 </div>
+            </div>
+
+            <div class="custom-control custom-switch mt-3">
+                {{form.newsletter_check}}
+                  <span class="custom-control-track"></span>
+                  <label class="custom-control-label" for="{{form.newsletter_check.id_for_label}}">
+                        Deseo que se me incluya en las listas de distribución de correo del Mercado Social.
+                </label>
+
+                {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
             </div>

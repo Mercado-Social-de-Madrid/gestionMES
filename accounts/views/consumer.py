@@ -17,6 +17,7 @@ from django_filters.views import FilterView
 from filters.views import FilterMixin
 
 from accounts.forms.consumer import ConsumerForm, ConsumerSignupForm
+from accounts.mixins.signup import SignupFormMixin
 from accounts.models import Consumer, SignupProcess
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
@@ -60,7 +61,7 @@ class ConsumersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMi
     field_labels = {'display_name': 'Nombre completo'}
 
 
-class ConsumerSignup(XFrameOptionsExemptMixin, CreateView):
+class ConsumerSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
 
     form_class = ConsumerSignupForm
     model = Consumer
@@ -68,8 +69,8 @@ class ConsumerSignup(XFrameOptionsExemptMixin, CreateView):
 
     def form_valid(self, form):
         super(ConsumerSignup, self).form_valid(form)
-        SignupProcess.objects.create_process(account=self.object)
-
+        process = SignupProcess.objects.create_process(account=self.object)
+        process.form_filled(self.object, form)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
@@ -109,7 +110,7 @@ class ConsumerUpdateView(UpdateView):
     def form_valid(self, form):
         response = super(ConsumerUpdateView, self).form_valid(form)
         process = self.getSignup()
-        process.form_filled(self.object)
+        process.form_filled(self.object, form)
         return response
 
     def get_object(self, queryset=None):
@@ -120,6 +121,15 @@ class ConsumerUpdateView(UpdateView):
             if account:
                 account.process = process
             return account
+
+    def get_initial(self):
+        process = self.getSignup()
+        initial = super(ConsumerUpdateView, self).get_initial()
+        initial['check_privacy_policy'] = True
+        initial['check_conditions'] = True
+        initial['from_app'] = process.from_app
+        initial['newsletter_check'] = process.newsletter_check
+        return initial
 
 
 class ConsumerDetailView(TabbedViewMixin, UpdateView):

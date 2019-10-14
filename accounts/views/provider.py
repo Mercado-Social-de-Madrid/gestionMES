@@ -11,6 +11,7 @@ from django_filters.views import FilterView
 from filters.views import FilterMixin
 
 from accounts.forms.provider import ProviderForm, ProviderSignupForm
+from accounts.mixins.signup import SignupFormMixin
 from accounts.models import Provider, SignupProcess, Category
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
@@ -82,7 +83,7 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
 
         return context
 
-class ProviderSignup(XFrameOptionsExemptMixin, CreateView):
+class ProviderSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
 
     form_class = ProviderSignupForm
     model = Provider
@@ -90,9 +91,10 @@ class ProviderSignup(XFrameOptionsExemptMixin, CreateView):
 
     def form_valid(self, form):
         response = super(ProviderSignup, self).form_valid(form)
-        SignupProcess.objects.create_process(account=self.object)
-
+        process = SignupProcess.objects.create_process(account=self.object)
+        process.form_filled(self.object, form)
         return response
+
 
     def get_context_data(self, **kwargs):
         context = super(ProviderSignup, self).get_context_data(**kwargs)
@@ -104,12 +106,14 @@ class ProviderSignup(XFrameOptionsExemptMixin, CreateView):
 
         return context
 
+
     def get_success_url(self):
         if self.request.user.is_authenticated:
             messages.success(self.request, _('Proceso de acogida añadido correctamente.'))
             return reverse('accounts:signup_list')
         else:
             return reverse('accounts:signup_success')
+
 
 class ProviderUpdateView(UpdateView):
     template_name = 'provider/edit.html'
@@ -144,13 +148,16 @@ class ProviderUpdateView(UpdateView):
     def form_valid(self, form):
         response = super(ProviderUpdateView, self).form_valid(form)
         process = self.getSignup()
-        process.form_filled(self.object)
+        process.form_filled(self.object, form)
         return response
 
     def get_initial(self):
+        process = self.getSignup()
         initial = super(ProviderUpdateView, self).get_initial()
         initial['check_privacy_policy'] = True
         initial['check_conditions'] = True
+        initial['from_app'] = process.from_app
+        initial['newsletter_check'] = process.newsletter_check
         return initial
 
     def get_object(self, queryset=None):

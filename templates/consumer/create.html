@@ -5,7 +5,7 @@
 
 {% block content %}
 
-{% if not 'from_app' in request.GET %}
+{% if not 'from_app' in request.GET and not 'hide_toolbar' in request.GET %}
     <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">

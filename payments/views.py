@@ -107,11 +107,12 @@ def generate_payment_form(payment_uuid, URL_params=''):
         "Ds_Merchant_MerchantCode": settings.SERMEPA_MERCHANT_CODE,
         "Ds_Merchant_Currency": settings.SERMEPA_CURRENCY,
         "Ds_Merchant_MerchantURL": "https://%s%s" % (site.domain, reverse('sermepa_ipn')),
-        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse('payments:payment_success')) + URL_params,
-        "Ds_Merchant_UrlKO": "https://%s%s" % (site.domain, reverse('payments:payment_error')) + URL_params,
+        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse('sermepa_ipn')) + URL_params,
+        "Ds_Merchant_UrlKO": "https://%s%s" % (site.domain, reverse('sermepa_ipn')) + URL_params,
     }
 
     order = SermepaIdTPV.objects.new_idtpv()  # Tiene que ser un número único cada vez
+
     sermepa_dict.update({
         "Ds_Merchant_Order": order,
         "Ds_Merchant_TransactionType": trans_type,
@@ -119,6 +120,8 @@ def generate_payment_form(payment_uuid, URL_params=''):
     form = SermepaPaymentForm(initial=sermepa_dict, merchant_parameters=sermepa_dict)
 
     return False, card_payment, form
+
+
 
 @xframe_options_exempt
 def form(request, uuid):

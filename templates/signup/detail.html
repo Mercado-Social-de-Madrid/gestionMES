@@ -57,6 +57,12 @@
             {% include 'payments/reference.html' with payment=payment %}
     {% endif%}
 
+{% if object.from_app %}<div class="pb-3"> <i class="material-icons">phone_iphone</i> Registrada desde la app </div> {% endif %}
+{% if object.newsletter_check %}
+    <div class="pb-3"> <i class="material-icons">check_circle_outline</i> Incluir en listas de distribución de correo </div>
+{% else %}
+   <div class="pb-3"> <i class="material-icons">highlight_off</i> No incluir en listas de distribución de correo </div>
+{% endif %}
 
 <span class="badge badge-primary">Estado actual</span>
 <div class="process-stepper">

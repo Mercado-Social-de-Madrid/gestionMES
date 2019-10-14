@@ -111,6 +111,8 @@ class SignupsManager(models.Manager):
 
             workflow.add_comment(user=None, comment='La consumidora completa el formulario')
 
+        return signup
+
 
 class SignupProcess(AccountProcess):
 
@@ -121,6 +123,7 @@ class SignupProcess(AccountProcess):
     contact_email = models.EmailField(null=False, verbose_name=_('Email de contacto'))
 
     newsletter_check = models.BooleanField(default=False, verbose_name=_('Acepta alta en listas de correo'))
+    from_app = models.BooleanField(default=False, verbose_name=_('Registro desde la app'))
 
     objects = SignupsManager()
 
@@ -176,6 +179,8 @@ class SignupProcess(AccountProcess):
 
         if form.is_valid():
             self.newsletter_check = form.cleaned_data['newsletter_check']
+            print(form.cleaned_data['from_app'])
+            self.from_app = form.cleaned_data['from_app']
             self.save()
 
         # Only advance in the signup process if it is the first time the form is filled

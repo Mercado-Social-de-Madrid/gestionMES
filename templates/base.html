@@ -35,7 +35,7 @@
   <body {% block bodyattrs %}{% endblock%}>
 
 
-{% if not 'from_app' in request.GET and not hide_navbar %}
+{% if not 'from_app' in request.GET and not hide_navbar and not 'hide_toolbar' in request.GET %}
     {%if user.is_authenticated %}
         {% include 'navbar/navbar_menu_user.html' %}
     {% else %}
