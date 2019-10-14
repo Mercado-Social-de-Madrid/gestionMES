@@ -96,10 +96,13 @@ def generate_payment_form(payment_uuid, URL_params=''):
     else:
         return False, None, None
 
+    # Redirect to local processor if we are in debug
+    view_OK = 'sermepa_ipn' if settings.SERMEPA_DEBUG else 'payments:payment_success'
+    view_KO = 'sermepa_ipn' if settings.SERMEPA_DEBUG else 'payments:payment_error'
+
     sermepa_dict = {
         "Ds_Merchant_Titular": card_payment.account.display_name,
         "Ds_Merchant_MerchantData": merchant_data,
-    # id del Pedido o Carrito, para identificarlo en el mensaje de vuelta
         "Ds_Merchant_MerchantName": settings.SERMEPA_MERCHANT_NAME,
         "Ds_Merchant_ProductDescription": card_payment.concept,
         "Ds_Merchant_Amount": amount,
@@ -107,12 +110,11 @@ def generate_payment_form(payment_uuid, URL_params=''):
         "Ds_Merchant_MerchantCode": settings.SERMEPA_MERCHANT_CODE,
         "Ds_Merchant_Currency": settings.SERMEPA_CURRENCY,
         "Ds_Merchant_MerchantURL": "https://%s%s" % (site.domain, reverse('sermepa_ipn')),
-        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse('sermepa_ipn')) + URL_params,
-        "Ds_Merchant_UrlKO": "https://%s%s" % (site.domain, reverse('sermepa_ipn')) + URL_params,
+        "Ds_Merchant_UrlOK": "https://%s%s" % (site.domain, reverse(view_OK)) + URL_params,
+        "Ds_Merchant_UrlKO": "https://%s%s" % (site.domain, reverse(view_KO)) + URL_params,
     }
 
-    order = SermepaIdTPV.objects.new_idtpv()  # Tiene que ser un número único cada vez
-
+    order = SermepaIdTPV.objects.new_idtpv()
     sermepa_dict.update({
         "Ds_Merchant_Order": order,
         "Ds_Merchant_TransactionType": trans_type,
