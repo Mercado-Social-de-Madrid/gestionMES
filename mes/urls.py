@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^management/', include('management.urls', namespace='management')),
     url(r'^jet/', include('jet.urls', 'jet')),
     url(r'^payments/', include('payments.urls', namespace='payments')),
+    url(r'^balance/', include('social_balance.urls', namespace='balance')),
     url(r'^pay/', include('sermepa.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(get_api('v1').urls)),

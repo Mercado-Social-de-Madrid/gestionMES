@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo proceso de acogida{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                 <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Balance social</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nuevo sello</h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post" class="mt-3 p-4" enctype="multipart/form-data">
+            {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">{% include "common/forms/field.html" with field=form.year  %}</div>
+            <div class="col-md-8">{% include "common/forms/field.html" with field=form.base_img not_floating=True %}</div>
+        </div>
+        {{form.layout_json}}
+
+        <div id="badge-creator">
+            <img id="badge_img">
+            <div class="resizedrag-label" id="entity-name">
+                 Nombre entidad
+                <div class="resize-handle"> </div>
+              </div>
+            <div class="resizedrag-label" id="achievement">
+                 Logro
+                <div class="resize-handle"> </div>
+              </div>
+
+            <div class="resizedrag-label" id="challenge">
+                 Reto
+                <div class="resize-handle"> </div>
+              </div>
+
+        </div>
+
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Enviar formulario</button>
+        </div>
+
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+    #badge-creator{
+        width:60vw;
+        min-height:35vw;
+        background-color:#eee;
+        margin:2rem auto;
+        position:relative;
+    }
+
+    #badge_img{
+        width:100%;
+    }
+
+    .resizedrag-label {
+      background-color: rgba(145, 90, 166, 0.15);
+      color: #111;
+      font-size: 20px;
+      font-family: sans-serif;
+      border-radius: 2px;
+      padding: 5px;
+      touch-action: none;
+        user-select: none;
+
+        position:absolute;
+        top:0;
+      width: 40vw;
+
+      /* This makes things *much* easier */
+      box-sizing: border-box;
+    }
+
+    .resize-handle{
+        width:15px;
+        height:15px;
+        position:absolute;
+        right:-10px;
+        bottom:-10px;
+        background-color:#fff;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        display:none;
+    }
+    .resizedrag-label.active .resize-handle{
+        display:block;
+    }
+
+
+</style>
+{% endblock extra_styles %}
+
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+<script type="text/javascript">
+
+function dragMoveListener (event) {
+  var target = event.target
+  // keep the dragged position in the data-x/data-y attributes
+  var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+  var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+
+  // translate the element
+  target.style.webkitTransform =
+    target.style.transform =
+      'translate(' + x + 'px, ' + y + 'px)'
+
+  // update the posiion attributes
+  target.setAttribute('data-x', x)
+  target.setAttribute('data-y', y)
+}
+
+$('.resizedrag-label').each( function(){
+
+var elem = $(this);
+elem.on('click', function(){
+    $('.resizedrag-label').each( function(){
+           interact(this).resizable(false);
+           $(this).removeClass('active');
+    });
+
+     elem.addClass('active');
+    interact(this).resizable(true);
+
+});
+
+interact(this)
+  .draggable({
+    onmove: dragMoveListener,
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: 'parent'
+      })
+    ]})
+  .resizable({
+    // resize from all edges and corners
+    edges: {  right: true, bottom: true },
+    allowFrom: '.resize-handle',
+    modifiers: [
+      // keep the edges inside the parent
+      interact.modifiers.restrictEdges({
+        outer: 'parent',
+        endOnly: true
+      }),
+
+      // minimum size
+      interact.modifiers.restrictSize({
+        min: { width: 100, height: 10 }
+      })
+    ],
+
+    inertia: true
+  })
+  .on('resizemove', function (event) {
+    var target = event.target
+    var x = (parseFloat(target.getAttribute('data-x')) || 0)
+    var y = (parseFloat(target.getAttribute('data-y')) || 0)
+
+    // update the element's style
+    target.style.width = event.rect.width + 'px'
+    target.style.height = event.rect.height + 'px'
+
+    // translate when resizing from top or left edges
+    x += event.deltaRect.left
+    y += event.deltaRect.top
+
+    target.style.webkitTransform = target.style.transform =
+        'translate(' + x + 'px,' + y + 'px)';
+
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+  });
+
+});
+
+var target = $('#badge_img');
+
+$("form").on('change', 'input[type="file"]', function(){
+        var input = this;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+            target.attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }).on('submit', function(e){
+        var width = target.outerWidth();
+        var height = target.outerHeight();
+        var labels = [];
+
+        $('.resizedrag-label').each( function(){
+            var elem = $(this);
+            var data = {
+                'id': elem.attr('id'),
+                'width': elem.outerWidth() * 100 / width,
+                'left': elem.attr('data-x') * 100 / width,
+                'height': elem.outerHeight() * 100 / height,
+                'top': elem.attr('data-y') * 100 / height
+            }
+            labels.push(data);
+        });
+
+        $(this).find('[name="layout_json"]').val(JSON.stringify(labels));
+    });
+
+</script>
+{% endblock %}
