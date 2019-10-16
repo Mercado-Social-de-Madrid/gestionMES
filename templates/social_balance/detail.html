@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Nuevo proceso de acogida{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                 <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Balance social</a><i class="material-icons md-18 ">arrow_forward_ios</i>Sello {{object.year}}</h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="badge-creator">
+            <img id="badge_img" src="{{object.base_img.url}}">
+            <div class="resizedrag-label" id="entity-name">
+                 Nombre entidad largooooo
+                <div class="resize-handle"> </div>
+              </div>
+            <div class="resizedrag-label" id="achievement">
+                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                <div class="resize-handle"> </div>
+              </div>
+
+            <div class="resizedrag-label" id="challenge">
+                 At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+                <div class="resize-handle"> </div>
+              </div>
+        </div>
+
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Enviar formulario</button>
+        </div>
+
+        </form>
+    </div>
+
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+    @font-face {
+      font-family: 'Coolvetica';
+      src: URL('{% static 'fonts/coolvetica.ttf' %}') format('truetype');
+    }
+
+    #badge-creator{
+        width:60vw;
+        min-height:35vw;
+        background-color:#eee;
+        margin:2rem auto;
+        position:relative;
+    }
+
+    #badge_img{
+        width:100%;
+    }
+    #entity-name{
+        font-family: 'Coolvetica';
+        color:#663879;
+        line-height:0.95;
+    }
+    .resizedrag-label {
+      color: #111;
+      font-size: 20px;
+      font-family: sans-serif;
+      border-radius: 2px;
+      padding: 5px;
+      touch-action: none;
+        user-select: none;
+
+        position:absolute;
+        top:0;
+      width: 40vw;
+
+      /* This makes things *much* easier */
+      box-sizing: border-box;
+    }
+
+</style>
+{% endblock extra_styles %}
+
+{% block scripts %}
+    <script src="{% static 'js/jquery.resizetext.js' %}?v=6"></script>
+<script type="text/javascript">
+
+var layout_data = {{object.layout_json|safe }};
+for (var i = 0; i < layout_data.length; i++) {
+    var label = layout_data[i];
+    $('#'+label['id'])
+        .css('width', label['width']+'%')
+        .css('height', label['height']+'%')
+        .css('top', label['top']+'%')
+        .css('left', label['left']+'%')
+        .resizeText();
+}
+
+var target = $('#badge_img');
+
+$("form").on('change', 'input[type="file"]', function(){
+        var input = this;
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+            target.attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }).on('submit', function(e){
+        var width = target.outerWidth();
+        var height = target.outerHeight();
+        var labels = [];
+
+        $('.resizedrag-label').each( function(){
+            var elem = $(this);
+            var data = {
+                'id': elem.attr('id'),
+                'width': elem.outerWidth() * 100 / width,
+                'left': elem.attr('data-x') * 100 / width,
+                'height': elem.outerHeight() * 100 / height,
+                'top': elem.attr('data-y') * 100 / height
+            }
+            labels.push(data);
+        });
+
+        $(this).find('[name="layout_json"]').val(JSON.stringify(labels));
+    });
+
+</script>
+{% endblock %}
