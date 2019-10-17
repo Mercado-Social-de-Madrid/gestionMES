@@ -22,7 +22,7 @@
 
         <div class="form-group">
             <label>Nombre de usuario</label>
-            <input class="form-control" id="{{ form.username.id_for_label }}" maxlength="30" name="{{ form.username.html_name }}" type="text" placeholder="Usuario"/>
+            <input class="form-control" id="{{ form.username.id_for_label }}" maxlength="90" name="{{ form.username.html_name }}" type="text" placeholder="Usuario"/>
             {%if form.username.errors %}
             <div class="d-block invalid-feedback">
                 {%for error in form.username.errors %} {{error}} {%endfor%}
@@ -32,7 +32,7 @@
 
       <div class="form-group">
           <label>Contraseña</label>
-            <input class="form-control" id="{{ form.password.id_for_label }}" maxlength="30" name="{{ form.password.html_name }}" type="password" />
+            <input class="form-control" id="{{ form.password.id_for_label }}" maxlength="90" name="{{ form.password.html_name }}" type="password" />
             {%if form.password.errors %}
             <div class="d-block invalid-feedback">
                 {%for error in form.password.errors %} {{error}} {%endfor%}
