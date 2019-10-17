@@ -28,6 +28,10 @@ class User(AbstractUser):
 
         )
 
+    @property
+    def display_name(self):
+        return self.get_full_name()
+
 
 class Gallery(models.Model):
 

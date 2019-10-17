@@ -17,6 +17,7 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.forms.password import PasswordForm
 from core.forms.profile import ProfileForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.models import User
@@ -40,14 +41,19 @@ class UserFilter(django_filters.FilterSet):
         fields = { 'is_active':['exact'], }
 
 
-class UsersListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class UsersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
+    model = User
     queryset = User.objects.all()
     objects_url_name = 'user_detail'
     template_name = 'user/list.html'
     ajax_template_name = 'user/query.html'
     filterset_class = UserFilter
-    paginate_by = 15
+    paginate_by = 5
+
+    csv_filename = 'usuarias'
+    available_fields = ['username', 'email', 'is_active', 'date_joined', 'display_name', 'last_login']
+    field_labels = {'display_name': 'Nombre completo'}
 
 
 class UserDetailView(UpdateView):
