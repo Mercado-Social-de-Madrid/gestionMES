@@ -175,6 +175,8 @@ LOGIN_EXEMPT_URLS = [
     r'^payments/end/*',
     r'^invite/',
     r'^invite/[#0-9a-zA-Z\-]+/',
+    r'^balance/render/*',
+    r'^media/balance/badges/*',
     r'^password_reset/*',
     r'^reset/*',
 ]

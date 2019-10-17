@@ -5,40 +5,22 @@
 
 
 {% block content %}
-
-    <div class="jumbotron py-4 px-2">
-        <div class="container">
-            <div class="row">
-            <div class="col-sm-12">
-                 <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Balance social</a><i class="material-icons md-18 ">arrow_forward_ios</i>Sello {{object.year}}</h4>
-            </div>
-        </div>
-        </div>
-    </div>
-
-    <div class="container">
         <div id="badge-creator">
             <img id="badge_img" src="{{object.base_img.url}}">
             <div class="resizedrag-label" id="entity-name">
-                 Nombre entidad largo
+                 {{entity.display_name}}
                 <div class="resize-handle"> </div>
               </div>
             <div class="resizedrag-label" id="achievement">
-                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                 {{balance.achievement}}
                 <div class="resize-handle"> </div>
               </div>
 
             <div class="resizedrag-label" id="challenge">
-                 At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+                 {{balance.challenge}}
                 <div class="resize-handle"> </div>
               </div>
         </div>
-
-        <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary btn-lg">Enviar formulario</button>
-        </div>
-
-    </div>
 
 {% endblock %}
 
@@ -50,10 +32,8 @@
     }
 
     #badge-creator{
-        width:60vw;
-        min-height:35vw;
+        width:100%;
         background-color:#eee;
-        margin:2rem auto;
         position:relative;
     }
 

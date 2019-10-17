@@ -22,6 +22,8 @@ class EntitySocialBalance(models.Model):
     achievement = models.TextField(null=True, blank=True, verbose_name=_('Logro'))
     challenge = models.TextField(null=True, blank=True, verbose_name=_('Reto'))
 
+    badge_image = ProcessedImageField(null=True, blank=True, upload_to='balances', verbose_name=_('Imagen del sello'), format='PNG')
+
 
     class Meta:
         verbose_name = _('Informe de balance social')

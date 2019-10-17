@@ -12,7 +12,7 @@ from django.views.generic import CreateView, UpdateView, TemplateView, DetailVie
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
-from accounts.models import Account
+from accounts.models import Account, Entity
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
@@ -24,7 +24,7 @@ from currency.forms.guest import GuestAccountForm
 from currency.forms.invite import GuestInviteForm
 from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
 from social_balance.forms.badge import SocialBadgeForm
-from social_balance.models import SocialBalanceBadge
+from social_balance.models import SocialBalanceBadge, EntitySocialBalance
 
 
 class  InvitesFilterForm(BootstrapForm):
@@ -72,28 +72,21 @@ class SocialBadgeDetailView(DetailView):
     queryset = SocialBalanceBadge.objects.all()
     model = SocialBalanceBadge
 
-
     def get_context_data(self, **kwargs):
         context = super(SocialBadgeDetailView, self).get_context_data(**kwargs)
-
         return context
 
-def add_app_user(request):
 
-    if request.method == "POST":
-        redirect_url = request.POST.get('redirect_to', '')
-        account_pk = request.POST.get('account', None)
+class SocialBadgeRender(DetailView):
+    template_name = 'social_balance/render.html'
+    queryset = SocialBalanceBadge.objects.all()
+    model = SocialBalanceBadge
 
-        if redirect_url and account_pk:
-            account = Account.objects.filter(pk=account_pk).first()
-            if account:
-                CurrencyAppUser.objects.create_app_user(account)
+    def get_context_data(self, **kwargs):
+        context = super(SocialBadgeRender, self).get_context_data(**kwargs)
+        entity_id = self.request.GET.get('id', None)
+        context['entity'] = Entity.objects.get(id=entity_id)
+        context['balance'] = EntitySocialBalance.objects.get(entity=context['entity'], year=self.object.year)
+        context['hide_navbar'] = True
 
-            return redirect(redirect_url)
-
-    return False
-
-#
-
-
-
+        return context
