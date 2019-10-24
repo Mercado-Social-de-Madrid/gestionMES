@@ -92,6 +92,10 @@ class Account(PolymorphicModel):
     def is_active(self):
         return self.status == ACTIVE or self.status == INITIAL_PAYMENT or self.status == PENDING_PAYMENT
 
+    @property
+    def registered_in_app(self):
+        return self.app_user.exists() and self.app_user.first().username is not None
+
     def __str__(self):
         return self.display_name
 

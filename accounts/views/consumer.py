@@ -57,8 +57,8 @@ class ConsumersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMi
 
     csv_filename = 'consumidoras'
     available_fields = ['cif', 'first_name', 'last_name', 'address', 'display_name', 'contact_email', 'contact_phone',
-                        'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date',]
-    field_labels = {'display_name': 'Nombre completo'}
+                        'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'registered_in_app']
+    field_labels = {'display_name': 'Nombre completo', 'registered_in_app':'Registrada en la app'}
 
 
 class ConsumerSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
