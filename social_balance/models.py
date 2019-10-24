@@ -40,6 +40,13 @@ class SocialBalanceBadge(models.Model):
 
     year = models.SmallIntegerField(default=2019, blank=False, null=False, verbose_name=_('Año'))
     layout_json = models.TextField(null=True, blank=True, verbose_name=_('JSON de configuración de layout'))
+    include_labels = models.BooleanField(default=False, verbose_name=_('Incluir etiqueta de Logro/Reto en el texto'))
     base_img = ProcessedImageField(null=True, blank=True, upload_to=RandomFileName('balance/badges/'),
                         verbose_name='Plantilla para el sello de balance social',
                         processors=[ResizeToFit(1600, 1200, upscale=False)], format='PNG')
+    exempt_img = ProcessedImageField(null=True, blank=True, upload_to=RandomFileName('balance/badges/'),
+                        verbose_name='Imagen de exenta',
+                        processors=[ResizeToFit(900, 700, upscale=False)], format='PNG')
+    undone_img = ProcessedImageField(null=True, blank=True, upload_to=RandomFileName('balance/badges/'),
+                        verbose_name='Imagen de no realizada',
+                        processors=[ResizeToFit(900, 700, upscale=False)], format='PNG')

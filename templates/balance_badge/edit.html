@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load staticfiles %}
 {% block title %}Nuevo proceso de acogida{% endblock %}
 
 
@@ -9,7 +9,7 @@
         <div class="container">
             <div class="row">
             <div class="col-sm-12">
-                 <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Balance social</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nuevo sello</h4>
+                 <h4 class="mb-0">Balance social<i class="material-icons md-18 ">arrow_forward_ios</i> <a href="{% url 'balance:badge_list' %}">Sellos</a><i class="material-icons md-18 ">arrow_forward_ios</i> {{object.year}}</h4>
             </div>
         </div>
         </div>
@@ -19,13 +19,20 @@
         <form method="post" class="mt-3 p-4" enctype="multipart/form-data">
             {% csrf_token %}
         <div class="row">
-            <div class="col-md-4">{% include "common/forms/field.html" with field=form.year  %}</div>
-            <div class="col-md-8">{% include "common/forms/field.html" with field=form.base_img not_floating=True %}</div>
+            <div class="col-md-4">
+                {% include "common/forms/field.html" with field=form.year  %}
+                {% include "common/forms/checkbox.html" with field=form.include_labels  %}
+            </div>
+            <div class="col-md-8">
+                {% include "common/forms/field.html" with field=form.base_img not_floating=True %}
+                {% include "common/forms/field.html" with field=form.exempt_img not_floating=True %}
+                {% include "common/forms/field.html" with field=form.undone_img not_floating=True %}
+            </div>
         </div>
         {{form.layout_json}}
 
         <div id="badge-creator">
-            <img id="badge_img">
+            <img id="badge_img" src="{{object.base_img.url}}">
             <div class="resizedrag-label" id="entity-name">
                  Nombre entidad
                 <div class="resize-handle"> </div>
@@ -102,8 +109,19 @@
 {% endblock extra_styles %}
 
 {% block scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+<script src="{% static 'js/jquery.resizetext.js' %}?v=6"></script>
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
 <script type="text/javascript">
+
+var layout_data = {{object.layout_json|safe }};
+for (var i = 0; i < layout_data.length; i++) {
+    var label = layout_data[i];
+    $('#'+label['id'])
+        .css('width', label['width']+'%')
+        .css('height', label['height']+'%')
+        .css('top', label['top']+'%')
+        .css('left', label['left']+'%')
+}
 
 function dragMoveListener (event) {
   var target = event.target
@@ -186,7 +204,7 @@ interact(this)
 
 var target = $('#badge_img');
 
-$("form").on('change', 'input[type="file"]', function(){
+$("form").on('change', 'input#{{ form.base_img.id_for_label }}', function(){
         var input = this;
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -205,9 +223,9 @@ $("form").on('change', 'input[type="file"]', function(){
             var data = {
                 'id': elem.attr('id'),
                 'width': elem.outerWidth() * 100 / width,
-                'left': elem.attr('data-x') * 100 / width,
+                'left': elem.position().left * 100 / width,
                 'height': elem.outerHeight() * 100 / height,
-                'top': elem.attr('data-y') * 100 / height
+                'top': elem.position().top * 100 / height
             }
             labels.push(data);
         });

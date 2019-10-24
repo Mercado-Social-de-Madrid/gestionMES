@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 
-{% block title %}Nuevo proceso de acogida{% endblock %}
+{% block title %}Sello{% endblock %}
 
 
 {% block content %}
@@ -9,8 +9,11 @@
     <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
-            <div class="col-sm-12">
-                 <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Balance social</a><i class="material-icons md-18 ">arrow_forward_ios</i>Sello {{object.year}}</h4>
+            <div class="col-sm-8">
+                 <h4 class="mb-0">Balance social<i class="material-icons md-18 ">arrow_forward_ios</i> <a href="{% url 'balance:badge_list' %}">Sellos</a><i class="material-icons md-18 ">arrow_forward_ios</i>Sello {{object.year}}</h4>
+            </div>
+            <div class="col-sm-4 col-md-4 text-sm-right">
+                <a href="{% url 'balance:badge_edit' object.pk %}" class="btn btn-primary"><i class="material-icons mr-2">edit</i> Editar</a>
             </div>
         </div>
         </div>
@@ -32,10 +35,6 @@
                  At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
                 <div class="resize-handle"> </div>
               </div>
-        </div>
-
-        <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary btn-lg">Enviar formulario</button>
         </div>
 
     </div>
@@ -99,37 +98,6 @@ for (var i = 0; i < layout_data.length; i++) {
         .css('left', label['left']+'%')
         .resizeText();
 }
-
-var target = $('#badge_img');
-
-$("form").on('change', 'input[type="file"]', function(){
-        var input = this;
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-            target.attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }).on('submit', function(e){
-        var width = target.outerWidth();
-        var height = target.outerHeight();
-        var labels = [];
-
-        $('.resizedrag-label').each( function(){
-            var elem = $(this);
-            var data = {
-                'id': elem.attr('id'),
-                'width': elem.outerWidth() * 100 / width,
-                'left': elem.attr('data-x') * 100 / width,
-                'height': elem.outerHeight() * 100 / height,
-                'top': elem.attr('data-y') * 100 / height
-            }
-            labels.push(data);
-        });
-
-        $(this).find('[name="layout_json"]').val(JSON.stringify(labels));
-    });
 
 </script>
 {% endblock %}

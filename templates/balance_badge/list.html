@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorías{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h3 class="mb-0">Balance social<i class="material-icons md-18 ">arrow_forward_ios</i>Plantillas para el sello</h3>
+            </div>
+            <div class="col-sm-5 col-md-4 text-sm-right">
+                <a href="{% url 'balance:create_badge' %}" class="btn btn-primary"><i class="material-icons mr-2">add</i> Nueva plantilla</a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container mt-3">
+        {% include 'common/ajax_wrapper.html' with query_template='balance_badge/query.html' %}
+    </div>
+
+{% endblock %}

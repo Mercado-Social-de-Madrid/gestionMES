@@ -1,0 +1,29 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Año</th>
+    <th>Base</th>
+    <th>Exenta</th>
+    <th>No hecho</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td"> {{item.year}}</td>
+<td> <img class="img-fluid" style="max-width:250px;" src="{{item.base_img.url}}"> </td>
+<td> <img class="img-fluid" style="max-width:250px;" src="{{item.exempt_img.url}}"> </td>
+<td> <img class="img-fluid" style="max-width:250px;" src="{{item.undone_img.url}}"> </td>
+<td>
+    <div class="dropdown dropdown-chip">
+      <button class="btn btn-outline-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="material-icons">more_vert</i>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="{% url 'balance:badge_detail' item.pk %}">Previsualizar</a>
+        <a class="dropdown-item" href="{% url 'balance:badge_edit' item.pk %}">Editar</a>
+      </div>
+    </div>
+</td>
+
+{% endblock %}

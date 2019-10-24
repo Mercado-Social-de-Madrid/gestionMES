@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.generic import CreateView, UpdateView, TemplateView, DetailView
+from django.views.generic import CreateView, UpdateView, TemplateView, DetailView, ListView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -27,58 +27,47 @@ from social_balance.forms.badge import SocialBadgeForm
 from social_balance.models import SocialBalanceBadge, EntitySocialBalance
 
 
-class  InvitesFilterForm(BootstrapForm):
-    field_order = ['o', 'search', ]
 
 
-class InvitesFilter(django_filters.FilterSet):
+class BadgesListView(ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
-    search = SearchFilter(names=['first_name', 'last_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['name', 'registration_date', 'expiration_date'], field_labels={'name':'Nombre', 'registration_date':'Fecha de registro', 'expiration_date':'Fecha de expiración'})
-
-    class Meta:
-        model = GuestAccount
-        form = InvitesFilterForm
-        fields = { 'active':['exact'], }
-
-class InvitesListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
-    model = GuestAccount
-    queryset = GuestAccount.objects.all().order_by('-registration_date')
-    objects_url_name = 'guest_detail'
-    template_name = 'invite/list.html'
-    ajax_template_name = 'invite/query.html'
-    filterset_class = InvitesFilter
-    paginate_by = 15
-
-    csv_filename = 'invitadas'
-    available_fields = ['cif', 'invited_by', 'token_used', 'first_name', 'last_name', 'contact_email',
-                        'registration_date', 'expiration_date', ]
+    queryset = SocialBalanceBadge.objects.all()
+    model = SocialBalanceBadge
+    objects_url_name = 'badge_detail'
+    template_name = 'balance_badge/list.html'
+    ajax_template_name = 'balance_badge/query.html'
+    filterset_class = None
+    paginate_by = 5
 
 
 class NewSocialBadge(CreateView):
 
     form_class = SocialBadgeForm
     model = SocialBalanceBadge
-    template_name = 'social_balance/create.html'
+    template_name = 'balance_badge/create.html'
 
     def get_success_url(self):
         return reverse('balance:badge_detail', kwargs={'pk': self.object.pk})
 
 
-
 class SocialBadgeDetailView(DetailView):
-    template_name = 'social_balance/detail.html'
+    template_name = 'balance_badge/detail.html'
     queryset = SocialBalanceBadge.objects.all()
     model = SocialBalanceBadge
 
-    def get_context_data(self, **kwargs):
-        context = super(SocialBadgeDetailView, self).get_context_data(**kwargs)
-        return context
+
+class SocialBadgeEditView(UpdateView):
+    form_class = SocialBadgeForm
+    template_name = 'balance_badge/edit.html'
+    queryset = SocialBalanceBadge.objects.all()
+    model = SocialBalanceBadge
+
+    def get_success_url(self):
+        return reverse('balance:badge_detail',  kwargs={'pk': self.object.pk})
 
 
 class SocialBadgeRender(DetailView):
-    template_name = 'social_balance/render.html'
+    template_name = 'balance_badge/render.html'
     queryset = SocialBalanceBadge.objects.all()
     model = SocialBalanceBadge
 
