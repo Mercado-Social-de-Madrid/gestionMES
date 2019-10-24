@@ -12,11 +12,13 @@
                 <div class="resize-handle"> </div>
               </div>
             <div class="resizedrag-label" id="achievement">
-                 {{balance.achievement}}
+                 {% if object.include_labels %}<strong>LOGRO {{object.year}}</strong>{% endif %}
+                {{balance.achievement}}
                 <div class="resize-handle"> </div>
               </div>
 
             <div class="resizedrag-label" id="challenge">
+                {% if object.include_labels %}<strong>RETO {{object.year|add:1}}</strong>{% endif %}
                  {{balance.challenge}}
                 <div class="resize-handle"> </div>
               </div>
@@ -70,15 +72,21 @@
 <script type="text/javascript">
 
 var layout_data = {{object.layout_json|safe }};
+
+var min_font = 100;
 for (var i = 0; i < layout_data.length; i++) {
     var label = layout_data[i];
-    $('#'+label['id'])
+    var elem = $('#'+label['id']);
+    elem
         .css('width', label['width']+'%')
         .css('height', label['height']+'%')
         .css('top', label['top']+'%')
         .css('left', label['left']+'%')
         .resizeText();
+    min_font = Math.min(min_font, parseFloat(elem.css('font-size')));
 }
+
+$('#achievement,#challenge').css('font-size', min_font+'px');
 
 var target = $('#badge_img');
 

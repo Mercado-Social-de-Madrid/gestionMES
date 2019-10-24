@@ -38,7 +38,6 @@ class Command(BaseCommand):
         entities = Entity.objects.filter(social_balances__isnull=False).distinct()
         for entity in entities:
             url = settings.BASESITE_URL + reverse('balance:badge_render', kwargs={'pk':badge.pk }) + '?id=' + str(entity.pk)
-            badge_img = '{}.png'.format(entity.pk)
             print(entity.display_name)
             driver.get(url)
 
