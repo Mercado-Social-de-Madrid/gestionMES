@@ -61,7 +61,7 @@ class Command(BaseCommand):
         print('{} missing:'.format(len(missing)))
         for consumer in missing:
             print(consumer)
-        print '---------------------------------'
+        print('---------------------------------')
         print('{} fails:'.format(len(failed)))
         for consumer in failed:
             print(consumer)
