@@ -70,7 +70,7 @@ class FeeRange(models.Model):
         fee_range = FeeRange.objects.filter(
             min_num_workers__lte=account.num_workers,
             max_num_workers__gte=account.num_workers,
-            min_income__lt=account.aprox_income,
+            min_income__lte=account.aprox_income,
             max_income__gte=account.aprox_income).first()
 
         if fee_range:

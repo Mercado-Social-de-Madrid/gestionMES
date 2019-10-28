@@ -254,7 +254,7 @@ function show_fees(numWorkers, aproxIncome){
 
         fees.each(function(i, elem){
             var fee = $(elem).removeClass('assigned-fee');
-            if ((income > fee.data('min-income')) && (income <= fee.data('max-income')) &&
+            if ((income >= fee.data('min-income')) && (income <= fee.data('max-income')) &&
                 (workers >= fee.data('min-workers')) && (workers <= fee.data('max-workers'))){
                 fee.addClass('assigned-fee');
             }
