@@ -10,6 +10,7 @@ from accounts.models import Provider, ACTIVE
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 
 
 class CatalogFilterForm(BootstrapForm):
@@ -26,7 +27,7 @@ class CatalogFilter(django_filters.FilterSet):
         fields = { 'categories':['exact'] }
 
 
-class CatalogListView(FilterMixin, FilterView, AjaxTemplateResponseMixin):
+class CatalogListView(XFrameOptionsExemptMixin, FilterMixin, FilterView, AjaxTemplateResponseMixin):
 
     queryset = Provider.objects.filter(status=ACTIVE).prefetch_related('social_balances')
     template_name = 'catalog/list.html'
