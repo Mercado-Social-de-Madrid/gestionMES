@@ -17,7 +17,7 @@
 {% empty %}
     {% if not simple_list %}
     <tr>
-      <td colspan="4">No hay ninguna entidad con los criterios de búsqueda actuales...</td>
+      <td colspan="4">No hay ningún elemento con los criterios de búsqueda actuales...</td>
     </tr>
     {% endif %}
 
@@ -26,4 +26,6 @@
 </table>
 </div>
 
+{% if page_obj %}
 {% include 'common/pagination.html' with page=page_obj %}
+{% endif %}

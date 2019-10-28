@@ -22,6 +22,7 @@ from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from payments.models import FeeRange, PendingPayment
+from social_balance.models import EntitySocialBalance
 
 
 class ProviderFilterForm(BootstrapForm):
@@ -80,6 +81,7 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
         context['categories'] = Category.objects.all()
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['signup'] = self.object.signup_process.first()
+        context['social_balances'] = EntitySocialBalance.objects.filter(entity=self.object).order_by('year')
         context['profile_tab'] = True
 
         return context

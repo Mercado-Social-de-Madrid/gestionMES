@@ -1,0 +1,25 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Año</th>
+    <th scope="col">Estado</th>
+{% endblock %}
+
+{% block item_row %}
+
+<td> {{item.year}}</td>
+<td>
+    {% if item.is_exempt %}
+        <span class="text-primary">Exenta</span>
+         {% else %}
+            {% if item.done %}
+               <span class="text-success"> Hecho </span>
+            {% else %}
+               <span class="text-danger">No hecho</span>
+            {% endif %}
+         {% endif %}
+
+</td>
+
+
+{% endblock %}
