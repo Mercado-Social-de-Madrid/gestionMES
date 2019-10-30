@@ -136,14 +136,14 @@
 
     <div aria-labelledby="balances-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="balances-form" role="tabpanel">
        <div class="row">
-           <div class="col-md-5">
+           <div class="col-md-4">
                <h4 class="text-primary"><i class="material-icons mr-1">schedule</i> Histórico</h4>
                 {% include 'balance/query.html' with object_list=social_balances %}
            </div>
 
-           <div class="col-md-7">
+           <div class="col-md-6">
                <h4 class="text-primary"><i class="material-icons mr-1">bookmark</i> Balance actual</h4>
-
+               {% include 'balance/current_balance.html' with balance=current_balance badge=current_badge %}
            </div>
        </div>
 

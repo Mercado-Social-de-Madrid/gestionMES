@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import django_filters
+from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
 from django.urls import reverse
@@ -22,7 +23,7 @@ from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from payments.models import FeeRange, PendingPayment
-from social_balance.models import EntitySocialBalance
+from social_balance.models import EntitySocialBalance, SocialBalanceBadge
 
 
 class ProviderFilterForm(BootstrapForm):
@@ -82,6 +83,8 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['signup'] = self.object.signup_process.first()
         context['social_balances'] = EntitySocialBalance.objects.filter(entity=self.object).order_by('year')
+        context['current_balance'] = EntitySocialBalance.objects.filter(entity=self.object, year=settings.CURRENT_BALANCE_YEAR).first()
+        context['current_badge'] =  SocialBalanceBadge.objects.filter(year=settings.CURRENT_BALANCE_YEAR).first()
         context['profile_tab'] = True
 
         return context
