@@ -37,6 +37,15 @@ class Command(BaseCommand):
 
         entities = Entity.objects.filter(social_balances__isnull=False).distinct()
         for entity in entities:
+            balance = EntitySocialBalance.objects.filter(entity=entity, year=year)
+            if not balance.exists():
+                print('{}: No balance. Passing...'.format(entity.display_name))
+                continue
+
+            balance = balance.first()
+            if balance.is_exempt or not balance.done:
+                print('{}: No balance or exempt. Passing...'.format(entity.display_name))
+                continue
             url = settings.BASESITE_URL + reverse('balance:badge_render', kwargs={'pk':badge.pk }) + '?id=' + str(entity.pk)
             print(entity.display_name)
             driver.get(url)
@@ -46,8 +55,8 @@ class Command(BaseCommand):
             img_temp.write(png)
             img_temp.flush()
 
-            balance = EntitySocialBalance.objects.get(entity=entity, year=year)
             balance.badge_image.save(f"{balance.year}_{entity.pk}", File(img_temp))
+            balance.save()
 
         driver.quit()
 
