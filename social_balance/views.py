@@ -24,6 +24,7 @@ from currency.forms.guest import GuestAccountForm
 from currency.forms.invite import GuestInviteForm
 from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
 from social_balance.forms.badge import SocialBadgeForm
+from social_balance.forms.entity_year import EntityYearBalanceForm
 from social_balance.models import SocialBalanceBadge, EntitySocialBalance
 
 
@@ -79,3 +80,29 @@ class SocialBadgeRender(DetailView):
         context['hide_navbar'] = True
 
         return context
+
+
+class SocialBalanceEditView(UpdateView):
+    form_class = EntityYearBalanceForm
+    template_name = 'balance/year_detail.html'
+    queryset = EntitySocialBalance.objects.all()
+    model = EntitySocialBalance
+
+    def get_object(self, queryset=None):
+        entity_id = self.kwargs['entity_pk']
+        year = self.kwargs['year']
+
+        return EntitySocialBalance.objects.get(entity__pk=entity_id, year=year)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['entity'] = Entity.objects.get(pk=self.object.entity.pk)
+        context['badge'] = SocialBalanceBadge.objects.filter(year=self.object.year).first()
+
+        print(context['badge'])
+        return context
+
+
+    def get_success_url(self):
+        messages.success(self.request, _('Datos de balance actualizados satisfactoriamente.'))
+        return reverse('balance:entity_year', kwargs={'entity_pk': self.object.entity.pk, 'year':self.object.year })

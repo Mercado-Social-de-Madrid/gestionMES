@@ -23,7 +23,7 @@ class EntitySocialBalance(models.Model):
     challenge = models.TextField(null=True, blank=True, verbose_name=_('Reto'))
 
     badge_image = ProcessedImageField(null=True, blank=True, upload_to='balances', verbose_name=_('Imagen del sello'), format='PNG')
-
+    report = models.FileField(null=True, blank=True, upload_to='reports', verbose_name=_('Informe'))
 
     class Meta:
         verbose_name = _('Informe de balance social')

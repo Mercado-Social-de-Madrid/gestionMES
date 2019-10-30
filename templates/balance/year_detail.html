@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load chunks %}
+
+{% block title %}Balance social {{object.year}}{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h4 class="mb-0 breadcrumbs">
+                    <a href="{% url 'accounts:providers_list' %}">Proveedoras</a>
+                    <i class="material-icons md-18 ">arrow_forward_ios</i>
+                    <a href="{% url 'accounts:provider_detail' entity.pk %}">{{entity.display_name}}</a>
+                    <i class="material-icons md-18 ">arrow_forward_ios</i>
+                    Balance social {{object.year}}
+                </h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post" class="p-2" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.year}}
+            {{form.entity}}
+
+        <div class="row">
+
+            <div class="col-md-7">
+
+                {% include "common/forms/checkbox.html" with field=form.done %}
+                {% include "common/forms/checkbox.html" with field=form.is_public %}
+                {% include "common/forms/checkbox.html" with field=form.is_exempt %}
+                {% include "common/forms/field.html" with field=form.external_id %}
+
+                <span class="badge badge-primary">Logro {{object.year}}</span>
+                {% include "common/forms/field.html" with field=form.achievement hide_label=True %}
+                <span class="badge badge-secondary mt-2">Reto {{object.year|add:1}}</span>
+                {% include "common/forms/field.html" with field=form.challenge hide_label=True %}
+
+                <label>Informe (PDF)</label><br>
+                {{ form.report }}
+          </div>
+
+            <div class="col-md-5 mt-4">
+                {% include 'balance/current_balance.html' with balance=object badge=badge %}
+            </div>
+
+
+
+            <div class="col-sm-12 ">
+              {% include "common/forms/field.html" with field=form.description %}
+          </div>
+
+
+        </div>
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+        </div>
+
+        </form>
+    </div>
+
+{% endblock %}

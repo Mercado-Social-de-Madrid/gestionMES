@@ -123,7 +123,7 @@
       {% endif %}
 
 
-      <form method="post" class="mt-1 p-4">
+      <form method="post" class="mt-1 p-4" enctype="multipart/form-data">
             {% csrf_token %}
             {{form.media}}
             {% include 'provider/form.html' %}

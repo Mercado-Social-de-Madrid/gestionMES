@@ -27,12 +27,14 @@
                 <div class="resize-handle"> </div>
               </div>
             <div class="resizedrag-label" id="achievement">
-                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                 {% if object.include_labels %}<strong>LOGRO {{object.year}}</strong>{% endif %}
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
                 <div class="resize-handle"> </div>
               </div>
 
             <div class="resizedrag-label" id="challenge">
-                 At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+                  {% if object.include_labels %}<strong>RETO {{object.year|add:1}}</strong>{% endif %}
+                At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
                 <div class="resize-handle"> </div>
               </div>
         </div>
@@ -88,16 +90,20 @@
     <script src="{% static 'js/jquery.resizetext.js' %}?v=6"></script>
 <script type="text/javascript">
 
+var min_font = 100;
 var layout_data = {{object.layout_json|safe }};
 for (var i = 0; i < layout_data.length; i++) {
     var label = layout_data[i];
-    $('#'+label['id'])
+    var elem = $('#'+label['id']);
+    elem
         .css('width', label['width']+'%')
         .css('height', label['height']+'%')
         .css('top', label['top']+'%')
         .css('left', label['left']+'%')
         .resizeText();
+    min_font = Math.min(min_font, parseFloat(elem.css('font-size')));
 }
+$('#achievement,#challenge').css('font-size', min_font+'px');
 
 </script>
 {% endblock %}

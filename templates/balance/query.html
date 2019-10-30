@@ -20,6 +20,9 @@
          {% endif %}
 
 </td>
+<td>
+    <a href="{% url 'balance:entity_year' item.entity.pk item.year %}"><i class="material-icons text-primary">chevron_right</i></a>
+</td>
 
 
 {% endblock %}

@@ -207,5 +207,8 @@ CKEDITOR_CONFIGS = {
 SERMEPA_DEBUG = True
 SERMEPA_SIGNATURE_VERSION = 'HMAC_SHA256_V1'
 
+# Year to show in the social balance badge
+CURRENT_BALANCE_YEAR = 2018
+
 # Import secret settings (see settings_secret.py.template for reference)
 from mes.settings_secret import *
