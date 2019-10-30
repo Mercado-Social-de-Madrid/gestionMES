@@ -27,4 +27,5 @@ rcssmin==1.0.6
 requests==2.20.0
 requests-toolbelt==0.8.0
 rjsmin==1.0.12
+selenium==3.141.0
 six==1.11.0
