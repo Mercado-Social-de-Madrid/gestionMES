@@ -18,18 +18,20 @@
          </div>
 
       </div>
-      <div class="col-md-5 col-sm-8 col-lg-6">
+      <div class="col-md-4 col-sm-8 col-lg-5">
 
          <h3>{{item.display_name}}</h3>
          <p>{{item.short_description}}</p>
          <strong class="lead">{{item.public_address}}</strong>
          {% include 'common/social_links.html' with obj=item %}
       </div>
-      <div class="col-md-4">
+      <div class="col-md-5">
          <h4 class="text-primary text-center">Balance social</h4>
          <div class="text-center">
-            <div style="max-width:400px;" class="text-center m-auto">
+            <div style="max-width:450px;" class="text-center m-auto">
+               {% if balance.report %} <a href="{{balance.report.url}}" target="_blank">{% endif %}
                {% include 'balance/current_balance.html' with balance=balance badge=current_badge %}
+               {% if balance.report %}</a>{% endif %}
             </div>
          </div>
       </div>
