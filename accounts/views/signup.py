@@ -33,12 +33,13 @@ class SignupFilter(django_filters.FilterSet):
 
     search = SearchFilter(names=['name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['name', 'last_update'], field_labels={'name':'Nombre', 'last_update':'Última actualización'})
-    status = WorkflowFilter(['prov_signup'], label='Estado')
+    status = WorkflowFilter(['prov_signup'], filter_cancelled=True, label='Estado')
 
     class Meta:
         model = SignupProcess
         form = SignupFilterForm
         fields = { 'member_type':['exact'], }
+
 
 
 class SignupListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):

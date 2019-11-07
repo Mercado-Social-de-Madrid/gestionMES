@@ -72,7 +72,7 @@
 
          {% if perms.accounts.mespermission_can_view_signups %}
          <li class="nav-item">
-        <a class="nav-link pl-4" href="{% url 'accounts:signup_list' %}">
+        <a class="nav-link pl-4" href="{% url 'accounts:signup_list' %}?status=">
           <i class="material-icons mr-3">call_received</i>
           Acogidas
         </a>
