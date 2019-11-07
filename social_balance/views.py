@@ -2,7 +2,9 @@
 from __future__ import unicode_literals
 
 import django_filters
+from django.conf import settings
 from django.contrib import messages
+from django.db.models import Prefetch
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -82,9 +84,33 @@ class SocialBadgeRender(DetailView):
         return context
 
 
+class SocialBalanceYear(ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    template_name = 'balance/year/list.html'
+    ajax_template_name = 'balance/year/query.html'
+    queryset = Entity.objects.all()
+    model = Entity
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        year = self.kwargs.get('year', settings.CURRENT_BALANCE_YEAR)
+        return qs.prefetch_related(
+            Prefetch(
+                "social_balances",
+                queryset=EntitySocialBalance.objects.filter(year=year),
+                to_attr="social_balance"
+            )
+        )
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['years'] = EntitySocialBalance.objects.all().order_by('year').values_list('year', flat=True).distinct()
+        return context
+
+
 class SocialBalanceEditView(UpdateView):
     form_class = EntityYearBalanceForm
-    template_name = 'balance/year_detail.html'
+    template_name = 'balance/year/detail.html'
     queryset = EntitySocialBalance.objects.all()
     model = EntitySocialBalance
 
@@ -99,7 +125,6 @@ class SocialBalanceEditView(UpdateView):
         context['entity'] = Entity.objects.get(pk=self.object.entity.pk)
         context['badge'] = SocialBalanceBadge.objects.filter(year=self.object.year).first()
 
-        print(context['badge'])
         return context
 
 

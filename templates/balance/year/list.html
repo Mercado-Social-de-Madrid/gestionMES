@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorías{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h3 class="mb-0">Balance social</h3>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container mt-3">
+        {% include 'common/ajax_wrapper.html' with query_template='balance/year/query.html' %}
+    </div>
+
+{% endblock %}

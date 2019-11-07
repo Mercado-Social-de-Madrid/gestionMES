@@ -11,6 +11,9 @@ urlpatterns = [
     url(r'^balance/badges/(?P<pk>\d+)/$', views.SocialBadgeDetailView.as_view(), name='badge_detail'),
     url(r'^balance/badges/(?P<pk>\d+)/edit/$', views.SocialBadgeEditView.as_view(), name='badge_edit'),
     url(r'^balance/render/(?P<pk>\d+)/$', views.SocialBadgeRender.as_view(), name='badge_render'),
+
+    url(r'^balance/$', views.SocialBalanceYear.as_view(), name='balance'),
+    url(r'^balance/(?P<year>\d+)/$', views.SocialBalanceYear.as_view(), name='balance_year'),
     url(r'^accounts/providers/(?P<entity_pk>\d+)/balance/(?P<year>\d+)/$', views.SocialBalanceEditView.as_view(), name='entity_year'),
 ]
 

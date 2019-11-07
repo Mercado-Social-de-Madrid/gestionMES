@@ -1,11 +1,13 @@
-
-
-{% if balance.is_exempt %}
+{% if not balance %}
     <img class="img-fluid" src="{{badge.exempt_img.url}}">
- {% else %}
-    {% if balance.done %}
-       {% if balance.badge_image %} <img class="img-fluid" src="{{ balance.badge_image.url }}"> {% else %} No generado {% endif %}
-    {% else %}
-       <img class="img-fluid" src="{{badge.undone_img.url}}">
-    {% endif %}
- {% endif %}
+{% else %}
+    {% if balance.is_exempt %}
+        <img class="img-fluid" src="{{badge.exempt_img.url}}">
+     {% else %}
+        {% if balance.done %}
+           {% if balance.badge_image %} <img class="img-fluid" src="{{ balance.badge_image.url }}"> {% else %} No generado {% endif %}
+        {% else %}
+           <img class="img-fluid" src="{{badge.undone_img.url}}">
+        {% endif %}
+     {% endif %}
+{% endif %}

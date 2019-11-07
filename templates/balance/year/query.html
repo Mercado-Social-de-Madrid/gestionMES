@@ -1,0 +1,48 @@
+{% extends 'common/list/base.html' %}
+
+{% block table_head %}
+<th scope="col">Entidad</th>
+<th scope="col">Estado</th>
+<th scope="col">Inf. pública</th>
+<th scope="col">Infografía</th>
+<th scope="col">Sello</th>
+{% endblock %}
+
+{% block item_row %}
+
+
+{% with item.social_balance.0 as balance %}
+<td> {{item.display_name}}</td>
+
+    {% if balance %}
+    <td>
+        {% if balance.is_exempt %}
+            <span class="text-primary">Exenta</span>
+             {% else %}
+                {% if balance.done %}
+                   <span class="text-success"> Hecho </span>
+                {% else %}
+                   <span class="text-danger">No hecho</span>
+                {% endif %}
+             {% endif %}
+
+    </td>
+    <td>{% if balance.is_public %}<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sí">done</i> {% else %} <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="No">cross</i>{% endif %}</td>
+    <td>{% if balance.report %} <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Subida">done</i> {% endif %}</td>
+    <td> {% if balance.badge_image.url %}<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Generado">image</i> {% endif %}</td>
+    <td>
+        <a href="{% url 'balance:entity_year' item.pk balance.year %}"><i class="material-icons text-primary">chevron_right</i></a>
+    </td>
+    {% else %}
+    <td>
+        <span class="text-muted">Sin información</span>
+    </td>
+    <td colspan="4" class="py-0">
+        <a href="#" class="mt-2 btn bg-light btn-sm"><i class="material-icons mr-2">add</i>Añadir datos</a>
+    </td>
+
+    {% endif %}
+
+{% endwith %}
+
+{% endblock %}
