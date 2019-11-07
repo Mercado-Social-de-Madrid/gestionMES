@@ -13,7 +13,7 @@
                 </div>
                 <div class="col-md-9">
 
-                <ul class="pagination py-0">
+                <ul class="pagination py-0 mb-0">
                     {% for year in years %}
 
                       <li class="page-item {% if year == current_year %}active{% endif %}">
@@ -30,6 +30,7 @@
     </div>
 
     <div class="container mt-3">
+        {% include 'common/list/filter_form.html' %}
         {% include 'common/ajax_wrapper.html' with query_template='balance/year/query.html' %}
     </div>
 

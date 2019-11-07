@@ -13,7 +13,7 @@ from filters.views import FilterMixin
 
 from accounts.forms.provider import ProviderForm, ProviderSignupForm
 from accounts.mixins.signup import SignupFormMixin
-from accounts.models import Provider, SignupProcess, Category
+from accounts.models import Provider, SignupProcess, Category, ACTIVE
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
@@ -39,6 +39,10 @@ class ProviderFilter(django_filters.FilterSet):
         model = Provider
         form = ProviderFilterForm
         fields = { 'status':['exact'], }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.form.initial['status'] = ACTIVE
 
 
 class ProvidersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):

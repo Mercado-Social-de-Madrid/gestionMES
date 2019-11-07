@@ -209,5 +209,3 @@ class Provider(Entity):
     def template_prefix(self):
         return 'provider'
 
-
-
