@@ -105,6 +105,7 @@ class SocialBalanceYear(ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['years'] = EntitySocialBalance.objects.all().order_by('year').values_list('year', flat=True).distinct()
+        context['current_year'] = int(self.kwargs.get('year', settings.CURRENT_BALANCE_YEAR))
         return context
 
 

@@ -2,7 +2,7 @@
 
 {% block table_head %}
 <th scope="col">Entidad</th>
-<th scope="col">Estado</th>
+<th scope="col" colspan="2">Estado</th>
 <th scope="col">Inf. pública</th>
 <th scope="col">Infografía</th>
 <th scope="col">Sello</th>
@@ -15,30 +15,27 @@
 <td> {{item.display_name}}</td>
 
     {% if balance %}
-    <td>
-        {% if balance.is_exempt %}
-            <span class="text-primary">Exenta</span>
-             {% else %}
-                {% if balance.done %}
-                   <span class="text-success"> Hecho </span>
-                {% else %}
-                   <span class="text-danger">No hecho</span>
-                {% endif %}
-             {% endif %}
 
-    </td>
+        {% if balance.is_exempt %}
+            <td class="bg-primary"></td><td>Exenta</td>
+         {% else %}
+            {% if balance.done %}
+               <td class="bg-success"> </td><td>Hecho</td>
+            {% else %}
+               <td class="bg-danger"></td><td>No hecho</td>
+            {% endif %}
+         {% endif %}
+
     <td>{% if balance.is_public %}<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sí">done</i> {% else %} <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="No">cross</i>{% endif %}</td>
     <td>{% if balance.report %} <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Subida">done</i> {% endif %}</td>
-    <td> {% if balance.badge_image.url %}<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Generado">image</i> {% endif %}</td>
+    <td> {% if balance.badge_image %}<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Generado">image</i> {% endif %}</td>
     <td>
         <a href="{% url 'balance:entity_year' item.pk balance.year %}"><i class="material-icons text-primary">chevron_right</i></a>
     </td>
     {% else %}
-    <td>
-        <span class="text-muted">Sin información</span>
-    </td>
+    <td class="bg-light"></td><td>Sin información</td>
     <td colspan="4" class="py-0">
-        <a href="#" class="mt-2 btn bg-light btn-sm"><i class="material-icons mr-2">add</i>Añadir datos</a>
+        <a href="#" class="mt-3 btn bg-light btn-sm"><i class="material-icons mr-2">add</i>Añadir datos</a>
     </td>
 
     {% endif %}
