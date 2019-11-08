@@ -89,6 +89,10 @@ for (var i = 0; i < layout_data.length; i++) {
         .css('top', label['top']+'%')
         .css('left', label['left']+'%')
         .resizeText();
+
+    if (label['id'] == 'info'){
+        continue;
+    }
     min_font = Math.min(min_font, parseFloat(elem.css('font-size')));
 }
 
