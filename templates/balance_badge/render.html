@@ -24,8 +24,8 @@
               </div>
 
             <div class="resizedrag-label" id="info">
-                 3 trabajador@s<br>
-                 desde 2015
+                 {{ entity.num_workers }} trabajador@{% if entity.num_workers > 1 %}s{% endif %}<br>
+                 desde {{ entity.start_year }}
                 <div class="resize-handle"> </div>
               </div>
         </div>
