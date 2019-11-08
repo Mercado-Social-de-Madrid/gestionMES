@@ -8,7 +8,7 @@
         <div id="badge-creator">
             <img id="badge_img" src="{{object.base_img.url}}">
             <div class="resizedrag-label" id="entity-name">
-                 {{entity.display_name}}
+                 <span>{{entity.display_name}}</span>
                 <div class="resize-handle"> </div>
               </div>
             <div class="resizedrag-label" id="achievement">
@@ -20,6 +20,12 @@
             <div class="resizedrag-label" id="challenge">
                 {% if object.include_labels %}<strong>RETO {{object.year|add:1}}</strong>{% endif %}
                  {{balance.challenge}}
+                <div class="resize-handle"> </div>
+              </div>
+
+            <div class="resizedrag-label" id="info">
+                 3 trabajador@s<br>
+                 desde 2015
                 <div class="resize-handle"> </div>
               </div>
         </div>
@@ -42,7 +48,7 @@
     #badge_img{
         width:100%;
     }
-    #entity-name{
+    #entity-name, #info{
         font-family: 'Coolvetica';
         color:#663879;
         line-height:0.95;
@@ -89,35 +95,12 @@ for (var i = 0; i < layout_data.length; i++) {
 $('#achievement,#challenge').css('font-size', min_font+'px');
 
 var target = $('#badge_img');
-
-$("form").on('change', 'input[type="file"]', function(){
-        var input = this;
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-            target.attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }).on('submit', function(e){
-        var width = target.outerWidth();
-        var height = target.outerHeight();
-        var labels = [];
-
-        $('.resizedrag-label').each( function(){
-            var elem = $(this);
-            var data = {
-                'id': elem.attr('id'),
-                'width': elem.outerWidth() * 100 / width,
-                'left': elem.attr('data-x') * 100 / width,
-                'height': elem.outerHeight() * 100 / height,
-                'top': elem.attr('data-y') * 100 / height
-            }
-            labels.push(data);
-        });
-
-        $(this).find('[name="layout_json"]').val(JSON.stringify(labels));
-    });
+var entity = $('#entity-name');
+var info = $('#info');
+var padding = parseFloat(entity.css('padding-right'));
+var translate = entity.outerWidth() - entity.find('span').width() - padding;
+var position = parseFloat(info.css('left'));
+info.css('left', (position - translate) + 'px');
 
 </script>
 {% endblock %}
