@@ -1,0 +1,13 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+{% endblock %}
+
+{% block item_row %}
+
+<td class="py-2 px-3">
+    <strong class="mb-0">{{item.display_name}} </strong><br>
+    <span>{{item.address}}</span>
+</td>
+
+{% endblock %}

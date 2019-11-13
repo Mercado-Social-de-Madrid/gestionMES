@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Mercado Social de Madrid{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h3 class="mb-0">Informes<i class="material-icons md-18 ">arrow_forward_ios</i>Histórico de socias</h3>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+        {% for year in report %}
+
+
+            <div class="d-flex align-items-center text-light px-4 py-2 bg-primary">
+                <h4 class="mb-0">{{year.year}}</h4>
+                <div class="pl-4">
+                    <i class="material-icons mr-1">call_received</i> Altas: {{year.total_signups}}
+                </div>
+                 <div class="pl-4">
+                    <i class="material-icons mr-1">trending_down</i> Bajas: 0
+                </div>
+            </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 px-0">
+                    <div class="bg-light py-2 px-3">
+                        <span class="lead pt-1">{{year.provider_signups_count}}</span>
+                        <i class="material-icons ml-1">store</i>
+                        <small>PROVEEDORAS</small>
+                    </div>
+                    {% include 'account/report_year.html' with object_list=year.provider_signups object_url_name=year.provider_signups.first.detail_url %}
+                </div>
+                <div class="col-md-4 px-0">
+                    <div class="bg-light py-2 px-3">
+                        <span class="lead pt-1">{{year.consumer_signups_count}}</span>
+                        <i class="material-icons ml-1">directions_walk</i>
+                        <small>CONSUMIDORAS</small>
+                    </div>
+                    {% include 'account/report_year.html' with object_list=year.consumer_signups object_url_name=year.consumer_signups.first.detail_url %}
+                </div>
+
+                <div class="col-md-4 px-0">
+                    <div class="bg-light py-2 px-3">
+                        <span class="lead pt-1">0</span>
+                        <i class="material-icons ml-1">trending_down</i>
+                        <small>BAJAS</small>
+                    </div>
+                </div>
+
+            </div>
+</div>
+
+        {% endfor %}
+    </div>
+
+{% endblock %}

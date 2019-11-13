@@ -35,6 +35,8 @@ urlpatterns = [
     url(r'^deletion/processes/(?P<pk>\d+)/$', views.DeletionDetailView.as_view(), name='deletion_detail'),
 
     url(r'^catalogo/$', views.CatalogListView.as_view(), name='catalog_list'),
+
+    url(r'^reports/$', views.AccountsReportView.as_view(), name='add_category'),
 ]
 
 
