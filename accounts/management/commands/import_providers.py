@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 
-from accounts.models import Provider, TERR_LOCAL, TERR_COUNTRY, LegalForm
+from accounts.models import Provider, TERR_LOCAL, TERR_COUNTRY, LegalForm, OPTED_OUT
 from mes import settings
 
 
@@ -24,7 +24,7 @@ class Command(BaseCommand):
         jsonfile = options['jsonfile']
 
         models = []
-        with open(jsonfile, 'r') as fp:
+        with open(jsonfile, 'rb') as fp:
             accounts = json.load(fp)
 
             for account in accounts:
@@ -39,8 +39,11 @@ class Command(BaseCommand):
                 provider.territory = TERR_COUNTRY if 'territory' in account and account['territory']=='Estatal' else TERR_LOCAL
                 provider.member_type = settings.MEMBER_PROV
                 provider.address = account['address']
-                provider.city = account['city']
-                provider.province = account['province']
+
+                if 'city' in account:
+                    provider.city = account['city']
+                if 'province' in account:
+                    provider.province = account['province']
 
                 if 'legal_form' in account:
                     legal = LegalForm.objects.filter(title=account['legal_form'])
@@ -96,6 +99,15 @@ class Command(BaseCommand):
                     instagram = re.findall(r'[Ii]nstagram\s*:?\s*@(\w+)\.?', sociallinks)
                     for inst in instagram:
                         provider.instagram_link = 'https://instagram.com/{}'.format(inst)
+
+                if 'registration_date' in account:
+                    provider.registration_date = account['registration_date']
+
+                if 'opted_out_date' in account:
+                    provider.opted_out_date = account['opted_out_date']
+
+                if 'opted_out' in account and account['opted_out'] == True:
+                    provider.status = OPTED_OUT
 
                 print('saving {}'.format(provider.cif))
                 try:
