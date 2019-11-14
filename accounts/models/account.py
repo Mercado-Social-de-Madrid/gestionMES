@@ -61,13 +61,16 @@ class Account(PolymorphicModel):
     province = models.CharField(null=True, blank=True, max_length=100, verbose_name=_('Provincia'))
     postalcode = models.CharField(null=True, blank=True, max_length=10, verbose_name=_('Código Postal'))
     iban_code = models.CharField(null=True, blank=True, max_length=50, verbose_name=_('Cuenta bancaria (IBAN)'))
-    registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
+
     cr_member = models.BooleanField(default=False, verbose_name=_('Miembro Consejo Rector'))
     pay_by_debit = models.BooleanField(default=False, verbose_name=_('Domiciliar la cuota'),
                                        help_text=_(
                                            'Permito que el MES domicilie en mi cuenta bancaria mi cuota anual y el capital social'))
 
     cyclos_user = models.CharField(null=True, blank=True, max_length=150, verbose_name=_('Antiguo usuario en Cyclos'))
+
+    registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
+    opted_out_date = models.DateField(verbose_name=_('Fecha de baja'), null=True, blank=True)
 
     class Meta:
         verbose_name = _('Socia')
