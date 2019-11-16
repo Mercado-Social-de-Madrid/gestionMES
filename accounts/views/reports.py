@@ -10,7 +10,7 @@ from django.views.generic.base import TemplateResponseMixin, View, TemplateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
-from accounts.models import Provider, ACTIVE, Account, Consumer
+from accounts.models import Provider, ACTIVE, Account, Consumer, OPTED_OUT
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
@@ -33,12 +33,15 @@ class AccountsReportView(TemplateView):
         for year in years:
             provider_signups = Provider.objects.filter(registration_date__year=year)
             consumer_signups = Consumer.objects.filter(registration_date__year=year)
+            account_optedout = Account.objects.filter(status=OPTED_OUT, opted_out_date__year=year)
             report = {
                 'year':year,
                 'provider_signups': provider_signups,
                 'consumer_signups': consumer_signups,
                 'consumer_signups_count': consumer_signups.count(),
-                'provider_signups_count': provider_signups.count()
+                'provider_signups_count': provider_signups.count(),
+                'account_optedout': account_optedout,
+                'account_optedout_count': account_optedout.count(),
             }
             report['total_signups'] = report['consumer_signups_count'] + report['provider_signups_count']
             reports.append(report)
