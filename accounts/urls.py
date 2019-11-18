@@ -36,7 +36,7 @@ urlpatterns = [
 
     url(r'^catalogo/$', views.CatalogListView.as_view(), name='catalog_list'),
 
-    url(r'^reports/$', views.AccountsReportView.as_view(), name='add_category'),
+    url(r'^reports/$', views.AccountsReportView.as_view(), name='accounts_report'),
 ]
 
 
