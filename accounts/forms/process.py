@@ -10,6 +10,8 @@ from mes.settings import MEMBER_CONSUMER
 
 class SignupProcessForm(forms.ModelForm, BootstrapForm):
 
+    required_fields = ['member_type', 'name']
+
     class Meta:
         model = SignupProcess
         exclude = ['workflow', 'account']
