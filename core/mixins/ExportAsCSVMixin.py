@@ -8,7 +8,7 @@ from django.views import View
 from django_filters.views import BaseFilterView, FilterView
 
 
-class ExportAsCSVMixin(FilterView):
+class ExportAsCSVMixin(View):
     csv_filename = 'data'
     available_fields = []
     field_labels = {}

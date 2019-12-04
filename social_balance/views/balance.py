@@ -7,6 +7,7 @@ from django.db.models import Prefetch
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
+from django_filters.views import FilterView
 from filters.views import FilterMixin
 
 from accounts.models import Entity, ACTIVE
@@ -18,9 +19,10 @@ from social_balance.forms.entity_year import EntityYearBalanceForm
 from social_balance.models import SocialBalanceBadge, EntitySocialBalance
 
 
-class SocialBalanceYear(FilterMixin, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class SocialBalanceYear(FilterView, FilterMixin, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
     template_name = 'balance/year/list.html'
     ajax_template_name = 'balance/year/query.html'
+    model = Entity
     queryset = Entity.objects.filter(status=ACTIVE)
     model = Entity
     paginate_by = 35
