@@ -17,6 +17,9 @@ class Command(BaseCommand):
     notfound = []
     fetched = 0
 
+    def add_arguments(self, parser):
+        parser.add_argument('cif', type=int, nargs='?', default=None)
+
     def fetch_accounts(self):
         accounts = Account.objects.all()
         for account in accounts:
@@ -49,6 +52,17 @@ class Command(BaseCommand):
         self.fetched += guests.count()
 
     def handle(self, *args, **options):
+
+        nif = options.get('cif', None)
+        print(nif)
+        if nif:
+            account = Account.objects.filter(cif=cif).first()
+            result = account is not None and fetch_account(account)
+            if result is True:
+                print('{}: updated succesfully'.format(account))
+            else:
+                print('{}: failed'.format(account))
+
         self.fetch_accounts()
         self.fetch_guests()
 
