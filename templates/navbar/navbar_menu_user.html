@@ -110,6 +110,13 @@
 
          {% endif %}
 
+         <li class="nav-item">
+        <a class="nav-link pl-4" href="{% url 'intercoop:accounts_list' %}">
+          <i class="material-icons mr-3">store</i>
+          Intercooperación
+        </a>
+      </li>
+
          {% if perms.accounts.mespermission_can_view_deletions %}
 
          <li class="nav-item">
