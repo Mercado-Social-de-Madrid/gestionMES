@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load chunks %}
+
+{% block title %}Nueva entidad{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h4 class="mb-0"><a href="{% url 'intercoop:entity_list' %}">Entidades de intercooperación</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nueva entidad</h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        {% include "intercoop/entity/form.html" with field=form.color %}
+    </div>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}Nueva socia consumidora{% endblock %}
+
+
+{% block content %}
+
+{% if not 'from_app' in request.GET and not 'hide_toolbar' in request.GET %}
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h3 class="mb-0">{% if request.user.is_authenticated %}<a href="{% url 'intercoop:accounts_list' %}">Socias de intercooperación</a><i class="material-icons md-18 ">arrow_forward_ios</i>{% endif %} Nueva socia de intercooperación</h3>
+            </div>
+        </div>
+        </div>
+    </div>
+{% endif %}
+
+    <div class="container">
+
+        <div style="max-width:500px;margin:auto">
+            <img src="{{entity.logo.url}}" class="img-fluid my-3">
+        </div>
+
+        <p class="lead my-4 px-4" style="font-weight:100;"> {{entity.description}}</p>
+
+
+        <form method="post" class="mt-3 p-4" target="_parent">
+            {% csrf_token %}
+            {{form.from_app}}
+
+Los campos marcados con <span class="text-primary lead">*</span> son obligatorios.
+<div class="row ">
+    <div class="col-md-4">
+        {% include "common/forms/field.html" with field=form.cif not_floating=True %}
+    </div>
+    {% if entity.include_code %}
+    <div class="col-md-4">
+        <label style="margin-bottom:-0.5rem;display:block;" for="{{ form.external_code.id_for_label }}">{{ entity.code_label }} <span class="text-primary lead">*</label>
+        {% include "common/forms/field.html" with field=form.external_code hide_label=True %}
+    </div>
+
+    <input type="hidden" id="{{ form.entity.id_for_label }}" name="{{ form.entity.name }}" value="{{entity.pk}}" >
+
+    {% endif %}
+</div>
+<div class="row">
+    <div class="col-md-5">
+        {% include "common/forms/field.html" with field=form.first_name %}
+    </div>
+
+    <div class="col-md-7">
+        {% include "common/forms/field.html" with field=form.last_name %}
+    </div>
+
+    <div class="col-md-6">
+        {% include "common/forms/field.html" with field=form.contact_phone %}
+    </div>
+
+    <div class="col-md-6">
+        {% include "common/forms/field.html" with field=form.contact_email %}
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+
+    <div class="col-lg-12 mt-md-4">
+        {% include "common/forms/field.html" with field=form.address not_floating=True %}
+    </div>
+
+    <div class="col-md-4">
+        {% include "common/forms/field.html" with field=form.postalcode %}
+    </div>
+
+    <div class="col-md-4">
+        {% include "common/forms/field.html" with field=form.city %}
+    </div>
+
+    <div class="col-md-4">
+        {% include "common/forms/field.html" with field=form.province %}
+    </div>
+
+
+
+    <div class="col-md-12 col-lg-12">
+
+        <div class="custom-control custom-switch mt-3">
+            {{form.newsletter_check}}
+              <span class="custom-control-track"></span>
+              <label class="custom-control-label" for="{{form.newsletter_check.id_for_label}}">
+                    Deseo que se me incluya en las listas de distribución de correo del Mercado Social.
+            </label>
+
+            {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
+        </div>
+
+        <hr class="my-4">
+        {% include 'signup/privacy_policy_check.html' %}
+    </div>
+
+</div>
+        <div class="text-center mt-5 mb-5">
+            <button type="submit" class="btn btn-primary btn-lg">Enviar solicitud</button>
+        </div>
+
+        </form>
+    </div>
+
+{% endblock %}

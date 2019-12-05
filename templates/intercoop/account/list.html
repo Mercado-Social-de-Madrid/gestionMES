@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Consumidoras{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-6 col-md-6">
+                <h3 class="mb-0">Socias de intercooperación</h3>
+            </div>
+            <div class="col-sm-6 col-md-6 text-sm-right">
+                <a data-toggle="modal" data-target="#entities" href="#" class="btn btn-secondary"><i class="material-icons mr-2">add</i> Añadir socia</a>
+                <a href="{% url 'intercoop:entity_list' %}" class="btn btn-primary ml-2">Gestionar entidades</a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        {% include 'common/list/filter_form.html' %}
+        {% include 'common/ajax_wrapper.html' with query_template='intercoop/account/query.html' %}
+    </div>
+
+
+<div class="modal fade" id="entities" tabindex="-1" role="dialog" aria-labelledby="cancel-process-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancel-process-label">Nueva socia</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <p class="">Elige la entidad de intercooperación de la que viene la socia:</p>
+
+              <table class="table table-hover">
+                  <tbody>
+              {% for entity in entities %}
+                  <tr class="link-row" data-href="{% url 'intercoop:account_create' entity.slug %}"><td >
+                {{entity.name}}
+                      </td></tr>
+              {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}

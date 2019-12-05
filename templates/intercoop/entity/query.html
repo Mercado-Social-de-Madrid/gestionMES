@@ -1,0 +1,17 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Necesita código</th>
+    <th scope="col">Validez</th>
+   <th scope="col">Altas</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.name}}</td>
+<td><i class="material-icons">{{item.include_code|yesno:"check,clear"}}</i> </td>
+<td>{{item.expiration}} años</td>
+<td>{{item.accounts.count}} </td>
+{% endblock %}

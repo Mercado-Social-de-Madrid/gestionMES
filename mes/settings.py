@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'payments',
     'social_balance',
     'currency',
+    'intercoop',
     'jet',
     'sermepa',
     'core',
@@ -165,6 +166,7 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_EXEMPT_URLS = [
+    r'^'+MEDIA_URL+'/*',
     r'^accounts/signup/provider/',
     r'^accounts/signup/success/',
     r'^accounts/signup/consumer/',
@@ -179,6 +181,7 @@ LOGIN_EXEMPT_URLS = [
     r'^media/balance/badges/*',
     r'^password_reset/*',
     r'^reset/*',
+    r'^intercoop/[0-9a-zA-Z_-]+/$'
 ]
 
 INLINE_INPUT_SEPARATOR = '&&&'

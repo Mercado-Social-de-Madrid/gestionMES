@@ -1,0 +1,30 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Alta</th>
+    <th scope="col">Entidad</th>
+    <th scope="col">Validada</th>
+   <th scope="col">Sinc. app</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.display_name}}</td>
+<td>{{item.registration_date|date:'d/m/Y'}}</td>
+<td>{{item.entity}}</td>
+<td>
+   {%if item.validated %}
+      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Validada">done</i>
+   {% endif %}
+</td>
+<td>
+   {%if item.app_user.exists %}
+      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
+      {% if item.app_user.first.username %}
+         <i class="material-icons text-success" data-toggle="tooltip" data-placement="bottom" title="Registrada">done_all</i>
+      {% endif %}
+   {% endif %}
+</td>
+{% endblock %}

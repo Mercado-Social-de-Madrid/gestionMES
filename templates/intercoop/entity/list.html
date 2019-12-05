@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Entidades de intercooperación{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h3 class="mb-0">Entidades de intercooperación</h3>
+            </div>
+            <div class="col-sm-5 col-md-4 text-sm-right">
+                <a href="{% url 'intercoop:add_entity' %}" class="btn btn-primary"><i class="material-icons mr-2">add</i> Añadir entidad</a>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        {% include 'common/ajax_wrapper.html' with query_template='intercoop/entity/query.html' %}
+    </div>
+
+{% endblock %}
