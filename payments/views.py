@@ -17,6 +17,7 @@ from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.ModelFieldsViewMixin import ModelFieldsViewMixin
 from payments.forms.payment import PaymentForm
@@ -63,15 +64,34 @@ class PaymentDetailView(UpdateView):
 
 
 
-class CardPaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class CardPaymentFilterForm(BootstrapForm):
+    field_order = ['o', 'search', 'status', ]
+
+
+class CardPaymentFilter(django_filters.FilterSet):
+
+    search = SearchFilter(names=['reference', 'account__contact_email'], lookup_expr='in', label=_('Buscar...'))
+    o = LabeledOrderingFilter(fields=['amount', 'attempt'], field_labels={'amount':'Cantidad', 'attempt':'Fecha'})
+
+    class Meta:
+        model = CardPayment
+        form = CardPaymentFilterForm
+        fields = { 'type':['exact'] }
+
+class CardPaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     queryset = CardPayment.objects.filter(paid=True).order_by('-attempt')
+    filterset_class = CardPaymentFilter
     objects_url_name = 'card_payment_detail'
     template_name = 'card/list.html'
     ajax_template_name = 'card/query.html'
-    paginate_by = 15
+    paginate_by = 12
 
     model = CardPayment
+
+    csv_filename = 'card'
+    available_fields = ['account', 'attempt', 'amount', 'reference', 'concept', 'type', 'paid', 'pending_payment', ]
+    field_labels = {'concept': 'Concepto', }
 
 
 class CardPaymentDetailView(ModelFieldsViewMixin, UpdateView):
