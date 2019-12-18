@@ -14,3 +14,5 @@ class IntercoopAccountForm(forms.ModelForm, BootstrapForm):
 
     check_privacy_policy = forms.BooleanField(required=True,
                                               widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))
+    check_share_data = forms.BooleanField(required=True,
+                                              widget=forms.CheckboxInput(attrs={'class': 'custom-control-input'}))

@@ -98,7 +98,20 @@ Los campos marcados con <span class="text-primary lead">*</span> son obligatorio
 
         <hr class="my-4">
         {% include 'signup/privacy_policy_check.html' %}
+
+        <div class="custom-control custom-switch mt-3">
+        {{form.check_share_data}}
+          <span class="custom-control-track"></span>
+          <label class="custom-control-label" for="{{form.check_share_data.id_for_label}}">
+              Acepto que ambas entidades intercambien la información indispensable entre ellas para poder realizar las validaciones pertinentes. <span class="text-primary">*</span>
+          </label>
+
+        {% if form.check_share_data.errors %} <div class="valid-feedback"> {{form.check_share_data.errors}}</div> {% endif %}
+        </div>
+
     </div>
+
+
 
 </div>
         <div class="text-center mt-5 mb-5">
