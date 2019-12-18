@@ -45,7 +45,7 @@ class ProviderFilter(django_filters.FilterSet):
         self.form.initial['status'] = ACTIVE
 
 
-class ProvidersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class ProvidersListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     model = Provider
     queryset = Provider.objects.all().prefetch_related('app_user')
@@ -57,11 +57,11 @@ class ProvidersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMi
 
     csv_filename = 'proveedoras'
     available_fields = ['cif', 'name', 'business_name', 'public_address', 'address',  'contact_email', 'contact_phone', 'contact_person', 'territory',
-                        'description', 'short_description', 'registered_in_app',
+                        'description', 'short_description', 'registered_in_app', 'current_fee', 'has_logo',
                         'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'is_physical_store',
                         'bonus_percent_entity', 'bonus_percent_general', 'max_percent_payment', 'start_year', 'facebook_link', 'webpage_link', 'twitter_link', 'instagram_link',
                         'telegram_link', ]
-    field_labels = {'registered_in_app': 'Registrada en la app'}
+    field_labels = {'registered_in_app': 'Registrada en la app', 'current_fee': 'Cuota anual', 'has_logo':'Tiene logo'}
 
 
 class ProviderDetailView(TabbedViewMixin, UpdateView):
@@ -82,7 +82,6 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(ProviderDetailView, self).get_context_data(**kwargs)
 
-        context['fee'] = FeeRange.calculate_fee(self.object)
         context['categories'] = Category.objects.all()
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['signup'] = self.object.signup_process.first()

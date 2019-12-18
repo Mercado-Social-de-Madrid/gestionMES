@@ -52,7 +52,7 @@
             </div>
             <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.num_workers %}</div>
             <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.aprox_income %}</div>
-            <div class="col-sm-6 col-md-4">{% if fee %} {% include "common/forms/display_value.html" with value=fee label='Cuota anual' %} {% endif %}</div>
+            <div class="col-sm-6 col-md-4">{% include "common/forms/display_value.html" with value=object.current_fee label='Cuota anual' %}</div>
             </div>
         </div>
 

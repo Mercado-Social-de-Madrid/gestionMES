@@ -212,3 +212,11 @@ class Provider(Entity):
     def template_prefix(self):
         return 'provider'
 
+    @property
+    def current_fee(self):
+        from payments.models import FeeRange
+        return FeeRange.calculate_fee(self)
+
+    @property
+    def has_logo(self):
+        return bool(self.logo)
