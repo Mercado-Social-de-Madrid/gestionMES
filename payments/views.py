@@ -27,6 +27,17 @@ from sermepa.models import SermepaIdTPV
 from sermepa.signals import payment_was_successful, payment_was_error, signature_error
 
 
+class MemberTypeFilter(django_filters.ChoiceFilter):
+
+    def __init__(self, *args,**kwargs):
+        django_filters.ChoiceFilter.__init__(self, choices=settings.MEMBER_TYPES, *args,**kwargs)
+
+    def filter(self,qs,value):
+        if value not in (None,''):
+            qs = qs.filter(account__member_type=value)
+        return qs
+
+
 class PendingPaymentFilterForm(BootstrapForm):
     field_order = ['o', 'search', 'status', ]
 
@@ -35,6 +46,7 @@ class PendingPaymentFilter(django_filters.FilterSet):
 
     search = SearchFilter(names=['concept', 'account__contact_email'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
+    account = MemberTypeFilter(label='Tipo de socia')
 
     class Meta:
         model = PendingPayment
