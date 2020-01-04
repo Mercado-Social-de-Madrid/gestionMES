@@ -16,7 +16,7 @@ from pilkit.processors import ResizeToFit, ResizeToFill
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
-from accounts.models import Account, Provider, Consumer
+from accounts.models import Account, Provider, Consumer, UserComment
 from core.models import User
 from currency_server import wallet_transaction
 from helpers import RandomFileName
@@ -78,6 +78,13 @@ class FeeRange(models.Model):
         return DEFAULT_PROVIDER_FEE
 
 
+class FeeComments(UserComment):
+    account = models.ForeignKey(Account, related_name='fee_comments', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ['timestamp']
+        verbose_name = _('Comentario de cuota')
+        verbose_name_plural = _('Comentarios de cuota')
 
 class PaymentsManager(models.Manager):
 

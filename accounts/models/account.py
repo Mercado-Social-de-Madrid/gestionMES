@@ -13,6 +13,7 @@ from pilkit.processors import ResizeToFit
 from polymorphic.models import PolymorphicModel
 
 from accounts.models import Category, LegalForm
+from core.models import UserComment
 from helpers import RandomFileName
 
 TERR_LOCAL = 'local'

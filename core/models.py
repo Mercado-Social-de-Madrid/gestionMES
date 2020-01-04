@@ -60,3 +60,15 @@ class GalleryPhoto(models.Model):
         verbose_name = _('Foto')
         verbose_name_plural = _('Fotos')
         ordering = ['order']
+
+
+class UserComment(models.Model):
+    completed_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario'), on_delete=models.SET_NULL)
+    timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha'))
+    comment = models.TextField(blank=True, null=True, verbose_name=_('Comentario'))
+
+    class Meta:
+        abstract = True
+        verbose_name = _('Comentario')
+        verbose_name_plural = _('Comentarios')
+        ordering = ['timestamp']

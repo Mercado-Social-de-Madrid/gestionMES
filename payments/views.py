@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.sites.models import Site
 from django.http import HttpResponse
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -20,6 +21,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.ModelFieldsViewMixin import ModelFieldsViewMixin
+from payments.forms.FeeComment import FeeCommentForm
 from payments.forms.payment import PaymentForm
 from payments.models import PendingPayment, CardPayment
 from sermepa.forms import SermepaPaymentForm
@@ -111,6 +113,20 @@ class CardPaymentDetailView(ModelFieldsViewMixin, UpdateView):
     queryset = CardPayment.objects.all()
     form_class = PaymentForm
     model = CardPayment
+
+
+def add_fee_comment(request):
+
+    if request.method == "POST":
+        form = FeeCommentForm(request.POST,)
+        if form.is_valid():
+            redirect_url = form.cleaned_data['redirect_to']
+            comment = form.save(commit=False)
+            comment.completed_by = request.user
+            comment.save()
+            messages.success(request, _('Comentario añadido correctamente.'))
+            return redirect(redirect_url)
+
 
 
 def generate_payment_form(payment_uuid, URL_params=''):

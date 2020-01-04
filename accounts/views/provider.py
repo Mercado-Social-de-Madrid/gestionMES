@@ -22,6 +22,7 @@ from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
+from payments.forms.FeeComment import FeeCommentForm
 from payments.models import FeeRange, PendingPayment
 from social_balance.models import EntitySocialBalance, SocialBalanceBadge
 
@@ -89,6 +90,12 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
         context['current_balance'] = EntitySocialBalance.objects.filter(entity=self.object, year=settings.CURRENT_BALANCE_YEAR).first()
         context['current_badge'] =  SocialBalanceBadge.objects.filter(year=settings.CURRENT_BALANCE_YEAR).first()
         context['profile_tab'] = True
+
+        form = FeeCommentForm(initial={
+            'account': self.object,
+            'redirect_to': reverse('accounts:provider_detail', kwargs={'pk': self.object.pk})
+        })
+        context['comment_form'] = form
 
         return context
 
