@@ -129,8 +129,41 @@
 
     {% if perms.payments.mespermission_can_view_payments %}
     <div aria-labelledby="payments-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="payments-form" role="tabpanel">
+        <div class="row">
+            <div class="col-md-7">
         <h3 class="text-primary"><i class="material-icons mr-1">receipt</i> Pagos</h3>
        {% include 'common/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments object_url_name='payments:payment_detail' %}
+            </div>
+            <div class="col-md-5">
+                <h4 class="text-primary mb-3"><i class="material-icons mr-1">receipt</i> Comentarios <button class="btn btn-light ml-2" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
+                Añadir comentario
+                </button></h4>
+
+                <form class="mb-4" method="post" action="{% url 'payments:add_fee_comment' %}">
+
+                <div class="collapse" id="commentContainer">
+                    {{comment_form.as_p}}
+                    <input type="submit" name="add_comment" class="btn btn-lg btn-light" value="Enviar" />
+                </div>
+                {% csrf_token %}
+
+                </form>
+
+                {% for comment in object.fee_comments.all %}
+                    {% if comment.completed_by %}
+                        {% include 'user/simple_profile.html' with user=comment.completed_by %}
+                    {% endif %}
+                    {{comment.timestamp}}<br>
+                    <span class="font-weight-light"> {{comment.comment}}</span>
+
+
+                    <hr>
+                {% empty %}
+                    No hay ningún comentario.
+                {% endfor %}
+
+            </div>
+    </div>
 
     </div>
     {% endif %}

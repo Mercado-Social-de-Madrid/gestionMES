@@ -27,6 +27,7 @@ from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
+from payments.forms.FeeComment import FeeCommentForm
 from payments.models import PendingPayment
 
 
@@ -154,5 +155,11 @@ class ConsumerDetailView(TabbedViewMixin, UpdateView):
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['profile_tab'] = True
         context['signup'] = self.object.signup_process.first()
+        form = FeeCommentForm(initial={
+            'account': self.object,
+            'redirect_to': reverse('accounts:consumer_detail', kwargs={'pk': self.object.pk})
+        })
+        context['comment_form'] = form
+
         return context
 
