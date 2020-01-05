@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load settings_value %}
+{% load l10n %}
+
+{% block title %}Nueva socia especial{% endblock %}
+
+{% block content %}
+
+{% if not 'from_app' in request.GET and not 'hide_toolbar' in request.GET %}
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="mb-0">{% if request.user.is_authenticated %} <a href="{% url 'accounts:collaborators_list' %}">Entidades especiales</a><i class="material-icons md-18 ">arrow_forward_ios</i> {% endif %}Nueva entidad</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+    <div class="container">
+        <form method="post" class="mt-3 p-4" enctype="multipart/form-data" target="_parent">
+            {% csrf_token %}
+
+            {% include 'collaborator/form.html' %}
+
+
+        <div class="text-center mt-5 mb-5">
+            <button type="submit" class="btn btn-primary btn-lg">Añadir entidad</button>
+        </div>
+
+        </form>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>
+{% include 'common/include_gmaps.html' %}
+<script type="text/javascript">
+
+
+  function initMap() {
+{% if entity %}
+    var entityPosition = new google.maps.LatLng({{ entity.latitude|unlocalize }}, {{ entity.longitude|unlocalize }});
+{% else %}
+    var entityPosition = new google.maps.LatLng({% settings_value "INITIAL_LATITUDE"|unlocalize %}, {% settings_value "INITIAL_LONGITUDE"|unlocalize %});
+{% endif %}
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 16,
+        center: entityPosition,
+        zoomControl: true,
+        scaleControl: true,
+        streetViewControl: false,
+        mapTypeControl:false
+    });
+
+    $('#map').removeClass('loading-container');
+
+    var marker = new RichMarker({
+      position: entityPosition,
+      map: map,
+      draggable:true,
+      content: '<div class="marker-wrapper"><div class="marker"><img src="' + '{%if entity.first_photo_url %}{{entity.first_photo_url}}{%else%}{% static "imgs/etics-icon.png" %}{%endif%}' + '"></div></div>'
+    });
+
+    var latInput = $('[name="latitude"]');
+    var lngInput = $('[name="longitude"]');
+
+    function updateMarker(){
+        marker.setPosition( new google.maps.LatLng( latInput.val(), lngInput.val() ) );
+        map.setCenter(marker.getPosition());
+    }
+    latInput.on('change',  updateMarker);
+    lngInput.on('change',  updateMarker);
+
+    google.maps.event.addListener(
+        marker,
+        'drag',
+        function() {
+            latInput.val( marker.position.lat() );
+            lngInput.val( marker.position.lng() );
+        }
+    );
+
+    var update_timeout = null;
+    google.maps.event.addListener(map, 'click', function(event){
+        update_timeout = setTimeout(function(){
+            marker.setPosition(event.latLng);
+            latInput.val( marker.position.lat() );
+            lngInput.val( marker.position.lng() );
+        }, 200);
+    });
+
+    google.maps.event.addListener(map, 'dblclick', function(event) {
+        clearTimeout(update_timeout);
+    });
+
+    show_fees(
+        $('#{{form.num_workers.id_for_label}}'),
+        $('#{{form.aprox_income.id_for_label}}')
+    );
+  }
+
+</script>
+
+{% endblock %}

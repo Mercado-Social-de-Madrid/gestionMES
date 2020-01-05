@@ -12,6 +12,7 @@ from django_filters.views import FilterView
 from filters.views import FilterMixin
 
 from accounts.forms.provider import ProviderForm, ProviderSignupForm
+from accounts.mixins.feecomments import FeeCommentsMixin
 from accounts.mixins.signup import SignupFormMixin
 from accounts.models import Provider, SignupProcess, Category, ACTIVE
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
@@ -22,7 +23,6 @@ from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
-from payments.forms.FeeComment import FeeCommentForm
 from payments.models import FeeRange, PendingPayment
 from social_balance.models import EntitySocialBalance, SocialBalanceBadge
 
@@ -65,7 +65,7 @@ class ProvidersListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMi
     field_labels = {'registered_in_app': 'Registrada en la app', 'current_fee': 'Cuota anual', 'has_logo':'Tiene logo'}
 
 
-class ProviderDetailView(TabbedViewMixin, UpdateView):
+class ProviderDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView):
     template_name = 'provider/detail.html'
     default_tab = 'details'
     available_tabs = ['details', 'payments', 'currency']
@@ -82,7 +82,6 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ProviderDetailView, self).get_context_data(**kwargs)
-
         context['categories'] = Category.objects.all()
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['signup'] = self.object.signup_process.first()
@@ -90,12 +89,6 @@ class ProviderDetailView(TabbedViewMixin, UpdateView):
         context['current_balance'] = EntitySocialBalance.objects.filter(entity=self.object, year=settings.CURRENT_BALANCE_YEAR).first()
         context['current_badge'] =  SocialBalanceBadge.objects.filter(year=settings.CURRENT_BALANCE_YEAR).first()
         context['profile_tab'] = True
-
-        form = FeeCommentForm(initial={
-            'account': self.object,
-            'redirect_to': reverse('accounts:provider_detail', kwargs={'pk': self.object.pk})
-        })
-        context['comment_form'] = form
 
         return context
 

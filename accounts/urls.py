@@ -11,6 +11,11 @@ urlpatterns = [
     url(r'^categories/add/$', views.CategoryCreate.as_view(), name='add_category'),
     url(r'^categories/(?P<pk>[0-9a-f-]+)/$', views.CategoryDetailView.as_view(), name='category_detail'),
 
+    url(r'^entities/$', views.EntitiesListView.as_view(), name='collaborators_list'),
+    url(r'^entities/add$', views.CreateEntity.as_view(), name='add_collaborator'),
+    url(r'^entities/(?P<pk>\d+)/$', views.EntityDetailView.as_view(), name='collaborator_detail'),
+
+
     url(r'^providers/$', views.ProvidersListView.as_view(), name='providers_list'),
     url(r'^providers/(?P<pk>\d+)/$', views.ProviderDetailView.as_view(), name='provider_detail'),
     url(r'^providers/(?P<pk>\d+)/delete$', views.delete_account, name='provider_delete'),

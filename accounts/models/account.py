@@ -193,7 +193,11 @@ class Entity(Account):
 
 
 class Colaborator(Entity):
+    is_sponsor = models.BooleanField(default=False, verbose_name=_('Es patrocinadora'))
+    is_collaborator = models.BooleanField(default=False, verbose_name=_('Es colaboradora'))
     collaboration = models.TextField(blank=True, verbose_name=_('Modo de colaboración'))
+    special_agreement = models.TextField(blank=True, verbose_name=_('Acuerdos especiales'))
+    custom_fee = models.FloatField(null=True, blank=True, verbose_name=_('Cuota específica'))
 
 
 class Provider(Entity):

@@ -91,7 +91,7 @@
          <li class="nav-item">
         <a class="nav-link pl-4" href="{% url 'accounts:providers_list' %}">
           <i class="material-icons mr-3">store</i>
-          Entidades
+          Proveedoras
         </a>
       </li>
 
@@ -107,8 +107,16 @@
           <i class="material-icons mr-3">card_membership</i>
           Invitadas
         </a>
-
          {% endif %}
+
+         <li class="nav-item">
+        <a class="nav-link pl-4" href="{% url 'accounts:collaborators_list' %}">
+          <i class="material-icons mr-3">grade</i>
+          Entidades esp.
+        </a>
+      </li>
+
+
 
          <li class="nav-item">
         <a class="nav-link pl-4" href="{% url 'intercoop:accounts_list' %}">

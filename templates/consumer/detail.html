@@ -149,7 +149,7 @@
 
                 </form>
 
-                {% for comment in object.fee_comments.all %}
+                {% for comment in fee_comments %}
                     {% if comment.completed_by %}
                         {% include 'user/simple_profile.html' with user=comment.completed_by %}
                     {% endif %}

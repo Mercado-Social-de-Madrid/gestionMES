@@ -21,7 +21,6 @@ class CommissionForm(forms.ModelForm, BootstrapForm):
     # Overriding __init__ here allows us to provide initial data for permissions
     def __init__(self, *args, **kwargs):
         # Only in case we build the form from an instance
-        # (otherwise, 'toppings' list should be empty)
         if kwargs.get('instance'):
             initial = kwargs.setdefault('initial', {})
             # The widget for a ModelMultipleChoiceField expects
@@ -31,7 +30,7 @@ class CommissionForm(forms.ModelForm, BootstrapForm):
 
         forms.ModelForm.__init__(self, *args, **kwargs)
 
-    # Overriding save allows us to process the value of 'toppings' field
+
     def save(self, commit=True):
 
         is_new = self.instance.pk is None

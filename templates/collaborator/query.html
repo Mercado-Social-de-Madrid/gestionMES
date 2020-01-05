@@ -1,0 +1,31 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Forma legal</th>
+    {% if not simple_list %}
+    <th scope="col">Fecha de alta</th>
+    <th scope="col">Colaboradora</th>
+    <th scope="col">Patrocinadora</th>
+    {% endif %}
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{{item.name}} {% include 'category/tag_list.html' with tags=item.categories.all %}</td>
+<td>{% if item.legal_form %} {{item.legal_form.title}} {% else %} - {% endif %}</td>
+{% if not simple_list %}
+<td>{{item.registration_date|date:'d/m/Y'}}</td>
+<td>
+   {% if item.is_collaborator %}
+      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
+   {% endif %}
+</td>
+<td>
+   {% if item.is_sponsor %}
+      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
+   {% endif %}
+</td>
+{% endif %}
+{% endblock %}

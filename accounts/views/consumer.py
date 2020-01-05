@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import codecs
-import csv
-
-import datetime
 import django_filters
-import polymorphic
 from django.contrib import messages
-from django.core.exceptions import FieldDoesNotExist
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -17,6 +11,7 @@ from django_filters.views import FilterView
 from filters.views import FilterMixin
 
 from accounts.forms.consumer import ConsumerForm, ConsumerSignupForm
+from accounts.mixins.feecomments import FeeCommentsMixin
 from accounts.mixins.signup import SignupFormMixin
 from accounts.models import Consumer, SignupProcess
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
@@ -27,7 +22,6 @@ from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
-from payments.forms.FeeComment import FeeCommentForm
 from payments.models import PendingPayment
 
 
@@ -134,7 +128,7 @@ class ConsumerUpdateView(UpdateView):
         return initial
 
 
-class ConsumerDetailView(TabbedViewMixin, UpdateView):
+class ConsumerDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView ):
     template_name = 'consumer/detail.html'
     default_tab = 'details'
     available_tabs = ['details', 'payments', 'currency']
@@ -151,15 +145,8 @@ class ConsumerDetailView(TabbedViewMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(ConsumerDetailView, self).get_context_data(**kwargs)
-
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['profile_tab'] = True
         context['signup'] = self.object.signup_process.first()
-        form = FeeCommentForm(initial={
-            'account': self.object,
-            'redirect_to': reverse('accounts:consumer_detail', kwargs={'pk': self.object.pk})
-        })
-        context['comment_form'] = form
-
         return context
 

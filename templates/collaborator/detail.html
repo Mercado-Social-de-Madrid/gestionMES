@@ -4,7 +4,7 @@
 {% load l10n %}
 {% load chunks %}
 
-{% block title %}Proveedoras | {{object.display_name}} {% endblock %}
+{% block title %}Entidades | {{object.display_name}} {% endblock %}
 
 {% block bodyattrs %} id="login-page" class="main-bg" {% endblock%}
 
@@ -15,7 +15,7 @@
             <div class="row">
             <div class="col-sm-8 col-md-8">
                 <h4 class="mb-0 breadcrumbs">
-                    <a href="{% url 'accounts:providers_list' %}">Proveedoras</a>
+                    <a href="{% url 'accounts:collaborators_list' %}">Entidades</a>
                     <i class="material-icons md-18 ">arrow_forward_ios</i>
                     {{object.display_name}}
                 </h4>
@@ -40,93 +40,20 @@
      <li class="nav-item">
         <a aria-controls="balances" aria-selected="false" class="nav-link {%if balances_tab%} active{%endif%}" data-toggle="tab" href="#balances-form" id="balances-tab" role="tab">Balance social</a>
       </li>
-
+<!--
      <li class="nav-item">
         <a aria-controls="currency" aria-selected="false" class="nav-link {%if currency_tab%} active{%endif%}" data-toggle="tab" href="#currency-form" id="currency-tab" role="tab">Etics</a>
       </li>
+    -->
     </ul>
 
 <div class="tab-content">
   <div aria-labelledby="data-tab" class="tab-pane p-4 px-5 {%if details_tab%}show active{%endif%}" id="data-form" role="tabpanel">
 
-      <div class="row px-4">
-          <div class="col-md-3">
-              <div class="card">
-                  <div class="card-body">
-                       <div class="float-left lead p-2 mb-2 mr-2">
-                      {% if object.is_active %}
-                        <i class="material-icons">check</i>
-                      {% else %}
-                        <i class="material-icons">clear</i>
-                      {% endif %}
-                           </div>
-                      <div class="float-left">
-                          <label>Estado</label><br>
-                            {{object.get_status_display}}
-                      </div>
-
-                      </div>
-              </div>
-          </div>
-          <div class="col-md-4">
-              <div class="card">
-                  <div class="card-body">
-              <label>Acogida</label><br>
-                 {% if signup %}
-                     <p class="pb-1"><a class="text-primary" href="{% url 'accounts:signup_detail' signup.pk %}"> {% include 'bpm/current_state.html' with workflow=signup.workflow %} <i class="material-icons mx-2">visibility</i></a></p>
-                  {% else %}
-                    <p class="pb-3"> Importada (previa a 2019)</p>
-                  {% endif %}
-                  </div>
-              </div>
-          </div>
-          <div class="col-md-3">
-              {% if object.is_active %}
-                {% if perms.accounts.mespermission_can_create_deletions %}
-                <a class="btn btn-secondary text-light mb-2" data-toggle="modal" data-target="#cancel-process">Dar de baja</a><br>
-                {% endif %}
-              {% endif %}
-                <a class="btn btn-light disabled mb-2">Consultar historial</a><br>
-          </div>
-      </div>
-
-      {% if object.is_active %}
-
-      <form method="post" action="{% url 'accounts:provider_delete' object.pk %}">
-         {% csrf_token %}
-         <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
-        <input type="hidden" name="process" value="{{object.pk}}">
-
-        <div class="modal fade" id="cancel-process" tabindex="-1" role="dialog" aria-labelledby="cancel-process-label" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="cancel-process-label">Baja de entidad</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body text-center">
-              <div class="mb-4 display-2 text-muted"> <i class="material-icons">error_outline</i></div>
-               Esta acción creará un proceso de baja para la entidad actual.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Confirmar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-     </form>
-
-      {% endif %}
-
-
-      <form method="post" class="mt-1 p-4" enctype="multipart/form-data">
+      <form method="post" class="mt-1 px-4" enctype="multipart/form-data">
             {% csrf_token %}
             {{form.media}}
-            {% include 'provider/form.html' %}
+            {% include 'collaborator/form.html' %}
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
         </div>
@@ -192,7 +119,7 @@
 
     </div>
     {% endif %}
-
+<!--
     <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
         <div class="row">
             <div class="col-md-4">
@@ -200,7 +127,7 @@
             </div>
         </div>
     </div>
-
+-->
   </div>
 
 {% endblock %}
