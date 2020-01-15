@@ -1,0 +1,42 @@
+.daterangepicker{
+    padding:1rem;
+
+   .calendar-table{
+        text-align:center;
+        tr:nth-child(2){
+
+            text-transform:uppercase;
+
+            color: $mes-primary;
+
+            th{
+                font-weight:lighter;
+                padding:0 0.3rem;
+                font-size:0.8rem;
+            }
+        }
+
+        .month{
+            text-transform:capitalize;
+            text-align:center;
+            color:#111;
+        }
+
+        tbody td{
+            font-size:0.8rem;
+            padding: 0.2rem 0;
+            &:hover, &:focus{
+                cursor:pointer;
+                background-color:$material-color-grey-100;
+            }
+            &.off{
+                color:#aaa;
+            }
+            &.start-date, &.end-date{
+                background-color: $mes-primary-light;
+                color:#fff;
+            }
+
+        }
+   }
+}

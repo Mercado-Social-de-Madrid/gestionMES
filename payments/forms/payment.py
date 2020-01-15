@@ -15,5 +15,7 @@ class PaymentForm(forms.ModelForm, BootstrapForm):
         model = PendingPayment
         exclude = ['reference', 'revised_by']
         widgets = {
-            'account': forms.HiddenInput()
+            'account': forms.HiddenInput(),
+            'concept': forms.Textarea(attrs={'rows':3}),
+            'comment': forms.Textarea(attrs={'rows': 3})
         }

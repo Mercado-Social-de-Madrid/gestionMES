@@ -16,7 +16,8 @@ class FeeCommentForm(forms.ModelForm, BootstrapForm):
         fields_required = ['comment']
 
         widgets = {
-            'account': forms.HiddenInput()
+            'account': forms.HiddenInput(),
+            'comment': forms.Textarea(attrs={'rows': 3, 'required':True}),
         }
 
 

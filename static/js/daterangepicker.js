@@ -59,20 +59,41 @@
         if (this.element.hasClass('dropup'))
             this.drops = 'up';
 
-        this.buttonClasses = 'btn btn-sm btn-primary';
-        this.applyClass = 'btn-s';
+        this.buttonClasses = 'btn btn-sm';
+        this.applyClass = 'btn-s btn-primary';
         this.cancelClass = 'btn-default';
 
         this.locale = {
             direction: 'ltr',
-            format: moment.localeData().longDateFormat('L'),
+            format: "DD/MM/YYYY HH:mm",
             separator: ' - ',
             applyLabel: 'Aplicar',
             cancelLabel: 'Cancelar',
             weekLabel: 'W',
             customRangeLabel: 'Personalizado',
-            daysOfWeek: moment.weekdaysMin(),
-            monthNames: moment.monthsShort(),
+            daysOfWeek: [
+            "Dom",
+            "Lun",
+            "Mar",
+            "Mié",
+            "Jue",
+            "Vie",
+            "Sáb"
+        ],
+        monthNames: [
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
+            "Agosto",
+            "Septiembre",
+            "Octubre",
+            "Noviembre",
+            "Diciembre"
+        ],
             firstDay: moment.localeData().firstDayOfWeek()
         };
 
@@ -97,10 +118,11 @@
                 '<div class="calendar left">' +
                     '<div class="daterangepicker_input">' +
                       '<input class="input-mini form-control" type="text" name="daterangepicker_start" value="" />' +
-                      '<i class="fas fa-calendar glyphicon glyphicon-calendar"></i>' +
-                      '<div class="calendar-time">' +
-                        '<div></div>' +
-                        '<i class="fas fa-clock-o glyphicon glyphicon-time"></i>' +
+                      '<i class="fas fa-calendar"></i>' +
+                      '<div class="calendar-time pb-2 d-flex justify-content-center">' +
+                        '<i class="far fa-clock mt-1 mr-2"></i>' +
+                        '<div class="text-center"></div>' +
+
                       '</div>' +
                     '</div>' +
                     '<div class="calendar-table"></div>' +
@@ -108,18 +130,18 @@
                 '<div class="calendar right">' +
                     '<div class="daterangepicker_input">' +
                       '<input class="input-mini form-control" type="text" name="daterangepicker_end" value="" />' +
-                      '<i class="fas fa-calendar glyphicon glyphicon-calendar"></i>' +
-                      '<div class="calendar-time">' +
+                      '<i class="far fa-calendar"></i>' +
+                      '<div class="calendar-time d-flex">' +
                         '<div></div>' +
-                        '<i class="fas fa-clock-o glyphicon glyphicon-time"></i>' +
+                        '<i class="far fa-clock"></i>' +
                       '</div>' +
                     '</div>' +
                     '<div class="calendar-table"></div>' +
                 '</div>' +
                 '<div class="ranges">' +
-                    '<div class="range_inputs">' +
-                        '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
-                        '<button class="cancelBtn" type="button"></button>' +
+                    '<div class="range_inputs m-2 d-flex">' +
+                        '<button class="applyBtn flex-fill mr-2" disabled="disabled" type="button"></button> ' +
+                        '<button class="cancelBtn flex-fill" type="button"></button>' +
                     '</div>' +
                 '</div>' +
             '</div>';
@@ -706,7 +728,7 @@
                 html += '<th></th>';
 
             if ((!minDate || minDate.isBefore(calendar.firstDay)) && (!this.linkedCalendars || side == 'left')) {
-                html += '<th class="prev available"><i class="fas fa-' + arrow.left + ' glyphicon glyphicon-' + arrow.left + '"></i></th>';
+                html += '<th class="prev available text-center"><i class="fas fa-2x fa-' + arrow.left + ' glyphicon glyphicon-' + arrow.left + '"></i></th>';
             } else {
                 html += '<th></th>';
             }
@@ -748,7 +770,7 @@
 
             html += '<th colspan="5" class="month">' + dateHtml + '</th>';
             if ((!maxDate || maxDate.isAfter(calendar.lastDay)) && (!this.linkedCalendars || side == 'right' || this.singleDatePicker)) {
-                html += '<th class="next available"><i class="fas fa-' + arrow.right + ' glyphicon glyphicon-' + arrow.right + '"></i></th>';
+                html += '<th class="next available text-center"><i class="fas fa-2x fa-' + arrow.right + ' glyphicon glyphicon-' + arrow.right + '"></i></th>';
             } else {
                 html += '<th></th>';
             }

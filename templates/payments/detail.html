@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load settings_value %}
+{% load staticfiles %}
 
 {% block title %}Detalles de pago{% endblock %}
 
@@ -11,7 +12,7 @@
         <div class="container">
             <div class="row">
             <div class="col-md-12">
-                <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Ref. {{object.reference}}</h4>
+                <h4 class="mb-0"><a href="{% url 'payments:payments_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Ref. {{object.reference}}</h4>
             </div>
 
         </div>
@@ -31,7 +32,7 @@
 
         <div class="col-md-7">
             <div class="card mb-3">
-        <div class="card-body">
+        <div class="card-body pb-4">
         <div class="d-flex align-items-stretch">
             <div class="pr-4 align-self-center text-center">
                 <h3 class="text-black-50">{{object.amount}}€</h3>
@@ -43,7 +44,6 @@
             </div>
             <div>
                 <small>Ref. {{object.reference}}</small><br>
-
 
                 Creado: {{object.added|date:'d/m/Y H:i'}}<br>
                 {{object.concept}}
@@ -64,9 +64,29 @@
 
     <form method="post" class="mt-3 p-4">
             {% csrf_token %}
+            {{form.account}}
+        <div class="row">
+            <div class="col-md-5">
+                {% include "common/forms/display_value.html" with value=object.reference label='Referencia' %}
+                {% include "common/forms/display_value.html" with value=object.added label='Añadido' %}
+                {% include "common/forms/field.html" with field=form.amount %}
+                <div class="mb-3">
+                    {% include "common/forms/switch.html" with field=form.completed %}
+                </div>
+                <div id="payment-data" {% if not object.completed %} style="display:none;" {% endif %}>
+                    {% include "common/forms/field.html" with field=form.timestamp %}
+                    {% include "common/forms/field.html" with field=form.type not_floating=True %}
+                    {% if object.completed and object.revised_by %}
+                        {% include "common/forms/display_value.html" with value=object.revised_by label='Revisado por' %}
+                    {% endif %}
+                </div>
 
-    {{ form.as_p }}
-
+            </div>
+            <div class="col-md-7">
+                {% include "common/forms/field.html" with field=form.concept not_floating=True %}
+                {% include "common/forms/field.html" with field=form.comment not_floating=True %}
+            </div>
+        </div>
 
     <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
@@ -75,5 +95,37 @@
     </form>
 </div>
 
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/moment.min.js' %}?v=7"></script>
+<script src="{% static 'js/daterangepicker.js' %}?v=7"></script>
+<script>
+$(function() {
+  var dateinput = $('input[name="{{ form.timestamp.name }}"]');
+  dateinput.daterangepicker({
+    singleDatePicker: true,
+    timePicker: true,
+    timePicker24Hour: true,
+    drops:'up',
+    locale: {
+        "format": "DD/MM/YYYY HH:mm",
+        "weekLabel": "W",
+
+        "firstDay": 1
+    },
+  });
+  dateinput.on('apply.daterangepicker', function(ev, picker) {
+      dateinput.val(picker.startDate.format('DD/MM/YYYY HH:mm'));
+  });
+
+  $('input[name="{{form.completed.name}}"]').on('change', function(){
+    $('#payment-data').toggle(this.checked);
+
+  });
+});
+</script>
 
 {% endblock %}

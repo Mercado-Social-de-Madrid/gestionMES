@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-
+{% load l10n %}
+    {% load humanize %}
 {% block title %}Pagos{% endblock %}
 
 
@@ -11,6 +12,9 @@
             <div class="col-sm-7 col-md-8">
                 <h3 class="mb-0">Pagos</h3>
             </div>
+                <div class="col-sm-4">
+                    Total pendiente: <h3 class="d-inline ml-2">{{ total_pending | intcomma }} €</h3>
+                </div>
 
         </div>
         </div>

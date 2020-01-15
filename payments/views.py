@@ -5,6 +5,7 @@ import django_filters
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.sites.models import Site
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.urls import reverse
@@ -66,12 +67,22 @@ class PaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateRe
     ordering = ['-added']
     paginate_by = 15
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_pending'] = PendingPayment.objects.filter(completed=False).aggregate(sum=Sum('amount'))['sum']
+        return context
+
 
 class PaymentDetailView(UpdateView):
     template_name = 'payments/detail.html'
     queryset = PendingPayment.objects.all()
     form_class = PaymentForm
     model = PendingPayment
+
+    def form_invalid(self, form):
+        res = super().form_invalid(form)
+        print (form.errors)
+        return res
 
     def get_success_url(self):
         return reverse('payments:payment_detail', kwargs={'pk': self.object.pk})
