@@ -54,13 +54,8 @@
         </div>
     </div>
 
-        </div>
-
-
-
     </div>
-
-
+    </div>
 
     <form method="post" class="mt-3 p-4">
             {% csrf_token %}
@@ -76,15 +71,16 @@
                 <div id="payment-data" {% if not object.completed %} style="display:none;" {% endif %}>
                     {% include "common/forms/field.html" with field=form.timestamp %}
                     {% include "common/forms/field.html" with field=form.type not_floating=True %}
-                    {% if object.completed and object.revised_by %}
-                        {% include "common/forms/display_value.html" with value=object.revised_by label='Revisado por' %}
-                    {% endif %}
+
                 </div>
 
             </div>
             <div class="col-md-7">
                 {% include "common/forms/field.html" with field=form.concept not_floating=True %}
                 {% include "common/forms/field.html" with field=form.comment not_floating=True %}
+                {% if object.completed and object.revised_by %}
+                    {% include "common/forms/display_value.html" with value=object.revised_by label='Revisado por' %}
+                {% endif %}
             </div>
         </div>
 

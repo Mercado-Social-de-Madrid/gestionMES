@@ -19,3 +19,12 @@ class PaymentForm(forms.ModelForm, BootstrapForm):
             'concept': forms.Textarea(attrs={'rows':3}),
             'comment': forms.Textarea(attrs={'rows': 3})
         }
+
+
+class UpdatePaymentForm(forms.ModelForm, BootstrapForm):
+
+    redirect_to = forms.CharField(required=False, widget=forms.HiddenInput())
+
+    class Meta:
+        model = PendingPayment
+        exclude = ['reference', 'revised_by', 'completed', 'amount', 'concept', 'comment', 'type', 'account']

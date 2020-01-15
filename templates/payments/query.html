@@ -13,18 +13,19 @@
 {% block item_row %}
 
 <td class="entity-td">{{item.account.display_name}}</td>
-<td>{{item.amount}} €</td>
+<td class="amount">{{item.amount}} €</td>
 <td>
     {% if item.type %}
         <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="{{item.get_type_display}}">{{item.icon_name}}</i>
     {% endif %}
 </td>
-<td>{{item.concept}}</td>
-<td>{% if item.completed %}
-                <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
-            {% else %}
-                <i class="material-icons">access_time</i> <small>Pend.</small>
-            {% endif %}</td>
+<td style="max-width:250px;">{{item.concept}}</td>
+<td class="{% if item.completed %}bg-success{% else %}bg-warning{% endif %}">
+    {% if item.completed %}
+        <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
+    {% else %}
+        <i class="material-icons">access_time</i> <small>Pend.</small>
+    {% endif %}</td>
 <td>{{item.added|date:'d/m/Y H:i'}}</td>
-
+<td> <a href="#" class="action" data-action="{% url 'payments:update_payment' item.pk %}" data-toggle="modal" data-target="#set-paid"> <i data-toggle="tooltip" data-placement="bottom" title="Marcar como pagado"  class="md-24 material-icons text-primary">check</i> </a></td>
 {% endblock %}

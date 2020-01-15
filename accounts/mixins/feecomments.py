@@ -10,7 +10,6 @@ class FeeCommentsMixin(object):
         context = super().get_context_data(**kwargs)
         view = resolve(self.request.path)
         view_redirect = '{}:{}'.format(view.namespace, view.url_name )
-        print(view_redirect)
         form = FeeCommentForm(initial={
             'account': self.object,
             'redirect_to': reverse(view_redirect, kwargs={'pk': self.object.pk})

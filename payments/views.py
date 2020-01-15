@@ -23,7 +23,7 @@ from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.ModelFieldsViewMixin import ModelFieldsViewMixin
 from payments.forms.FeeComment import FeeCommentForm
-from payments.forms.payment import PaymentForm
+from payments.forms.payment import PaymentForm, UpdatePaymentForm
 from payments.models import PendingPayment, CardPayment
 from sermepa.forms import SermepaPaymentForm
 from sermepa.models import SermepaIdTPV
@@ -70,6 +70,7 @@ class PaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateRe
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_pending'] = PendingPayment.objects.filter(completed=False).aggregate(sum=Sum('amount'))['sum']
+        context['form'] = UpdatePaymentForm()
         return context
 
 
@@ -139,6 +140,29 @@ def add_fee_comment(request):
             return redirect(redirect_url)
 
 
+def update_payment(request, pk):
+    if request.method == "POST":
+        payment = PendingPayment.objects.get(pk=pk)
+        form = UpdatePaymentForm(request.POST,)
+        if form.is_valid():
+            payment.completed = True
+            payment.timestamp = form.cleaned_data.get('timestamp')
+            payment.revised_by = request.user
+            payment.save()
+
+            redirect_url = form.cleaned_data.get('redirect_to')
+            print(redirect_url)
+            if redirect_url:
+                messages.success(request, _('Pago actualizado correctamente.'))
+                return redirect(redirect_url)
+
+            return HttpResponse(status=200)
+
+        else:
+            print('form invalid!')
+            print(form.errors)
+
+    return HttpResponse(status=400)
 
 def generate_payment_form(payment_uuid, URL_params=''):
     site = Site.objects.get_current()
