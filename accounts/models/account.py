@@ -6,10 +6,12 @@ from datetime import datetime
 from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext as _
 from imagekit import ImageSpec, register
 from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFit
+from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
 from accounts.models import Category, LegalForm
@@ -49,6 +51,14 @@ class MaxResize(ImageSpec):
 register.generator('mes:profile:max_resize', MaxResize)
 
 
+
+class AccountsManager(PolymorphicManager):
+
+    def active(self):
+        qs = self.get_queryset()
+        return qs.filter( Q(status=ACTIVE) | Q(status=INITIAL_PAYMENT) | Q(status=PENDING_PAYMENT) )
+
+
 class Account(PolymorphicModel):
 
     status = models.CharField(null=False, default=ACTIVE, max_length=20, choices=ACCOUNT_STATUSES, verbose_name=_('Estado'))
@@ -72,6 +82,9 @@ class Account(PolymorphicModel):
 
     registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
     opted_out_date = models.DateField(verbose_name=_('Fecha de baja'), null=True, blank=True)
+
+    # Custom model manager
+    objects = AccountsManager()
 
     class Meta:
         verbose_name = _('Socia')

@@ -22,7 +22,7 @@ class Command(BaseCommand):
         parser.add_argument('cif', type=int, nargs='?', default=None)
 
     def fetch_accounts(self):
-        accounts = Account.objects.all()
+        accounts = Account.objects.active()
         for account in accounts:
             result = fetch_account(account)
             if result is True:
