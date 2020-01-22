@@ -24,15 +24,22 @@
 
     <div class="row">
          <div class="col-md-5 mb-3">
+             <span class="badge badge-primary mb-2">Socia</span>
+            <div class="card mb-3">
+                <div class="card-body">
             {% include 'account/simple_profile.html' with account=object.account %}
-             <div class="mt-2 pl-4">
-             <a class="btn btn-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
+             <div class="text-right">
+                 <a class="btn btn-outline-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}?tab=payments">Ver pagos</a>
+                 <a class="btn btn-outline-primary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
              </div>
+                </div>
+            </div>
         </div>
 
         <div class="col-md-7">
+            <span class="badge badge-primary mb-2">Pago</span>
             <div class="card mb-3">
-        <div class="card-body pb-4">
+        <div class="card-body py-4">
         <div class="d-flex align-items-stretch">
             <div class="pr-4 align-self-center text-center">
                 <h3 class="text-black-50">{{object.amount}}€</h3>
@@ -42,7 +49,7 @@
                     <i class="material-icons">access_time</i> <small>Pendiente</small>
                 {% endif %}
             </div>
-            <div>
+            <div class="mb-3">
                 <small>Ref. {{object.reference}}</small><br>
 
                 Creado: {{object.added|date:'d/m/Y H:i'}}<br>

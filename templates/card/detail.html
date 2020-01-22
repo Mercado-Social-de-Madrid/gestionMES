@@ -22,15 +22,22 @@
 <div class="container pt-4">
 
     <div class="row">
-         <div class="col-md-5 mb-3">
+         <div class="col-md-6 mb-3">
+            <span class="badge badge-primary mb-2">Socia</span>
+            <div class="card mb-3">
+                <div class="card-body">
             {% include 'account/simple_profile.html' with account=object.account %}
-             <div class="mt-2 pl-4">
-             <a class="btn btn-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
+             <div class="text-right">
+                 <a class="btn btn-outline-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}?tab=payments">Ver pagos</a>
+                 <a class="btn btn-outline-primary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
              </div>
+                </div>
+            </div>
         </div>
 
-        <div class="col-md-7">
+        <div class="col-md-6 mt-2">
             {% if object.pending_payment %}
+            <span class="badge badge-primary mb-2">Pago</span>
                 {% include 'payments/detail_card.html' with payment=object.pending_payment %}
             {% endif %}
 
@@ -39,7 +46,7 @@
     </div>
 
     {% if object.bank_response %}
-        <div class="card p-4 mt-3">
+        <div class="card p-4 mt-1 mb-5">
             <div class="card-body">
                 <h4 class="card-title text-primary">Datos del TPV</h4>
                 {% url 'sermepa_response' object.bank_response.pk as bank_response %}
