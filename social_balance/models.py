@@ -28,12 +28,17 @@ class EntitySocialBalance(models.Model):
     class Meta:
         verbose_name = _('Informe de balance social')
         verbose_name_plural = _('Informes de balance social')
+        permissions = (
+            ("mespermission_can_view_social_balances", _("Puede gestionar los balances sociales")),
+            ("mespermission_can_edit_social_balances", _("Puede editar los informes de balance social")),
+        )
 
     def __str__(self):
         return '{}: {}'.format(self.entity.cif, self.year)
 
     def __unicode__(self):
         return '{}: {}'.format(self.entity.cif, self.year)
+
 
 
 class SocialBalanceBadge(models.Model):
@@ -50,3 +55,11 @@ class SocialBalanceBadge(models.Model):
     undone_img = ProcessedImageField(null=True, blank=True, upload_to=RandomFileName('balance/badges/'),
                         verbose_name='Imagen de no realizada',
                         processors=[ResizeToFit(900, 700, upscale=False)], format='PNG')
+
+    class Meta:
+        verbose_name = _('Sello de balance social')
+        verbose_name_plural = _('Sellos de balance social')
+        permissions = (
+            ("mespermission_can_view_social_badges", _("Puede ver las plantillas de sellos de balance social")),
+            ("mespermission_can_create_social_badges", _("Puede crear plantillas de sellos de balance social")),
+        )

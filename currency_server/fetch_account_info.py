@@ -182,7 +182,7 @@ def fetch_intercoop_account(account):
         "cif": account.cif,
         "email": account.contact_email,
     }
-    print(account)
+
     app_user = CurrencyAppUser.objects.filter(intercoop_account=account)
     if app_user.exists():
         selected = app_user.first()
@@ -202,8 +202,6 @@ def fetch_intercoop_account(account):
         user = result['user']
         if 'is_registered' in user and user['is_registered']:
             app_user.username = user['username']
-
-        print(result)
 
         account_data = result['person']
         if 'name' in account_data and account_data['name']:

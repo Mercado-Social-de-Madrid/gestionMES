@@ -60,7 +60,9 @@
 
         </div>
         <div class="text-center mt-3">
+            {% if perms.social_balance.mespermission_can_edit_social_balances %}
             <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+            {% endif %}
         </div>
 
         </form>

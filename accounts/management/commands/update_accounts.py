@@ -82,8 +82,8 @@ class Command(BaseCommand):
             return
 
         self.fetch_accounts()
-        self.fetch_guests()
-        self.fetch_intercoop()
+        #self.fetch_guests()
+        #self.fetch_intercoop()
 
         print('Completed fetching info from {} accounts! Missing {} accounts'.format(self.fetched, len(self.notfound)) )
         for account in self.notfound:

@@ -166,28 +166,32 @@
     </ul>
     {% endif %}
 
-
+    {% if perms.social_balance.mespermission_can_view_social_badges or perms.social_balance.mespermission_can_view_social_balances %}
      <div class="navdrawer-divider"></div>
 
         <p class="navdrawer-subheader">Balance social</p>
 
         <ul class="navdrawer-nav">
 
+        {% if perms.social_balance.mespermission_can_view_social_badges %}
          <li class="nav-item">
             <a class="nav-link pl-4" href="{% url 'balance:badge_list' %}">
               <i class="material-icons mr-3">palette</i>
               Sellos (plantilla)
             </a>
          </li>
+        {% endif %}
 
+         {% if perms.social_balance.mespermission_can_view_social_balances %}
         <li class="nav-item">
             <a class="nav-link pl-4" href="{% url 'balance:balance' %}">
               <i class="material-icons mr-3">art_track</i>
               Datos anuales
             </a>
          </li>
+        {% endif %}
         </ul>
-
+    {% endif %}
 
     </div>
 

@@ -30,12 +30,16 @@
     <td>{% if balance.report %} <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Subida">done</i> {% endif %}</td>
     <td> {% if balance.badge_image %}<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Generado">image</i> {% endif %}</td>
     <td>
+        {% if perms.social_balance.mespermission_can_edit_social_balances %}
         <a href="{% url 'balance:entity_year' item.pk balance.year %}"><i class="material-icons text-primary">chevron_right</i></a>
+        {% endif %}
     </td>
     {% else %}
     <td class="bg-light"></td><td>Sin información</td>
     <td colspan="4" class="py-0">
+        {% if perms.social_balance.mespermission_can_edit_social_balances %}
         <a href="#" class="mt-3 btn bg-light btn-sm"><i class="material-icons mr-2">add</i>Añadir datos</a>
+        {% endif %}
     </td>
 
     {% endif %}
