@@ -30,140 +30,6 @@ from sermepa.models import SermepaIdTPV
 from sermepa.signals import payment_was_successful, payment_was_error, signature_error
 
 
-class MemberTypeFilter(django_filters.ChoiceFilter):
-
-    def __init__(self, *args,**kwargs):
-        django_filters.ChoiceFilter.__init__(self, choices=settings.MEMBER_TYPES, *args,**kwargs)
-
-    def filter(self,qs,value):
-        if value not in (None,''):
-            qs = qs.filter(account__member_type=value)
-        return qs
-
-
-class PendingPaymentFilterForm(BootstrapForm):
-    field_order = ['o', 'search', 'status', ]
-
-
-class PendingPaymentFilter(django_filters.FilterSet):
-
-    search = SearchFilter(names=['concept', 'account__contact_email'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
-    account = MemberTypeFilter(label='Tipo de socia')
-
-    class Meta:
-        model = PendingPayment
-        form = PendingPaymentFilterForm
-        fields = { 'type':['exact'], 'completed':['exact'] }
-
-
-class PaymentsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
-    queryset = PendingPayment.objects.all()
-    objects_url_name = 'payment_detail'
-    template_name = 'payments/list.html'
-    ajax_template_name = 'payments/query.html'
-    filterset_class = PendingPaymentFilter
-    ordering = ['-added']
-    paginate_by = 15
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['total_pending'] = PendingPayment.objects.filter(completed=False).aggregate(sum=Sum('amount'))['sum']
-        context['form'] = UpdatePaymentForm()
-        return context
-
-
-class PaymentDetailView(UpdateView):
-    template_name = 'payments/detail.html'
-    queryset = PendingPayment.objects.all()
-    form_class = PaymentForm
-    model = PendingPayment
-
-    def form_invalid(self, form):
-        res = super().form_invalid(form)
-        print (form.errors)
-        return res
-
-    def get_success_url(self):
-        return reverse('payments:payment_detail', kwargs={'pk': self.object.pk})
-
-
-
-class CardPaymentFilterForm(BootstrapForm):
-    field_order = ['o', 'search', 'status', ]
-
-
-class CardPaymentFilter(django_filters.FilterSet):
-
-    search = SearchFilter(names=['reference', 'account__contact_email'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['amount', 'attempt'], field_labels={'amount':'Cantidad', 'attempt':'Fecha'})
-
-    class Meta:
-        model = CardPayment
-        form = CardPaymentFilterForm
-        fields = { 'type':['exact'] }
-
-class CardPaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
-    queryset = CardPayment.objects.filter(paid=True).order_by('-attempt')
-    filterset_class = CardPaymentFilter
-    objects_url_name = 'card_payment_detail'
-    template_name = 'card/list.html'
-    ajax_template_name = 'card/query.html'
-    paginate_by = 12
-
-    model = CardPayment
-
-    csv_filename = 'card'
-    available_fields = ['account', 'attempt', 'amount', 'reference', 'concept', 'type', 'paid', 'pending_payment', ]
-    field_labels = {'concept': 'Concepto', }
-
-
-class CardPaymentDetailView(ModelFieldsViewMixin, UpdateView):
-    template_name = 'card/detail.html'
-    queryset = CardPayment.objects.all()
-    form_class = PaymentForm
-    model = CardPayment
-
-
-def add_fee_comment(request):
-
-    if request.method == "POST":
-        form = FeeCommentForm(request.POST,)
-        if form.is_valid():
-            redirect_url = form.cleaned_data['redirect_to']
-            comment = form.save(commit=False)
-            comment.completed_by = request.user
-            comment.save()
-            messages.success(request, _('Comentario añadido correctamente.'))
-            return redirect(redirect_url)
-
-
-def update_payment(request, pk):
-    if request.method == "POST":
-        payment = PendingPayment.objects.get(pk=pk)
-        form = UpdatePaymentForm(request.POST,)
-        if form.is_valid():
-            payment.completed = True
-            payment.timestamp = form.cleaned_data.get('timestamp')
-            payment.revised_by = request.user
-            payment.save()
-
-            redirect_url = form.cleaned_data.get('redirect_to')
-            print(redirect_url)
-            if redirect_url:
-                messages.success(request, _('Pago actualizado correctamente.'))
-                return redirect(redirect_url)
-
-            return HttpResponse(status=200)
-
-        else:
-            print('form invalid!')
-            print(form.errors)
-
-    return HttpResponse(status=400)
-
 def generate_payment_form(payment_uuid, URL_params=''):
     site = Site.objects.get_current()
     merchant_data = 0
@@ -228,6 +94,7 @@ def form(request, uuid):
     return HttpResponse(render_to_response('payments/pay_form.html',
                                            {'request': request, 'uuid': uuid, 'payment': payment, 'form': form,
                                             'card_payment': card_payment, 'debug': settings.SERMEPA_DEBUG}))
+
 
 @xframe_options_exempt
 def payment_success(request):
