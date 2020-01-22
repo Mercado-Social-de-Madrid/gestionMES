@@ -66,6 +66,31 @@ def post_consumer(consumer):
         return False, None
 
 
+def post_intercoop(account):
+    api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
+    consumer_dict = {
+        "address": account.address,
+        "nif": account.cif,
+        "email": account.contact_email,
+        "name": account.first_name,
+        "surname": account.last_name,
+        "is_guest_account": False,
+        "city": settings.CITY_ID,
+    }
+
+    r = requests.post(api_url, json={
+        'email': account.contact_email,
+        'person': consumer_dict
+    })
+
+    if r.ok:
+        result = r.json()
+        uuid = result['person']['id']
+        return True, uuid
+    else:
+        return False, None
+
+
 def post_guest(guest):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
     guest_dict = {
@@ -92,3 +117,5 @@ def post_guest(guest):
         return True, uuid
     else:
         return False, None
+
+

@@ -172,3 +172,50 @@ def fetch_guest_account(account):
         return True
     else:
         return r.status_code
+
+
+def fetch_intercoop_account(account):
+    api_url = '{}api/v1/fetch/'.format(settings.CURRENCY_SERVER_BASE_URL)
+    headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
+
+    fetch_info = {
+        "cif": account.cif,
+        "email": account.contact_email,
+    }
+    print(account)
+    app_user = CurrencyAppUser.objects.filter(intercoop_account=account)
+    if app_user.exists():
+        selected = app_user.first()
+        if app_user.count() > 1:
+            print('remove duplicate currency users')
+            app_user.exclude(pk=selected.pk).delete()  # remove all but first
+
+        if selected.uuid is not None:
+            fetch_info['uuid'] = str(selected.uuid)
+
+    r = requests.get(api_url, json=fetch_info, headers=headers)
+
+    if r.ok:
+        result = r.json()
+        app_user, created = CurrencyAppUser.objects.get_or_create(intercoop_account=account)
+        app_user.is_pushed = True
+        user = result['user']
+        if 'is_registered' in user and user['is_registered']:
+            app_user.username = user['username']
+
+        print(result)
+
+        account_data = result['person']
+        if 'name' in account_data and account_data['name']:
+            account.first_name = account_data['name']
+        if 'surname' in account_data and account_data['surname']:
+            account.last_name = account_data['surname']
+        if 'email' in account_data and account_data['email']:
+            account.contact_email = account_data['email']
+
+        account.save()
+        app_user.uuid = account_data['id']
+        app_user.save()
+        return True
+    else:
+        return r.status_code

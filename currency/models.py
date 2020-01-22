@@ -15,6 +15,7 @@ from accounts.models import Account, Provider, Consumer
 from currency.exceptions import AllInvitesSent
 from currency_server import create_account
 from helpers import send_template_email
+from intercoop.models import IntercoopAccount
 from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
 
 MAX_INVITATIONS_PER_USER = 5
@@ -131,6 +132,16 @@ class CurrencyAppUsersManager(models.Manager):
             user.uuid = uuid
             user.save()
 
+    def create_app_intercoop_user(self, intercoop):
+
+        user = self.create(intercoop=True, cif=intercoop.cif, intercoop_account=intercoop)
+        result, uuid = create_account.post_intercoop(intercoop)
+        if result:
+            user.is_pushed = result
+            user.uuid = uuid
+            user.save()
+
+
     def create_app_user(self, account):
 
         user = self.create(cif=account.cif, account=account)
@@ -152,6 +163,7 @@ class CurrencyAppUsersManager(models.Manager):
 
 class CurrencyAppUser(models.Model):
     is_guest = models.BooleanField(default=False, verbose_name=_('Es invitada'))
+    intercoop = models.BooleanField(default=False, verbose_name=_('Es socia de intercoop.'))
     is_pushed = models.BooleanField(default=False, verbose_name=_('Actualizado en el servidor'))
     cif = models.CharField(max_length=50, verbose_name=_('NIF/CIF'))
     username = models.CharField(null=True, max_length=50, verbose_name=_('Nombre de usuario'))
@@ -159,9 +171,9 @@ class CurrencyAppUser(models.Model):
 
     account = models.ForeignKey(Account, null=True, blank=True, verbose_name=_('Socia'), related_name='app_user', on_delete=models.CASCADE)
     guest_account = models.ForeignKey(GuestAccount, null=True, blank=True, verbose_name=_('Invitada'), related_name='app_user', on_delete=models.CASCADE)
+    intercoop_account = models.ForeignKey(IntercoopAccount, null=True, blank=True, verbose_name=_('Intercoop'), related_name='app_user', on_delete=models.CASCADE)
 
     objects = CurrencyAppUsersManager()
-
 
 
 # Method to create the app user of a guest account
