@@ -72,7 +72,9 @@
                 <a class="btn btn-secondary text-light mb-2" data-toggle="modal" data-target="#cancel-process">Dar de baja</a><br>
               {% endif %}
               {% if not object.validated %}
+                {% if perms.intercoop.mespermission_can_validate_account %}
                 <a class="btn btn-secondary text-light mb-2" data-toggle="modal" data-target="#validate-process">Validar</a><br>
+                {% endif %}
               {% endif %}
                 <a class="btn btn-light disabled mb-2">Consultar historial</a><br>
           </div>

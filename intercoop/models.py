@@ -28,6 +28,11 @@ class IntercoopEntity(models.Model):
     class Meta:
         verbose_name = _('Entidad de intercooperación')
         verbose_name_plural = _('Entidades de intercooperación')
+        ordering = ('name',)
+        permissions = (
+            ("mespermission_can_manage_entity", _("Puede gestionar entidades de intercooperación")),
+            ("mespermission_can_add_entity", _("Puede añadir entidades de intercooperación")),
+        )
 
     def __str__(self):
         return self.name
@@ -61,7 +66,10 @@ class IntercoopAccount(models.Model):
     class Meta:
         verbose_name = _('Socia intercooperación')
         verbose_name_plural = _('Socias intercooperación')
-
+        permissions = (
+            ("mespermission_can_add_account", _("Puede añadir socias de intercooperación")),
+            ("mespermission_can_validate_account", _("Puede validar socias de intercooperación")),
+        )
 
     def validate_account(self):
         self.validated = True
@@ -84,7 +92,7 @@ class IntercoopAccount(models.Model):
 
     @property
     def is_active(self):
-        return self.active
+        return self.active and self.validated
 
     def __str__(self):
         return self.display_name

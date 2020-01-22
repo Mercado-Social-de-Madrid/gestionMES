@@ -12,7 +12,9 @@
                 <h3 class="mb-0">Entidades de intercooperación</h3>
             </div>
             <div class="col-sm-5 col-md-4 text-sm-right">
+                {% if perms.intercoop.mespermission_can_add_entity %}
                 <a href="{% url 'intercoop:add_entity' %}" class="btn btn-primary"><i class="material-icons mr-2">add</i> Añadir entidad</a>
+                {% endif %}
             </div>
         </div>
         </div>
