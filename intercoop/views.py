@@ -19,11 +19,12 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from currency.forms.guest import GuestAccountForm
 from currency.forms.invite import GuestInviteForm
 from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
-from intercoop.forms.account import IntercoopAccountForm
+from intercoop.forms.account import IntercoopAccountForm, IntercoopAccountSignupForm
 from intercoop.models import IntercoopAccount, IntercoopEntity
 from intercoop.forms.entity import IntercoopEntityForm
 
@@ -50,7 +51,7 @@ class IntercoopAccountsList(FilterMixin, ExportAsCSVMixin, FilterView, ListItemU
     queryset = IntercoopAccount.objects.all().order_by('-registration_date')
     objects_url_name = 'account_detail'
     template_name = 'intercoop/account/list.html'
-    ajax_template_name = 'invite/query.html'
+    ajax_template_name = 'intercoop/account/query.html'
     filterset_class = IntercoopAccountFilter
     paginate_by = 15
 
@@ -111,7 +112,7 @@ class EntityDetail(UpdateView):
 
 class AccountSlugCreate(CreateView):
 
-    form_class = IntercoopAccountForm
+    form_class = IntercoopAccountSignupForm
     model = IntercoopAccount
     template_name = 'intercoop/account/create.html'
 
@@ -133,15 +134,32 @@ class AccountSlugCreate(CreateView):
         return reverse('intercoop:accounts_list')
 
 
-class AccountDetail(UpdateView):
+class AccountDetail(TabbedViewMixin, UpdateView):
     template_name = 'intercoop/account/detail.html'
-    form_class = IntercoopEntityForm
-    model = IntercoopEntity
+    form_class = IntercoopAccountForm
+    default_tab = 'details'
+    available_tabs = ['details', 'payments', 'currency']
+    model = IntercoopAccount
 
     def get_success_url(self):
         return reverse('intercoop:account_detail', kwargs={'pk': self.object.pk})
 
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        print(form.errors)
+        return response
+
     def form_valid(self, form):
         response = super().form_valid(form)
+
         messages.success(self.request, _('Datos actualizados correctamente.'))
         return response
+
+
+def validate_account(request, pk):
+    if request.method == "POST":
+        account = IntercoopAccount.objects.get(pk=pk)
+        account.validate_account()
+        return redirect(reverse('intercoop:account_detail', kwargs={'pk': account.pk}))
+
+    return False

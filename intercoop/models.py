@@ -1,23 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import uuid
-from datetime import datetime
-
-import dateutil
-from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFit
 
-from accounts.models import Account, Provider, Consumer
-from currency.exceptions import AllInvitesSent
-from currency_server import create_account
-from helpers import send_template_email, RandomFileName
-from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
+from helpers import RandomFileName
 
 INVITE_DURATION_YEARS = 3
 
@@ -73,6 +62,13 @@ class IntercoopAccount(models.Model):
         verbose_name = _('Socia intercooperación')
         verbose_name_plural = _('Socias intercooperación')
 
+
+    def validate_account(self):
+        self.validated = True
+        self.save()
+        from currency.models import CurrencyAppUser
+        CurrencyAppUser.objects.create_app_intercoop_user(self)
+
     @property
     def template_prefix(self):
         return 'intercoop'
@@ -80,6 +76,11 @@ class IntercoopAccount(models.Model):
     @property
     def display_name(self):
         return "{} {}".format(self.first_name, self.last_name)
+
+    @property
+    def get_status_display(self):
+        return 'Validada' if self.validated else 'Pendiente de validación'
+
 
     @property
     def is_active(self):
