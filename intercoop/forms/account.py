@@ -11,7 +11,8 @@ class IntercoopAccountForm(forms.ModelForm, BootstrapForm):
         exclude = []
 
 
-class IntercoopAccountSignupForm(BaseSignupForm, IntercoopAccountForm):
+class IntercoopAccountSignupForm(BaseSignupForm):
 
     class Meta:
+        model = IntercoopAccount
         exclude = []
