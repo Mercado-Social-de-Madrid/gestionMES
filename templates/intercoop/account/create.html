@@ -20,7 +20,7 @@
     <div class="container">
 
         <div style="max-width:500px;margin:auto">
-            <img src="{{entity.logo.url}}" class="img-fluid my-3">
+            {% if entity.logo %} <img src="{{entity.logo.url}}" class="img-fluid my-3">{% endif %}
         </div>
 
         <p class="lead my-4 px-4" style="font-weight:100;"> {{entity.description}}</p>
