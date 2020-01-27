@@ -4,7 +4,7 @@
     <th scope="col">Cuenta</th>
     <th scope="col">Cantidad</th>
     <th scope="col">Fecha</th>
-
+    <th scope="col">Tipo</th>
 {% endblock %}
 
 
@@ -14,5 +14,12 @@
 <td>{{item.amount}} €</td>
 <td>{{item.attempt|date:'d/m/Y'}}</td>
 <td>{{item.concept}}</td>
+<td>
+    {% if item.type == 'compramoneda' %}
+        <i class="material-icons fa fa-shopping-bag text-primary" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Compra de etics"></i>
+    {% else %}
+        <i class="material-icons text-primary"  data-toggle="tooltip" data-placement="bottom" title="Pago pendiente">receipt</i>
+    {% endif %}
+</td>
 
 {% endblock %}
