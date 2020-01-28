@@ -10,7 +10,7 @@
         <div class="container">
             <div class="row">
             <div class="col-sm-12">
-                <h3 class="mb-0">{% if request.user.is_authenticated %}<a href="{% url 'intercoop:accounts_list' %}">Socias de intercooperación</a><i class="material-icons md-18 ">arrow_forward_ios</i>{% endif %} Nueva socia de intercooperación</h3>
+                <h3 class="mb-0">{% if request.user.is_authenticated %}<a href="{% url 'intercoop:accounts_list' %}">Socias de intercooperación</a><i class="material-icons md-18 ">arrow_forward_ios</i>{% endif %} Nueva socia de intercooperación - {{entity.name}}</h3>
             </div>
         </div>
         </div>
@@ -19,8 +19,8 @@
 
     <div class="container">
 
-        <div style="max-width:500px;margin:auto">
-            {% if entity.logo %} <img src="{{entity.logo.url}}" class="img-fluid my-3">{% endif %}
+        <div style="max-width:700px;margin:auto">
+            {% if entity.logo %} <img src="{{entity.logo.url}}" class="img-fluid my-4">{% endif %}
         </div>
 
         <p class="lead my-4 px-4" style="font-weight:100;"> {{entity.description}}</p>
