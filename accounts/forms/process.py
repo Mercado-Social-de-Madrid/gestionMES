@@ -14,7 +14,5 @@ class SignupProcessForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = SignupProcess
-        exclude = ['workflow', 'account']
-        widgets = {
-            'uuid': forms.HiddenInput()
-        }
+        exclude = ['workflow', 'account', 'uuid']
+
