@@ -20,11 +20,13 @@
 	<div class="mes-loader my-2"></div>
 </div>
 
+<div class="list-group" id="accordionYears">
 
-        {% for year in report %}
+        {% for year in report reversed %}
 
-
-            <div class="d-flex align-items-center text-light px-4 py-2 bg-primary">
+<div class="list-group-item p-0">
+    <a aria-controls="collapse{{year.year}}" aria-expanded="false" class="p-0 expansion-panel-toggler collapsed bg-primary text-light " data-toggle="collapse" href="#collapse{{year.year}}" id="heading{{year.year}}">
+            <div class="d-flex align-items-center px-4 py-2 w-100">
                 <h4 class="mb-0">{{year.year}}</h4>
                 <div class="pl-4">
                     <i class="material-icons mr-1">call_received</i> Altas: {{year.total_signups}}
@@ -32,17 +34,26 @@
                  <div class="pl-4">
                     <i class="material-icons mr-1">trending_down</i> Bajas: {{year.account_optedout_count}}
                 </div>
-            </div>
 
+                <div class="expansion-panel-icon ml-auto text-black-secondary">
+                    <i class="collapsed-show material-icons">keyboard_arrow_down</i>
+                    <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
+                  </div>
+            </div>
+    </a>
+
+    <div aria-labelledby="heading{{year.year}}" class="collapse" data-parent="#accordionYears" id="collapse{{year.year}}">
+      <div class="expansion-panel-body p-0">
+
+      <div class="bg-light">
         <div class="container">
             <div class="row">
                 <div class="col-md-4 px-0">
-                    <div class="bg-light py-2 px-3">
+                    <div class="py-2 px-3">
                         <span class="lead pt-1">{{year.provider_signups_count}}</span>
                         <i class="material-icons ml-1">store</i>
                         <small>PROVEEDORAS</small>
                     </div>
-                    {% include 'account/report_year.html' with object_list=year.provider_signups object_url_name=year.provider_signups.first.detail_url %}
                 </div>
                 <div class="col-md-4 px-0">
                     <div class="bg-light py-2 px-3">
@@ -50,7 +61,6 @@
                         <i class="material-icons ml-1">directions_walk</i>
                         <small>CONSUMIDORAS</small>
                     </div>
-                    {% include 'account/report_year.html' with object_list=year.consumer_signups object_url_name=year.consumer_signups.first.detail_url %}
                 </div>
 
                 <div class="col-md-4 px-0">
@@ -59,10 +69,27 @@
                         <i class="material-icons ml-1">trending_down</i>
                         <small>BAJAS</small>
                     </div>
-                    {% include 'account/report_year.html' with object_list=year.account_optedout object_url_name=year.account_optedout.first.detail_url %}
+                </div>
+            </div>
+        </div>
+      </div>
+          <div class="container" style="max-height:50vh;overflow-y:scroll;">
+              <div class="row">
+                <div class="col-md-4 px-0">
+                    {% include 'account/report_year.html' with object_list=year.provider_signups object_url_name=year.provider_signups.first.detail_url %}
+                </div>
+                <div class="col-md-4 px-0">
+                    {% include 'account/report_year.html' with object_list=year.consumer_signups object_url_name=year.consumer_signups.first.detail_url %}
+                </div>
+
+                <div class="col-md-4 px-0">
+                    {% include 'account/report_year.html' with object_list=year.account_optedout object_url_name=year.account_optedout.first.detail_url show_icon=True %}
                 </div>
 
             </div>
+          </div>
+      </div>
+    </div>
 </div>
 
         {% endfor %}
@@ -90,7 +117,7 @@
 			data.addColumn('number', "Bajas");
 
 			data.addRows( {{ report|length }} );
-			{% for year in report %}
+			{% for year in report reversed %}
 			    total = total + {{year.total_signups}} - {{year.account_optedout_count}};
 
 				data.setValue({{ forloop.counter0 }},0,'{{year.year}}');

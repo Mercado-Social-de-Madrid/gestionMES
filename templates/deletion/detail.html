@@ -30,7 +30,7 @@
                             {% if object.account %}
                                 {% include 'account/simple_profile.html' with account=object.account %}
                             <div class="mt-2">
-                            <a class="btn btn-secondary mr-2" href="">Ver detalle de socia</a>
+                            <a class="btn btn-secondary mr-2" href="{% url object.account.detail_url object.account.pk %}">Ver detalle de socia</a>
                              </div>
                             {% endif %}
                         </div>

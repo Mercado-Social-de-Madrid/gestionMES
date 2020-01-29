@@ -63,6 +63,11 @@ class NewSignup(CreateView):
         self.object.initialize()
         return response
 
+    def form_invalid(self, form):
+        response = super(NewSignup, self).form_invalid(form)
+        print(form.errors)
+        return response
+
     def get_success_url(self):
         messages.success(self.request, _('Proceso de acogida añadido correctamente.'))
         return reverse('accounts:signup_list')

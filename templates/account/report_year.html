@@ -6,6 +6,9 @@
 {% block item_row %}
 
 <td class="py-2 px-3">
+    {% if show_icon %}
+    <i class="material-icons mr-1">{% if item.template_prefix == 'consumer' %}directions_walk{% else %}store{% endif %}</i>
+    {% endif %}
     <strong class="mb-0">{{item.display_name}} </strong><br>
     <span>{{item.address}}</span>
 </td>
