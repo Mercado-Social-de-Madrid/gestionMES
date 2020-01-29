@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.contrib import messages
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView, TemplateView
@@ -49,7 +49,7 @@ class UsersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin,
     template_name = 'user/list.html'
     ajax_template_name = 'user/query.html'
     filterset_class = UserFilter
-    paginate_by = 5
+    paginate_by = 10
 
     csv_filename = 'usuarias'
     available_fields = ['username', 'email', 'is_active', 'date_joined', 'display_name', 'last_login']
@@ -122,6 +122,17 @@ class UsersCreate(CreateView):
 
     def get_success_url(self):
         return reverse('management:users_list')
+
+
+def user_delete(request, pk):
+    if request.method == "POST":
+        user = User.objects.filter(pk=pk).first()
+        if user:
+            user.delete()
+            messages.success(request, _('Usuario eliminado correctamente.'))
+            return redirect(reverse('management:users_list'))
+
+    return False
 
 
 class ComissionsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):

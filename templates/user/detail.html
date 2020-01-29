@@ -11,14 +11,15 @@
  <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
-            <div class="col-sm-7 col-md-8">
+            <div class="col-sm-6">
                 <h4 class="mb-0 breadcrumbs"><a href="{% url 'management:users_list' %}">Usuarios</a><i class="material-icons md-18 ">arrow_forward_ios</i>{{object.username}}</h4>
                 {{object.get_full_name}}
             </div>
 
-            <div class="col-sm-5 col-md-4 text-sm-right">
+            <div class="col-sm-6 text-sm-right">
+                <a href="#" data-toggle="modal" data-target="#delete-user" class="btn btn-secondary"><i class="material-icons mr-2">delete</i> Eliminar usuario</a>
                  {% if perms.core.mespermission_can_change_passwords %}
-                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#password-modal"><i class="material-icons mr-2">add</i> Modificar contraseña</a>
+                <a href="#" class="btn btn-primary ml-2" data-toggle="modal" data-target="#password-modal"><i class="material-icons mr-2">add</i> Modificar contraseña</a>
                 {% endif %}
             </div>
         </div>
@@ -146,5 +147,32 @@
   </div>
 </div>
 
+
+<form method="post" action="{% url 'management:delete_user' object.pk %}">
+         {% csrf_token %}
+
+        <div class="modal fade" id="delete-user" tabindex="-1" role="dialog" aria-labelledby="cancel-process-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancel-process-label">Eliminar usuario</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+              <div class="mb-4 display-2 text-muted"> <i class="material-icons">error_outline</i></div>
+              <p class="lead">¿Estás segura de eliminar el usuario "{{object.username}}"?</p>
+               Esta acción no se puede deshacer.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     </form>
 
 {% endblock %}
