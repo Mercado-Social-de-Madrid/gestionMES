@@ -14,7 +14,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <h4 class="mb-0">{% if request.user.is_authenticated %} <a href="{% url 'accounts:providers_list' %}">Acogidas</a><i class="material-icons md-18 ">arrow_forward_ios</i> {% if object.process %}<a href="{% url 'accounts:signup_detail' object.process.pk %}">  {{object.display_name}}</a> {% else %} Nueva {% endif %}<i class="material-icons md-18 ">arrow_forward_ios</i> Cuestionario  {% else %} {{object.display_name}} {% endif %}</h4>
+                    <h4 class="mb-0">
+                        {% if request.user.is_authenticated %}
+                            <a href="{% url 'accounts:providers_list' %}">Acogidas</a><i class="material-icons md-18 ">arrow_forward_ios</i>
+                            {% if object.process %}
+                            <a href="{% url 'accounts:signup_detail' object.process.pk %}">  {{object.display_name}}</a>
+                            {% else %}
+                            Nueva {% endif %}
+                        <i class="material-icons md-18 ">arrow_forward_ios</i> Cuestionario
+                        {% else %}
+                            {{object.display_name|default:"Nueva socia proveedora"}}
+                        {% endif %}
+                    </h4>
                 </div>
             </div>
         </div>

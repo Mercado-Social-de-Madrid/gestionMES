@@ -168,9 +168,12 @@ LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_EXEMPT_URLS = [
     r'^'+MEDIA_URL+'/*',
+    r'^accounts/signup/consumer/',
     r'^accounts/signup/provider/',
     r'^accounts/signup/success/',
-    r'^accounts/signup/consumer/',
+    r'^accounts/signup/[0-9a-f-]+/',
+    r'^accounts/signup/provider/[0-9a-f-]+/',
+    r'^accounts/signup/consumer/[0-9a-f-]+/',
     r'^api/*',
     r'^pay/*',
     r'^accounts/catalogo/*',
