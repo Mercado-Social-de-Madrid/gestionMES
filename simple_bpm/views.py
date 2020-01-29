@@ -3,9 +3,11 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.conf import settings
+from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.views.generic import UpdateView, CreateView, DetailView
+from django.utils.translation import gettext as _
+from django.views.generic import CreateView, DetailView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -13,12 +15,10 @@ from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.FormsetView import FormsetView
-import core.forms
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
-
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
 from simple_bpm.forms.process import ProcessForm, getStepsFormset
-from simple_bpm.models import Process, ProcessStepTask
+from simple_bpm.models import Process, ProcessStepTask, ProcessWorkflow
 
 
 class FilterForm(BootstrapForm):
@@ -107,3 +107,15 @@ def add_workflow_event(request):
         return False
 
 
+def delete_process(request, pk):
+    if request.method == "POST":
+        process = Process.objects.filter(pk=pk).first()
+        workflow = ProcessWorkflow.objects.filter(process=process)
+        if not workflow.exists():
+            process.delete()
+            messages.success(request, _('Proceso eliminado correctamente.'))
+            return redirect(reverse('bpm:list'))
+        else:
+            messages.success(request, _('El proceso ha sido utilizado en alguna tarea.'))
+            return redirect(reverse('bpm:detail', kwargs={'pk':pk}))
+    return False
