@@ -95,13 +95,11 @@ class GuestAccountDetailView(UpdateView):
     model = GuestAccount
     form_class = GuestAccountForm
 
-
     def get_success_url(self):
-        return reverse('accounts:signup_detail', kwargs={'pk': self.object.pk})
+        return reverse('currency:guest_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super(GuestAccountDetailView, self).get_context_data(**kwargs)
-
         return context
 
 def add_app_user(request):

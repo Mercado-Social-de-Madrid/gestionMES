@@ -129,11 +129,11 @@
     });
 
     var task = $('.step_task').first().clone();
-    $('.step_tasks')
-        .on('click', '.add-task', function(e){
+    $('form')
+        .on('click', '.step_tasks .add-task', function(e){
             $(this).before(task.clone());
         })
-        .on('click', '.remove-task', function(e){
+        .on('click', '.step_tasks .remove-task', function(e){
             $(this).parents('.step_task').remove();
         });
     </script>
