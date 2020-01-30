@@ -114,8 +114,18 @@
             formId = formId.substr(0, formId.lastIndexOf('-heading'));
             row.find('[data-toggle="collapse"]').attr('data-target', '#'+formId+'-body');
             initElems(row);
+            autoUpdate(row);
         }
     });
+
+    function autoUpdate(elem){
+        elem.find('.autoupdate-text').on('change paste keyup', function(e){
+            var title = $(this).closest('.card').find('[data-autoupdate]');
+            title.text($(this).val());
+        });
+    }
+
+    autoUpdate($('body'));
 
     $('form').on('submit', function(event ){
         $('.step-formset').each(function(){
