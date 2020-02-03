@@ -23,4 +23,6 @@ class IntercoopAccountSignupForm(BaseSignupForm):
         exclude = []
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
+            'entity': forms.HiddenInput(),
+            
         }

@@ -124,6 +124,18 @@ class AccountSlugCreate(CreateView):
 
         return context
 
+    def get_initial(self):
+        entity_slug = self.kwargs['slug']
+        entity = IntercoopEntity.objects.filter(slug=entity_slug).first()
+        return {
+            'entity': entity,
+            'active': False
+        }
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        print(form.errors)
+        return response
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -131,7 +143,11 @@ class AccountSlugCreate(CreateView):
         return response
 
     def get_success_url(self):
-        return reverse('intercoop:accounts_list')
+        if self.request.user.is_authenticated:
+            messages.success(self.request, _('Usuario añadido correctamente.'))
+            return reverse('intercoop:signup_list')
+        else:
+            return reverse('accounts:signup_success')
 
 
 class AccountDetail(TabbedViewMixin, UpdateView):

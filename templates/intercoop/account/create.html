@@ -25,11 +25,10 @@
 
         <p class="lead my-4 px-4" style="font-weight:100;"> {{entity.description}}</p>
 
-
         <form method="post" class="mt-3 p-4" target="_parent">
             {% csrf_token %}
             {{form.from_app}}
-
+            {{form.entity}}
 Los campos marcados con <span class="text-primary lead">*</span> son obligatorios.
 <div class="row ">
     <div class="col-md-4">

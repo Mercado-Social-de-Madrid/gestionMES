@@ -122,6 +122,7 @@
         elem.find('.autoupdate-text').on('change paste keyup', function(e){
             var title = $(this).closest('.card').find('[data-autoupdate]');
             title.text($(this).val());
+            console.log(title);
         });
     }
 
