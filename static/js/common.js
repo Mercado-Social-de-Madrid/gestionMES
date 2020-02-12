@@ -203,6 +203,43 @@ function initElems(container){
         $(this).iconpicker();
     });
 
+    container.find('.threestate-checkbox').each(function(){
+        var checkbox = $(this).find('input[type="checkbox"]');
+        var select =  $(this).find('select');
+        if (select.val() == null || select.val() == ''){
+            checkbox.prop('indeterminate', true);
+            checkbox.data('indeterminate', 'true');
+        }
+        else{
+            checkbox.prop('indeterminate', false);
+            checkbox.data('indeterminate', 'false');
+            if (select.val() == 'true'){
+                checkbox.prop('checked', 'true');
+            }
+            checkbox.data('checked', select.val());
+        }
+        checkbox.on('click', function(e){
+            if (checkbox.data('indeterminate')=='true'){
+                checkbox.data('indeterminate', 'false');
+                checkbox.data('checked', 'true');
+                select.val('true');
+            }
+            else if (checkbox.data('checked')=='true'){
+                checkbox.data('indeterminate', 'false');
+                checkbox.data('checked', 'false');
+                select.val('false');
+            }
+            else{
+                checkbox.data('indeterminate', 'true');
+                checkbox.data('checked', 'false');
+                select.val(null);
+            }
+            checkbox.prop('indeterminate', checkbox.data('indeterminate')=='true');
+            checkbox.prop('checked', checkbox.data('checked')=='true');
+            select.change();
+        });
+    });
+
     container.find('.enhanced-select').each(function(){
         var control = $(this);
         var select = control.find('select').addClass('form-control');

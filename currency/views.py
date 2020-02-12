@@ -10,6 +10,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import CreateView, UpdateView, TemplateView
 from django_filters.views import FilterView
+from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
 
 from accounts.models import Account
@@ -33,7 +34,7 @@ class InvitesFilter(django_filters.FilterSet):
 
     search = SearchFilter(names=['first_name', 'last_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['name', 'registration_date', 'expiration_date'], field_labels={'name':'Nombre', 'registration_date':'Fecha de registro', 'expiration_date':'Fecha de expiración'})
-
+    active = django_filters.BooleanFilter(field_name='active', widget=BooleanWidget(attrs={'class': 'threestate'}))
     class Meta:
         model = GuestAccount
         form = InvitesFilterForm

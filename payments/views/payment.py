@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django_filters.views import FilterView
+from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
 
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
@@ -43,11 +44,12 @@ class PendingPaymentFilter(django_filters.FilterSet):
     search = SearchFilter(names=['concept', 'account__contact_email'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
     account = MemberTypeFilter(label='Tipo de socia')
+    completed = django_filters.BooleanFilter(field_name='completed', widget=BooleanWidget(attrs={'class':'threestate'}))
 
     class Meta:
         model = PendingPayment
         form = PendingPaymentFilterForm
-        fields = { 'type':['exact'], 'completed':['exact'] }
+        fields = {  }
 
 
 class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):

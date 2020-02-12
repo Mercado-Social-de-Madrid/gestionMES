@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView, TemplateView
 from django_filters.views import FilterView
+from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
 
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
@@ -34,11 +35,13 @@ class UserFilter(django_filters.FilterSet):
 
     search = SearchFilter(names=['username', 'first_name', 'last_name', 'email'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['username', 'last_login', 'date_joined'])
+    is_active = django_filters.BooleanFilter(field_name='is_active',
+                                             widget=BooleanWidget(attrs={'class': 'threestate'}))
 
     class Meta:
         model = User
         form = UserFilterForm
-        fields = { 'is_active':['exact'], }
+        fields = { }
 
 
 class UsersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):

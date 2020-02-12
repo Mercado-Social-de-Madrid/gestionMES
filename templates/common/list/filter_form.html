@@ -23,18 +23,30 @@
                 </div>
 
             {% else %}
-                {% if field.field.widget.allow_multiple_selected %}
-                <div class="align-self-start mb-2 mr-md-3">
-                    <label class="mr-1 align-self-center">{{ field.label }}</label>
-                    <div class="tag-select">
-                        {% include "common/forms/multiselect.html" with field=field hide_label=True %}
-                        </div>
+                {% if 'threestate' in field.field.widget.attrs.class %}
+                 <div class=" threestate-checkbox mr-md-3">
+                    <div class="hidden">{{ field }}</div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="{{field.id_for_label}}-check">
+                      <label class="custom-control-label" for="{{field.id_for_label}}-check">{{ field.label }}</label>
+                    </div>
                 </div>
                 {% else %}
-                    <div class="d-flex align-self-stretch mb-2 flex-fill mr-md-3">
-                    <label class="mr-1 align-self-center">{{ field.label }}</label>
-                    {{ field }}
-                </div>
+                    {% if field.field.widget.allow_multiple_selected %}
+                    <div class="align-self-start mb-2 mr-md-3">
+                        <label class="mr-1 align-self-center">{{ field.label }}</label>
+                        <div class="tag-select">
+                            {% include "common/forms/multiselect.html" with field=field hide_label=True %}
+                            </div>
+                    </div>
+                    {% else %}
+                        <div class="d-flex align-self-stretch mb-2 flex-fill mr-md-3">
+                        <label class="mr-1 align-self-center">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endif %}
+
+
                 {% endif %}
 
 

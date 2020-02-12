@@ -11,7 +11,7 @@
 
     <!-- CSS -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,500,500i,700,700i" rel="stylesheet" />
-      <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,700,700i" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,700,700i" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
@@ -34,7 +34,6 @@
   </head>
   <body {% block bodyattrs %}{% endblock%}>
 
-
 {% if not 'from_app' in request.GET and not hide_navbar and not 'hide_toolbar' in request.GET %}
     {%if user.is_authenticated %}
         {% include 'navbar/navbar_menu_user.html' %}
@@ -42,7 +41,6 @@
         {% include 'navbar/navbar_menu_anon.html' %}
     {% endif %}
 {% endif %}
-
 
 <div id="main-content">
 {% block content %}{% endblock content %}
@@ -68,7 +66,7 @@
     <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
     <script src="{% static 'js/jquery.fontawesome-iconpicker.min.js' %}"></script>
     <script src="{% static 'js/jquery.spectrum.js' %}"></script>
-    <script src="{% static 'js/common.js' %}?v=7"></script>
+    <script src="{% static 'js/common.js' %}?v=8"></script>
 
     {% block scripts %}{% endblock scripts %}
   </body>
