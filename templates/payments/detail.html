@@ -68,25 +68,34 @@
             {% csrf_token %}
             {{form.account}}
         <div class="row">
-            <div class="col-md-5">
-                {% include "common/forms/display_value.html" with value=object.reference label='Referencia' %}
-                {% include "common/forms/display_value.html" with value=object.added label='Añadido' %}
+            <div class="col-md-6">
+                <!--{% include "common/forms/display_value.html" with value=object.reference label='Referencia' %}
+                {% include "common/forms/display_value.html" with value=object.added label='Añadido' %}-->
                 {% include "common/forms/field.html" with field=form.amount %}
+                {% include "common/forms/field.html" with field=form.concept not_floating=True %}
+                {% include "common/forms/field.html" with field=form.comment not_floating=True %}
+
+            </div>
+            <div class="col-md-6">
                 <div class="mb-3">
                     {% include "common/forms/switch.html" with field=form.completed %}
                 </div>
                 <div id="payment-data" {% if not object.completed %} style="display:none;" {% endif %}>
                     {% include "common/forms/field.html" with field=form.timestamp %}
                     {% include "common/forms/field.html" with field=form.type not_floating=True %}
+                    {% include "common/forms/display_value.html" with value=object.revised_by label='Revisado por' %}
 
+                    <div class="mb-3">
+                        {% include "common/forms/switch.html" with field=form.returned %}
+                    </div>
+                    <div id="return-data" {% if not object.returned %} style="display:none;" {% endif %}>
+                        {% include "common/forms/field.html" with field=form.returned_timestamp %}
+                        {% include "common/forms/field.html" with field=form.returned_reason not_floating=True %}
+                    </div>
                 </div>
 
-            </div>
-            <div class="col-md-7">
-                {% include "common/forms/field.html" with field=form.concept not_floating=True %}
-                {% include "common/forms/field.html" with field=form.comment not_floating=True %}
                 {% if object.completed and object.revised_by %}
-                    {% include "common/forms/display_value.html" with value=object.revised_by label='Revisado por' %}
+
                 {% endif %}
             </div>
         </div>
@@ -107,7 +116,7 @@
 <script src="{% static 'js/daterangepicker.js' %}?v=7"></script>
 <script>
 $(function() {
-  var dateinput = $('input[name="{{ form.timestamp.name }}"]');
+  var dateinput = $('input[name="{{ form.timestamp.name }}"], input[name="{{ form.returned_timestamp.name }}"]');
   dateinput.daterangepicker({
     singleDatePicker: true,
     timePicker: true,
@@ -116,18 +125,20 @@ $(function() {
     locale: {
         "format": "DD/MM/YYYY HH:mm",
         "weekLabel": "W",
-
         "firstDay": 1
     },
   });
   dateinput.on('apply.daterangepicker', function(ev, picker) {
-      dateinput.val(picker.startDate.format('DD/MM/YYYY HH:mm'));
+      $(this).val(picker.startDate.format('DD/MM/YYYY HH:mm'));
   });
 
   $('input[name="{{form.completed.name}}"]').on('change', function(){
     $('#payment-data').toggle(this.checked);
+   });
 
-  });
+   $('input[name="{{form.returned.name}}"]').on('change', function(){
+    $('#return-data').toggle(this.checked);
+   });
 });
 </script>
 

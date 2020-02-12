@@ -149,7 +149,16 @@
          <li class="nav-item">
         <a class="nav-link pl-4" href="{% url 'payments:payments_list' %}">
           <i class="material-icons mr-3">receipt</i>
-          Pagos
+          Pagos de cuota
+        </a>
+      </li>
+            {% endif %}
+
+            {% if perms.payments.mespermission_can_view_payments %}
+         <li class="nav-item">
+        <a class="nav-link pl-4" href="{% url 'payments:payments_list' %}">
+          <i class="material-icons mr-3">library_books</i>
+          Remesas
         </a>
       </li>
             {% endif %}
