@@ -29,7 +29,7 @@
             <div class="d-flex align-items-center px-4 py-2 w-100">
                 <h4 class="mb-0">{{year.year}}</h4>
                 <div class="pl-4">
-                    <i class="material-icons mr-1">call_received</i> Altas: {{year.total_signups}}
+                    <i class="material-icons mr-1">trending_up</i> Altas: {{year.total_signups}}
                 </div>
                  <div class="pl-4">
                     <i class="material-icons mr-1">trending_down</i> Bajas: {{year.account_optedout_count}}
@@ -117,7 +117,7 @@
 			data.addColumn('number', "Bajas");
 
 			data.addRows( {{ report|length }} );
-			{% for year in report reversed %}
+			{% for year in report %}
 			    total = total + {{year.total_signups}} - {{year.account_optedout_count}};
 
 				data.setValue({{ forloop.counter0 }},0,'{{year.year}}');
