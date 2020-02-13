@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}Pagos{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-7 col-md-8">
+                <h4 class="mb-0"><a href="{% url 'payments:payments_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Remesas SEPA</h4>
+            </div>
+                <div class="col-sm-4">
+                    Total pendiente: <h3 class="d-inline ml-2">{{ total_pending | intcomma }} €</h3>
+                </div>
+
+        </div>
+        </div>
+    </div>
+
+    <div class="container" id="payments-list">
+        {% include 'common/list/filter_form.html' %}
+        {% include 'common/ajax_wrapper.html' with query_template='payments/query.html' valign=True %}
+    </div>
+
+
+<form method="post" action="">
+     {% csrf_token %}
+
+    <div class="modal fade" id="set-paid" tabindex="-1" role="dialog" aria-labelledby="cancel-process-label" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancel-process-label">Pago realizado</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+           <p> Marcar el siguiente pago como realizado:</p>
+          <div class="row">
+              <div class="col-md-5">
+                  <div class="badge badge-primary">Cuenta</div>
+                  <div id="payment-name"></div>
+
+                  <div class="badge badge-primary mt-2"> Cantidad</div>
+                  <div class="lead" id="payment-amount"></div>
+              </div>
+              <div class="col-md-6">
+                    {% include "common/forms/field.html" with field=form.timestamp %}
+                    {{form.redirect_to}}
+              </div>
+          </div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/moment.min.js' %}?v=7"></script>
+<script src="{% static 'js/daterangepicker.js' %}?v=7"></script>
+<script>
+$(function() {
+
+    var modal = $('#set-paid');
+    var form = modal.parents('form');
+
+    $('#payments-list').on('click', 'a.action', function(){
+        var action = $(this).attr('data-action');
+        var payment = $(this).parents('tr');
+        var name = payment.find('.entity-td').text();
+        var amount = payment.find('.amount').text();
+
+        form.attr('action', action);
+        modal.find('input[name="{{form.redirect_to.name}}"]').val(window.location);
+        modal.find('#payment-name').text(name);
+        modal.find('#payment-amount').text(amount);
+    });
+
+  var dateinput = $('input[name="{{ form.timestamp.name }}"]');
+  dateinput.daterangepicker({
+    singleDatePicker: true,
+    timePicker: true,
+    timePicker24Hour: true,
+    drops:'up',
+    locale: {
+        "format": "DD/MM/YYYY HH:mm",
+        "weekLabel": "W",
+        "firstDay": 1
+    },
+  });
+  dateinput.on('apply.daterangepicker', function(ev, picker) {
+      dateinput.val(picker.startDate.format('DD/MM/YYYY HH:mm'));
+  });
+});
+</script>
+
+{% endblock %}

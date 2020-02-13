@@ -154,11 +154,11 @@
       </li>
             {% endif %}
 
-            {% if perms.payments.mespermission_can_view_payments %}
+            {% if perms.payments.mespermission_can_manage_sepa %}
          <li class="nav-item">
-        <a class="nav-link pl-4" href="{% url 'payments:payments_list' %}">
+        <a class="nav-link pl-4" href="{% url 'payments:sepa_list' %}">
           <i class="material-icons mr-3">library_books</i>
-          Remesas
+          Remesas (SEPA)
         </a>
       </li>
             {% endif %}

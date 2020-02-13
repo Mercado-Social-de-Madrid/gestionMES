@@ -38,30 +38,8 @@
 
         <div class="col-md-7">
             <span class="badge badge-primary mb-2">Pago</span>
-            <div class="card mb-3">
-        <div class="card-body py-4">
-        <div class="d-flex align-items-stretch">
-            <div class="pr-4 align-self-center text-center">
-                <h3 class="text-black-50">{{object.amount}}€</h3>
-                 {% if object.completed %}
-                    <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
-                {% else %}
-                    <i class="material-icons">access_time</i> <small>Pendiente</small>
-                {% endif %}
-            </div>
-            <div class="mb-3">
-                <small>Ref. {{object.reference}}</small><br>
-
-                Creado: {{object.added|date:'d/m/Y H:i'}}<br>
-                {{object.concept}}
-
-            </div>
+            {% include 'payments/detail_card.html' with payment=object %}
         </div>
-
-        </div>
-    </div>
-
-    </div>
     </div>
 
     <form method="post" class="mt-3 p-4">
