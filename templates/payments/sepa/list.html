@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% load humanize %}
-{% block title %}Pagos{% endblock %}
+{% block title %}Remesas SEPA{% endblock %}
 
 
 {% block content %}
@@ -9,14 +9,13 @@
     <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
-            <div class="col-sm-7 col-md-8">
-                <h4 class="mb-0"><a href="{% url 'payments:payments_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Remesas SEPA</h4>
-            </div>
-                <div class="col-sm-4">
-                    Total pendiente: <h3 class="d-inline ml-2">{{ total_pending | intcomma }} €</h3>
+                <div class="col-sm-7 col-md-8">
+                    <h4 class="mb-0"><a href="{% url 'payments:payments_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Remesas SEPA</h4>
                 </div>
-
-        </div>
+                <div class="col-sm-4 text-right">
+                    <a href="{% url 'payments:sepa_create' %}" class="btn btn-primary"><i class="material-icons mr-2">add</i> Nueva remesa</a>
+                </div>
+             </div>
         </div>
     </div>
 

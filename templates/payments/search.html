@@ -1,0 +1,15 @@
+{% load staticfiles %}
+{% load l10n %}
+
+{% block content %}
+
+{% if 'simple' in request.GET %}
+<div class="container" data-prevent-link="true">
+    {% include 'common/list/filter_form.html' %}
+{% endif %}
+    {% include 'common/ajax_wrapper.html' with query_template='payments/query.html' %}
+{% if 'simple' in request.GET %}
+</div>
+{% endif %}
+
+{% endblock%}

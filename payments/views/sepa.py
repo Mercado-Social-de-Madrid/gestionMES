@@ -2,8 +2,11 @@
 from __future__ import unicode_literals
 
 import django_filters
+from django.contrib import messages
 from django.db.models import Sum, Count
+from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.views.generic import CreateView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
@@ -15,8 +18,9 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.payment import UpdatePaymentForm
+from payments.forms.sepa import SepaBatchForm
 from payments.models import PendingPayment
-from payments.models.sepa import SepaBatch
+from payments.models import SepaBatch
 
 
 class SepaBatchFilterForm(BootstrapForm):
@@ -49,3 +53,19 @@ class SepaBatchListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateR
 
     def get_queryset(self):
         return super().get_queryset().annotate(payments_count=Count('payments'))
+
+
+class BatchCreate(CreateView):
+
+    form_class = SepaBatchForm
+    model = SepaBatch
+    template_name = 'payments/sepa/create.html'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, _('Usuario añadido correctamente.'))
+        return response
+
+    def get_success_url(self):
+        return reverse('management:users_list')
+

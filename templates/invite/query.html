@@ -5,7 +5,7 @@
     <th scope="col">Invitación</th>
     <th scope="col">Alta</th>
     <th scope="col">Fecha expiración</th>
-    <th scope="col">Sincr. en app</th>
+    <th scope="col" class="px-0">Sincr. en app</th>
 {% endblock %}
 
 {% block item_row %}
@@ -14,7 +14,7 @@
 <td>{% if item.invited_by %} {{item.invited_by.display_name}} {% else %} <span class="text-monospace">{{item.token_used|default_if_none:'-'}}</span> {% endif %}</td>
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
 <td>{{item.expiration_date|date:'d/m/Y'}}</td>
-<td>
+<td class="px-0">
    {%if item.app_user.exists %}
       <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
       {% if item.app_user.first.username %}

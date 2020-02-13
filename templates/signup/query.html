@@ -3,7 +3,7 @@
  {% block table_head %}
     <th scope="col">Nombre</th>
     <th scope="col">Tipo</th>
-    <th scope="col">Estado</th>
+    <th scope="col" class="px-0">Estado</th>
     <th scope="col">Última actualización</th>
 
 {% endblock %}
@@ -13,7 +13,7 @@
 
 <td class="entity-td">{% if item.account %} {{item.account.display_name }} {% else %} {{item.name}} {% endif %} </td>
 <td>{{item.get_member_type_display}}</td>
-<td>
+<td class="px-0">
     {% if item.cancelled %}
         {% include 'bpm/current_state.html' with cancelled=True %}
     {% else %}

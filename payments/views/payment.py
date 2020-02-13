@@ -63,15 +63,25 @@ class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
     filterset_class = PendingPaymentFilter
     ordering = ['-added']
     paginate_by = 15
+    simple_paginate_by = 8
 
     model = PendingPayment
     csv_filename = 'pagos'
     available_fields = ['account', 'reference', 'amount', 'concept', 'type', 'completed', 'timestamp', 'revised_by', 'comment', 'added' ]
 
+    def get_paginate_by(self, queryset):
+        if 'simple' in self.request.GET:
+            return self.simple_paginate_by
+        else:
+            return self.paginate_by
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_pending'] = PendingPayment.objects.filter(completed=False).aggregate(sum=Sum('amount'))['sum']
         context['form'] = UpdatePaymentForm()
+        context['narrow'] = True
+        context['valign'] = True
         return context
 
 

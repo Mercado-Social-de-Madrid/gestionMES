@@ -1,5 +1,5 @@
 <div class="table-responsive mb-4">
-<table class="table table-hover {% if valign %}valign{% endif %}" {% if ajax_url %} data-ajax-url="{{ajax_url}}" {% endif %}>
+<table class="table table-hover {% if valign %}valign{% endif %} {% if narrow %}narrow{% endif %}" {% if ajax_url %} data-ajax-url="{{ajax_url}}" {% endif %}>
   <thead>
     <tr>
         {% block table_head %}

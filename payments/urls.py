@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^end/error/$', views.payment_error, name='payment_error'),
 
     url(r'^sepa/$', views.SepaBatchListView.as_view(), name='sepa_list'),
+    url(r'^sepa/add/$', views.BatchCreate.as_view(), name='sepa_create'),
     url(r'^fees/add_comment/$', views.add_fee_comment, name='add_fee_comment'),
 ]
 

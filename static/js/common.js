@@ -18,51 +18,62 @@ function getCookie(name) {
     return cookieValue;
 }
 
+
 (function( $ ) {
-    function loadResults(resultsContainer, url){
+    function loadResults(resultsContainer, url, keepUrl){
         if (url == null || url == '' || url.startsWith('#')){
             return;
         }
         resultsContainer.addClass('loading-container');
         $.get(url, {}, function(data){
             resultsContainer.find('.results').html(data);
-            resultsContainer.find('[data-toggle="tooltip"]').tooltip();
-            resultsContainer.find(".link-row").click(function() {
-                window.location = $(this).data("href");
-            });
+            initElems(resultsContainer);
+
             resultsContainer.removeClass('loading-container');
-            var preserveHistory = resultsContainer.attr('data-preservehistory');
-            if (!preserveHistory || preserveHistory != 'true')
-                window.history.replaceState({}, '', url);
+            if (!keepUrl){
+
+                var preserveHistory = resultsContainer.attr('data-preservehistory');
+                if (!preserveHistory || preserveHistory != 'true')
+                    window.history.replaceState({}, '', url);
+            }
+
         });
     }
 
+
     $.fn.ajaxLoader = function( url_or_action ) {
-        var self = this;
+        this.each(function(){
+            var self = $(this);
+            var initialUrl = self.attr('data-initial');
+            var keepUrl = (self.attr('data-keepurl') != null) && (self.attr('data-keepurl')!='');
 
-        if ( url_or_action != null) {
+            if ( url_or_action != null) {
 
-            if (url_or_action === 'reload'){
-                var current = self.find('.pagination .page-item.active > a').attr('href');
-                loadResults(self, current);
+                if (url_or_action === 'reload'){
+                    var current = self.find('.pagination .page-item.active > a').attr('href');
+                    loadResults(self, current, keepUrl);
+                    return self;
+                }
+
+                loadResults(self, url);
                 return self;
             }
 
-            loadResults(self, url);
-            return self;
-        }
+            if ((initialUrl != null) && (initialUrl!='')){
+                loadResults(self, initialUrl, keepUrl);
+            }
 
-        var initialUrl = self.attr('data-initial');
-        if ((initialUrl != null) && (initialUrl!='')){
-            loadResults(self, initialUrl);
-        }
+            self.on('click', '.pagination a', function(e){
+                e.preventDefault();
+                if ($(this).parent().hasClass('active'))
+                    return;
+                var url = $(this).attr('href');
+                if ((url.startsWith('?')) && (initialUrl != null)){
+                    url = initialUrl + url;
+                }
+                loadResults(self, url, keepUrl);
+            });
 
-        self.on('click', '.pagination a', function(e){
-            e.preventDefault();
-            if ($(this).parent().hasClass('active'))
-                return;
-            var url = $(this).attr('href')
-            loadResults(self, url);
         });
 
     };
@@ -72,17 +83,28 @@ function getCookie(name) {
         var resultsTarget = self.attr('data-results') || '#results';
         var resultsContainer = $(resultsTarget);
         var initialUrl = resultsContainer.attr('data-initial');
-        var filterUrl = ((initialUrl != null) && (initialUrl!=''))? initialUrl : '' + '?';
+        var filterUrl = ((initialUrl != null) && (initialUrl!=''))? initialUrl : '';
+        var parentAjax = false;
+        if (filterUrl == ''){
+            ajaxContainer = self.parents('.ajax-load');
+            if (ajaxContainer.length > 0){
+                parentAjax = true;
+                filterUrl = ajaxContainer.eq(0).attr('data-initial');
+                if (filterUrl.includes('?'))
+                   filterUrl = filterUrl.split('?')[0];
+            }
+        }
+        filterUrl += '?';
 
         self.on('submit', function(e){
             e.preventDefault();
             var query = filterUrl + self.serialize();
-            loadResults(resultsContainer, query)
+            loadResults(resultsContainer, query, parentAjax)
         });
 
         self.on('change', 'select', function(e){
             var query = filterUrl + self.serialize();
-            loadResults(resultsContainer, query);
+            loadResults(resultsContainer, query, parentAjax);
         });
 
         self.on('click', '.pagination a', function(e){
@@ -90,7 +112,7 @@ function getCookie(name) {
             if ($(this).parent().hasClass('active'))
                 return;
             var url = $(this).attr('href')
-            loadResults(self, url);
+            loadResults(self, url, parentAjax);
         });
 
     };
@@ -175,13 +197,14 @@ function initElems(container){
 
     container.find('[data-toggle="tooltip"]').tooltip();
 
-    container.find(".link-row").click(function(e) {
-        var target = $(e.target);
-        if (!target.is('button') && !target.parents('button').length && !target.is('a') && !target.parents('a').length){
-            window.location = $(this).data("href");
-        }
-
-    });
+    if (container.closest('[data-prevent-link="true"]').length == 0){
+        container.find(".link-row").click(function(e) {
+            var target = $(e.target);
+            if (!target.is('button') && !target.parents('button').length && !target.is('a') && !target.parents('a').length){
+                window.location = $(this).data("href");
+            }
+        });
+    }
 
     container.find('.special-select').select2({ 'theme': 'default custom-select' });
 

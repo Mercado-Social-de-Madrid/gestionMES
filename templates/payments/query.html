@@ -1,38 +1,62 @@
 {% extends 'common/list/base.html' %}
 
  {% block table_head %}
+
+    <th scope="col" class="{% if 'simple' in request.GET %}px-2{% endif %}">{% if not 'simple' in request.GET %}Estado{% endif %}</th>
+
     <th scope="col">Cuenta</th>
     <th scope="col">Cantidad</th>
-    <th scope="col">Tipo</th>
+    {% if not 'simple' in request.GET %}
+    <th scope="col" class="px-0">Tipo</th>
+    {% endif %}
     <th scope="col">Concepto</th>
-    <th scope="col">Estado</th>
-    <th scope="col">Fecha</th>
+    <th scope="col">Fecha emisión</th>
+
 {% endblock %}
 
 
 {% block item_row %}
 
+<td class="text-truncate {% if 'simple' in request.GET %}px-2{% endif %} {% if item.completed %}{% if item.returned %}bg-info{% else %}bg-success{% endif %}{% else %}bg-warning{% endif %}">
+    {% if item.completed %}
+        {% if item.returned %}
+            <i class="material-icons">new_releases</i> <small> {% if not 'simple' in request.GET %}Devuelto{% endif %}</small>
+        {% else %}
+            <i class="material-icons">check_circle_outline</i> <small> {% if not 'simple' in request.GET %}Pagado{% endif %}</small>
+        {% endif %}
+    {% else %}
+        <i class="material-icons">access_time</i> <small> {% if not 'simple' in request.GET %}Pendiente{% endif %}</small>
+    {% endif %}
+</td>
+
+
 <td class="entity-td">{{item.account.display_name}}</td>
-<td class="amount">{{item.amount}} €</td>
-<td>
+<td class="amount">
+    {{item.amount}} €
+</td>
+{% if not 'simple' in request.GET %}
+<td class="px-0">
 {% if item.type %}
     <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="{{item.get_type_display}}">{{item.icon_name}}</i>
 {% endif %}
 </td>
-<td style="max-width:250px;">{{item.concept}}</td>
-<td class="{% if item.completed %}{% if item.returned %}bg-info{% else %}bg-success{% endif %}{% else %}bg-warning{% endif %}">
-    {% if item.completed %}
-        {% if item.returned %}
-            <i class="material-icons">new_releases</i> <small>Devuelto</small>
-        {% else %}
-            <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
-        {% endif %}
+{% endif %}
+<td style="max-width:250px;" class="text-truncate">
+    {% if 'simple' in request.GET %}
+        {{item.concept |truncatechars:50 }}
     {% else %}
-        <i class="material-icons">access_time</i> <small>Pend.</small>
-    {% endif %}</td>
-<td>{{item.added|date:'d/m/Y H:i'}}</td>
-<td>
-    {% if not item.completed %}
-    <a href="#" class="action" data-action="{% url 'payments:update_payment' item.pk %}" data-toggle="modal" data-target="#set-paid"> <i data-toggle="tooltip" data-placement="bottom" title="Marcar como pagado"  class="md-24 material-icons text-primary">check</i> </a></td>
+        {{item.concept}}
     {% endif %}
+     </td>
+
+<td>{{item.added|date:'d/m/Y'}}</td>
+
+
+{% if not 'simple' in request.GET %}
+<td class="px-0">
+    {% if not item.completed %}
+    <a href="#" class="action" data-action="{% url 'payments:update_payment' item.pk %}" data-toggle="modal" data-target="#set-paid"> <i data-toggle="tooltip" data-placement="bottom" title="Marcar como pagado"  class="md-24 material-icons text-primary">check</i> </a>
+    {% endif %}
+</td>
+{% endif %}
 {% endblock %}
