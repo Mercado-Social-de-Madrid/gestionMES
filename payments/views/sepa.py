@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db.models import Sum, Count
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
@@ -29,21 +29,19 @@ class SepaBatchFilterForm(BootstrapForm):
 
 class SepaBatchFilter(django_filters.FilterSet):
 
-    search = SearchFilter(names=['concept', 'account__contact_email'], lookup_expr='in', label=_('Buscar...'))
+    search = SearchFilter(names=['title'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['amount', 'attempt'], field_labels={'amount':'Cantidad', 'attempt':'Fecha', })
-    completed = django_filters.BooleanFilter(field_name='completed', widget=BooleanWidget(attrs={'class':'threestate'}))
-    returned = django_filters.BooleanFilter(field_name='returned',
-                                             widget=BooleanWidget(attrs={'class': 'threestate'}))
+
     class Meta:
         model = SepaBatch
         form = SepaBatchFilterForm
-        fields = {  }
+        fields = ['generated_by']
 
 
 class SepaBatchListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     queryset = SepaBatch.objects.all()
-    objects_url_name = 'payment_detail'
+    objects_url_name = 'sepa_detail'
     template_name = 'payments/sepa/list.html'
     ajax_template_name = 'payments/sepa/query.html'
     filterset_class = SepaBatchFilter
@@ -67,5 +65,13 @@ class BatchCreate(CreateView):
         return response
 
     def get_success_url(self):
-        return reverse('management:users_list')
+        return reverse('payments:sepa_detail', kwargs={'pk': self.object.pk})
+
+
+class BatchDetail(DetailView):
+    template_name = 'payments/sepa/detail.html'
+    queryset = SepaBatch.objects.all()
+    model = SepaBatch
+
+
 

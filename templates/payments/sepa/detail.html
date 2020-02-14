@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}Pagos{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h4 class="mb-0">
+                        <a href="{% url 'payments:payments_list' %}">Pagos</a>
+                        <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        <a href="{% url 'payments:sepa_list' %}">Remesas SEPA</a>
+                        <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        {% if object.title %} {{ object.title }}  {% else %} {{object.attempt|date:'d/m/Y'}} {% endif %}
+                    </h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+    <div class="container mt-2">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 lead">
+                <label class="text-secondary">Núm de recibos</label><br>
+                {{object.payments.count}}
+            </div>
+
+              <div class="col-sm-3 col-md-2 lead">
+                <label class="text-secondary">Importe total</label><br>
+                {{ object.amount|floatformat:2 }} €
+            </div>
+
+            <div class="col-sm-3 col-md-2 lead">
+                <label class="text-secondary">Generado</label><br>
+                {{object.attempt|date:'d/m/Y'}}
+            </div>
+
+            <div class="col-sm-3 col-md-2 lead">
+                <label class="text-secondary">Por</label><br>
+                {% include 'user/simple_profile.html' with user=object.generated_by %}
+            </div>
+
+            <div class="col-md-4 mt-3">
+                {% if object.sepa_file %}
+                    <a class="btn btn-primary" href="{{object.sepa_file.url}}"> <i class="material-icons mr-2 ">save_alt</i> Descargar fichero SEPA</a>
+                {% endif %}
+            </div>
+        </div>
+        <p class="lead">
+
+        </p>
+
+        {% include 'payments/query.html' with valign=True object_list=object.payments.all hide_controls=True %}
+    </div>
+
+
+{% endblock %}

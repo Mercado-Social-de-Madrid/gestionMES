@@ -18,6 +18,8 @@ urlpatterns = [
 
     url(r'^sepa/$', views.SepaBatchListView.as_view(), name='sepa_list'),
     url(r'^sepa/add/$', views.BatchCreate.as_view(), name='sepa_create'),
+    url(r'^sepa/(?P<pk>[0-9a-f-]+)/$', views.BatchDetail.as_view(), name='sepa_detail'),
+
     url(r'^fees/add_comment/$', views.add_fee_comment, name='add_fee_comment'),
 ]
 
