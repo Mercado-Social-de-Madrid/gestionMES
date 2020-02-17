@@ -1,38 +1,24 @@
 {% extends 'common/list/base.html' %}
 
  {% block table_head %}
-    <th scope="col">Cuenta</th>
-    <th scope="col">Cantidad</th>
-    <th scope="col">Tipo</th>
-    <th scope="col">Concepto</th>
-    <th scope="col">Estado</th>
     <th scope="col">Fecha</th>
+    <th scope="col">Núm. de recibos</th>
+    <th scope="col">Total</th>
+    <th scope="col">Nombre</th>
+    <th scope="col">Fichero SEPA</th>
 {% endblock %}
 
 
 {% block item_row %}
 
-<td class="entity-td">{{item.account.display_name}}</td>
-<td class="amount">{{item.amount}} €</td>
-<td>
-{% if item.type %}
-    <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="{{item.get_type_display}}">{{item.icon_name}}</i>
-{% endif %}
-</td>
-<td style="max-width:250px;">{{item.concept}}</td>
-<td class="{% if item.completed %}{% if item.returned %}bg-info{% else %}bg-success{% endif %}{% else %}bg-warning{% endif %}">
-    {% if item.completed %}
-        {% if item.returned %}
-            <i class="material-icons">new_releases</i> <small>Devuelto</small>
-        {% else %}
-            <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
-        {% endif %}
-    {% else %}
-        <i class="material-icons">access_time</i> <small>Pend.</small>
-    {% endif %}</td>
-<td>{{item.added|date:'d/m/Y H:i'}}</td>
-<td>
-    {% if not item.completed %}
-    <a href="#" class="action" data-action="{% url 'payments:update_payment' item.pk %}" data-toggle="modal" data-target="#set-paid"> <i data-toggle="tooltip" data-placement="bottom" title="Marcar como pagado"  class="md-24 material-icons text-primary">check</i> </a></td>
+<td>{{item.attempt|date:'d/m/Y'}}</td>
+<td>{{item.payments_count}}</td>
+<td class="amount">{{item.amount|floatformat:2}} €</td>
+<td class="text-truncate" style="max-width:250px;">{{item.title|default:'-'}}</td>
+<td class="py-2">
+    {% if item.sepa_file %}
+        <a class="text-primary" href="{{item.sepa_file.url}}"> <i class="fas fa-2x fa-file-download"></i></a>
     {% endif %}
+
+</td>
 {% endblock %}

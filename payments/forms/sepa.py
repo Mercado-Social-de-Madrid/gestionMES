@@ -6,7 +6,7 @@ from payments.models import SepaBatch, PendingPayment
 
 
 class SepaBatchForm(forms.ModelForm, BootstrapForm):
-    payments = forms.ModelMultipleChoiceField(queryset=PendingPayment.objects.filter(), required=False, widget=forms.HiddenInput())
+    payments = forms.ModelMultipleChoiceField(queryset=PendingPayment.objects.filter(), required=False, )
 
     required_fields = []
 
@@ -17,9 +17,7 @@ class SepaBatchForm(forms.ModelForm, BootstrapForm):
 
     def save(self, commit=True):
 
-        is_new = self.instance.pk is None
         instance = forms.ModelForm.save(self, False)
-
         # Prepare a 'save_m2m' method for the form,
         old_save_m2m = self.save_m2m
         def save_m2m():
@@ -36,10 +34,12 @@ class SepaBatchForm(forms.ModelForm, BootstrapForm):
 
             total_amount = 0
             for payment in instance.payments.all():
-                print(payment)
                 total_amount += payment.amount
             instance.amount = total_amount
             instance.save()
+
+            instance.generate_batch()
+
 
         return instance
 
