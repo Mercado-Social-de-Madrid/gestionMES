@@ -20,7 +20,7 @@ from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.payment import UpdatePaymentForm
 from payments.forms.sepa import SepaBatchForm
 from payments.models import PendingPayment
-from payments.models import SepaBatch
+from payments.models import SepaPaymentsBatch
 
 
 class SepaBatchFilterForm(BootstrapForm):
@@ -33,21 +33,21 @@ class SepaBatchFilter(django_filters.FilterSet):
     o = LabeledOrderingFilter(fields=['amount', 'attempt'], field_labels={'amount':'Cantidad', 'attempt':'Fecha', })
 
     class Meta:
-        model = SepaBatch
+        model = SepaPaymentsBatch
         form = SepaBatchFilterForm
         fields = ['generated_by']
 
 
 class SepaBatchListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
-    queryset = SepaBatch.objects.all()
+    queryset = SepaPaymentsBatch.objects.all()
     objects_url_name = 'sepa_detail'
     template_name = 'payments/sepa/list.html'
     ajax_template_name = 'payments/sepa/query.html'
     filterset_class = SepaBatchFilter
     ordering = ['-attempt']
     paginate_by = 15
-    model = SepaBatch
+    model = SepaPaymentsBatch
 
     def get_queryset(self):
         return super().get_queryset().annotate(payments_count=Count('payments'))
@@ -56,7 +56,7 @@ class SepaBatchListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateR
 class BatchCreate(CreateView):
 
     form_class = SepaBatchForm
-    model = SepaBatch
+    model = SepaPaymentsBatch
     template_name = 'payments/sepa/create.html'
 
     def form_valid(self, form):
@@ -70,8 +70,8 @@ class BatchCreate(CreateView):
 
 class BatchDetail(DetailView):
     template_name = 'payments/sepa/detail.html'
-    queryset = SepaBatch.objects.all()
-    model = SepaBatch
+    queryset = SepaPaymentsBatch.objects.all()
+    model = SepaPaymentsBatch
 
 
 

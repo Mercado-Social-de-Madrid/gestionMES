@@ -1,8 +1,7 @@
 from django import forms
 
 from core.forms.BootstrapForm import BootstrapForm
-from mes.settings import MEMBER_PROV
-from payments.models import SepaBatch, PendingPayment
+from payments.models import SepaPaymentsBatch, PendingPayment, SepaBatchResult
 
 
 class SepaBatchForm(forms.ModelForm, BootstrapForm):
@@ -11,7 +10,7 @@ class SepaBatchForm(forms.ModelForm, BootstrapForm):
     required_fields = []
 
     class Meta:
-        model = SepaBatch
+        model = SepaPaymentsBatch
         exclude = ['sepa_file', 'amount', 'attempt']
 
 
@@ -19,12 +18,10 @@ class SepaBatchForm(forms.ModelForm, BootstrapForm):
 
         instance = forms.ModelForm.save(self, False)
         # Prepare a 'save_m2m' method for the form,
-        old_save_m2m = self.save_m2m
         def save_m2m():
-           old_save_m2m()
-           # This is where we actually link the permissions to the group
-           instance.payments.clear()
-           instance.payments.add(*self.cleaned_data['payments'])
+           for payment in self.cleaned_data['payments'].all():
+               SepaBatchResult.objects.create(payment=payment, batch=instance)
+
         self.save_m2m = save_m2m
 
         # Do we need to save all changes now?
