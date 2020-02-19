@@ -46,15 +46,17 @@ class SepaPaymentsBatch(models.Model):
                 batch_result.success = False
                 batch_result.fail_reason = IBAN_MISSING
 
-            batch_result.bank_code = payment.account.iban_code[4:8]
-            bank = BankBICCode.objects.filter(bank_code=batch_result.bank_code).first()
-            if not bank:
-                batch_result.success = False
-                batch_result.fail_reason = BIC_MISSING
-                print("No BIC for that Bank... passing")
+            else:
+                batch_result.iban_code = payment.account.iban_code[4:8]
+                bank = BankBICCode.objects.filter(bank_code=batch_result.iban_code).first()
+                if not bank:
+                    batch_result.success = False
+                    batch_result.fail_reason = BIC_MISSING
+                    print("No BIC for that Bank... passing")
 
             if batch_result.success:
                 batch_result.bic_code = bank.bic_code
+                batch_result.bank_name = bank.bank_name
                 pay = {
                     "name": payment.account.display_name,
                     "IBAN": payment.account.iban_code,

@@ -19,7 +19,7 @@ from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.payment import UpdatePaymentForm
 from payments.forms.sepa import SepaBatchForm
-from payments.models import PendingPayment
+from payments.models import PendingPayment, SepaBatchResult
 from payments.models import SepaPaymentsBatch
 
 
@@ -73,5 +73,10 @@ class BatchDetail(DetailView):
     queryset = SepaPaymentsBatch.objects.all()
     model = SepaPaymentsBatch
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['batch_results'] = SepaBatchResult.objects.filter(batch=self.object).order_by('-fail_reason')
+        context['batch_success'] = SepaBatchResult.objects.filter(batch=self.object, success=True).count()
+        return context
 
 
