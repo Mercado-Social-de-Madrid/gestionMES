@@ -3,23 +3,20 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
-from django.db.models import Sum, Count
+from django.db.models import Count
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView, DetailView
 from django_filters.views import FilterView
-from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
 
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
-from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
-from payments.forms.payment import UpdatePaymentForm
 from payments.forms.sepa import SepaBatchForm
-from payments.models import PendingPayment, SepaBatchResult
+from payments.models import SepaBatchResult
 from payments.models import SepaPaymentsBatch
 
 

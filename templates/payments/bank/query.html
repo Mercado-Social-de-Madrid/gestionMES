@@ -1,0 +1,18 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Código de entidad</th>
+    <th scope="col">Nombre</th>
+    <th scope="col">BIC/SWIFT</th>
+    <th scope="col">Modificado</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td><span class="badge badge-secondary">{{item.bank_code}}</span></td>
+<td>{{item.bank_name}}</td>
+<td>{{item.bic_code}}</td>
+<td>{{item.modified|date:'d/m/Y'}}</td>
+
+{% endblock %}

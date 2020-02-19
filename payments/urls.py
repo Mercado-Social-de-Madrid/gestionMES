@@ -20,6 +20,10 @@ urlpatterns = [
     url(r'^sepa/add/$', views.BatchCreate.as_view(), name='sepa_create'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/$', views.BatchDetail.as_view(), name='sepa_detail'),
 
+    url(r'^banks/$', views.BankList.as_view(), name='bank_list'),
+    url(r'^banks/add/$', views.BankCreate.as_view(), name='bank_create'),
+    url(r'^banks/(?P<pk>[0-9a-f-]+)/$', views.BankUpdate.as_view(), name='bank_detail'),
+
     url(r'^fees/add_comment/$', views.add_fee_comment, name='add_fee_comment'),
 ]
 

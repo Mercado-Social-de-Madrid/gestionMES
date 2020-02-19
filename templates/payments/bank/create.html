@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load chunks %}
+
+{% block title %}Nueva entidad{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h4 class="mb-0">Contabilidad
+                        <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        <a href="{% url 'payments:sepa_list' %}">Remesas SEPA</a>
+                         <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        <a href="{% url 'payments:bank_list' %}">Entidades bancarias</a>
+                         <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        Nueva entidad
+                </h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post" class="mt-3 p-4">
+            {% csrf_token %}
+
+        <div class="row">
+
+            <div class="col-sm-9 ">
+              {% include "common/forms/field.html" with field=form.bank_name %}
+          </div>
+
+            <div class="col-sm-6 col-md-4">
+              {% include "common/forms/field.html" with field=form.bank_code %}
+            </div>
+
+
+
+            <div class="col-sm-6 col-md-4">
+              {% include "common/forms/field.html" with field=form.bic_code %}
+          </div>
+
+
+        </div>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Crear</button>
+        </div>
+
+        </form>
+    </div>
+
+{% endblock %}

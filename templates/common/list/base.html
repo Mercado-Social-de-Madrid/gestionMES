@@ -1,12 +1,14 @@
 <div class="table-responsive mb-4">
 <table class="table table-hover {% if valign %}valign{% endif %} {% if narrow %}narrow{% endif %}" {% if ajax_url %} data-ajax-url="{{ajax_url}}" {% endif %}>
-  <thead>
+  {% if not hide_header %}
+    <thead>
     <tr>
         {% block table_head %}
       <th scope="col">Nombre</th>
         {% endblock %}
     </tr>
   </thead>
+    {% endif %}
   <tbody>
     {% for item in object_list %}
 

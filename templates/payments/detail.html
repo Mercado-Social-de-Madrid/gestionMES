@@ -39,10 +39,15 @@
         <div class="col-md-7">
             <span class="badge badge-primary mb-2">Pago</span>
             {% include 'payments/detail_card.html' with payment=object %}
+
+            {% if sepa_batches %}
+                <span class="badge badge-primary mb-2">Remesa SEPA</span>
+                {% include 'payments/sepa/query.html' with valign=True hide_header=True object_list=sepa_batches hide_controls=True object_url_name='payments:sepa_detail' %}
+            {% endif %}
         </div>
     </div>
 
-    <form method="post" class="mt-3 p-4">
+    <form method="post" class="{% if sepa_batches %}mt-0 px-4 pb-4{% else %}mt-3 p-4{% endif %}">
             {% csrf_token %}
             {{form.account}}
         <div class="row">

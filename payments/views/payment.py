@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.conf import settings
 from django.contrib import messages
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -21,7 +21,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.payment import PaymentForm, UpdatePaymentForm
-from payments.models import PendingPayment
+from payments.models import PendingPayment, SepaPaymentsBatch
 
 
 class MemberTypeFilter(django_filters.ChoiceFilter):
@@ -91,10 +91,13 @@ class PaymentDetailView(UpdateView):
     form_class = PaymentForm
     model = PendingPayment
 
-    def form_invalid(self, form):
-        res = super().form_invalid(form)
-        print (form.errors)
-        return res
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['sepa_batches'] = SepaPaymentsBatch.objects\
+            .annotate(payments_count=Count('batch_payments'))\
+            .filter(batch_payments__payment=self.object)
+        return context
 
     def get_success_url(self):
         return reverse('payments:payment_detail', kwargs={'pk': self.object.pk})

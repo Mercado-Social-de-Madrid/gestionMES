@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}Remesas SEPA{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-7 col-md-7">
+                    <h4 class="mb-0">Contabilidad
+                        <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        <a href="{% url 'payments:sepa_list' %}">Remesas SEPA</a>
+                         <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        Entidades bancarias</h4>
+                </div>
+                <div class="col-sm-4 col-md-4 text-right">
+                    <a href="{% url 'payments:bank_create' %}" class="btn btn-primary"><i class="material-icons">add</i> Nueva entidad</a>
+                </div>
+             </div>
+        </div>
+    </div>
+
+    <div class="container" id="payments-list">
+        {% include 'common/list/filter_form.html' %}
+        {% include 'common/ajax_wrapper.html' with query_template='payments/bank/query.html' valign=True %}
+    </div>
+
+{% endblock %}
+
