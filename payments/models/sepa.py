@@ -11,7 +11,7 @@ from django.utils.translation import gettext as _
 from sepaxml import SepaTransfer, SepaDD
 
 from core.models import User
-from payments.models import PendingPayment
+from payments.models import PendingPayment, DEBIT
 
 
 class SepaPaymentsBatch(models.Model):
@@ -33,7 +33,7 @@ class SepaPaymentsBatch(models.Model):
 
     def generate_batch(self):
         sepa = SepaDD(settings.SEPA_CONFIG,schema="pain.008.001.02", clean=True)
-        success = 0
+        payments = []
 
         for batch_result in SepaBatchResult.objects.filter(batch=self):
             payment = batch_result.payment
@@ -52,7 +52,6 @@ class SepaPaymentsBatch(models.Model):
                 if not bank:
                     batch_result.success = False
                     batch_result.fail_reason = BIC_MISSING
-                    print("No BIC for that Bank... passing")
 
             if batch_result.success:
                 batch_result.bic_code = bank.bic_code
@@ -64,18 +63,18 @@ class SepaPaymentsBatch(models.Model):
                     "BIC":  batch_result.bic_code,
                     "type": "RCUR",
                     "collection_date": datetime.date.today(),
-                    "mandate_id": "1234",
+                    "mandate_id": payment.account.cif,
                     "execution_date": datetime.date.today(),
                     "mandate_date": datetime.date.today(),
                     "description": payment.concept,
                     "endtoend_id": str(payment.reference).replace('-',''),
                 }
                 sepa.add_payment(pay)
-                success += 1
+                payments.append(batch_result.payment)
 
             batch_result.save()
 
-        if (success > 0):
+        if (len(payments) > 0):
             sepa_xml = sepa.export(validate=True)
             xml_temp = NamedTemporaryFile()
             xml_temp.write(sepa_xml)
@@ -83,6 +82,13 @@ class SepaPaymentsBatch(models.Model):
 
             self.sepa_file.save(f"sepa_batch_{self.pk}.xml", File(xml_temp))
             self.save()
+
+            # We check the included payments as paid
+            for payment in payments:
+                payment.completed = True
+                payment.timestamp = datetime.datetime.now()
+                payment.type = DEBIT
+                payment.save()
 
 
 IBAN_MISSING = 1

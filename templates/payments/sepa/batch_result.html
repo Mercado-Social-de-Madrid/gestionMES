@@ -7,6 +7,7 @@
     <th scope="col">Entidad</th>
 {% endblock %}
 
+{% block item_url %}{% url object_url_name item.payment.pk %}{% endblock %}
 
 {% block item_row %}
 

@@ -55,7 +55,7 @@
 
         </p>
 
-        {% include 'payments/sepa/batch_result.html' with valign=True object_list=batch_results hide_controls=True %}
+        {% include 'payments/sepa/batch_result.html' with valign=True object_list=batch_results hide_controls=True object_url_name='payments:payment_detail' %}
     </div>
 
 
