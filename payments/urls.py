@@ -8,6 +8,7 @@ app_name = 'payments'
 urlpatterns = [
 
     url(r'^$', views.PaymentsListView.as_view(), name='payments_list'),
+    url(r'^create/$', views.PaymentCreate.as_view(), name='create_payment'),
     url(r'^(?P<pk>[0-9a-f-]+)/update/$', views.update_payment, name='update_payment'),
     url(r'^(?P<pk>[0-9a-f-]+)$', views.PaymentDetailView.as_view(), name='payment_detail'),
     url(r'^card/$', views.CardPaymentsListView.as_view(), name='card_payments_list'),

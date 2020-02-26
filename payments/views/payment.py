@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, CreateView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
@@ -83,6 +83,19 @@ class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
         context['narrow'] = True
         context['valign'] = True
         return context
+
+
+class PaymentCreate(CreateView):
+    template_name = 'payments/create.html'
+    form_class = PaymentForm
+    model = PendingPayment
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_success_url(self):
+        return reverse('payments:payment_detail', kwargs={'pk': self.object.pk})
 
 
 class PaymentDetailView(UpdateView):

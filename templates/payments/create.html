@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load settings_value %}
+{% load staticfiles %}
+
+{% block title %}Detalles de pago{% endblock %}
+
+
+{% block content %}
+
+
+<div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-12">
+                <h4 class="mb-0"><a href="{% url 'payments:payments_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nuevo pago</h4>
+            </div>
+
+        </div>
+        </div>
+    </div>
+
+
+<div class="container pt-4">
+
+    <form id="create-form" method="post" class="{% if sepa_batches %}mt-0 px-4 pb-4{% else %}mt-3 p-4{% endif %}">
+            {% csrf_token %}
+            {{form.account}}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group {% if hide_label %} my-2 {% endif %}">
+
+                    <label>Socia <span class="text-primary lead">*</span></label>
+                    <input id="account-selector" type="text" name=""  class="form-control" placeholder="Selecciona cuenta..." required="" disabled>
+                    <div class="invalid-feedback form-errors" id="no-account" style="display:none;">
+                        Es obligatorio asociar el pago a una socia
+                    </div>
+                </div>
+
+                {% include "common/forms/field.html" with field=form.amount %}
+
+                 <div class="mt-4">
+                    {% include "common/forms/switch.html" with field=form.completed %}
+                </div>
+
+                <div id="payment-data" {% if not object.completed %} style="display:none;" {% endif %}>
+                    {% include "common/forms/field.html" with field=form.timestamp %}
+                    {% include "common/forms/field.html" with field=form.type not_floating=True %}
+                    {% include "common/forms/display_value.html" with value=object.revised_by label='Revisado por' %}
+
+                    <div class="mb-3">
+                        {% include "common/forms/switch.html" with field=form.returned %}
+                    </div>
+                    <div id="return-data" {% if not object.returned %} style="display:none;" {% endif %}>
+                        {% include "common/forms/field.html" with field=form.returned_timestamp %}
+                        {% include "common/forms/field.html" with field=form.returned_reason not_floating=True %}
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-md-6">
+                {% include "common/forms/field.html" with field=form.concept not_floating=True %}
+                {% include "common/forms/field.html" with field=form.comment not_floating=True %}
+
+            </div>
+        </div>
+
+    <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+        </div>
+
+    </form>
+</div>
+
+
+
+<div class="modal fade" id="accounts-dialog" tabindex="-1" role="dialog" aria-labelledby="cancel-process-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document" style="max-width:70vw;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancel-process-label">Nueva socia</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <p class="">Elige la socia:</p>
+                <div class="ajax-load" data-initial="{% url 'accounts:list' %}" data-keepurl="true" data-prevent-link="true">
+                    <div class="results">
+
+                    </div>
+                    <div class="loading-spinner"><div class="mes-loader"></div></div>
+                    <span class="sr-only">Loading...</span>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/moment.min.js' %}?v=7"></script>
+<script src="{% static 'js/daterangepicker.js' %}?v=7"></script>
+<script>
+$(function() {
+
+    var account = $('#account-selector');
+    var dialog = $('#accounts-dialog');
+    var accInput = $('input[name="{{form.account.name}}"]');
+
+    account.parent().on('click', function(){
+        dialog.modal('show');
+    });
+    dialog.on('click', 'tr', function(){
+        var acc = $(this);
+        acc_pk = acc.attr('data-pk');
+        account.val(acc.find('td').first().text());
+        accInput.val(acc_pk);
+        dialog.modal('hide');
+    });
+
+    $('#create-form').on('submit', function(e){
+        console.log(accInput.val());
+        if (accInput.val() == null || accInput.val() == ''){
+            e.preventDefault();
+            $('#no-account').fadeIn();
+        }
+    });
+
+
+  var dateinput = $('input[name="{{ form.timestamp.name }}"], input[name="{{ form.returned_timestamp.name }}"]');
+  dateinput.daterangepicker({
+    singleDatePicker: true,
+    timePicker: true,
+    timePicker24Hour: true,
+    drops:'up',
+    locale: {
+        "format": "DD/MM/YYYY HH:mm",
+        "weekLabel": "W",
+        "firstDay": 1
+    },
+  });
+  dateinput.on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('DD/MM/YYYY HH:mm'));
+  });
+
+  $('input[name="{{form.completed.name}}"]').on('change', function(){
+    $('#payment-data').toggle(this.checked);
+   });
+
+   $('input[name="{{form.returned.name}}"]').on('change', function(){
+    $('#return-data').toggle(this.checked);
+   });
+});
+</script>
+
+{% endblock %}

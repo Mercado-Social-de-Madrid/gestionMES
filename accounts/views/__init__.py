@@ -6,3 +6,4 @@ from accounts.views.deletion import *
 from accounts.views.catalog import *
 from accounts.views.reports import *
 from accounts.views.entity import *
+from accounts.views.account import *

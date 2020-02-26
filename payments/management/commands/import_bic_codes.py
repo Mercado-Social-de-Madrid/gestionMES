@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import csv
 import json
 import re
@@ -23,10 +24,11 @@ class Command(BaseCommand):
 
         csvfile = options['csvfile']
 
-        with open(csvfile, 'r'  ) as fp:
+        with open(csvfile, 'r', ) as fp:
             csv_reader = csv.reader(fp, delimiter=';')
 
             for row in csv_reader:
+
                 bic, created = BankBICCode.objects.get_or_create(bank_code=row[0])
                 bic.bank_name = row[1]
                 bic.bic_code = row[2]

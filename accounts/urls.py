@@ -7,6 +7,8 @@ app_name = 'accounts'
 
 urlpatterns = [
 
+    url(r'^$', views.AccountListView.as_view(), name='list'),
+
     url(r'^categories/$', views.CategoryListView.as_view(), name='category_list'),
     url(r'^categories/add/$', views.CategoryCreate.as_view(), name='add_category'),
     url(r'^categories/(?P<pk>[0-9a-f-]+)/$', views.CategoryDetailView.as_view(), name='category_detail'),

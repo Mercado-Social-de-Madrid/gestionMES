@@ -1,0 +1,31 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+   <th scope="col">Tipo de socia</th>
+    <th scope="col">Fecha de alta</th>
+    <th scope="col" class="px-0">Sincr. en app</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td>{{item.display_name}} </td>
+<td>{{item.get_member_type_display}}</td>
+<td>{{item.registration_date|date:'d/m/Y'}}</td>
+
+<td class="px-0">
+   {% if item.app_user.exists %}
+      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
+      {% if item.app_user.first.username %}
+         <i class="material-icons text-success" data-toggle="tooltip" data-placement="bottom" title="Registrada">done_all</i>
+      {% endif %}
+
+      {% if item.logo %}
+         <i class="material-icons text-primary" data-toggle="tooltip" data-placement="bottom" title="Logo">image</i>
+      {% endif %}
+
+   {% endif %}
+</td>
+
+{% endblock %}
