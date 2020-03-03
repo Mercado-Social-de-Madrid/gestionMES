@@ -256,11 +256,19 @@ class DeletionProcess(AccountProcess):
     objects = DeletionManager()
 
     def update(self, event):
-
         if event.workflow.completed:
             self.account.status = OPTED_OUT
             self.account.opted_out_date = datetime.now()
             self.account.save()
+
+    def revert(self):
+        self.account.status = ACTIVE
+        self.account.opted_out_date = None
+        self.account.save()
+
+        self.last_update = datetime.now()
+        self.cancelled = True
+        self.save()
 
     def cancel(self):
         self.last_update = datetime.now()

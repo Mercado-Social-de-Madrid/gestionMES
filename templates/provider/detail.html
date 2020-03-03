@@ -81,9 +81,13 @@
               </div>
           </div>
           <div class="col-md-3">
-              {% if object.is_active %}
-                {% if perms.accounts.mespermission_can_create_deletions %}
-                <a class="btn btn-secondary text-light mb-2" data-toggle="modal" data-target="#cancel-process">Dar de baja</a><br>
+              {% if perms.accounts.mespermission_can_create_deletions %}
+                {% if object.is_active %}
+                    <a class="btn btn-secondary text-light mb-2" data-toggle="modal" data-target="#cancel-process">Dar de baja</a><br>
+                {% else %}
+                    {% if object.deletion_process  %}
+                        <a class="btn btn-secondary text-light mb-2" href="{% url 'accounts:deletion_detail' object.deletion_process.first.pk %}">Ver proceso de baja</a><br>
+                    {% endif %}
                 {% endif %}
               {% endif %}
                 <a class="btn btn-light disabled mb-2">Consultar historial</a><br>

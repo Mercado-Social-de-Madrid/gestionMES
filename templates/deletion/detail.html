@@ -49,8 +49,11 @@
 {% else %}
     {% if object.workflow.completed %}
             {% include 'bpm/workflow_step_complete.html' with big=True %}
+            {% if perms.accounts.mespermission_can_update_deletions %}
+                <a href="#undo-process" data-toggle="modal" class="btn btn-primary"><i class="material-icons mr-2">block</i> Deshacer proceso</a>
+            {% endif %}
     {% else %}
-                {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
+            {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
     {% endif %}
 {% endif %}
 </div>
@@ -103,7 +106,38 @@
         </div>
       </div>
     </div>
+     </form>
 
+{% endif %}
+
+
+{% if object.workflow.completed %}
+           <form method="post" action="{% url 'accounts:revert_deletion' %}">
+         {% csrf_token %}
+         <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
+        <input type="hidden" name="process" value="{{object.pk}}">
+
+        <div class="modal fade" id="undo-process" tabindex="-1" role="dialog" aria-labelledby="undo-process-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="undo-process-label">Deshacer proceso</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+              <div class="mb-4 display-2 text-muted"> <i class="material-icons">error_outline</i></div>
+              <p class="lead">¿Estás segura de que deseas deshacer el proceso?</p>
+               Esta acción marcará este proceso de baja como cancelado y volverá a dejar a la socia en estado activo.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
      </form>
 
 {% endif %}
