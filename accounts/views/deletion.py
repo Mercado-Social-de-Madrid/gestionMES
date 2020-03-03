@@ -80,3 +80,17 @@ class DeletionDetailView(DetailView):
         })
         context['comment_form'] = form
         return context
+
+
+def cancel_delete(request):
+    if request.method == "POST":
+        redirect_url = request.POST.get('redirect_to', '')
+        process_pk = request.POST.get('process', None)
+
+        if redirect_url and process_pk:
+            process = DeletionProcess.objects.filter(pk=process_pk).first()
+            if process:
+                process.cancel()
+            return redirect(redirect_url)
+
+    return False

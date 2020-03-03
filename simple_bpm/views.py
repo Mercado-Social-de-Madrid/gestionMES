@@ -72,8 +72,6 @@ class ProcessCreateView(CreateView, FormsetView):
                 checklist_items = step.cleaned_data.get('checklist_tasks')
                 checklist = checklist_items.split(settings.INLINE_INPUT_SEPARATOR)
 
-                print(process_step.pk)
-
                 for order, description in enumerate(checklist, start=1):
                     if not description:
                         continue
@@ -86,7 +84,6 @@ class ProcessCreateView(CreateView, FormsetView):
 class ProcessDetailView(DetailView):
     model = Process
     template_name = 'bpm/detail.html'
-
 
 
 def add_workflow_event(request):

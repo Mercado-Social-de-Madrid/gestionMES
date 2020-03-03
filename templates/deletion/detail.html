@@ -77,7 +77,7 @@
 
     </form>
 
-     <form method="post" action="{% url 'accounts:cancel_signup' %}">
+     <form method="post" action="{% url 'accounts:cancel_deletion' %}">
          {% csrf_token %}
          <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
         <input type="hidden" name="process" value="{{object.pk}}">

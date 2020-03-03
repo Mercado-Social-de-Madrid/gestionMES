@@ -134,6 +134,7 @@ def cancel_signup(request):
         redirect_url = request.POST.get('redirect_to', '')
         process_pk = request.POST.get('process', None)
 
+
         if redirect_url and process_pk:
             process = SignupProcess.objects.filter(pk=process_pk).first()
             if process:

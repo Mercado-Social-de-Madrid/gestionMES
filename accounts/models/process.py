@@ -262,6 +262,12 @@ class DeletionProcess(AccountProcess):
             self.account.opted_out_date = datetime.now()
             self.account.save()
 
+    def cancel(self):
+        self.last_update = datetime.now()
+        self.cancelled = True
+        self.save()
+
+
 @receiver(post_save, sender=ProcessWorkflowEvent)
 def update_process_event(sender, instance, **kwargs):
     process = SignupProcess.objects.filter(workflow=instance.workflow).first()
