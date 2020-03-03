@@ -15,6 +15,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from accounts.models import Provider, TERR_LOCAL, TERR_COUNTRY, LegalForm, Entity
 from mes import settings
 from social_balance.models import EntitySocialBalance, SocialBalanceBadge
+from social_balance.renderer import BadgeRenderer
 
 
 class Command(BaseCommand):
@@ -28,12 +29,8 @@ class Command(BaseCommand):
         year = options['year']
         badge = SocialBalanceBadge.objects.get(year=year)
 
-        weboptions = webdriver.ChromeOptions()
-        weboptions.add_argument('headless')
-        DRIVER = 'chromedriver'
-        driver = webdriver.Chrome(DRIVER, chrome_options=weboptions)
-        driver.set_window_position(0, 0)
-        driver.set_window_size(1200, 850)
+        renderer = BadgeRenderer(badge)
+        renderer.configure_webdriver()
 
         entities = Entity.objects.filter(social_balances__isnull=False).distinct()
         for entity in entities:
@@ -43,20 +40,5 @@ class Command(BaseCommand):
                 continue
 
             balance = balance.first()
-            if balance.is_exempt or not balance.done:
-                print('{}: No balance or exempt. Passing...'.format(entity.display_name))
-                continue
-            url = settings.BASESITE_URL + reverse('balance:badge_render', kwargs={'pk':badge.pk }) + '?id=' + str(entity.pk)
-            print(entity.display_name)
-            driver.get(url)
-
-            img_temp = NamedTemporaryFile()
-            png = driver.get_screenshot_as_png()
-            img_temp.write(png)
-            img_temp.flush()
-
-            balance.badge_image.save(f"{balance.year}_{entity.pk}", File(img_temp))
-            balance.save()
-
-        driver.quit()
+            renderer.update_balance_image(balance)
 
