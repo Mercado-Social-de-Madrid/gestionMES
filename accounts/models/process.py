@@ -259,6 +259,7 @@ class DeletionProcess(AccountProcess):
 
         if event.workflow.completed:
             self.account.status = OPTED_OUT
+            self.account.opted_out_date = datetime.now()
             self.account.save()
 
 @receiver(post_save, sender=ProcessWorkflowEvent)

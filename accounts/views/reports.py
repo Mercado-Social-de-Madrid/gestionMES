@@ -30,6 +30,8 @@ class AccountsReportView(TemplateView):
         print (years)
         reports = []
         providers = Provider.objects.all()
+        opted = Account.objects.filter(status=OPTED_OUT, opted_out_date__isnull=True)
+        print(opted.count())
         for year in years:
             provider_signups = Provider.objects.filter(registration_date__year=year)
             consumer_signups = Consumer.objects.filter(registration_date__year=year)
