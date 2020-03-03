@@ -85,7 +85,7 @@
                 {% if object.is_active %}
                     <a class="btn btn-secondary text-light mb-2" data-toggle="modal" data-target="#cancel-process">Dar de baja</a><br>
                 {% else %}
-                    {% if object.deletion_process  %}
+                    {% if object.deletion_process.exists  %}
                         <a class="btn btn-secondary text-light mb-2" href="{% url 'accounts:deletion_detail' object.deletion_process.first.pk %}">Ver proceso de baja</a><br>
                     {% endif %}
                 {% endif %}
