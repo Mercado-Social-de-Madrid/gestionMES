@@ -61,3 +61,4 @@ class SocialBadgeRender(DetailView):
         context['hide_navbar'] = True
 
         return context
+

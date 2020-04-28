@@ -112,7 +112,8 @@
                 </div>
 
                 <div class="col-md-6">
-
+                    <div class="mb-3">
+                        {% include "common/forms/switch.html" with field=form.hidden_in_catalog %}</div>
                     {% include "common/forms/field.html" with field=form.start_year %}
                     {% include "common/forms/multiselect.html" with field=form.categories tags=categories %}
                     <div class="mb-3">

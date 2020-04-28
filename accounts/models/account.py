@@ -194,6 +194,7 @@ class Entity(Account):
     apportations = models.TextField(blank=True, verbose_name=_('Qué trata de aportar vuestro proyecto a la transformación social'))
     networking = models.TextField(blank=True, verbose_name=_('Redes/organizaciones/iniciativas de transformación social de las que la entidad forma parte'))
 
+    hidden_in_catalog = models.BooleanField(default=False, verbose_name=_('Oculta en el catálogo'), help_text='No mostrar esta entidad en el catálogo de la web')
 
     class Meta:
         verbose_name = _('Entidad')

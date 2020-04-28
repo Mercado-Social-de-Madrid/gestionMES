@@ -32,7 +32,7 @@ class CatalogFilter(django_filters.FilterSet):
 
 class CatalogListView(XFrameOptionsExemptMixin, FilterMixin, FilterView, AjaxTemplateResponseMixin):
 
-    queryset = Provider.objects.filter(status=ACTIVE).prefetch_related(Prefetch(
+    queryset = Provider.objects.filter(status=ACTIVE, hidden_in_catalog=False).prefetch_related(Prefetch(
         'social_balances',
         queryset=EntitySocialBalance.objects.filter( year=settings.CURRENT_BALANCE_YEAR),
         to_attr='social_balance'
