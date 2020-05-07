@@ -30,3 +30,4 @@ rjsmin==1.0.12
 selenium==3.141.0
 six==1.11.0
 sepaxml==2.2.0
+webdriver-manager==2.4.0

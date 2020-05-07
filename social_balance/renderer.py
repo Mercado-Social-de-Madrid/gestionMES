@@ -2,7 +2,7 @@ from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.urls import reverse
 from selenium import webdriver
-
+from webdriver_manager.chrome import ChromeDriverManager
 from mes import settings
 
 
@@ -20,9 +20,10 @@ class BadgeRenderer(object):
             self.driver.quit()
 
     def configure_webdriver(self):
+
         weboptions = webdriver.ChromeOptions()
         weboptions.add_argument('headless')
-        self.driver = webdriver.Chrome(self.DRIVER, chrome_options=weboptions)
+        self.driver = webdriver.Chrome(ChromeDriverManager().install(), chrome_options=weboptions)
         self.driver.set_window_position(0, 0)
         self.driver.set_window_size(1200, 850)
 
