@@ -127,7 +127,6 @@ def update_payment(request, pk):
             payment.save()
 
             redirect_url = form.cleaned_data.get('redirect_to')
-            print(redirect_url)
             if redirect_url:
                 messages.success(request, _('Pago actualizado correctamente.'))
                 return redirect(redirect_url)
