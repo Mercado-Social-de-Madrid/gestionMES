@@ -1,5 +1,4 @@
 # Instalación
---------------
 
 ## Linux
 
@@ -28,6 +27,9 @@ export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
 source ~/.local/bin/virtualenvwrapper.sh
 ```
 
+Recargamos estas nuevas variables:
+`source ~/.bashrc`
+
 Creamos nuestro virtualenv
 ```
 mkvirtualenv mes
@@ -44,13 +46,13 @@ Instalamos mySQL (nos pedirá introducir la constraseña de root):
 ```
 sudo apt-get install mysql-server
 sudo apt-get install python-dev libmysqlclient-dev
-sudo systemctl mysql start
+sudo systemctl mysql start (si este comando da error, no preocuparse, puede que ya esté corriendo el servicio)
 ```
 
-Entramos en la consola de mySQL(`mysql -u root -p`) y creamos la base de datos:
+Entramos en la consola de mySQL(`mysql -u root -p` o `sudo mysql`) y creamos la base de datos:
 ```
 create database mes;
-grant all privileges on mes.* to 'insuler'@'localhost' identified by "insula";
+grant all privileges on mes.* to 'tu_usuario'@'localhost' identified by "tu_contraseña";
 ```
 
 
@@ -69,15 +71,28 @@ cp mes/settings_secret.py.template mes/settings_secret.py
 En este fichero tenemos que introducir nuestra configuración concreta, siendo lo más importante la configuración
 de la base de datos (con la tabla y usuario que hemos creado antes) y dos campos relativos a la URL donde se
 encontrará nuestro servidor: `BASESITE_URL` y `ALLOWED_HOSTS`.
-Una vez configurado, realizamos las migraciones iniciales, copiamos los ficheros estáticos y creamos el usuario admin:
+Una vez configurado, realizamos las migraciones iniciales, copiamos los ficheros estáticos, creamos el usuario admin
+y cargamos los datos iniciales (fixtures):
 ```
 python manage.py migrate
 python manage.py collectstatic
 python manage.py createsuperuser
+python manage.py loaddata */fixtures/*.json
 ```
 
+Una vez hemos llegado aquí sin errores, ya podemos lanzar el servidor de pruebas de Django para desplegar el sistema
+en nuestra máquina local:
+```
+python manage.py runserver
+```
 
-### Apache
+---
+
+# Configuración del servidor web
+
+Si queremos desplegar nuestro propio sistema en producción podemos usar uno de los siguientes servidores:
+
+### 1. Apache
 
 Instalamos el módulo wsgi de Apache:
 ```
@@ -118,7 +133,7 @@ Una vez guardado, actualizamos el servicio de Apache:
 sudo service apache2 restart
 ```
 
-## Nginx
+## 2. Nginx
 
 Creamos los directorios externos y añadimos al usuario al grupo web:
 
