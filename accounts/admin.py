@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from accounts.models import LegalForm, Category, SignupProcess, Provider, Consumer, DeletionProcess
+from accounts.models import LegalForm, Category, SignupProcess, Provider, Consumer, DeletionProcess, Colaborator
 
 
 class ProviderAdmin(admin.ModelAdmin):
@@ -19,3 +19,4 @@ admin.site.register(SignupProcess)
 admin.site.register(DeletionProcess)
 admin.site.register(Consumer)
 admin.site.register(Provider, ProviderAdmin)
+admin.site.register(Colaborator, ProviderAdmin)

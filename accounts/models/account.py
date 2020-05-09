@@ -213,6 +213,11 @@ class Colaborator(Entity):
     special_agreement = models.TextField(blank=True, verbose_name=_('Acuerdos especiales'))
     custom_fee = models.FloatField(null=True, blank=True, verbose_name=_('Cuota específica'))
 
+    class Meta:
+        verbose_name = _('Entidad especial')
+        verbose_name_plural = _('Entidades especiales')
+        ordering = ['name']
+
 
 class Provider(Entity):
     is_physical_store = models.BooleanField(default=False, verbose_name=_('Es tienda física'))
