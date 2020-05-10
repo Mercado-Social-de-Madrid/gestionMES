@@ -84,11 +84,11 @@ class SepaPaymentsBatch(models.Model):
             self.save()
 
             # We check the included payments as paid
-            for payment in payments:
+            '''for payment in payments:
                 payment.completed = True
                 payment.timestamp = datetime.datetime.now()
                 payment.type = DEBIT
-                payment.save()
+                payment.save()'''
 
 
 IBAN_MISSING = 1
