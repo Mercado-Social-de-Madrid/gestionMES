@@ -17,7 +17,7 @@
 <td class="text-truncate" style="max-width:250px;">{{item.title|default:'-'}}</td>
 <td class="py-2">
     {% if item.sepa_file %}
-        <a class="text-primary" href="{{item.sepa_file.url}}"> <i class="fas fa-2x fa-file-download"></i></a>
+        <a class="text-primary" href="{{item.sepa_file.url}}" download> <i class="fas fa-2x fa-file-download"></i></a>
     {% endif %}
 
 </td>
