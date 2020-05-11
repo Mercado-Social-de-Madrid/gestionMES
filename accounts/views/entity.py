@@ -34,7 +34,7 @@ class EntityFilterForm(BootstrapForm):
 
 class EntityFilter(django_filters.FilterSet):
 
-    search = SearchFilter(names=['address', 'name', 'business_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
+    search = SearchFilter(names=['address', 'cif', 'name', 'business_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['name', 'start_year', 'registration_date'], field_labels={'name':'Nombre', 'start_year':'Año de inicio', 'registration_date':'Fecha de alta'})
 
     class Meta:
