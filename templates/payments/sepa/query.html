@@ -4,8 +4,7 @@
     <th scope="col">Fecha</th>
     <th scope="col">Núm. de recibos</th>
     <th scope="col">Total</th>
-    <th scope="col">Nombre</th>
-    <th scope="col">Fichero SEPA</th>
+    <th scope="col" colspan="2">Nombre</th>
 {% endblock %}
 
 
@@ -16,9 +15,17 @@
 <td class="amount">{{item.amount|floatformat:2}} €</td>
 <td class="text-truncate" style="max-width:250px;">{{item.title|default:'-'}}</td>
 <td class="py-2">
-    {% if item.sepa_file %}
-        <a class="text-primary" href="{{item.sepa_file.url}}" download> <i class="fas fa-2x fa-file-download"></i></a>
-    {% endif %}
+    <div class="dropdown dropdown-chip">
+      <button class="btn btn-outline-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="material-icons">more_vert</i>
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          {% if item.sepa_file %}
+        <a class="dropdown-item" href="{{item.sepa_file.url}}" download> <span class="material-icons mr-2">description</span> Descargar fichero</a>
+          {% endif %}
+        <a class="dropdown-item" href="{% url 'payments:sepa_delete' item.pk %}"><span class="material-icons mr-2">delete</span> Eliminar remesa</a>
+      </div>
+    </div>
 
 </td>
 {% endblock %}
