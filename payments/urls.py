@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^sepa/$', views.SepaBatchListView.as_view(), name='sepa_list'),
     url(r'^sepa/add/$', views.BatchCreate.as_view(), name='sepa_create'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/$', views.BatchDetail.as_view(), name='sepa_detail'),
+    url(r'^sepa/(?P<pk>[0-9a-f-]+)/delete/$', views.sepa_delete, name='sepa_delete'),
 
     url(r'^banks/$', views.BankList.as_view(), name='bank_list'),
     url(r'^banks/add/$', views.BankCreate.as_view(), name='bank_create'),

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.contrib import messages
 from django.db.models import Count
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView, DetailView
@@ -76,4 +77,8 @@ class BatchDetail(DetailView):
         context['batch_success'] = SepaBatchResult.objects.filter(batch=self.object, success=True).count()
         return context
 
-
+def sepa_delete(request, pk):
+    sepa = SepaPaymentsBatch.objects.get(pk=pk)
+    sepa.delete()
+    messages.success(request, _('Remesa SEPA eliminada correctamente.'))
+    return redirect(reverse('payments:sepa_list'))

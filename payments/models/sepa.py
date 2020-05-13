@@ -3,10 +3,13 @@ from __future__ import unicode_literals
 
 import datetime
 
+import os
 from django.conf import settings
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from sepaxml import SepaTransfer, SepaDD
 
@@ -120,3 +123,12 @@ class BankBICCode(models.Model):
     class Meta:
         verbose_name = _('Código BIC')
         verbose_name_plural = _('Códigos BIC')
+
+
+@receiver(post_delete, sender=SepaPaymentsBatch)
+def delete_batch_file(sender, instance, **kwargs):
+    try:
+        if instance.sepa_file and instance.sepa_file.storage.exists(instance.sepa_file.name):
+            os.remove(instance.sepa_file.path)
+    except OSError:
+        print("Error deleting SEPA batch file")
