@@ -80,6 +80,7 @@ class Account(PolymorphicModel):
 
     cyclos_user = models.CharField(null=True, blank=True, max_length=150, verbose_name=_('Antiguo usuario en Cyclos'))
 
+    last_updated = models.DateTimeField(verbose_name=_('Última actualización'), null=True, blank=True)
     registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
     opted_out_date = models.DateField(verbose_name=_('Fecha de baja'), null=True, blank=True)
 
@@ -91,6 +92,7 @@ class Account(PolymorphicModel):
         verbose_name_plural = _('Socias')
         permissions = (
             ("mespermission_can_view_accounts", _("Puede ver la lista de socias")),
+            ("mespermission_can_view_reports", _("Puede ver los informes de socias")),
         )
 
     @property
