@@ -206,6 +206,9 @@ def fetch_intercoop_account(account):
         if 'is_registered' in user and user['is_registered']:
             app_user.username = user['username']
 
+        if not 'person' in result or not result['person']:
+            return False
+
         account_data = result['person']
         if 'name' in account_data and account_data['name']:
             account.first_name = account_data['name']

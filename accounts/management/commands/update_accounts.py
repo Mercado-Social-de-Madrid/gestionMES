@@ -1,5 +1,6 @@
 import json
 import re
+from datetime import datetime
 
 import requests
 from django.contrib.auth.models import User
@@ -26,7 +27,8 @@ class Command(BaseCommand):
         for account in accounts:
             result = fetch_account(account)
             if result is True:
-                print('{}: updated succesfully'.format(account))
+                pass
+                #print('{}: updated succesfully'.format(account))
             elif result is False:
                 self.notfound.append(account)
                 print('{}: failed'.format(account))
@@ -42,7 +44,8 @@ class Command(BaseCommand):
         for guest in guests:
             result = fetch_guest_account(guest)
             if result is True:
-                print('{}: updated succesfully'.format(guest))
+                pass
+                #print('{}: updated succesfully'.format(guest))
             elif result is False:
                 self.notfound.append(guest)
                 print('{}: failed'.format(guest))
@@ -58,7 +61,8 @@ class Command(BaseCommand):
         for guest in intercoop:
             result = fetch_intercoop_account(guest)
             if result is True:
-                print('{}: updated succesfully'.format(guest))
+                pass
+                #print('{}: updated succesfully'.format(guest))
             elif result is False:
                 self.notfound.append(guest)
                 print('{}: failed'.format(guest))
@@ -66,12 +70,11 @@ class Command(BaseCommand):
                 self.notfound.append(guest)
                 print('{} not fetched: {}'.format(guest, result))
 
-        self. fetched += intercoop.count()
+        self.fetched += intercoop.count()
 
     def handle(self, *args, **options):
 
         nif = options.get('cif', None)
-        print(nif)
         if nif:
             account = Account.objects.filter(cif=nif).first()
             result = account is not None and fetch_account(account)
@@ -83,8 +86,9 @@ class Command(BaseCommand):
 
         self.fetch_accounts()
         #self.fetch_guests()
-        #self.fetch_intercoop()
+        self.fetch_intercoop()
 
+        print('Completed task:' +  str(datetime.now()))
         print('Completed fetching info from {} accounts! Missing {} accounts'.format(self.fetched, len(self.notfound)) )
-        for account in self.notfound:
-            print(account)
+        #for account in self.notfound:
+            #print(account)
