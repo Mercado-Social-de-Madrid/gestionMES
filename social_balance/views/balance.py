@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Prefetch
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
@@ -67,7 +68,20 @@ class SocialBalanceEditView(UpdateView):
 
         return context
 
-
     def get_success_url(self):
         messages.success(self.request, _('Datos de balance actualizados satisfactoriamente.'))
         return reverse('balance:entity_year', kwargs={'entity_pk': self.object.entity.pk, 'year':self.object.year })
+
+
+def generate_badge(request, entity_pk, year):
+
+    balance = EntitySocialBalance.objects.get(entity__pk=entity_pk, year=year)
+
+    if request.method == "POST":
+        redirect_url = request.POST.get('redirect_to', '')
+        balance.render_badge()
+        if redirect_url:
+            messages.success(request, _('Sello actualizado correctamente.'))
+            return redirect(redirect_url)
+
+    return False

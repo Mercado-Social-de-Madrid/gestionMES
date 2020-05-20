@@ -15,6 +15,7 @@ urlpatterns = [
     url(r'^balance/$', views.SocialBalanceYear.as_view(), name='balance'),
     url(r'^balance/(?P<year>\d+)/$', views.SocialBalanceYear.as_view(), name='balance_year'),
     url(r'^accounts/providers/(?P<entity_pk>\d+)/balance/(?P<year>\d+)/$', views.SocialBalanceEditView.as_view(), name='entity_year'),
+    url(r'^accounts/providers/(?P<entity_pk>\d+)/balance/(?P<year>\d+)/renderbadge/$', views.generate_badge, name='generate_badge'),
 ]
 
 

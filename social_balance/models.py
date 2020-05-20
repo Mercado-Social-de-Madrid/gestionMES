@@ -8,6 +8,7 @@ from pilkit.processors import ResizeToFit
 
 from accounts.models import Entity
 from helpers import RandomFileName
+from social_balance.renderer import BadgeRenderer
 
 
 class EntitySocialBalance(models.Model):
@@ -32,6 +33,14 @@ class EntitySocialBalance(models.Model):
             ("mespermission_can_view_social_balances", _("Puede gestionar los balances sociales")),
             ("mespermission_can_edit_social_balances", _("Puede editar los informes de balance social")),
         )
+
+
+    def render_badge(self):
+        badge = SocialBalanceBadge.objects.get(year=self.year)
+        renderer = BadgeRenderer(badge)
+        renderer.configure_webdriver()
+        renderer.update_balance_image(self)
+
 
     def __str__(self):
         return '{}: {}'.format(self.entity.cif, self.year)
