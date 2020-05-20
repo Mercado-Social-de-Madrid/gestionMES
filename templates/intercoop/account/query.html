@@ -5,6 +5,7 @@
     <th scope="col">Alta</th>
     <th scope="col">Entidad</th>
     <th scope="col" class="px-0">Validada</th>
+   <th scope="col">Últ. actualización</th>
    <th scope="col" class="px-0">Sinc. app</th>
 {% endblock %}
 
@@ -19,6 +20,7 @@
       <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Validada">done</i>
    {% endif %}
 </td>
+<td><small>{{item.last_updated|date:'d/m/Y H:i'|default:"Nunca"}}</small></td>
 <td class="px-0">
    {%if item.app_user.exists %}
       <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>

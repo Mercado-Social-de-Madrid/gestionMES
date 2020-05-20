@@ -1,4 +1,5 @@
 import tempfile
+from datetime import datetime
 
 from django.conf import settings
 from django.core import files
@@ -79,6 +80,7 @@ def fetch_account(account):
             if 'email' in account_data and account_data['email']:
                 account.contact_email = account_data['email']
             uuid = account_data['id']
+            account.last_updated = datetime.now()
             account.save()
 
         elif result['type'] == 'entity':
@@ -120,6 +122,7 @@ def fetch_account(account):
             update_categories(account, account_data)
 
             uuid = account_data['id']
+            account.last_updated = datetime.now()
             account.save()
 
         app_user.uuid = uuid
@@ -211,6 +214,7 @@ def fetch_intercoop_account(account):
         if 'email' in account_data and account_data['email']:
             account.contact_email = account_data['email']
 
+        account.last_updated = datetime.now()
         account.save()
         app_user.uuid = account_data['id']
         app_user.save()

@@ -1,0 +1,13 @@
+{% if account.app_user.first %}
+    <div class="col-lg-7">
+        <label class="text-secondary mt-3">Última actualización</label><br>
+        {{account.last_updated|date:'d/m/Y H:i'}}<br>
+
+        <form class="mt-3" method="post" action="{% url 'currency:fetch_acccount_info' %}">
+            {% csrf_token %}
+            <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
+            <input type="hidden" name="account" value="{{account.pk}}">
+             <button type="submit" class="btn btn-primary">Actualizar datos</button>
+        </form>
+    </div>
+{% endif %}

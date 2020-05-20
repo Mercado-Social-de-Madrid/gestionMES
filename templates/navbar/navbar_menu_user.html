@@ -23,12 +23,8 @@
         <a class="navbar-brand px-0" href="#">GestiónMES</a>
       </div>
 
-        {% if perms.core.mespermission_can_manage_users or
-            perms.management.mespermission_can_manage_commissions or
-            perms.bpm.mespermission_can_manage_processes or
-            perms.accounts.mespermission_can_manage_categories or
-            perms.accounts.mespermission_can_view_reports %}
-        
+        {% if perms.core.mespermission_can_manage_users or perms.management.mespermission_can_manage_commissions or perms.bpm.mespermission_can_manage_processes or perms.accounts.mespermission_can_manage_categories or perms.accounts.mespermission_can_view_reports %}
+
         <p class="navdrawer-subheader">Administración</p>
         <ul class="navdrawer-nav">
              {% if perms.core.mespermission_can_manage_users %}

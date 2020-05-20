@@ -202,6 +202,10 @@
             <div class="col-md-4">
                 {% include 'currency/app_user.html' with account=object %}
             </div>
+
+            <div class="col-md-7">
+                {% include 'currency/account_last_updated.html' with account=object %}
+            </div>
         </div>
     </div>
 

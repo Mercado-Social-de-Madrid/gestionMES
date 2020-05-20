@@ -170,8 +170,12 @@
 
     <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if currency_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 {% include 'currency/app_user.html' with account=object %}
+            </div>
+
+            <div class="col-md-7">
+                {% include 'currency/account_last_updated.html' with account=object %}
             </div>
         </div>
 

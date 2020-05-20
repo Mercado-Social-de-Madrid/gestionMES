@@ -24,6 +24,7 @@ from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from currency.forms.guest import GuestAccountForm
 from currency.forms.invite import GuestInviteForm
 from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
+from currency_server.fetch_account_info import fetch_account
 
 
 class  InvitesFilterForm(BootstrapForm):
@@ -120,5 +121,23 @@ def add_app_user(request):
 
 #
 
+def fetch_acccount_info(request):
+    if request.method == "POST":
+        redirect_url = request.POST.get('redirect_to', '')
+        account_pk = request.POST.get('account', None)
 
+        if redirect_url and account_pk:
+            account = Account.objects.filter(pk=account_pk).first()
+            if account:
+                result = fetch_account(account)
+                if result is True:
+                    messages.success(request, _('Datos actualizados correctamente.'))
+                else:
+                    messages.success(request, _('Error actualizando datos'))
+
+            return redirect(redirect_url)
+
+    return False
+
+#
 

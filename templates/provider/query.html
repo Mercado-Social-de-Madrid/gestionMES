@@ -5,6 +5,7 @@
     <th scope="col">Forma legal</th>
     {% if not simple_list %}
     <th scope="col">Fecha de alta</th>
+   <th scope="col">Últ. actualización</th>
     <th scope="col" class="px-0">Sincr. en app</th>
     {% endif %}
 {% endblock %}
@@ -16,6 +17,7 @@
 <td>{% if item.legal_form %} {{item.legal_form.title}} {% else %} - {% endif %}</td>
 {% if not simple_list %}
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
+<td><small>{{item.last_updated|date:'d/m/Y H:i'|default:"Nunca"}}</small></td>
 <td class="px-0">
    {%if item.app_user.exists %}
       <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>

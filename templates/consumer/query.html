@@ -3,7 +3,7 @@
  {% block table_head %}
     <th scope="col">Nombre</th>
     <th scope="col">Alta</th>
-    <th scope="col">Consejo Rector</th>
+    <th scope="col">Últ. actualización</th>
     <th scope="col" class="px-0">Sincr. en app</th>
 {% endblock %}
 
@@ -12,7 +12,7 @@
 
 <td class="entity-td">{{item.display_name}}</td>
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
-<td><i class="material-icons">{%if item.cr_member %}check_box{% else %}check_box_outline_blank{% endif %}</i> </td>
+<td><small>{{item.last_updated|date:'d/m/Y H:i'}}</small></td>
 <td class="px-0">
    {%if item.app_user.exists %}
       <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
