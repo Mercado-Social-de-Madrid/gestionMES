@@ -1,11 +1,11 @@
 import json
 import re
-from datetime import datetime
 
 import requests
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
+from django.utils import timezone
 
 from accounts.models import Provider, TERR_LOCAL, TERR_COUNTRY, LegalForm, Account
 from currency.models import GuestAccount
@@ -88,7 +88,7 @@ class Command(BaseCommand):
         #self.fetch_guests()
         self.fetch_intercoop()
 
-        print('Completed task:' +  str(datetime.now()))
+        print('Completed task:' +  str(timezone.now()))
         print('Completed fetching info from {} accounts! Missing {} accounts'.format(self.fetched, len(self.notfound)) )
         #for account in self.notfound:
             #print(account)
