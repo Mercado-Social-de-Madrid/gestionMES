@@ -23,7 +23,12 @@
         <a class="navbar-brand px-0" href="#">GestiónMES</a>
       </div>
 
-        {% if perms.core.mespermission_can_manage_users or perms.management.mespermission_can_manage_commissions or perms.bpm.mespermission_can_manage_processes or perms.accounts.mespermission_can_manage_categories %}
+        {% if perms.core.mespermission_can_manage_users or
+            perms.management.mespermission_can_manage_commissions or
+            perms.bpm.mespermission_can_manage_processes or
+            perms.accounts.mespermission_can_manage_categories or
+            perms.accounts.mespermission_can_view_reports %}
+        
         <p class="navdrawer-subheader">Administración</p>
         <ul class="navdrawer-nav">
              {% if perms.core.mespermission_can_manage_users %}
@@ -60,15 +65,16 @@
               Categorías
             </a>
           </li>
-
             {% endif %}
 
+            {% if perms.accounts.mespermission_can_view_reports %}
             <li class="nav-item">
             <a class="nav-link" href="{% url 'accounts:accounts_report' %}">
               <i class="material-icons mr-3">assessment</i>
               Informes
             </a>
           </li>
+            {% endif %}
 
         </ul>
 
