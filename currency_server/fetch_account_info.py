@@ -13,7 +13,7 @@ from currency.models import GuestAccount, CurrencyAppUser
 
 def download_entity_logo(account, logo):
     if account.logo:
-        print('Image already exists')
+        #print('Image already exists')
         return
 
     logo_url = settings.CURRENCY_SERVER_BASE_URL + logo[1:]
