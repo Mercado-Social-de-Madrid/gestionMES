@@ -30,6 +30,8 @@ class FeeRange(models.Model):
 
     @staticmethod
     def calculate_fee(account):
+        if account.num_workers == 1 and account.aprox_income == 0:
+            return None
 
         fee_range = FeeRange.objects.filter(
             min_num_workers__lte=account.num_workers,
