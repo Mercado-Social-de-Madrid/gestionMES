@@ -207,6 +207,9 @@ class Entity(Account):
     def display_name(self):
         return self.name
 
+    @property
+    def category_list(self):
+        return ";".join([cat.name for cat in self.categories.all()])
 
 class Colaborator(Entity):
     is_sponsor = models.BooleanField(default=False, verbose_name=_('Es patrocinadora'))
