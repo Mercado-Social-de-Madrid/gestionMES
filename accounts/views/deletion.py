@@ -24,16 +24,6 @@ from simple_bpm.custom_filters import WorkflowFilter
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
 
 
-def delete_account(request, pk):
-    if request.method == "POST":
-        account = Account.objects.get(pk=pk)
-        process = DeletionProcess.objects.create_process(account=account)
-        return redirect(reverse('accounts:deletion_detail', kwargs={'pk': process.pk}))
-
-    return False
-
-
-
 class DeletionFilterForm(BootstrapForm):
     field_order = ['o', 'search', 'status', ]
 
@@ -80,6 +70,15 @@ class DeletionDetailView(DetailView):
         })
         context['comment_form'] = form
         return context
+
+
+def delete_account(request, pk):
+    if request.method == "POST":
+        account = Account.objects.get(pk=pk)
+        process = DeletionProcess.objects.create_process(account=account)
+        return redirect(reverse('accounts:deletion_detail', kwargs={'pk': process.pk}))
+
+    return False
 
 
 def cancel_delete(request):

@@ -1,0 +1,15 @@
+
+  <div class="stepper active">
+    <div class="stepper-icon mr-3 {% if big %} big {% endif %} bg-dark" >
+      <i class="material-icons">autorenew</i>
+    </div>
+    <span class="stepper-text">
+        <span class="font-weight-light"> Reiniciado </span>
+        <br>{{event.timestamp}}
+        {% if event.completed_by %}
+        <br>
+        {% include 'user/simple_profile.html' with user=event.completed_by %}
+        {% endif %}
+
+    </span>
+  </div>

@@ -145,6 +145,7 @@ class ProcessWorkflow(models.Model):
 SPECIAL_EVENTS = (
     ('completed', 'Completado'),
     ('cancelled', 'Cancelado'),
+    ('restarted', 'Reiniciado'),
 )
 
 class ProcessWorkflowEvent(models.Model):

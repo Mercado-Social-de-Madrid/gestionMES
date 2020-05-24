@@ -238,6 +238,15 @@ class DeletionManager(models.Manager):
         deletion, created = self.get_or_create(account=account, member_type=account.member_type)
         if created:
             deletion.initialize()
+        elif deletion.cancelled:
+            # if it is a process that was cancelled, we need to revert it to the initial state
+            deletion.workflow.current_state = deletion.workflow.get_first_step()
+            deletion.workflow.save()
+            deletion.workflow.add_special_event('restarted')
+
+            deletion.cancelled = False
+            deletion.save()
+
         return deletion
 
 
