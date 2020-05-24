@@ -213,10 +213,13 @@ class SignupProcess(AccountProcess):
                 self.workflow.add_comment(user=None, comment='La consumidora completa el formulario')
 
 
-    def cancel(self):
+    def cancel(self, user=None):
         self.last_update = datetime.now()
         self.cancelled = True
         self.save()
+
+        # we create also the special completion event
+        self.workflow.add_special_event('cancelled', user)
 
         if self.account:
             self.account.status = OPTED_OUT
@@ -270,14 +273,20 @@ class DeletionProcess(AccountProcess):
         self.cancelled = True
         self.save()
 
-    def cancel(self):
+    def cancel(self, user=None):
         self.last_update = datetime.now()
         self.cancelled = True
         self.save()
+        # we create also the special completion event
+        self.workflow.add_special_event('cancelled', user)
 
 
 @receiver(post_save, sender=ProcessWorkflowEvent)
 def update_process_event(sender, instance, **kwargs):
+    #special event types should be ignored by concrete processes
+    if instance.special:
+        return
+
     process = SignupProcess.objects.filter(workflow=instance.workflow).first()
     if not process:
         process = DeletionProcess.objects.filter(workflow=instance.workflow).first()

@@ -128,6 +128,24 @@ class ProcessWorkflow(models.Model):
         event.completed_by = user
         event.save()
 
+        if self.completed:
+            # we create also the special completion event
+            self.add_special_event('completed', user)
+
+
+    def add_special_event(self, special_type, user=None):
+        event = ProcessWorkflowEvent()
+        event.workflow = self
+        event.completed_by = user
+        event.special = True
+        event.special_type = special_type
+        event.save()
+
+
+SPECIAL_EVENTS = (
+    ('completed', 'Completado'),
+    ('cancelled', 'Cancelado'),
+)
 
 class ProcessWorkflowEvent(models.Model):
     workflow = models.ForeignKey(ProcessWorkflow, verbose_name=_('Evento de un proceso'), related_name='history_events', on_delete=models.CASCADE)
@@ -135,11 +153,15 @@ class ProcessWorkflowEvent(models.Model):
     completed_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario'), on_delete=models.SET_NULL)
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comentario'))
+    special = models.BooleanField(default=False, verbose_name=_('Evento especial'))
+    special_type = models.CharField(null=True, choices=SPECIAL_EVENTS, max_length=15, verbose_name=_('Tipo de evento especial'))
 
     class Meta:
         verbose_name = _('Evento de Proceso')
         verbose_name_plural = _('Eventos de proceso')
         ordering = ['-timestamp']
+
+
 
 
 class ProcessWorkflowTask(models.Model):

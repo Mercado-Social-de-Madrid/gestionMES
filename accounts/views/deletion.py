@@ -90,7 +90,7 @@ def cancel_delete(request):
         if redirect_url and process_pk:
             process = DeletionProcess.objects.filter(pk=process_pk).first()
             if process:
-                process.cancel()
+                process.cancel(request.user)
             return redirect(redirect_url)
 
     return False
