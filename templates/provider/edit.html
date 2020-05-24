@@ -73,8 +73,8 @@
 
 
   function initMap() {
-{% if entity %}
-    var entityPosition = new google.maps.LatLng({{ entity.latitude|unlocalize }}, {{ entity.longitude|unlocalize }});
+{% if object %}
+    var entityPosition = new google.maps.LatLng({{ object.latitude|unlocalize }}, {{ object.longitude|unlocalize }});
 {% else %}
     var entityPosition = new google.maps.LatLng({% settings_value "INITIAL_LATITUDE"|unlocalize %}, {% settings_value "INITIAL_LONGITUDE"|unlocalize %});
 {% endif %}
