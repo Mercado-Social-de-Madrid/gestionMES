@@ -21,46 +21,48 @@
         </div>
     </div>
 
-    <div class="container">
-        <form method="post" class="mt-3 p-4">
+    <div class="container mt-2  p-3">
+
+    <div class="row custom-selector" data-action-class="card-actions pt-2 px-0 text-right">
+    <div class="col-md-4 mb-3">
+        <form method="post" class="mt-3">
             {% csrf_token %}
-            {% include 'common/forms/field.html' with field=form.title %}
+
             <div class="hidden">
                 {{form.payments}}
                 {% include 'common/forms/hidden_value.html' with field=form.generated_by hidden_value=request.user.pk %}
             </div>
-
-
-    <div class="row custom-selector" data-action-class="card-actions pt-2 px-0 text-right">
-    <div class="col-md-4 mb-3">
         <div class="current-members" data-selector="current">
                 <h5 class="card-title mt-3"> Seleccionados <span id="selected-count" class="badge badge-sm badge-light">0</span></h5>
                 <div class="custom-selector-panel">
                     <div class="table-responsive mb-4">
-<table class="table table-hover">
-  <thead>
-    <tr>
-        <th scope="col" class="px-0"></th>
-      <th scope="col">Nombre</th>
-        <th scope="col">Cantidad</th>
-    </tr>
-  </thead>
-  <tbody class="selected">
-  </tbody>
-</table>
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                            <th scope="col" class="px-0"></th>
+                          <th scope="col">Nombre</th>
+                            <th scope="col">Cantidad</th>
+                        </tr>
+                      </thead>
+                      <tbody class="selected">
+                      </tbody>
+                    </table>
                 </div>
         </div>
 
         </div>
 
         <div class="text-center mt-2">
+            {% include 'common/forms/field.html' with field=form.title %}
             <button type="submit" class="btn btn-primary btn-lg">Generar remesa</button>
         </div>
+            </form>
+
     </div>
 
     <div class="col-md-8 mb-3">
         <div class="future-members" data-selector="future">
-                <div class="ajax-load" data-initial="{% url 'payments:payments_list' %}?simple=true&psize=8" data-keepurl="true" data-prevent-link="true">
+                <div class="ajax-load" id="results" data-initial="{% url 'payments:payments_list' %}?simple=true&completed=false&psize=8" data-keepurl="true" data-prevent-link="true">
                     <div class="results">
 
                     </div>
@@ -78,7 +80,6 @@
     </div>
 
 
-    </form>
     </div>
 
 {% endblock %}
@@ -89,18 +90,14 @@
         var payments = $('#{{form.payments.id_for_label}}');
         var selected = $('.selected');
         var selectedCount = $('#selected-count');
-        console.log(payments);
-
         $('.selected').on('click', 'tr', function(){
             $(this).remove();
             selectedCount.text(selected.children().length);
         });
 
         $('.future-members').on('click', 'tr', function(){
-
             var pay = $(this).clone();
             pay.find('.hide-select').hide();
-
             if (selected.find('[data-pk="' + pay.attr('data-pk') + '"]').length == 0){
                 selected.append(pay);
                 selectedCount.text(selected.children().length);
@@ -114,7 +111,6 @@
                 selPayments.push($(this).attr('data-pk'));
             });
             payments.val(selPayments);
-            console.log(selPayments);
         });
     });
 

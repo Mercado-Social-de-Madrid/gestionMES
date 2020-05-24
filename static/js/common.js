@@ -85,17 +85,15 @@ function getCookie(name) {
         var initialUrl = resultsContainer.attr('data-initial');
         var filterUrl = ((initialUrl != null) && (initialUrl!=''))? initialUrl : '';
         var parentAjax = false;
-        if (filterUrl == ''){
-            ajaxContainer = self.parents('.ajax-load');
-            if (ajaxContainer.length > 0){
-                parentAjax = true;
-                filterUrl = ajaxContainer.eq(0).attr('data-initial');
-                if (filterUrl.includes('?'))
-                   filterUrl = filterUrl.split('?')[0];
-            }
-        }
-        filterUrl += '?';
 
+        ajaxContainer = self.parents('.ajax-load');
+        if (ajaxContainer.length > 0){
+            parentAjax = true;
+            filterUrl = ajaxContainer.eq(0).attr('data-initial');
+            self.siblings('.ajax-load').find('.loading-spinner').remove();
+        }
+
+        filterUrl += filterUrl.includes('?') ? '&' : '?';
         self.on('submit', function(e){
             e.preventDefault();
             var query = filterUrl + self.serialize();

@@ -60,6 +60,7 @@ class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
     objects_url_name = 'payment_detail'
     template_name = 'payments/list.html'
     ajax_template_name = 'payments/query.html'
+    external_template_name = 'payments/query_wrapper.html'
     filterset_class = PendingPaymentFilter
     ordering = ['-added']
     paginate_by = 15
@@ -75,6 +76,11 @@ class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
         else:
             return self.paginate_by
 
+    def get_template_names(self):
+        if self.request.is_ajax() and 'simple' in self.request.GET:
+            return [self.external_template_name]
+        else:
+            return super().get_template_names()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -83,6 +89,8 @@ class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
         context['narrow'] = True
         context['valign'] = True
         return context
+
+
 
 
 class PaymentCreate(CreateView):
