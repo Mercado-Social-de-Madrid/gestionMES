@@ -8,7 +8,13 @@
         <h4>Completado!</h4>
         <span class="font-weight-light">No quedan más tareas pendientes asociadas al proceso.</span>
         {% else %}
-        <h5>Completado!</h5>
+        <span class="font-weight-light"> Completado </span>
+            <br>{{event.timestamp}}
+            {% if event.completed_by %}
+            <br>
+            {% include 'user/simple_profile.html' with user=event.completed_by %}
+
+            {% endif %}
         {% endif %}
 
     </span>

@@ -70,7 +70,7 @@
     {% include 'bpm/workflow_step_cancelled.html' with big=True %}
 {% else %}
     {% if object.workflow.completed %}
-            {% include 'bpm/workflow_step_complete.html' with big=True %}
+            {% include 'bpm/workflow_step_completed.html' with big=True %}
     {% else %}
                 {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
     {% endif %}
@@ -132,52 +132,11 @@
 {% endif %}
     </div>
 
-<div class="col-md-6">
-<h5>Historial</h5>
-<div class="stepper-vert process-stepper">
-{% for event in object.workflow.history_events.all %}
-  <div class="stepper active">
-    {% if event.step %}
-        <div class="stepper-icon"  style="background-color:{%if event.step.color %}{{event.step.color}}{%endif%}" >
-        <i class="{{event.step.fa_icon}}"></i>
-    {% else %}
-        <div class="stepper-icon"  style="background-color:#fff" >
-        <i class="material-icons text-dark">comment</i>
-    {%endif%}
-  </div>
-    <span class="stepper-text">
-        {% if event.step %}
-        <h5>{{event.step.title}}</h5>
-        <span class="font-weight-light"> {{event.step.description}}</span>
-        {% else %}
-        <span class="font-weight-light"> {{event.comment}}</span>
-
-        {%endif%}
-        <br>{{event.timestamp}}
-        {% if event.completed_by %}
-        <br>
-        {% include 'user/simple_profile.html' with user=event.completed_by %}
-
-        {% endif %}
-    </span>
-  </div>
-{% endfor %}
-
-      <div class="stepper active">
-        <div class="stepper-icon"  style="background-color:#ddd" >
-      <i class="material-icons text-dark">star</i>
+    <div class="col-md-6">
+        <h5>Historial</h5>
+        {% include 'bpm/history.html' with workflow=object.workflow %}
     </div>
-    <span class="stepper-text">
-        <span class="font-weight-light"> Inicio del proceso</span>
-        <br>{{object.workflow.start_time}}
-    </span>
-  </div>
-
 </div>
-
-</div>
-        </div>
-    </div>
 
 {% endblock %}
 
