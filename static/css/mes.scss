@@ -109,30 +109,20 @@ $secondary: (
 
 }
 
-select.form-control, .custom-select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-
 .material-icons.md-18 { font-size: 18px; margin:auto 5px; vertical-align:middle; }
 .material-icons.md-24 { font-size: 24px;  margin:auto 5px; vertical-align:middle; }
 .material-icons.md-36 { font-size: 36px;  margin:auto 5px; vertical-align:middle; }
 .material-icons.md-48 { font-size: 48px;  margin:auto 5px; vertical-align:middle; }
 
+.text-decoration-none{
+    text-decoration: none !important;
+    &:hover{
+        text-decoration: none !important;
+        opacity:0.9;
+    }
+}
 
 tr.link-row:hover{ cursor: pointer; }
-
-
-.select2-container--default .select2-selection--multiple, .select2-container--default.select2-container--focus .select2-selection--multiple{
-    background-color:#transparent;
-    border:none;
-}
-.select2-container.select2-container--default.select2-container--open{
-    background:none;
-    border-width:0;
-    &:hover, &:focus{ border-width:0; box-shadow:none;}
-}
 
 .color-container{ position:relative; }
 .color-container > * {
@@ -143,16 +133,6 @@ tr.link-row:hover{ cursor: pointer; }
     position:absolute;
     right:0;
     top:0;
-}
-
-.dropdown-chip .btn{
-    min-width:2rem; padding:0; color: $material-color-grey-500;
-    &:active, &:focus, &.active, &:hover{ background: transparent; }
-}
-
-.custom-selector-panel{
-    height:50vh;
-    overflow-y:scroll;
 }
 
 /* For compatibility with older Bootstrap */

@@ -9,3 +9,26 @@
 .tag-image .profile-circle{ margin-right:10px; display:inline-block; width:40px; height:40px; vertical-align:middle; border-width:1px; }
 
 .select2-container .select2-selection--multiple .select2-selection__rendered{ overflow: visible; }
+
+select.form-control, .custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+.select2-container--default .select2-selection--multiple, .select2-container--default.select2-container--focus .select2-selection--multiple{
+    background-color:#transparent;
+    border:none;
+}
+.select2-container.select2-container--default.select2-container--open{
+    background:none;
+    border-width:0;
+    &:hover, &:focus{ border-width:0; box-shadow:none;}
+}
+.dropdown-chip .btn{
+    min-width:2rem; padding:0; color: $material-color-grey-500;
+    &:active, &:focus, &.active, &:hover{ background: transparent; }
+}
+.custom-selector-panel{
+    height:50vh;
+    overflow-y:scroll;
+}
