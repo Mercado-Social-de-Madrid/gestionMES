@@ -1,4 +1,5 @@
 {% extends 'common/list/base.html' %}
+{% load tz %}
 
  {% block table_head %}
     <th scope="col">Nombre</th>
@@ -17,7 +18,7 @@
 <td>{% if item.legal_form %} {{item.legal_form.title}} {% else %} - {% endif %}</td>
 {% if not simple_list %}
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
-<td><small>{{item.last_updated|date:'d/m/Y H:i'|default:"Nunca"}}</small></td>
+<td><small>{{item.last_updated|localtime|date:'d/m/Y H:i'|default:"Nunca"}}</small></td>
 <td class="px-0">
    {%if item.app_user.exists %}
       <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
