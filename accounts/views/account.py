@@ -33,7 +33,7 @@ class AccountFilterForm(BootstrapForm):
 
 class AccountFilter(django_filters.FilterSet):
 
-    # search = SearchFilter(names=['address', 'name', 'business_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
+    search = SearchFilter(names=['Consumer___first_name', 'Consumer___last_name', 'cif', 'Entity___name', 'Entity___business_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['name', 'registration_date'], field_labels={'name':'Nombre', 'registration_date':'Fecha de alta'})
 
     class Meta:
