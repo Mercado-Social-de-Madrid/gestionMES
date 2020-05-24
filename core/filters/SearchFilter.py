@@ -18,6 +18,12 @@ class SearchFilter(django_filters.Filter):
         self.names = names
         django_filters.Filter.__init__(self,*args,**kwargs)
 
+
+    def get_subquery_list(self, search_value):
+        return [Q(**{'%s__icontains'%name:
+                    (self.token_prefix+search_value+self.token_suffix)})
+                        for name in self.names]
+
     def filter(self,qs,value):
         if value not in (None,''):
             tokens = value.split(',')
@@ -25,11 +31,6 @@ class SearchFilter(django_filters.Filter):
                 reduce(
                     self.token_reducer,
                     [
-                        reduce(
-                            operator.or_,
-                            [Q(**{
-                                '%s__icontains'%name:
-                                    (self.token_prefix+token+self.token_suffix)})
-                                        for name in self.names])
+                        reduce(operator.or_, self.get_subquery_list(token))
                         for token in tokens]))
         return qs

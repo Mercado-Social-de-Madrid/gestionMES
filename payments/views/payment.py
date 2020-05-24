@@ -14,6 +14,7 @@ from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
 
+from accounts.custom_filters import AccountSearchFilter
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
@@ -41,7 +42,7 @@ class PendingPaymentFilterForm(BootstrapForm):
 
 class PendingPaymentFilter(django_filters.FilterSet):
 
-    search = SearchFilter(names=['concept', 'account__contact_email'], lookup_expr='in', label=_('Buscar...'))
+    search = AccountSearchFilter(names=['concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
     account = MemberTypeFilter(label='Tipo de socia')
     completed = django_filters.BooleanFilter(field_name='completed', widget=BooleanWidget(attrs={'class':'threestate'}))
