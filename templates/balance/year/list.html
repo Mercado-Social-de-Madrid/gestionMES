@@ -15,7 +15,6 @@
 
                 <ul class="pagination py-0 mb-0">
                     {% for year in years %}
-
                       <li class="page-item {% if year == current_year %}active{% endif %}">
                       <a class="page-link" href="{% url 'balance:balance_year' year %}" aria-label="{{year}}">
                         {{year}}

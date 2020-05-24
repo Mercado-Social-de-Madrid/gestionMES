@@ -9,10 +9,23 @@
     <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
-            <div class="col-sm-4">
-                <h3 class="mb-0">Pagos</h3>
+            <div class="col-md-7 d-flex">
+                <h3 class="mb-0 mr-3">Pagos</h3>
+                <ul class="pagination py-0 mb-0">
+                {% for year in years %}
+                    {% if year.year == current_year %}
+                    <li class="page-item active">
+                        <a class="page-link" href="{% url 'payments:payments_list' %}" aria-label="{{year.year}}">{{year.year}}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'payments:list_by_year' year.year %}" aria-label="{{year.year}}">{{year.year}}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
             </div>
-                <div class="col-sm-7 text-right">
+                <div class="col-md-5 text-right">
 
                     Total pendiente: <h3 class="d-inline ml-2">{{ total_pending | intcomma }} €</h3>
                     <a href="{% url 'payments:create_payment' %}" class="btn btn-primary ml-3 mb-2">Nuevo pago</a>

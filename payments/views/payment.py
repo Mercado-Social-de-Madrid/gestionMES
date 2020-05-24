@@ -16,7 +16,6 @@ from filters.views import FilterMixin
 
 from accounts.custom_filters import AccountSearchFilter
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
-from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
@@ -83,9 +82,23 @@ class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
         else:
             return super().get_template_names()
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        year = self.get_current_year()
+        if year is not None:
+            qs = qs.filter(added__year=year)
+        return qs
+
+    def get_current_year(self):
+        by_param = self.kwargs.get('year', None)
+        return int(by_param) if by_param else None
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_pending'] = PendingPayment.objects.filter(completed=False).aggregate(sum=Sum('amount'))['sum']
+        context['years'] = PendingPayment.objects.dates('added','year').distinct()
+        context['current_year'] = self.get_current_year()
         context['form'] = UpdatePaymentForm()
         context['narrow'] = True
         context['valign'] = True
