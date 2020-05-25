@@ -18,6 +18,8 @@ urlpatterns = [
     url(r'^end/success/$', views.payment_success, name='payment_success'),
     url(r'^end/error/$', views.payment_error, name='payment_error'),
 
+    url(r'^annual/(?P<year>\d+)/$', views.AnnualFeeChargesList.as_view(), name='annual_feecharges'),
+
     url(r'^sepa/$', views.SepaBatchListView.as_view(), name='sepa_list'),
     url(r'^sepa/add/$', views.BatchCreate.as_view(), name='sepa_create'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/$', views.BatchDetail.as_view(), name='sepa_detail'),

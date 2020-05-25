@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import gettext as _
 
-from accounts.models import Account, Provider
+from accounts.models import Account, Provider, Consumer, Colaborator
 from core.models import UserComment
 from payments.models import PendingPayment
 
@@ -31,14 +31,18 @@ class FeeRange(models.Model):
     def __str__(self):
         return "{} - {}".format(self.min_num_workers, self.max_num_workers).encode('utf-8')
 
+
     @staticmethod
     def calculate_fee(account):
         if account.get_real_instance_class() is Provider:
-            fee = FeeRange.calculate_fee(account)
-            share = FeeRange.DEFAULT_PROVIDER_SHARE
+            return FeeRange.calculate_provider_fee(account)
+        elif account.get_real_instance_class() is Consumer:
+            return FeeRange.DEFAULT_CONSUMER_FEE
+        elif account.get_real_instance_class() is Colaborator:
+            return FeeRange.DEFAULT_SPECIAL_FEE
         else:
-            fee = FeeRange.DEFAULT_CONSUMER_FEE
-            share = FeeRange.DEFAULT_CONSUMER_SHARE
+            return  None
+
 
     @staticmethod
     def calculate_provider_fee(account):
@@ -56,19 +60,9 @@ class FeeRange(models.Model):
         return FeeRange.DEFAULT_PROVIDER_FEE
 
 
-class FeeChargesManager(models.Manager):
-
-    def get_or_create(**kwargs):
-        charges, created = super().get_or_create(kwargs)
-        if (created):
-            charges.create_pending_data()
-        return charges, created
-
-
 class AnnualFeeCharges(models.Model):
     year = models.IntegerField(verbose_name=_('Año'))
     accounts = models.ManyToManyField(Account, verbose_name=_('Socias'), through='AccountAnnualFeeCharge', related_name='annual_fee_charges')
-    objects = FeeChargesManager()
 
     class Meta:
         ordering = ['-year']
@@ -77,7 +71,7 @@ class AnnualFeeCharges(models.Model):
 
     def create_pending_data(self):
         for account in Account.objects.active().filter(registration_date__year__lt=self.year):
-            charge = AccountAnnualFeeCharge.objects.get_or_create(account=account, annual_charge=self)
+            charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=account, annual_charge=self)
             fee = account.current_fee
             if fee is not None and fee > 0:
                 if not charge.payment:
@@ -86,7 +80,7 @@ class AnnualFeeCharges(models.Model):
                         concept=concept, account=account, amount = fee
                     )
                     charge.save()
-                elif not charge.payment.is_completed() and charge.payment.amount != fee:
+                elif not charge.payment.is_completed and charge.payment.amount != fee:
                     # if the payment is not done yet and the fee has changed, update it
                     charge.payment.amount = fee
                     charge.payment.save()

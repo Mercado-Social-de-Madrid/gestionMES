@@ -1,11 +1,64 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import django_filters
 from django.contrib import messages
+from django.db.models import Sum
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
+from django_filters.views import FilterView
+from django_filters.widgets import BooleanWidget
+from filters.views import FilterMixin
 
+from accounts.custom_filters import AccountSearchFilter
+from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
+from core.forms.BootstrapForm import BootstrapForm
+from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
+from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.FeeComment import FeeCommentForm
+from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges
+
+
+class FeeChargeFilterForm(BootstrapForm):
+    field_order = ['o', 'search', 'amount', ]
+
+
+class FeeChargeFilter(django_filters.FilterSet):
+
+    search = AccountSearchFilter(names=['concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
+    o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
+
+    class Meta:
+        model = AccountAnnualFeeCharge
+        form = FeeChargeFilterForm
+        fields = {  }
+
+
+class AnnualFeeChargesList(FilterMixin, FilterView, AjaxTemplateResponseMixin):
+
+    template_name = 'fee/annual.html'
+    ajax_template_name = 'fee/query.html'
+    filterset_class = FeeChargeFilter
+    model = AccountAnnualFeeCharge
+    paginate_by = 15
+
+    def get_queryset(self):
+        year = self.kwargs.get('year', None)
+        annualFee, created = AnnualFeeCharges.objects.get_or_create(year=year)
+
+        if not 'page' in self.request.GET:
+            annualFee.create_pending_data()
+            if created:
+                messages.success(self.request, _('Proceso anual de cobro creado correctamente.'))
+
+        return annualFee.accountannualfeecharge_set.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total_amount'] = self.object_list.aggregate(sum=Sum('payment__amount'))['sum']
+        context['years'] = AnnualFeeCharges.objects.values_list('year', flat=True)
+        return context
 
 
 def add_fee_comment(request):

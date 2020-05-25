@@ -1,0 +1,32 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col" class="pr-0">Tipo</th>
+    <th scope="col">Socia</th>
+    <th scope="col" class="px-0">Num. trabajadorxs</th>
+    <th scope="col">Ingresos anuales </th>
+    <th scope="col">Cuota</th>
+
+{% endblock %}
+
+
+{% block item_row %}
+<td class="text-muted pr-0">{% include "account/type_icon.html" with account=item.account %}</td>
+<td>{{item.account.display_name}}</td>
+
+<td class="amount px-0" >{% if item.payment %}{{item.account.num_workers}}{% endif %}</td>
+<td class="amount">{% if item.payment %}{{item.account.aprox_income}}{% endif %}</td>
+<td class="amount">
+    {% if item.payment %}
+        {{item.payment.amount|floatformat:2}}
+    {% endif %}
+</td>
+{% if not 'simple' in request.GET %}
+<td class="px-0">
+{% if item.type %}
+    <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="{{item.get_type_display}}">{{item.icon_name}}</i>
+{% endif %}
+</td>
+{% endif %}
+
+{% endblock %}

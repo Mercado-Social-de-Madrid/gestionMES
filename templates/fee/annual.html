@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}Pagos{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-7 d-flex">
+                <h3 class="mb-0 mr-3">Cobro de cuotas anuales</h3>
+                <ul class="pagination py-0 mb-0">
+                {% for year in years %}
+                    {% if year == current_year %}
+                    <li class="page-item active">
+                        <a class="page-link" href="#" aria-label="{{year}}">{{year}}</a>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="{% url 'payments:annual_feecharges' year %}" aria-label="{{year}}">{{year}}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+                <div class="col-md-5 text-right">
+                    Total: <h3 class="d-inline ml-2">{{ total_amount | intcomma }} €</h3>
+                </div>
+
+        </div>
+        </div>
+    </div>
+
+    <div class="container" id="payments-list">
+        {% include 'common/list/filter_form.html' %}
+        {% include 'common/ajax_wrapper.html' with query_template='fee/query.html' valign=True %}
+    </div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+{% endblock %}

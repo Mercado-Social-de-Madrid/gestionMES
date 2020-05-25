@@ -1,0 +1,11 @@
+{% if account.template_prefix == 'consumer' %}
+<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Consumidora">directions_walk</i>
+{% endif %}
+
+{% if account.template_prefix == 'provider' %}
+<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Proveedora">store</i>
+{% endif %}
+
+{% if account.template_prefix == 'colaborator' %}
+<i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Especial">grade</i>
+{% endif %}
