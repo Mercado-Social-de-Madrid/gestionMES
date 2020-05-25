@@ -11,7 +11,6 @@ from django.utils.translation import gettext as _
 from accounts.models import Account, Provider
 from core.models import User
 from currency_server import wallet_transaction
-from payments.models import FeeRange
 from sermepa.models import SermepaResponse
 
 CREDIT_CARD = 'tarjeta'
@@ -45,11 +44,11 @@ class PaymentsManager(models.Manager):
 
     def create_initial_payment(self, account):
         payment, created =  PendingPayment.objects.get_or_create(account=account)
+        from payments.models import FeeRange
+        fee = account.current_fee
         if account.get_real_instance_class() is Provider:
-            fee = FeeRange.calculate_fee(account)
             share = FeeRange.DEFAULT_PROVIDER_SHARE
         else:
-            fee = FeeRange.DEFAULT_CONSUMER_FEE
             share = FeeRange.DEFAULT_CONSUMER_SHARE
 
         print('Creating initial payment!')
@@ -160,6 +159,10 @@ class PendingPayment(models.Model):
             return 'receipt'
         elif self.type == TRANSFER:
             return 'local_atm'
+
+    @property
+    def is_completed(self):
+        return self.completed and not self.returned
 
     def paid_by_card(self):
         self.completed = True

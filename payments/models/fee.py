@@ -4,7 +4,9 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import gettext as _
 
-from accounts.models import Account, UserComment
+from accounts.models import Account, Provider
+from core.models import UserComment
+from payments.models import PendingPayment
 
 
 class FeeRange(models.Model):
@@ -19,6 +21,7 @@ class FeeRange(models.Model):
     DEFAULT_CONSUMER_FEE = 20.0
     DEFAULT_PROVIDER_SHARE = 20.0
     DEFAULT_CONSUMER_SHARE = 10.0
+    DEFAULT_SPECIAL_FEE = 500.0
 
     class Meta:
         verbose_name = _('Rango de cuotas')
@@ -30,6 +33,15 @@ class FeeRange(models.Model):
 
     @staticmethod
     def calculate_fee(account):
+        if account.get_real_instance_class() is Provider:
+            fee = FeeRange.calculate_fee(account)
+            share = FeeRange.DEFAULT_PROVIDER_SHARE
+        else:
+            fee = FeeRange.DEFAULT_CONSUMER_FEE
+            share = FeeRange.DEFAULT_CONSUMER_SHARE
+
+    @staticmethod
+    def calculate_provider_fee(account):
         if account.num_workers == 1 and account.aprox_income == 0:
             return None
 
@@ -42,6 +54,52 @@ class FeeRange(models.Model):
         if fee_range:
             return fee_range.fee
         return FeeRange.DEFAULT_PROVIDER_FEE
+
+
+class FeeChargesManager(models.Manager):
+
+    def get_or_create(**kwargs):
+        charges, created = super().get_or_create(kwargs)
+        if (created):
+            charges.create_pending_data()
+        return charges, created
+
+
+class AnnualFeeCharges(models.Model):
+    year = models.IntegerField(verbose_name=_('Año'))
+    accounts = models.ManyToManyField(Account, verbose_name=_('Socias'), through='AccountAnnualFeeCharge', related_name='annual_fee_charges')
+    objects = FeeChargesManager()
+
+    class Meta:
+        ordering = ['-year']
+        verbose_name = _('Cobro anual de cuota')
+        verbose_name_plural = _('Cobros anuales de cuota')
+
+    def create_pending_data(self):
+        for account in Account.objects.active().filter(registration_date__year__lt=self.year):
+            charge = AccountAnnualFeeCharge.objects.get_or_create(account=account, annual_charge=self)
+            fee = account.current_fee
+            if fee is not None and fee > 0:
+                if not charge.payment:
+                    concept = "Cuota anual {}".format(self.year)
+                    charge.payment = PendingPayment.objects.create(
+                        concept=concept, account=account, amount = fee
+                    )
+                    charge.save()
+                elif not charge.payment.is_completed() and charge.payment.amount != fee:
+                    # if the payment is not done yet and the fee has changed, update it
+                    charge.payment.amount = fee
+                    charge.payment.save()
+
+
+class AccountAnnualFeeCharge(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    annual_charge = models.ForeignKey(AnnualFeeCharges, on_delete=models.CASCADE, )
+    payment = models.ForeignKey(PendingPayment, null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = _('Cobro anual de cuota a socia')
+        verbose_name_plural = _('Cobros anuales de cuota a socias')
 
 
 class FeeComments(UserComment):

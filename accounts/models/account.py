@@ -15,7 +15,7 @@ from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
 from accounts.models import Category, LegalForm
-from core.models import UserComment
+
 from helpers import RandomFileName
 
 TERR_LOCAL = 'local'
@@ -115,6 +115,10 @@ class Account(PolymorphicModel):
     def registered_in_app(self):
         return self.app_user.exists() and self.app_user.first().username is not None
 
+    @property
+    def current_fee(self):
+        return None # there is no general fee defined for all the account types
+
     def __str__(self):
         return self.display_name
 
@@ -139,6 +143,10 @@ class Consumer(Account):
     def display_name(self):
         return "{} {}".format(self.first_name, self.last_name)
 
+    @property
+    def current_fee(self):
+        from payments.models import FeeRange
+        return FeeRange.DEFAULT_CONSUMER_FEE
 
 
 class Entity(Account):
@@ -222,6 +230,11 @@ class Colaborator(Entity):
         verbose_name = _('Entidad especial')
         verbose_name_plural = _('Entidades especiales')
         ordering = ['name']
+
+    @property
+    def current_fee(self):
+        from payments.models import FeeRange
+        return self.custom_fee if self.custom_fee else FeeRange.DEFAULT_SPECIAL_FEE
 
 
 class Provider(Entity):
