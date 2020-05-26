@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import django_filters
+from django.conf import settings
 from django.contrib import messages
 from django.db.models import Sum
 from django.shortcuts import redirect
@@ -21,18 +22,20 @@ from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges
 
 
 class FeeChargeFilterForm(BootstrapForm):
-    field_order = ['o', 'search', 'amount', ]
+    field_order = ['o', 'search', 'account__member_type', 'uncalculated' ]
 
 
 class FeeChargeFilter(django_filters.FilterSet):
 
-    search = AccountSearchFilter(names=['concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
+    search = AccountSearchFilter(names=['payment__concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
+    o = LabeledOrderingFilter(fields=['payment__amount', 'account__member_type', 'timestamp'], field_labels={'payment__amount':'Cuota', 'account__member_type':'Tipo de socia', 'timestamp':'Pagado'})
+    uncalculated = django_filters.BooleanFilter(field_name='payment', lookup_expr='isnull', widget=BooleanWidget(attrs={'class':'threestate'}), label=_('Cuota sin calcular'))
+    account__member_type = django_filters.ChoiceFilter(choices=settings.MEMBER_TYPES, label=_('Tipo de socia:'))
 
     class Meta:
         model = AccountAnnualFeeCharge
         form = FeeChargeFilterForm
-        fields = {  }
+        fields = { 'account__member_type':['exact'] }
 
 
 class AnnualFeeChargesList(FilterMixin, FilterView, AjaxTemplateResponseMixin):
@@ -44,10 +47,10 @@ class AnnualFeeChargesList(FilterMixin, FilterView, AjaxTemplateResponseMixin):
     paginate_by = 15
 
     def get_queryset(self):
-        year = self.kwargs.get('year', None)
+        year = int(self.kwargs.get('year'))
         annualFee, created = AnnualFeeCharges.objects.get_or_create(year=year)
 
-        if not 'page' in self.request.GET:
+        if not 'page' in self.request.GET and not self.request.is_ajax():
             annualFee.create_pending_data()
             if created:
                 messages.success(self.request, _('Proceso anual de cobro creado correctamente.'))
@@ -58,6 +61,7 @@ class AnnualFeeChargesList(FilterMixin, FilterView, AjaxTemplateResponseMixin):
         context = super().get_context_data(**kwargs)
         context['total_amount'] = self.object_list.aggregate(sum=Sum('payment__amount'))['sum']
         context['years'] = AnnualFeeCharges.objects.values_list('year', flat=True)
+        context['current_year'] = int(self.kwargs.get('year'))
         return context
 
 

@@ -232,9 +232,17 @@ class Colaborator(Entity):
         ordering = ['name']
 
     @property
+    def template_prefix(self):
+        return 'collaborator'
+
+    @property
+    def detail_url(self):
+        return 'accounts:collaborator_detail'
+
+    @property
     def current_fee(self):
         from payments.models import FeeRange
-        return self.custom_fee if self.custom_fee else FeeRange.DEFAULT_SPECIAL_FEE
+        return self.custom_fee if (self.custom_fee and self.custom_fee > 0) else FeeRange.DEFAULT_SPECIAL_FEE
 
 
 class Provider(Entity):

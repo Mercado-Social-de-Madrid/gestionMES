@@ -2,7 +2,7 @@
     <div class="floating-label">
     <label>{{ label }}</label>
 
-    <input type="text" value="{{ value }}" readonly="" class="form-control">
+    <input type="text" value="{{ value|default:'' }}" readonly="" class="form-control">
     </div>
 
 </div>

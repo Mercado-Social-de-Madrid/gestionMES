@@ -45,8 +45,7 @@ class PendingPaymentFilter(django_filters.FilterSet):
     o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
     account = MemberTypeFilter(label='Tipo de socia')
     completed = django_filters.BooleanFilter(field_name='completed', widget=BooleanWidget(attrs={'class':'threestate'}))
-    returned = django_filters.BooleanFilter(field_name='returned',
-                                             widget=BooleanWidget(attrs={'class': 'threestate'}))
+    returned = django_filters.BooleanFilter(field_name='returned', widget=BooleanWidget(attrs={'class': 'threestate'}))
 
     class Meta:
         model = PendingPayment

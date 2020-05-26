@@ -149,11 +149,18 @@
 
             {% if perms.payments.mespermission_can_view_payments %}
          <li class="nav-item">
-        <a class="nav-link pl-4" href="{% url 'payments:payments_list' %}">
-          <i class="material-icons mr-3">receipt</i>
-          Pagos de cuota
-        </a>
-      </li>
+            <a class="nav-link pl-4" href="{% url 'payments:annual_feecharges' 2020 %}">
+              <i class="material-icons mr-3">menu_book</i>
+              Cuotas anuales
+            </a>
+          </li>
+
+            <li class="nav-item">
+            <a class="nav-link pl-4" href="{% url 'payments:payments_list' %}">
+              <i class="material-icons mr-3">receipt</i>
+              Pagos
+            </a>
+          </li>
             {% endif %}
 
             {% if perms.payments.mespermission_can_manage_sepa %}

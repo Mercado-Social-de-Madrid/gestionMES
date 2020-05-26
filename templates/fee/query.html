@@ -1,12 +1,15 @@
 {% extends 'common/list/base.html' %}
+{% load humanize %}
 
  {% block table_head %}
     <th scope="col" class="pr-0">Tipo</th>
     <th scope="col">Socia</th>
-    <th scope="col" class="px-0">Num. trabajadorxs</th>
-    <th scope="col">Ingresos anuales </th>
+    <th scope="col" class="px-0">Núm. <br>trabajador@s</th>
+    <th scope="col">Ingresos anuales <br>
+                    (en miles de €)
+    </th>
     <th scope="col">Cuota</th>
-
+    <th scope="col" class="pl-0">Emitida</th>
 {% endblock %}
 
 
@@ -14,19 +17,27 @@
 <td class="text-muted pr-0">{% include "account/type_icon.html" with account=item.account %}</td>
 <td>{{item.account.display_name}}</td>
 
-<td class="amount px-0" >{% if item.payment %}{{item.account.num_workers}}{% endif %}</td>
-<td class="amount">{% if item.payment %}{{item.account.aprox_income}}{% endif %}</td>
+<td class="amount px-0" >{% if item.account.business_name %}{{item.account.num_workers}} {% else %} - {% endif %}</td>
+<td class="amount">{% if item.account.business_name %}{{item.account.aprox_income| intcomma}}k {% else %} - {% endif %}</td>
 <td class="amount">
     {% if item.payment %}
-        {{item.payment.amount|floatformat:2}}
+        {{item.payment.amount|floatformat:2}} €
+    {% else %}
+        <strong>No calculada</strong>
     {% endif %}
 </td>
-{% if not 'simple' in request.GET %}
-<td class="px-0">
-{% if item.type %}
-    <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="{{item.get_type_display}}">{{item.icon_name}}</i>
-{% endif %}
+<td class="px-0">{{item.payment.added|date:'d/m/Y'}}</td>
+<td>
+    <a class="btn btn-outline btn-narrow text-primary"
+       href="{% url item.account.detail_url item.account.pk %}"
+        data-toggle="tooltip" data-placement="bottom" title="Ver detalle de socia"> <i class="material-icons">visibility</i> </a>
+    {% if item.payment %}
+    <a class="btn btn-outline btn-narrow text-primary"
+       href="{% url 'payments:payment_detail' item.payment.pk %}"
+        data-toggle="tooltip" data-placement="bottom" title="Ver pago"> <i class="material-icons">receipt</i> </a>
+    {% endif %}
 </td>
-{% endif %}
 
 {% endblock %}
+
+{% block row_class %}{% if not item.payment %}bg-light-1{% endif %}{% endblock %}
