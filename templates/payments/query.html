@@ -3,8 +3,9 @@
  {% block table_head %}
 
     <th scope="col" class="text-truncate {% if 'simple' in request.GET %}px-2{% else %}px-3{% endif %}">{% if not 'simple' in request.GET %}Estado{% endif %}</th>
-
+    {% if not hide_entity_name %}
     <th scope="col">Cuenta</th>
+    {% endif %}
     <th scope="col">Cantidad</th>
     {% if not 'simple' in request.GET %}
     <th scope="col" class="px-0">Tipo</th>
@@ -28,8 +29,9 @@
         <i class="material-icons">access_time</i> <small> {% if not 'simple' in request.GET %}Pendiente{% endif %}</small>
     {% endif %}
 </td>
-
+{% if not hide_entity_name %}
 <td class="entity-td">{{item.account.display_name}}</td>
+{% endif %}
 <td class="amount">
     {{item.amount|floatformat:2}} €
 </td>

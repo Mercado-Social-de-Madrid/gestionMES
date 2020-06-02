@@ -51,15 +51,38 @@
 
       {% include 'account/status_menu.html' %}
 
-      <form method="post" class="mt-1 p-4" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{form.media}}
-            {% include 'provider/form.html' %}
-        <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
-        </div>
+      <div class="row">
+          <div class="{% if fee_comments %}col-lg-8{% else %}col-lg-12{% endif %}">
+              <form method="post" class="mt-1 p-4" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{form.media}}
+                    {% include 'provider/form.html' %}
+                <div class="text-center mt-3">
+                    <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
+                </div>
+              </form>
+          </div>
 
-        </form>
+          {% if fee_comments %}
+          <div class="col-lg-4 mt-4">
+              <h4 class="text-primary mb-3"> Comentarios</h4>
+              {% for comment in fee_comments %}
+                    {% if comment.completed_by %}
+                        {% include 'user/simple_profile.html' with user=comment.completed_by %}
+                    {% endif %}
+                    {{comment.timestamp}}<br>
+                    <span class="font-weight-light"> {{comment.comment}}</span>
+
+
+                    <hr>
+                {% empty %}
+                    No hay ningún comentario.
+                {% endfor %}
+          </div>
+          {% endif %}
+      </div>
+
+
     </div>
 
     <div aria-labelledby="balances-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="balances-form" role="tabpanel">
@@ -83,10 +106,10 @@
         <div class="row">
             <div class="col-md-7">
                 <h4 class="text-primary"><i class="material-icons mr-1">receipt</i> Pagos</h4>
-                {% include 'common/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments object_url_name='payments:payment_detail' %}
+                {% include 'common/ajax_wrapper.html' with query_template='payments/query.html' object_list=payments hide_entity_name=True object_url_name='payments:payment_detail' %}
             </div>
             <div class="col-md-5">
-                <h4 class="text-primary mb-3"><i class="material-icons mr-1">receipt</i> Comentarios <button class="btn btn-light ml-2" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
+                <h4 class="text-primary mb-3"><i class="material-icons mr-1">insert_comment</i> Comentarios <button class="btn btn-light ml-2" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
                 Añadir comentario
                 </button></h4>
 
