@@ -39,13 +39,17 @@ class ExportAsCSVMixin(View):
                     return label
             except FieldDoesNotExist:
                 # If it is not a field, we try to find a property with that name
-                if field_name in dir(self.model) and isinstance(getattr(self.model, field_name), property):
+                if not field_name in dir(self.model) or not isinstance(getattr(self.model, field_name), property):
                     if field_name in self.field_labels:
                         return self.field_labels[field_name]
+
+        elif field_name in self.field_labels:
+            return self.field_labels[field_name]
+
         return None
 
 
-    def export_csv(self, request, filter_list=None, *args, **kwargs):
+    def export_csv(self, request, object_list, filter_list=None, *args, **kwargs):
 
         now = datetime.datetime.now()
         response = HttpResponse(content_type='text/csv')
@@ -68,7 +72,7 @@ class ExportAsCSVMixin(View):
 
         writer.writerow(header_row)
 
-        for elem in self.object_list:
+        for elem in object_list:
             results = []
             for field in final_fields:
                 value = getattr(elem, field)
@@ -83,6 +87,10 @@ class ExportAsCSVMixin(View):
         context['export_csv_fields'] = self.__csv_fields
         return context
 
+    def get_list_to_export(self):
+        filterset_class = self.get_filterset_class()
+        self.filterset = self.get_filterset(filterset_class)
+        return self.filterset.qs
 
     def get(self, request, *args, **kwargs):
         if request.GET.get('export','') == 'csv':
@@ -90,10 +98,8 @@ class ExportAsCSVMixin(View):
                 request.GET = request.GET.copy()
                 del request.GET['o']
             filter_list = request.GET.getlist('csv_fields[]', None)
-            filterset_class = self.get_filterset_class()
-            self.filterset = self.get_filterset(filterset_class)
-            self.object_list = self.filterset.qs
+            object_list = self.get_list_to_export()
 
-            return self.export_csv(request, filter_list, *args, **kwargs)
+            return self.export_csv(request, object_list, filter_list, *args, **kwargs)
 
         return super(ExportAsCSVMixin, self).get(request, *args, **kwargs)

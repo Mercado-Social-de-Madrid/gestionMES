@@ -47,8 +47,9 @@
 
             <div class="col-md-4 mt-3">
                 {% if object.sepa_file %}
-                    <a class="btn btn-primary" href="{{object.sepa_file.url}}"> <i class="material-icons mr-2 ">save_alt</i> Descargar fichero SEPA</a>
+                    <a class="btn btn-primary" href="{{object.sepa_file.url}}"> <i class="material-icons mr-2 ">save_alt</i> Fichero SEPA</a>
                 {% endif %}
+                <a class="btn btn-secondary" href="?export=csv"> <i class="material-icons mr-2 ">save_alt</i> CSV</a>
             </div>
         </div>
         <p class="lead">

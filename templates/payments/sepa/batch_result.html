@@ -11,10 +11,10 @@
 
 {% block item_row %}
 
-<td class="text-truncate" style="max-width:250px;">{{item.payment.account.display_name|default:'-'}}</td>
-<td class="amount">{{item.payment.amount|floatformat:2}} €</td>
+<td class="text-truncate" style="max-width:250px;">{{item.account_name|default:'-'}}</td>
+<td class="amount">{{item.payment_amount|floatformat:2}} €</td>
 <td>
-    <small>{{item.payment.account.iban_code|default:'-'}}/{{item.bic_code|default:'-'}}</small>
+    <small>{{item.account_iban|default:'-'}}/{{item.bic_code|default:'-'}}</small>
 </td>
 <td>
     <small> {% if item.iban_code %}<span class="badge badge-secondary">{{item.iban_code}}</span> {% endif %} {{item.bank_name|default:'?'}}</small>
@@ -23,7 +23,7 @@
     {% if item.success %}
         <i class="material-icons">check_circle_outline</i>
     {% else %}
-        {{item.get_fail_reason_display}}
+        {{item.fail_reason_display}}
     {% endif %}
 
 </td>

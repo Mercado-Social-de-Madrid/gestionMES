@@ -15,6 +15,7 @@ from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
+from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.sepa import SepaBatchForm
 from payments.models import SepaBatchResult
@@ -66,14 +67,28 @@ class BatchCreate(CreateView):
         return reverse('payments:sepa_detail', kwargs={'pk': self.object.pk})
 
 
-class BatchDetail(DetailView):
+class BatchDetail(ExportAsCSVMixin, DetailView):
     template_name = 'payments/sepa/detail.html'
     queryset = SepaPaymentsBatch.objects.all()
     model = SepaPaymentsBatch
 
+    available_fields = ['account_name', 'payment_amount', 'account_iban', 'iban_code', 'bic_code', 'bank_name', 'success', 'fail_reason_display']
+    field_labels = {'account_name': 'Cuenta',
+                    'payment_amount': 'Cantidad',
+                    'account_iban': 'IBAN',
+                    'iban_code': 'Código entidad bancaria',
+                    'bic_code': 'Código BIC',
+                    'bank_name': 'Nombre entidad',
+                    'success':'Añadido',
+                    'fail_reason_display':'Motivo fallo'}
+
+
+    def get_list_to_export(self):
+        return SepaBatchResult.objects.filter(batch=self.get_object()).order_by('-fail_reason')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['batch_results'] = SepaBatchResult.objects.filter(batch=self.object).order_by('-fail_reason')
+        context['batch_results'] = self.get_list_to_export()
         context['batch_success'] = SepaBatchResult.objects.filter(batch=self.object, success=True).count()
         return context
 

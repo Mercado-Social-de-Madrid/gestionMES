@@ -112,6 +112,22 @@ class SepaBatchResult(models.Model):
     bank_name = models.CharField(null=True, blank=True, verbose_name=_('Nombre del banco'), max_length=180)
     fail_reason = models.IntegerField(choices=FAIL_REASONS, default=0)
 
+    @property
+    def payment_amount(self):
+        return self.payment.amount
+
+    @property
+    def account_name(self):
+        return self.payment.account.display_name
+
+    @property
+    def account_iban(self):
+        return self.payment.account.iban_code
+
+    @property
+    def fail_reason_display(self):
+        return self.get_fail_reason_display()
+
 
 class BankBICCode(models.Model):
     bank_code = models.CharField(null=True, blank=True, verbose_name=_('Código de cuenta'), max_length=20)
