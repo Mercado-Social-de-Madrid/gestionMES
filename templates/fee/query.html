@@ -22,6 +22,9 @@
 <td class="amount">
     {% if item.payment %}
         {{item.payment.amount|floatformat:2}}€
+        {% if item.manually_modified %}
+        <i class="material-icons text-danger" data-toggle="tooltip" data-placement="bottom" title="Modificada manualmente ({{item.account.current_fee|floatformat:2}}€)">outlined_flag</i>
+        {% endif %}
     {% else %}
         <strong>No calculada</strong>
     {% endif %}

@@ -125,13 +125,20 @@ class PaymentDetailView(UpdateView):
     form_class = PaymentForm
     model = PendingPayment
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sepa_batches'] = SepaPaymentsBatch.objects\
             .annotate(payments_count=Count('batch_payments'))\
             .filter(batch_payments__payment=self.object)
         return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        fee = self.object.fee_charges.first()
+        if fee:
+            fee.payment_updated()
+
+        return response
 
     def get_success_url(self):
         return reverse('payments:payment_detail', kwargs={'pk': self.object.pk})

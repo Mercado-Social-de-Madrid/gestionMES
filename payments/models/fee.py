@@ -80,7 +80,7 @@ class AnnualFeeCharges(models.Model):
                         concept=concept, account=account, amount = fee
                     )
                     charge.save()
-                elif not charge.payment.is_completed and charge.payment.amount != fee:
+                elif not charge.payment.is_completed and not charge.manually_modified and charge.payment.amount != fee:
                     # if the payment is not done yet and the fee has changed, update it
                     charge.payment.amount = fee
                     charge.payment.save()
@@ -89,11 +89,17 @@ class AnnualFeeCharges(models.Model):
 class AccountAnnualFeeCharge(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     annual_charge = models.ForeignKey(AnnualFeeCharges, on_delete=models.CASCADE, )
-    payment = models.ForeignKey(PendingPayment, null=True, on_delete=models.SET_NULL)
+    payment = models.ForeignKey(PendingPayment, null=True, on_delete=models.SET_NULL, related_name='fee_charges')
+    manually_modified = models.BooleanField(default=False, verbose_name=_('Modificado manualmente'))
 
     class Meta:
         verbose_name = _('Cobro anual de cuota a socia')
         verbose_name_plural = _('Cobros anuales de cuota a socias')
+
+    def payment_updated(self):
+        calculated_amount = self.account.current_fee
+        self.manually_modified = calculated_amount != self.payment.amount
+        self.save()
 
 
 class FeeComments(UserComment):
