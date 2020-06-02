@@ -32,7 +32,7 @@ class ConsumerFilterForm(BootstrapForm):
 class ConsumerFilter(django_filters.FilterSet):
 
     search = SearchFilter(names=['address', 'cif', 'first_name', 'last_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['last_name', 'registration_date'])
+    o = LabeledOrderingFilter(fields=['last_name', 'registration_date'], field_labels={'last_name':'Apellido', 'registration_date':'Fecha de alta'})
 
     class Meta:
         model = Consumer
