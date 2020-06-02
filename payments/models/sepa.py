@@ -86,12 +86,11 @@ class SepaPaymentsBatch(models.Model):
             self.sepa_file.save(f"sepa_batch_{self.pk}.xml", File(xml_temp))
             self.save()
 
-            # We check the included payments as paid
-            '''for payment in payments:
-                payment.completed = True
-                payment.timestamp = datetime.datetime.now()
+            # We update the payments date
+            for payment in payments:
+                payment.added = datetime.datetime.now()
                 payment.type = DEBIT
-                payment.save()'''
+                payment.save()
 
 
 IBAN_MISSING = 1
