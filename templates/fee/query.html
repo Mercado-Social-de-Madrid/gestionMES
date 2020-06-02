@@ -35,9 +35,9 @@
        href="{% url item.account.detail_url item.account.pk %}"
         data-toggle="tooltip" data-placement="bottom" title="Ver detalle de socia"> <i class="material-icons">visibility</i> </a>
     {% if item.payment %}
-    <a class="btn btn-outline btn-narrow text-primary"
+    <a class="btn btn-outline btn-narrow  {% if item.payment.completed %}bg-success text-white{% else %}text-primary{% endif %}"
        href="{% url 'payments:payment_detail' item.payment.pk %}"
-        data-toggle="tooltip" data-placement="bottom" title="Ver pago"> <i class="material-icons">receipt</i> </a>
+        data-toggle="tooltip" data-placement="bottom" title="Ver pago{% if item.payment.completed %} (realizado){% endif %}"> <i class="material-icons">receipt</i> </a>
     {% endif %}
 </td>
 
