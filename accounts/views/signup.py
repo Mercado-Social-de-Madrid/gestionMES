@@ -142,7 +142,3 @@ def cancel_signup(request):
             return redirect(redirect_url)
 
     return False
-
-#
-
-

@@ -58,9 +58,11 @@ Los campos marcados con <span class="text-primary lead">*</span> son obligatorio
 
 
 
-    <div class="col-md-12 col-lg-12">
+    <div class="col-md-12 col-lg-12 mt-3">
 
-        <div class="custom-control custom-switch mt-3">
+         {% include "common/forms/field.html" with field=form.reference not_floating=True %}
+
+        <div class="custom-control custom-switch mt-5">
             {{form.newsletter_check}}
               <span class="custom-control-track"></span>
               <label class="custom-control-label" for="{{form.newsletter_check.id_for_label}}">

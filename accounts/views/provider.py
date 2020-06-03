@@ -13,7 +13,7 @@ from filters.views import FilterMixin
 
 from accounts.forms.provider import ProviderForm, ProviderSignupForm
 from accounts.mixins.feecomments import FeeCommentsMixin
-from accounts.mixins.signup import SignupFormMixin
+from accounts.mixins.signup import SignupFormMixin, SignupUpdateMixin
 from accounts.models import Provider, SignupProcess, Category, ACTIVE
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
@@ -124,55 +124,15 @@ class ProviderSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
             return reverse('accounts:signup_success')
 
 
-class ProviderUpdateView(UpdateView):
+class ProviderUpdateView(SignupUpdateMixin, UpdateView):
     template_name = 'provider/edit.html'
     form_class = ProviderSignupForm
     model = Provider
 
-    def getSignup(self):
-        uuid = self.kwargs.get('uuid')
-        process = SignupProcess.objects.filter(uuid=uuid).first()
-        if not process:
-            raise Http404("No se encontró el proceso")
-        else:
-            return process
-
-    def get_success_url(self):
-        messages.success(self.request, _('Proceso de acogida actualizado correctamente.'))
-        if self.request.user.is_authenticated:
-            return reverse('accounts:signup_detail', kwargs={'pk': self.getSignup().pk})
-        else:
-            return reverse('accounts:signup_success')
-
     def get_context_data(self, **kwargs):
         context = super(ProviderUpdateView, self).get_context_data(**kwargs)
-
         context['worker_ranges'] = FeeRange.objects.order_by('min_num_workers').values('min_num_workers', 'max_num_workers').distinct()
         context['income_ranges'] = FeeRange.objects.order_by('min_income').values('min_income', 'max_income').distinct()
         context['fees'] = FeeRange.objects.all()
         context['categories'] = Category.objects.all()
-
         return context
-
-    def form_valid(self, form):
-        response = super(ProviderUpdateView, self).form_valid(form)
-        process = self.getSignup()
-        process.form_filled(self.object, form)
-        return response
-
-    def get_initial(self):
-        process = self.getSignup()
-        initial = super(ProviderUpdateView, self).get_initial()
-        initial['check_privacy_policy'] = True
-        initial['check_conditions'] = True
-        initial['from_app'] = process.from_app
-        initial['newsletter_check'] = process.newsletter_check
-        return initial
-
-    def get_object(self, queryset=None):
-        process = self.getSignup()
-        if process != None:
-            account = process.account
-            if account:
-                account.process = process
-            return account

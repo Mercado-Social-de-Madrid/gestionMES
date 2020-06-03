@@ -30,14 +30,14 @@
         <div class="row mt-4">
             <div class="col-md-6">
 
-                    <div class="mb-4 pb-2 pr-2">
-                        <div class="card-body">
+                    <div class="pb-2 pr-2">
+                        <div class="card-body pl-4">
                              {% if first_step %}
                             <h5 class="card-title">Formulario de inscripción</h5>
                             La entidad aún no ha rellenado el formulario de inscripción. Para facilitar el seguimiento del proceso,
                             facilitar el enlace del formulario personalizado<br><small>
                             {% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}</small>
-                            <div class=" mt-2">
+                            <div class="mt-2">
                             <a class="btn btn-light mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
                             <a href="#" class="btn btn-secondary copy-clipboard" data-clipboard-text="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}"><i class="material-icons mr-2">link</i>Copiar enlace</a>
                              </div>
@@ -45,26 +45,37 @@
 
                             {% if object.account %}
                                 {% include 'account/simple_profile.html' with account=object.account %}
-                            <div class="mt-2">
-                            <a class="btn btn-secondary mr-2" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
-                             </div>
-                            {% endif %}
+                                <div class="profile h-auto">
+                                    {% if object.from_app %}<div class="pb-3"> <i class="material-icons mr-3">phone_iphone</i> Registrada desde la app </div> {% endif %}
+                                    {% if object.newsletter_check %}
+                                        <div class="pb-3"> <i class="material-icons mr-3">check_circle_outline</i> Incluir en listas de distribución de correo </div>
+                                    {% else %}
+                                       <div class="pb-3"> <i class="material-icons mr-3">highlight_off</i> No incluir en listas de distribución de correo </div>
+                                    {% endif %}
+
+                                    {% if object.reference %}
+                                          <div class="pb-3">
+                                              <i class="material-icons mr-3">contact_support</i> <strong>¿Cómo nos has conocido? </strong>
+                                              <div class="ml-5"> {{ object.reference }} </div>
+                                          </div>
+                                    {% endif %}
+
+                                    <a class="btn btn-secondary" href="{% settings_value 'BASESITE_URL' %}{% url 'accounts:signup_form' object.uuid %}">Ver cuestionario</a>
+                                </div>
+
+                            <div class=""></div>
+
+                                {% endif %}
                         </div>
                     </div>
 
-    {% if payment_step and payment %}
-            <span class="badge badge-primary mb-2">Pago</span>
-            {% include 'payments/reference.html' with payment=payment %}
-    {% endif%}
 
-{% if object.from_app %}<div class="pb-3"> <i class="material-icons">phone_iphone</i> Registrada desde la app </div> {% endif %}
-{% if object.newsletter_check %}
-    <div class="pb-3"> <i class="material-icons">check_circle_outline</i> Incluir en listas de distribución de correo </div>
-{% else %}
-   <div class="pb-3"> <i class="material-icons">highlight_off</i> No incluir en listas de distribución de correo </div>
-{% endif %}
+{% if payment_step and payment %}
+    <span class="badge badge-primary mb-2 mt-2">Pago</span>
+    {% include 'payments/reference.html' with payment=payment %}
+{% endif%}
 
-<span class="badge badge-primary">Estado actual</span>
+<span class="badge badge-primary mt-2">Estado actual</span>
 <div class="process-stepper">
 {% if object.cancelled %}
     {% include 'bpm/workflow_step_cancelled.html' with big=True %}

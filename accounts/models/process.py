@@ -123,6 +123,7 @@ class SignupProcess(AccountProcess):
     contact_email = models.EmailField(null=False, verbose_name=_('Email de contacto'))
 
     newsletter_check = models.BooleanField(default=False, verbose_name=_('Acepta alta en listas de correo'))
+    reference = models.TextField(null=True, blank=True, verbose_name=_('Cómo nos conocisste'))
     from_app = models.BooleanField(default=False, verbose_name=_('Registro desde la app'))
 
     objects = SignupsManager()
@@ -179,6 +180,7 @@ class SignupProcess(AccountProcess):
 
         if form.is_valid():
             self.newsletter_check = form.cleaned_data['newsletter_check']
+            self.reference = form.cleaned_data['reference']
             print(form.cleaned_data['from_app'])
             self.from_app = form.cleaned_data['from_app']
             self.save()

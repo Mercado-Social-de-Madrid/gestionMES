@@ -12,7 +12,7 @@ from filters.views import FilterMixin
 
 from accounts.forms.consumer import ConsumerForm, ConsumerSignupForm
 from accounts.mixins.feecomments import FeeCommentsMixin
-from accounts.mixins.signup import SignupFormMixin
+from accounts.mixins.signup import SignupFormMixin, SignupUpdateMixin
 from accounts.models import Consumer, SignupProcess
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
@@ -83,49 +83,10 @@ class ConsumerSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
 
 
 
-class ConsumerUpdateView(UpdateView):
+class ConsumerUpdateView(SignupUpdateMixin, UpdateView):
     template_name = 'consumer/edit.html'
     form_class = ConsumerSignupForm
     model = Consumer
-
-    def getSignup(self):
-        uuid = self.kwargs.get('uuid')
-        process = SignupProcess.objects.filter(uuid=uuid).first()
-        if not process:
-            raise Http404("No se encontró el proceso")
-        else:
-            return process
-
-    def get_success_url(self):
-        if self.request.user.is_authenticated:
-            messages.success(self.request, _('Proceso de acogida añadido correctamente.'))
-            return reverse('accounts:signup_detail', kwargs={'pk': self.getSignup().pk})
-        else:
-            return reverse('accounts:signup_success')
-
-    def form_valid(self, form):
-        response = super(ConsumerUpdateView, self).form_valid(form)
-        process = self.getSignup()
-        process.form_filled(self.object, form)
-        return response
-
-    def get_object(self, queryset=None):
-
-        process = self.getSignup()
-        if process != None:
-            account = process.account
-            if account:
-                account.process = process
-            return account
-
-    def get_initial(self):
-        process = self.getSignup()
-        initial = super(ConsumerUpdateView, self).get_initial()
-        initial['check_privacy_policy'] = True
-        initial['check_conditions'] = True
-        initial['from_app'] = process.from_app
-        initial['newsletter_check'] = process.newsletter_check
-        return initial
 
 
 class ConsumerDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView ):
