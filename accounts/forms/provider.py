@@ -37,7 +37,12 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
             'num_workers_female_partners':forms.NumberInput(attrs={'min':0}),
             'num_workers_male_non_partners':forms.NumberInput(attrs={'min':0}),
             'num_workers_female_non_partners':forms.NumberInput(attrs={'min':0}),
+            'aprox_income': forms.NumberInput(attrs={'min': 0}),
+            'num_workers': forms.NumberInput(attrs={'min': 1}),
+        }
 
+        help_texts = {
+            'aprox_income': _('Expresado en miles de €')
         }
 
     # Overriding __init__ here allows us to provide initial data for permissions

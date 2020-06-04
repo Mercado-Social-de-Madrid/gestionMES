@@ -57,6 +57,21 @@
         </p>
 
         {% include 'payments/sepa/batch_result.html' with valign=True object_list=batch_results hide_controls=True object_url_name='payments:payment_detail' %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="row mb-5">
+                <div class="col-md-7 text-dark-3">
+                    <span class="typography-subheading text-muted"> El fichero SEPA se genera en el momento de crear la remesa. </span><br>
+                    Si corriges alguno de los errores de los recibos no incluídos, puedes regenerar
+                    la remesa para que se incluyan en el fichero.
+                </div>
+                <div class="col-md-5">
+                    <button type="submit" class="btn mt-3"><span class="material-icons mr-2">cached</span> Regenerar remesa</button>
+                </div>
+            </div>
+
+        </form>
     </div>
 
 

@@ -34,16 +34,18 @@ class SepaPaymentsBatch(models.Model):
         )
 
 
-    def generate_batch(self):
-        sepa = SepaDD(settings.SEPA_CONFIG,schema="pain.008.001.02", clean=True)
-        payments = []
-
+    def preprocess_batch(self):
         for batch_result in SepaBatchResult.objects.filter(batch=self):
             payment = batch_result.payment
+            batch_result.success = True
 
             if payment.amount <= 0:
                 batch_result.success = False
                 batch_result.fail_reason = ZERO_AMOUNT
+
+            if not payment.concept or payment.concept == '':
+                batch_result.success = False
+                batch_result.fail_reason = CONCEPT_MISSING
 
             if not payment.account or not payment.account.iban_code:
                 batch_result.success = False
@@ -55,10 +57,21 @@ class SepaPaymentsBatch(models.Model):
                 if not bank:
                     batch_result.success = False
                     batch_result.fail_reason = BIC_MISSING
+                else:
+                    batch_result.bic_code = bank.bic_code
+                    batch_result.bank_name = bank.bank_name
+
+            batch_result.save()
+
+
+    def generate_batch(self):
+        sepa = SepaDD(settings.SEPA_CONFIG,schema="pain.008.001.02", clean=True)
+        payments = []
+
+        for batch_result in SepaBatchResult.objects.filter(batch=self):
+            payment = batch_result.payment
 
             if batch_result.success:
-                batch_result.bic_code = bank.bic_code
-                batch_result.bank_name = bank.bank_name
                 pay = {
                     "name": payment.account.display_name,
                     "IBAN": payment.account.iban_code,
@@ -75,7 +88,6 @@ class SepaPaymentsBatch(models.Model):
                 sepa.add_payment(pay)
                 payments.append(batch_result.payment)
 
-            batch_result.save()
 
         if (len(payments) > 0):
             sepa_xml = sepa.export(validate=True)
@@ -96,10 +108,12 @@ class SepaPaymentsBatch(models.Model):
 IBAN_MISSING = 1
 BIC_MISSING = 2
 ZERO_AMOUNT = 3
+CONCEPT_MISSING = 4
 FAIL_REASONS = (
     (IBAN_MISSING, 'La cuenta no tiene IBAN'),
     (BIC_MISSING, 'Entidad desconocida'),
     (ZERO_AMOUNT, 'La transferencia no tenía una cantidad positiva'),
+    (CONCEPT_MISSING, 'Falta el concepto del pago'),
 )
 
 

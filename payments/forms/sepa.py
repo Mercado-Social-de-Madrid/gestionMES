@@ -35,6 +35,7 @@ class SepaBatchForm(forms.ModelForm, BootstrapForm):
             instance.amount = total_amount
             instance.save()
 
+            instance.preprocess_batch()
             instance.generate_batch()
 
 

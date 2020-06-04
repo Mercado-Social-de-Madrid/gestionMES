@@ -82,7 +82,6 @@ class BatchDetail(ExportAsCSVMixin, DetailView):
                     'success':'Añadido',
                     'fail_reason_display':'Motivo fallo'}
 
-
     def get_list_to_export(self):
         return SepaBatchResult.objects.filter(batch=self.get_object()).order_by('-fail_reason')
 
@@ -91,6 +90,15 @@ class BatchDetail(ExportAsCSVMixin, DetailView):
         context['batch_results'] = self.get_list_to_export()
         context['batch_success'] = SepaBatchResult.objects.filter(batch=self.object, success=True).count()
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.preprocess_batch()
+        self.object.generate_batch()
+
+        return redirect(reverse('payments:sepa_detail', kwargs={'pk': self.object.pk}))
+
+
 
 def sepa_delete(request, pk):
     sepa = SepaPaymentsBatch.objects.get(pk=pk)
