@@ -45,8 +45,9 @@ class BalanceManager(models.Manager):
 
 
 class BalanceProcess(AccountProcess):
-    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='deletion_process', on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='balance_process', on_delete=models.CASCADE)
     sponsor = models.ForeignKey(User, null=True, verbose_name=_('Madrina'), related_name='balance_sponsors', on_delete=models.SET_NULL)
+    year = models.SmallIntegerField(default=2019, blank=False, null=False, verbose_name=_('Año'))
 
     general_process = 'social_balance'
 
@@ -63,25 +64,8 @@ class BalanceProcess(AccountProcess):
 
     def update(self, event):
         if event.workflow.completed:
-            self.account.status = OPTED_OUT
-            self.account.opted_out_date = datetime.now()
-            self.account.save()
+            pass
 
-    def revert(self):
-        self.account.status = ACTIVE
-        self.account.opted_out_date = None
-        self.account.save()
-
-        self.last_update = datetime.now()
-        self.cancelled = True
-        self.save()
-
-    def cancel(self, user=None):
-        self.last_update = datetime.now()
-        self.cancelled = True
-        self.save()
-        # we create also the special completion event
-        self.workflow.add_special_event('cancelled', user)
 
 
 @receiver(post_save, sender=ProcessWorkflowEvent)
