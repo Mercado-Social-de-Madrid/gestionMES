@@ -36,9 +36,9 @@
 
 {% if not 'from_app' in request.GET and not hide_navbar and not 'hide_toolbar' in request.GET %}
     {%if user.is_authenticated %}
-        {% include 'navbar/navbar_menu_user.html' %}
+        {% include 'navbar/user.html' %}
     {% else %}
-        {% include 'navbar/navbar_menu_anon.html' %}
+        {% include 'navbar/anon.html' %}
     {% endif %}
 {% endif %}
 
