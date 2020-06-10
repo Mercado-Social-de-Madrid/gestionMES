@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -35,8 +36,8 @@ class ProcessFilter(django_filters.FilterSet):
         fields = { 'member_type':['exact'], }
 
 
-class ProcessesListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class ProcessesListView(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'simple_bpm.mespermission_can_manage_processes'
     queryset = Process.objects.all()
     objects_url_name = 'detail'
     model = Process

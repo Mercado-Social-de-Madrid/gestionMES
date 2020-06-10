@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
 from django.views.generic import CreateView, UpdateView, DetailView, ListView
 
@@ -11,8 +12,8 @@ from social_balance.forms.badge import SocialBadgeForm
 from social_balance.models import SocialBalanceBadge, EntitySocialBalance
 
 
-class BadgesListView(ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class BadgesListView(PermissionRequiredMixin, ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'social_balance.mespermission_can_view_social_badges'
     queryset = SocialBalanceBadge.objects.all()
     model = SocialBalanceBadge
     objects_url_name = 'badge_detail'
@@ -23,7 +24,6 @@ class BadgesListView(ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
 
 class NewSocialBadge(CreateView):
-
     form_class = SocialBadgeForm
     model = SocialBalanceBadge
     template_name = 'balance_badge/create.html'

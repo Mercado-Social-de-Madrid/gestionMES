@@ -1,0 +1,25 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Nombre</th>
+    <th scope="col">Tipo</th>
+    <th scope="col" class="px-0">Estado</th>
+    <th scope="col">Última actualización</th>
+
+{% endblock %}
+
+
+{% block item_row %}
+
+<td class="entity-td">{% if item.account %} {{item.account.display_name }} {% else %} {{item.name}} {% endif %} </td>
+<td>{{item.get_member_type_display}}</td>
+<td class="px-0">
+    {% if item.cancelled %}
+        {% include 'bpm/current_state.html' with cancelled=True %}
+    {% else %}
+        {% include 'bpm/current_state.html' with workflow=item.workflow %}
+    {% endif %}
+</td>
+<td>{{item.last_update|date:'d/m/Y H:i'}}</td>
+
+{% endblock %}

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -41,8 +42,8 @@ class InvitesFilter(django_filters.FilterSet):
         form = InvitesFilterForm
         fields = { 'active':['exact'], }
 
-class InvitesListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class InvitesListView(PermissionRequiredMixin, FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'currency.mespermission_can_view_guests'
     model = GuestAccount
     queryset = GuestAccount.objects.all().order_by('-registration_date')
     objects_url_name = 'guest_detail'

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Prefetch
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -20,7 +21,8 @@ from social_balance.forms.entity_year import EntityYearBalanceForm
 from social_balance.models import SocialBalanceBadge, EntitySocialBalance
 
 
-class SocialBalanceYear(FilterView, FilterMixin, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class SocialBalanceYear(PermissionRequiredMixin, FilterView, FilterMixin, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'social_balance.mespermission_can_view_social_balances'
     template_name = 'balance/year/list.html'
     ajax_template_name = 'balance/year/query.html'
     model = Entity

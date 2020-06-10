@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
@@ -40,8 +41,8 @@ class DeletionFilter(django_filters.FilterSet):
         fields = { 'member_type':['exact'], }
 
 
-class DeletionListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class DeletionListView(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'accounts.mespermission_can_view_deletions'
     queryset = DeletionProcess.objects.pending().order_by('-last_update')
     objects_url_name = 'deletion_detail'
     template_name = 'deletion/list.html'

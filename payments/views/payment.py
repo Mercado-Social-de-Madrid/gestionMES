@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Sum, Count
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -53,8 +54,8 @@ class PendingPaymentFilter(django_filters.FilterSet):
         fields = {  }
 
 
-class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class PaymentsListView(PermissionRequiredMixin, FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'payments.mespermission_can_view_payments'
     queryset = PendingPayment.objects.all()
     objects_url_name = 'payment_detail'
     template_name = 'payments/list.html'
@@ -106,7 +107,7 @@ class PaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
 
 
 
-class PaymentCreate(CreateView):
+class PaymentCreate(PermissionRequiredMixin, CreateView):
     template_name = 'payments/create.html'
     form_class = PaymentForm
     model = PendingPayment

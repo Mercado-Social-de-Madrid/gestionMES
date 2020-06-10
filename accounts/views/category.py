@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -14,8 +15,8 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 
 
-class CategoryListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class CategoryListView(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'accounts.mespermission_can_manage_categories'
     queryset = Category.objects.all()
     model = Category
     objects_url_name = 'category_detail'

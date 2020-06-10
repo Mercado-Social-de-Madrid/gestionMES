@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -49,8 +50,8 @@ class IntercoopAccountFilter(django_filters.FilterSet):
 
 
 
-class IntercoopAccountsList(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class IntercoopAccountsList(PermissionRequiredMixin, FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'intercoop.mespermission_can_manage_entity'
     model = IntercoopAccount
     queryset = IntercoopAccount.objects.all().order_by('-registration_date')
     objects_url_name = 'account_detail'

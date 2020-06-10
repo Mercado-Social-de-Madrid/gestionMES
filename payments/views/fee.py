@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Sum
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
@@ -38,8 +39,8 @@ class FeeChargeFilter(django_filters.FilterSet):
         fields = { 'account__member_type':['exact'] }
 
 
-class AnnualFeeChargesList(FilterMixin, FilterView, AjaxTemplateResponseMixin):
-
+class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, AjaxTemplateResponseMixin):
+    permission_required = 'payments.mespermission_can_view_payments'
     template_name = 'fee/annual.html'
     ajax_template_name = 'fee/query.html'
     filterset_class = FeeChargeFilter

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Count
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -37,8 +38,8 @@ class SepaBatchFilter(django_filters.FilterSet):
         fields = ['generated_by']
 
 
-class SepaBatchListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class SepaBatchListView(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'payments.mespermission_can_manage_sepa'
     queryset = SepaPaymentsBatch.objects.all()
     objects_url_name = 'sepa_detail'
     template_name = 'payments/sepa/list.html'
@@ -52,8 +53,8 @@ class SepaBatchListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateR
         return super().get_queryset().annotate(payments_count=Count('payments'))
 
 
-class BatchCreate(CreateView):
-
+class BatchCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'payments.mespermission_can_manage_sepa'
     form_class = SepaBatchForm
     model = SepaPaymentsBatch
     template_name = 'payments/sepa/create.html'
@@ -67,7 +68,8 @@ class BatchCreate(CreateView):
         return reverse('payments:sepa_detail', kwargs={'pk': self.object.pk})
 
 
-class BatchDetail(ExportAsCSVMixin, DetailView):
+class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, DetailView):
+    permission_required = 'payments.mespermission_can_manage_sepa'
     template_name = 'payments/sepa/detail.html'
     queryset = SepaPaymentsBatch.objects.all()
     model = SepaPaymentsBatch

@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -44,8 +45,8 @@ class UserFilter(django_filters.FilterSet):
         fields = { }
 
 
-class UsersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class UsersListView(PermissionRequiredMixin, FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'core.mespermission_can_manage_users'
     model = User
     queryset = User.objects.all()
     objects_url_name = 'user_detail'
@@ -138,8 +139,8 @@ def user_delete(request, pk):
     return False
 
 
-class ComissionsListView(FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class ComissionsListView(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'currency.mespermission_can_manage_commissions'
     queryset = Comission.objects.all()
     objects_url_name = 'commission_detail'
     model = Comission

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'social_balance',
     'currency',
     'intercoop',
+    'menu',
     'jet',
     'sermepa',
     'core',

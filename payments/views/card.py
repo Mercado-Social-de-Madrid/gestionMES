@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import django_filters
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django_filters.views import FilterView
@@ -32,8 +33,8 @@ class CardPaymentFilter(django_filters.FilterSet):
         form = CardPaymentFilterForm
         fields = { 'type':['exact'] }
 
-class CardPaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class CardPaymentsListView(PermissionRequiredMixin, FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'payments.mespermission_can_view_card_payments'
     queryset = CardPayment.objects.filter(paid=True).order_by('-attempt')
     filterset_class = CardPaymentFilter
     objects_url_name = 'card_payment_detail'
@@ -48,7 +49,8 @@ class CardPaymentsListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUr
     field_labels = {'concept': 'Concepto', }
 
 
-class CardPaymentDetailView(ModelFieldsViewMixin, UpdateView):
+class CardPaymentDetailView(PermissionRequiredMixin, ModelFieldsViewMixin, UpdateView):
+    permission_required = 'payments.mespermission_can_view_card_payments'
     template_name = 'card/detail.html'
     queryset = CardPayment.objects.all()
     form_class = PaymentForm

@@ -2,6 +2,8 @@
 {% load staticfiles %}
 {% load settings_value %}
 {% load sass_tags %}
+{% load menu %}
+
 <html lang="es">
   <head>
     <!-- Required meta tags -->
@@ -35,8 +37,9 @@
   <body {% block bodyattrs %}{% endblock%}>
 
 {% if not 'from_app' in request.GET and not hide_navbar and not 'hide_toolbar' in request.GET %}
+    {% generate_menu %}
     {%if user.is_authenticated %}
-        {% include 'navbar/user.html' %}
+        {% with menu=menus.main %} {% include 'navbar/user.html' %} {% endwith %}
     {% else %}
         {% include 'navbar/anon.html' %}
     {% endif %}
