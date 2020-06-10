@@ -20,6 +20,7 @@ class PermissionsMenuItem(MenuItem):
              return False
 
          permissions = self.permissions or []
+
          try:
             parsed = urlparse(self.url)
             match = resolve(parsed.path)
@@ -28,12 +29,10 @@ class PermissionsMenuItem(MenuItem):
          except Resolver404:
              pass
 
-         visible = len(permissions) == 0
+         self.visible = len(permissions) == 0
          for perm in permissions:
-             visible = visible or request.user.has_perm(perm)
-             print(request.user.has_perm(perm))
+             self.visible = self.visible or request.user.has_perm(perm)
 
-         self.visible = visible
 
 
     def match_url(self, request):
