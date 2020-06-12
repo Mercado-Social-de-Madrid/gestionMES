@@ -153,8 +153,10 @@ class Entity(Account):
     name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Nombre'))
     business_name = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Razón social'))
     categories = models.ManyToManyField(Category, verbose_name='Categorías', related_name='entities')
-    territory = models.CharField(null=False, default=TERR_LOCAL, max_length=20, choices=TERRITORY_OPTIONS,
-                                 verbose_name=_('Ámbito'))
+    territory = models.CharField(null=False, default=TERR_LOCAL, max_length=20, choices=TERRITORY_OPTIONS, verbose_name=_('Ámbito'))
+    contact_phone2 = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('Teléfono de contacto (2)'))
+    contact_email2 = models.EmailField(null=True, blank=True, verbose_name=_('Email de contacto (2)'))
+
     assisted_last_fair = models.BooleanField(default=False, verbose_name=_('Asistió a la última feria'))
     latitude = models.FloatField(null=False, verbose_name='Latitud', default=settings.INITIAL_LATITUDE)
     longitude = models.FloatField(null=False, verbose_name='Longitud', default=settings.INITIAL_LONGITUDE)

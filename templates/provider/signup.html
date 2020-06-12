@@ -2,8 +2,6 @@
 {% load settings_value %}
 {% load l10n %}
 
-{{form.from_app}}
-
 Los campos marcados con <span class="text-primary lead">*</span> son obligatorios.
 
 <h4 class="text-primary mt-3">Datos fiscales</h4>
@@ -49,7 +47,9 @@ Los campos marcados con <span class="text-primary lead">*</span> son obligatorio
                 <div class="col-lg-6">
                     {% include "common/forms/field.html" with field=form.contact_person %}
                     {% include "common/forms/field.html" with field=form.contact_email %}
+                    {% include "common/forms/field.html" with field=form.contact_email2 visible_by=form.contact_email%}
                     {% include "common/forms/field.html" with field=form.contact_phone %}
+                    {% include "common/forms/field.html" with field=form.contact_phone2 visible_by=form.contact_phone %}
                 </div>
                 <div class="col-lg-6 mt-3">
                     {% include "common/forms/field.html" with field=form.reference not_floating=True %}

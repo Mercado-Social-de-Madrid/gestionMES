@@ -261,6 +261,16 @@ function initElems(container){
         });
     });
 
+    container.find('[data-visible-by]').each(function(){
+        var input = $(this);
+        var visibleBy = container.find(input.attr('data-visible-by'));
+        visibleBy.on('keyup change', function(){
+            value = visibleBy.val();
+            input.toggle(value !== null && value !== '')
+        });
+        visibleBy.change();
+    });
+
     container.find('.enhanced-select').each(function(){
         var control = $(this);
         var select = control.find('select').addClass('form-control');

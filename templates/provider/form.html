@@ -76,7 +76,9 @@
       <div class="expansion-panel-body">
         {% include "common/forms/field.html" with field=form.contact_person %}
         {% include "common/forms/field.html" with field=form.contact_email %}
+        {% include "common/forms/field.html" with field=form.contact_email2 visible_by=form.contact_email %}
         {% include "common/forms/field.html" with field=form.contact_phone %}
+        {% include "common/forms/field.html" with field=form.contact_phone2 visible_by=form.contact_phone %}
 
          </div>
     </div>
