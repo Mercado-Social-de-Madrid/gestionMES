@@ -61,7 +61,7 @@ class BatchCreate(PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, _('Usuario añadido correctamente.'))
+        messages.success(self.request, _('Fichero SEPA creado correctamente.'))
         return response
 
     def get_success_url(self):
@@ -85,7 +85,7 @@ class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, DetailView):
                     'fail_reason_display':'Motivo fallo'}
 
     def get_list_to_export(self):
-        return SepaBatchResult.objects.filter(batch=self.get_object()).order_by('-fail_reason')
+        return SepaBatchResult.objects.filter(batch=self.get_object()).order_by('-fail_reason', 'order' )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -97,7 +97,7 @@ class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, DetailView):
         self.object = self.get_object()
         self.object.preprocess_batch()
         self.object.generate_batch()
-
+        messages.success(request, _('Remesa SEPA generada correctamente.'))
         return redirect(reverse('payments:sepa_detail', kwargs={'pk': self.object.pk}))
 
 

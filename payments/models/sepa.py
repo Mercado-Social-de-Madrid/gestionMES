@@ -119,12 +119,18 @@ FAIL_REASONS = (
 
 class SepaBatchResult(models.Model):
     batch = models.ForeignKey(SepaPaymentsBatch, related_name='batch_payments', on_delete=models.SET_NULL, null=True)
-    payment = models.ForeignKey(PendingPayment, related_name='batch_payments', on_delete=models.SET_NULL, null=True,blank=True)
+    order = models.IntegerField(verbose_name=_('Orden'), null=True, blank=True)
+    payment = models.ForeignKey(PendingPayment, related_name='batch_payments', on_delete=models.SET_NULL, null=True, blank=True)
     success = models.BooleanField(default=True, verbose_name=_('Añadido correctamente'))
     iban_code = models.CharField(null=True, blank=True, verbose_name=_('Código de cuenta'), max_length=20)
     bic_code = models.CharField(null=True, blank=True, verbose_name=_('Código BIC'), max_length=20)
     bank_name = models.CharField(null=True, blank=True, verbose_name=_('Nombre del banco'), max_length=180)
     fail_reason = models.IntegerField(choices=FAIL_REASONS, default=0)
+
+    class Meta:
+        verbose_name = _('Remesa SEPA')
+        verbose_name_plural = _('Remesas SEPA')
+        ordering = ['order']
 
     @property
     def payment_amount(self):

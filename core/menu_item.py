@@ -12,7 +12,6 @@ class PermissionsMenuItem(MenuItem):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.permissions = kwargs.get('permissions', None)
-        print (self.permissions)
 
     def check(self, request):
          """Check permissions based on our view"""

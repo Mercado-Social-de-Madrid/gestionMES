@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 
 from core.forms.BootstrapForm import BootstrapForm
 from payments.models import SepaPaymentsBatch, PendingPayment, SepaBatchResult
@@ -6,7 +7,7 @@ from payments.models import SepaPaymentsBatch, PendingPayment, SepaBatchResult
 
 class SepaBatchForm(forms.ModelForm, BootstrapForm):
     payments = forms.ModelMultipleChoiceField(queryset=PendingPayment.objects.filter(), required=False, )
-
+    payments_order = forms.CharField(widget=forms.HiddenInput())
     required_fields = []
 
     class Meta:
@@ -19,8 +20,15 @@ class SepaBatchForm(forms.ModelForm, BootstrapForm):
         instance = forms.ModelForm.save(self, False)
         # Prepare a 'save_m2m' method for the form,
         def save_m2m():
+           paymentsOrder = self.cleaned_data['payments_order']
+           paymentsOrder = paymentsOrder.split(settings.INLINE_INPUT_SEPARATOR)
+           print(paymentsOrder)
            for payment in self.cleaned_data['payments'].all():
-               SepaBatchResult.objects.create(payment=payment, batch=instance)
+               order = paymentsOrder.index(str(payment.pk))
+               print(payment)
+               print(payment.pk)
+               print(order)
+               SepaBatchResult.objects.create(payment=payment, order=order, batch=instance)
 
         self.save_m2m = save_m2m
 

@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
-
+{% load settings_value %}
 {% block title %}Nueva remesa SEPA{% endblock %}
-
 
 {% block content %}
 
@@ -30,6 +29,7 @@
 
             <div class="hidden">
                 {{form.payments}}
+                {{form.payments_order}}
                 {% include 'common/forms/hidden_value.html' with field=form.generated_by hidden_value=request.user.pk %}
             </div>
         <div class="current-members" data-selector="current">
@@ -88,6 +88,7 @@
 <script type="text/javascript">
     $(function(){
         var payments = $('#{{form.payments.id_for_label}}');
+        var paymentsOrder = $('#{{form.payments_order.id_for_label}}');
         var selected = $('.selected');
         var selectedCount = $('#selected-count');
         $('.selected').on('click', 'tr', function(){
@@ -110,6 +111,7 @@
             selected.find('tr').each(function(){
                 selPayments.push($(this).attr('data-pk'));
             });
+            paymentsOrder.val(selPayments.join('{% settings_value 'INLINE_INPUT_SEPARATOR'|escape|safe %}'));
             payments.val(selPayments);
         });
     });
