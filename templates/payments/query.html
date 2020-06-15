@@ -13,7 +13,12 @@
     <th scope="col">Concepto</th>
     <th scope="col">
         Fecha
-        <a data-container="body" href="#" role="button" data-toggle="popover" data-placement="bottom" title="Ayuda" data-content="La fecha que se muestra depende del estado del pago. Si forma parte de una remesa SEPA, se muestra dicha fecha. Si el recibo ha sido devuelto, se muestra la fecha de devolución" data-trigger="focus" tabindex="0">
+        <a data-container="body" href="#" role="button" data-toggle="popover" data-placement="bottom"
+           title="Ayuda" data-html="true"
+           data-content="La fecha que se muestra depende del estado del pago:<ul class='px-3'>
+            <li>Si se ha <b>pagado</b>, se muestra dicha fecha.
+            <li>Si el recibo ha sido <b>devuelto</b>, se muestra la fecha de devolución</li>
+            <li>En caso contrario, se muestra la fecha de emisión</li></ul>" data-trigger="focus" tabindex="0">
             <i class="material-icons" >help_outline</i>
         </a>
 
