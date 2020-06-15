@@ -5,7 +5,8 @@ import django_filters
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Sum, Count
+from django.db.models import Sum, Count, Max
+from django.db.models.functions import Coalesce
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -43,7 +44,8 @@ class PendingPaymentFilterForm(BootstrapForm):
 class PendingPaymentFilter(django_filters.FilterSet):
 
     search = AccountSearchFilter(names=['concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['amount', 'added', 'timestamp'], field_labels={'amount':'Cantidad', 'added':'Añadido', 'timestamp':'Pagado'})
+    o = LabeledOrderingFilter(
+        choices=(('-added', 'Añadido'), ('-amount', 'Cantidad (descendente)'), ('-timestamp','Pagado'), ('-sepa_batches__attempt','Añadido a remesa')) )
     account = MemberTypeFilter(label='Tipo de socia')
     completed = django_filters.BooleanFilter(field_name='completed', widget=BooleanWidget(attrs={'class':'threestate'}))
     returned = django_filters.BooleanFilter(field_name='returned', widget=BooleanWidget(attrs={'class': 'threestate'}))

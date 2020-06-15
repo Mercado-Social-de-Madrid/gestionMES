@@ -11,7 +11,13 @@
     <th scope="col" class="px-0">Tipo</th>
     {% endif %}
     <th scope="col">Concepto</th>
-    <th scope="col">Fecha emisión</th>
+    <th scope="col">
+        Fecha
+        <a data-container="body" href="#" role="button" data-toggle="popover" data-placement="bottom" title="Ayuda" data-content="La fecha que se muestra depende del estado del pago. Si forma parte de una remesa SEPA, se muestra dicha fecha. Si el recibo ha sido devuelto, se muestra la fecha de devolución" data-trigger="focus" tabindex="0">
+            <i class="material-icons" >help_outline</i>
+        </a>
+
+    </th>
 
 {% endblock %}
 
@@ -33,7 +39,7 @@
 <td class="entity-td">{{item.account.display_name}}</td>
 {% endif %}
 <td class="amount">
-    {{item.amount|floatformat:2}} €
+    {{item.amount|floatformat:2}}&nbsp;€
 </td>
 {% if not 'simple' in request.GET %}
 <td class="px-0">
@@ -50,7 +56,17 @@
     {% endif %}
      </td>
 
-<td class="hide-select">{{item.added|date:'d/m/Y'}}</td>
+<td class="hide-select">
+    {% if item.completed %}
+        {% if item.returned %}
+            {{item.returned_timestamp|date:'d/m/Y'}}
+        {% else %}
+            {{item.timestamp|date:'d/m/Y'}}
+        {% endif %}
+    {% else %}
+    {{item.added|date:'d/m/Y'}}
+    {% endif %}
+</td>
 
 {% if not 'simple' in request.GET and not hide_controls %}
 <td class="px-0">

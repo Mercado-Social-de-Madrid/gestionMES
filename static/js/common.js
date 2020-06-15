@@ -192,7 +192,7 @@ function initElems(container){
     container.find('.datepicker').pickdate();
     container.find('.ajax-load').ajaxLoader();
     container.find('.ajax-filter').ajaxFilter();
-
+    container.find('[data-toggle="popover"]').popover()
     container.find('[data-toggle="tooltip"]').tooltip();
 
     if (container.closest('[data-prevent-link="true"]').length == 0){

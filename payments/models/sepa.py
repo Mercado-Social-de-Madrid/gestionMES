@@ -100,7 +100,7 @@ class SepaPaymentsBatch(models.Model):
 
             # We update the payments date
             for payment in payments:
-                payment.added = datetime.datetime.now()
+                #payment.added = datetime.datetime.now()
                 payment.type = DEBIT
                 payment.save()
 
