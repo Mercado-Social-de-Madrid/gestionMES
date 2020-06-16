@@ -35,7 +35,6 @@ class WorkflowFilter(django_filters.ChoiceFilter):
         django_filters.ChoiceFilter.__init__(self, choices=choices, *args,**kwargs)
 
     def filter(self,qs,value):
-        print(self.filter_cancelled)
         if value == 'cancelled':
             return qs.filter(cancelled=True)
 

@@ -35,7 +35,8 @@ class SocialBalanceYear(PermissionRequiredMixin, FilterView, FilterMixin, Export
     def get_queryset(self):
         qs = super().get_queryset()
         year = self.kwargs.get('year', settings.CURRENT_BALANCE_YEAR)
-        return qs.prefetch_related(
+        entities = qs.filter(registration_date__year__lte=year)
+        return entities.prefetch_related(
             Prefetch(
                 "social_balances",
                 queryset=EntitySocialBalance.objects.filter(year=year),
