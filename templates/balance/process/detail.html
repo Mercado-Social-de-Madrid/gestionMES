@@ -15,7 +15,7 @@
             </div>
 
             <div class="col-md-3 text-sm-right">
-                {% if perms.accounts.mespermission_can_update_signups and not object.workflow.completed and not object.cancelled %}
+                {% if perms.social_balance.mespermission_can_manage_balance_process and not object.workflow.completed and not object.cancelled %}
                 <a href="#" data-toggle="modal" data-target="#cancel-process" class="btn btn-primary"><i class="material-icons mr-2">block</i> Cancelar proceso</a>
                 {% endif %}
             </div>
@@ -48,11 +48,13 @@
                 <strong>Madrina:</strong> {{object.sponsor}}<br>
                 <strong>Tipo:</strong> {{object.get_balance_type_display}}
             </p>
-
+            {% if perms.social_balance.mespermission_can_manage_balance_process %}
             <button type="button" class="btn btn-secondary ml-4" id="edit-sponsor">Editar</button>
+            {% endif %}
         </div>
     {% endif %}
 
+    {% if perms.social_balance.mespermission_can_manage_balance_process %}
     <form method="post" class="{% if object.sponsor %}hidden{% endif %}" id="sponsor-form">
         {% csrf_token %}
 
@@ -63,8 +65,9 @@
             </div>
             <button type="submit" class="btn btn-secondary ml-4">Guardar</button>
         </div>
-
     </form>
+
+    {% endif %}
 </div>
 <span class="badge badge-primary mt-2">Estado actual</span>
 <div class="process-stepper">
