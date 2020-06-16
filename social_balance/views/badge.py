@@ -23,7 +23,8 @@ class BadgesListView(PermissionRequiredMixin, ListView, ListItemUrlMixin, AjaxTe
     paginate_by = 5
 
 
-class NewSocialBadge(CreateView):
+class NewSocialBadge(PermissionRequiredMixin, CreateView):
+    permission_required = 'social_balance.mespermission_can_create_social_badges'
     form_class = SocialBadgeForm
     model = SocialBalanceBadge
     template_name = 'balance_badge/create.html'

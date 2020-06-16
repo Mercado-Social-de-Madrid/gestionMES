@@ -48,7 +48,7 @@ class BalanceFilter(django_filters.FilterSet):
 
 
 class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-    permission_required = 'social_balance.mespermission_can_manage_balance_process'
+    permission_required = 'social_balance.mespermission_can_view_balance_process'
     queryset = BalanceProcess.objects.pending().order_by('-last_update')
     objects_url_name = 'process_detail'
     template_name = 'balance/process/list.html'
@@ -65,7 +65,8 @@ class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListI
             return BalanceProcess.objects.filter(year=year)
         return BalanceProcess.objects.all()
 
-class BalanceProcessDetail(UpdateView):
+class BalanceProcessDetail(PermissionRequiredMixin, UpdateView):
+    permission_required = 'social_balance.mespermission_can_view_balance_process'
     template_name = 'balance/process/detail.html'
     queryset = BalanceProcess.objects.all()
     form_class = ProcessSponsorForm
