@@ -98,14 +98,7 @@
         {% endif %}
 
         {% if perms.accounts.mespermission_can_comment_signups %}
-        <button class="btn btn-light btn-lg" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
-        Añadir comentario
-        </button>
-
-        <div class="collapse" id="commentContainer">
-            {{comment_form.as_p}}
-            <input type="submit" name="add_comment" class="btn btn-lg btn-light" value="Enviar" />
-        </div>
+            {% include 'bpm/comment_form.html' %}
         {% endif %}
         {% csrf_token %}
 
