@@ -85,7 +85,7 @@
 
     </div>
 
-    <div aria-labelledby="balances-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="balances-form" role="tabpanel">
+    <div aria-labelledby="balances-tab" class="tab-pane p-4 px-5 {% if balances_tab %}show active{%endif%}" id="balances-form" role="tabpanel">
        <div class="row">
            <div class="col-md-4">
                <h4 class="text-primary"><i class="material-icons mr-1">schedule</i> Histórico</h4>
@@ -144,7 +144,7 @@
     </div>
     {% endif %}
 
-    <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if payments_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
+    <div aria-labelledby="currency-tab" class="tab-pane p-4 px-5 {% if currency_tab %}show active{%endif%}" id="currency-form" role="tabpanel">
         <div class="row">
             <div class="col-md-4">
                 {% include 'currency/app_user.html' with account=object %}

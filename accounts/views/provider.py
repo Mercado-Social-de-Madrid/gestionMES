@@ -68,7 +68,7 @@ class ProvidersListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMi
 class ProviderDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView):
     template_name = 'provider/detail.html'
     default_tab = 'details'
-    available_tabs = ['details', 'payments', 'currency']
+    available_tabs = ['details', 'payments', 'balances', 'currency']
     form_class = ProviderForm
     model = Provider
 
