@@ -22,7 +22,7 @@ class Process(models.Model):
         )
 
     def __str__(self):
-        return "{}".format(self.title).encode('utf-8')
+        return self.title or 'Process'
 
 
 class ProcessStep(models.Model):
@@ -40,7 +40,7 @@ class ProcessStep(models.Model):
         ordering = ['order']
 
     def __str__(self):
-        return "{} - {}".format(self.process.title, self.title).encode('utf-8')
+        return "{} - {}".format(self.process.title, self.title)
 
     def is_named_step(self, shortname):
         return CurrentProcessStep.objects.filter(process_step=self, shortname=shortname).exists()

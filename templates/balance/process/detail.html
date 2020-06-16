@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load settings_value %}
+{% block title %}Acogida{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-8">
+                <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Balance social</a>
+                    <i class="material-icons md-18 ">arrow_forward_ios</i> {{object.year}}
+                    <i class="material-icons md-18 ">arrow_forward_ios</i> {{object.account.display_name}}</h4>
+            </div>
+
+            <div class="col-md-3 text-sm-right">
+                {% if perms.accounts.mespermission_can_update_signups and not object.workflow.completed and not object.cancelled %}
+                <a href="#" data-toggle="modal" data-target="#cancel-process" class="btn btn-primary"><i class="material-icons mr-2">block</i> Cancelar proceso</a>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row mt-4">
+            <div class="col-md-6">
+
+                    <div class="pb-2 pr-2">
+                        <div class="card-body pl-4">
+
+                            {% if object.account %}
+                                {% include 'account/simple_profile.html' with account=object.account %}
+
+                            <div class=""></div>
+
+                                {% endif %}
+                        </div>
+                    </div>
+
+
+{% if first_step %}
+    <h5 class="card-title">Madrina</h5>
+{% endif %}
+
+<span class="badge badge-primary mt-2">Estado actual</span>
+<div class="process-stepper">
+{% if object.cancelled %}
+    {% include 'bpm/workflow_step_cancelled.html' with big=True %}
+{% else %}
+    {% if object.workflow.completed %}
+            {% include 'bpm/workflow_step_completed.html' with big=True %}
+    {% else %}
+                {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
+    {% endif %}
+{% endif %}
+</div>
+
+
+{% if not object.workflow.completed and not object.cancelled%}
+    <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
+        {% if not first_step %}
+        {% if perms.social_balance.mespermission_can_manage_balance_process %}
+        <input type="submit" name="complete_step" class="btn btn-lg btn-primary mr-3" value="Completar paso" />
+        {% endif %}
+        {% endif %}
+
+        {% if perms.social_balance.mespermission_can_add_balance_comments %}
+        <button class="btn btn-light btn-lg" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
+        Añadir comentario
+        </button>
+
+        <div class="collapse" id="commentContainer">
+            {{comment_form.as_p}}
+            <input type="submit" name="add_comment" class="btn btn-lg btn-light" value="Enviar" />
+        </div>
+        {% endif %}
+        {% csrf_token %}
+
+    </form>
+
+     <form method="post" action="{% url 'accounts:cancel_signup' %}">
+         {% csrf_token %}
+         <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
+        <input type="hidden" name="process" value="{{object.pk}}">
+
+        <div class="modal fade" id="cancel-process" tabindex="-1" role="dialog" aria-labelledby="cancel-process-label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cancel-process-label">Cancelar proceso</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+              <div class="mb-4 display-2 text-muted"> <i class="material-icons">error_outline</i></div>
+              <p class="lead">¿Estás segura de que deseas cancelar el proceso?</p>
+               Esta acción cerrará el proceso de acogida en negativo.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+     </form>
+
+{% endif %}
+    </div>
+
+    <div class="col-md-6">
+        <h5>Historial</h5>
+        {% include 'bpm/history.html' with workflow=object.workflow %}
+    </div>
+</div>
+
+{% endblock %}
+
+        {% block scripts %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+        <script type="text/javascript">
+            new ClipboardJS('.copy-clipboard');
+        </script>
+
+        {% endblock %}

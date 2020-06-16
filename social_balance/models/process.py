@@ -10,7 +10,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext as _
 
-from accounts.models import Provider, Consumer, Account, INITIAL_PAYMENT, ACTIVE, OPTED_OUT, SIGNUP, AccountProcess
+from accounts.models import Provider, Consumer, Account, INITIAL_PAYMENT, ACTIVE, OPTED_OUT, SIGNUP, AccountProcess, \
+    Entity
 from core.models import User
 from payments.models import PendingPayment
 from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
@@ -25,23 +26,24 @@ STEP_CONSUMER_PAYMENT = 'consumer_payment'
 
 class BalanceManager(models.Manager):
 
-    def pending(query, entity=None):
-        return query.filter(workflow__completed=False)
+    def pending(query, year=None):
+        if year:
+            return query.filter(workflow__completed=False, year=year)
+        else:
+            return query.filter(workflow__completed=False)
+
+    def create_pending_processes(self, year):
+        for account in Entity.objects.active():
+            process, created = self.get_or_create(account=account, year=year)
+            if created:
+                process.initialize()
 
     def create_process(self, account):
-        deletion, created = self.get_or_create(account=account, member_type=account.member_type)
+        process, created = self.get_or_create(account=account, member_type=account.member_type)
         if created:
-            deletion.initialize()
-        elif deletion.cancelled:
-            # if it is a process that was cancelled, we need to revert it to the initial state
-            deletion.workflow.current_state = deletion.workflow.get_first_step()
-            deletion.workflow.save()
-            deletion.workflow.add_special_event('restarted')
+            process.initialize()
 
-            deletion.cancelled = False
-            deletion.save()
-
-        return deletion
+        return process
 
 
 class BalanceProcess(AccountProcess):
