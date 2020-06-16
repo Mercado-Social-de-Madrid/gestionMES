@@ -2,6 +2,7 @@
 
  {% block table_head %}
     <th scope="col">Nombre</th>
+    <th scope="col" class="px-0">Tipo</th>
     <th scope="col">Madrina</th>
     <th scope="col" class="px-0">Estado</th>
     <th scope="col">Última actualización</th>
@@ -12,7 +13,8 @@
 {% block item_row %}
 
 <td class="entity-td">{% if item.account %} {{item.account.display_name }} {% else %} {{item.name}} {% endif %} </td>
-<td>{{item.sponsor|default:'-'}}</td>
+<td class="px-0">{{item.get_balance_type_display|default:'-'}}</td>
+<td>{{item.sponsor|default:'Sin asignar'}}</td>
 <td class="px-0">
     {% if item.cancelled %}
         {% include 'bpm/current_state.html' with cancelled=True %}

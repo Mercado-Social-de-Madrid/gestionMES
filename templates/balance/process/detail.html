@@ -41,18 +41,29 @@
 
 <div class="mt-2">
 
-<span class="badge badge-primary mt-2">Madrina</span><br>
+<span class="badge badge-primary mt-2">Datos del proceso</span><br>
     {% if object.sponsor %}
         <div class="d-flex flex-row align-items-center py-2">
-            <p class="h5 mb-0">{{object.sponsor}}</p>
+            <p class="h5 mb-0 flex-fill">
+                <strong>Madrina:</strong> {{object.sponsor}}<br>
+                <strong>Tipo:</strong> {{object.get_balance_type_display}}
+            </p>
+
             <button type="button" class="btn btn-secondary ml-4" id="edit-sponsor">Editar</button>
         </div>
     {% endif %}
 
-    <form method="post" class="d-flex flex-row align-items-center {% if object.sponsor %}hidden{% endif %}" id="sponsor-form">
+    <form method="post" class="{% if object.sponsor %}hidden{% endif %}" id="sponsor-form">
         {% csrf_token %}
-        <div class="flex-fill">{% include "common/forms/field.html" with field=form.sponsor hide_label=True %}</div>
-        <button type="submit" class="btn btn-secondary ml-4">Guardar</button>
+
+        <div class="d-flex flex-row align-items-center ">
+            <div class="flex-fill mt-2">
+                {% include "common/forms/field.html" with field=form.balance_type not_floating=True %}
+                {% include "common/forms/field.html" with field=form.sponsor not_floating=True %}
+            </div>
+            <button type="submit" class="btn btn-secondary ml-4">Guardar</button>
+        </div>
+
     </form>
 </div>
 <span class="badge badge-primary mt-2">Estado actual</span>

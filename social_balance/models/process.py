@@ -16,13 +16,15 @@ from core.models import User
 from payments.models import PendingPayment
 from simple_bpm.models import ProcessWorkflow, CurrentProcess, CurrentProcessStep, ProcessWorkflowEvent
 
-STEP_SIGNUP_FORM = 'signup_form'
-STEP_CONSUMER_FORM = 'consumer_form'
-STEP_PAYMENT_RULES = 'payment_rules'
-STEP_PAYMENT = 'payment'
-STEP_CONSUMER_PAYMENT = 'consumer_payment'
+BALANCE_SHORT = 'BSacotado'
+BALANCE_LONG = 'BSlargo'
+BALANCE_EXEMPT = 'BSexenta'
 
-
+BALANCE_TYPES = (
+    (BALANCE_SHORT, 'Acotado'),
+    (BALANCE_LONG, 'Largo'),
+    (BALANCE_EXEMPT, 'Exenta'),
+)
 
 class BalanceManager(models.Manager):
 
@@ -50,7 +52,7 @@ class BalanceProcess(AccountProcess):
     account = models.ForeignKey(Account, null=True, verbose_name=_('Datos de socia'), related_name='balance_process', on_delete=models.CASCADE)
     sponsor = models.ForeignKey(User, null=True, verbose_name=_('Madrina'), related_name='balance_sponsors', on_delete=models.SET_NULL)
     year = models.SmallIntegerField(default=2019, blank=False, null=False, verbose_name=_('Año'))
-
+    balance_type = models.CharField(null=True, blank=True, max_length=30, choices=BALANCE_TYPES, verbose_name=_('Tipo de balance'))
     general_process = 'social_balance'
 
     class Meta:

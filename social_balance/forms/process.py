@@ -8,5 +8,5 @@ class ProcessSponsorForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = BalanceProcess
-        fields = ['sponsor']
+        fields = ['sponsor', 'balance_type']
 
