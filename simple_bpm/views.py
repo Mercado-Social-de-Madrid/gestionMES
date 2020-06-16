@@ -117,3 +117,17 @@ def delete_process(request, pk):
             messages.success(request, _('El proceso ha sido utilizado en alguna tarea.'))
             return redirect(reverse('bpm:detail', kwargs={'pk':pk}))
     return False
+
+
+def cancel_process(request, processModel):
+    if request.method == "POST":
+        redirect_url = request.POST.get('redirect_to', '')
+        process_pk = request.POST.get('process', None)
+
+        if redirect_url and process_pk:
+            process = processModel.objects.filter(pk=process_pk).first()
+            if process:
+                process.cancel(request.user)
+            return redirect(redirect_url)
+
+    return False

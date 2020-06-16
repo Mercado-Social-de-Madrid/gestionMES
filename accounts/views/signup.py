@@ -23,6 +23,7 @@ from payments.models import PendingPayment
 from payments.views import generate_payment_form
 from simple_bpm.custom_filters import WorkflowFilter
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
+from simple_bpm.views import cancel_process
 
 
 class SignupFilterForm(BootstrapForm):
@@ -130,15 +131,4 @@ def signup_form_redirect(request, uuid):
 
 
 def cancel_signup(request):
-    if request.method == "POST":
-        redirect_url = request.POST.get('redirect_to', '')
-        process_pk = request.POST.get('process', None)
-
-
-        if redirect_url and process_pk:
-            process = SignupProcess.objects.filter(pk=process_pk).first()
-            if process:
-                process.cancel(request.user)
-            return redirect(redirect_url)
-
-    return False
+    return cancel_process(request, SignupProcess)

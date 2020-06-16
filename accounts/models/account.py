@@ -214,6 +214,10 @@ class Entity(Account):
         ordering = ['name']
 
     @property
+    def template_prefix(self):
+        return 'entity'
+
+    @property
     def display_name(self):
         return self.name
 
@@ -232,10 +236,6 @@ class Colaborator(Entity):
         verbose_name = _('Entidad especial')
         verbose_name_plural = _('Entidades especiales')
         ordering = ['name']
-
-    @property
-    def template_prefix(self):
-        return 'collaborator'
 
     @property
     def detail_url(self):

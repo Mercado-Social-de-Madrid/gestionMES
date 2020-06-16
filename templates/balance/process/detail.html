@@ -32,7 +32,7 @@
                 <div class="card-body">
             {% include 'account/simple_profile.html' with account=object.account %}
              <div class="text-right">
-                 <a class="btn btn-outline-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}?tab=payments">Ver pagos</a>
+                 <a class="btn btn-outline-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}?tab=balances">Ver balances anteriores</a>
                  <a class="btn btn-outline-primary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
              </div>
                 </div>
@@ -84,7 +84,7 @@
 
     </form>
 
-     <form method="post" action="{% url 'accounts:cancel_signup' %}">
+     <form method="post" action="{% url 'balance:cancel_process' %}">
          {% csrf_token %}
          <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
         <input type="hidden" name="process" value="{{object.pk}}">

@@ -23,6 +23,7 @@ from mes import settings
 from payments.models import PendingPayment
 from simple_bpm.custom_filters import WorkflowFilter
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
+from simple_bpm.views import cancel_process
 
 
 class DeletionFilterForm(BootstrapForm):
@@ -83,17 +84,7 @@ def delete_account(request, pk):
 
 
 def cancel_delete(request):
-    if request.method == "POST":
-        redirect_url = request.POST.get('redirect_to', '')
-        process_pk = request.POST.get('process', None)
-
-        if redirect_url and process_pk:
-            process = DeletionProcess.objects.filter(pk=process_pk).first()
-            if process:
-                process.cancel(request.user)
-            return redirect(redirect_url)
-
-    return False
+    return cancel_process(request, DeletionProcess)
 
 
 def revert_delete(request):

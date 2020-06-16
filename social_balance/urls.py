@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^balance/processes/$', views.BalanceProcessList.as_view(), name='process_list'),
     url(r'^balance/processes/(?P<year>\d+)/$', views.BalanceProcessList.as_view(), name='process_list_year'),
     url(r'^balance/process/(?P<pk>\d+)/$', views.BalanceProcessDetail.as_view(), name='process_detail'),
+    url(r'^balance/processes/cancel/$', views.cancel, name='cancel_process'),
 ]
 
 

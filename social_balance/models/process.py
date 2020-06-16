@@ -74,10 +74,18 @@ class BalanceProcess(AccountProcess):
                 self.workflow.complete_current_step(user)
         # TODO: In the future, notify users?
 
+
     def update(self, event):
         if event.workflow.completed:
             pass
 
+    def cancel(self, user=None):
+        self.last_update = datetime.now()
+        self.cancelled = True
+        self.save()
+        # we create also the special completion event
+        self.workflow.add_special_event('cancelled', user)
+        # TODO: Add balance report with done=false
 
 
 @receiver(post_save, sender=ProcessWorkflowEvent)
