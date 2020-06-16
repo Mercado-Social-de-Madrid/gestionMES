@@ -9,7 +9,7 @@
         <div class="container">
             <div class="row">
             <div class="col-md-8">
-                <h4 class="mb-0"><a href="{% url 'accounts:signup_list' %}">Balance social</a>
+                <h4 class="mb-0"><a href="{% url 'balance:process_list' %}">Balance social</a>
                     <i class="material-icons md-18 ">arrow_forward_ios</i> {{object.year}}
                     <i class="material-icons md-18 ">arrow_forward_ios</i> {{object.account.display_name}}</h4>
             </div>
@@ -27,23 +27,34 @@
         <div class="row mt-4">
             <div class="col-md-6">
 
-                    <div class="pb-2 pr-2">
-                        <div class="card-body pl-4">
+            <span class="badge badge-primary mb-2">Socia</span>
+            <div class="card mb-3">
+                <div class="card-body">
+            {% include 'account/simple_profile.html' with account=object.account %}
+             <div class="text-right">
+                 <a class="btn btn-outline-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}?tab=payments">Ver pagos</a>
+                 <a class="btn btn-outline-primary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
+             </div>
+                </div>
+            </div>
 
-                            {% if object.account %}
-                                {% include 'account/simple_profile.html' with account=object.account %}
 
-                            <div class=""></div>
+<div class="mt-2">
 
-                                {% endif %}
-                        </div>
-                    </div>
+<span class="badge badge-primary mt-2">Madrina</span><br>
+    {% if object.sponsor %}
+        <div class="d-flex flex-row align-items-center py-2">
+            <p class="h5 mb-0">{{object.sponsor}}</p>
+            <button type="button" class="btn btn-secondary ml-4" id="edit-sponsor">Editar</button>
+        </div>
+    {% endif %}
 
-
-{% if first_step %}
-    <h5 class="card-title">Madrina</h5>
-{% endif %}
-
+    <form method="post" class="d-flex flex-row align-items-center {% if object.sponsor %}hidden{% endif %}" id="sponsor-form">
+        {% csrf_token %}
+        <div class="flex-fill">{% include "common/forms/field.html" with field=form.sponsor hide_label=True %}</div>
+        <button type="submit" class="btn btn-secondary ml-4">Guardar</button>
+    </form>
+</div>
 <span class="badge badge-primary mt-2">Estado actual</span>
 <div class="process-stepper">
 {% if object.cancelled %}
@@ -52,7 +63,7 @@
     {% if object.workflow.completed %}
             {% include 'bpm/workflow_step_completed.html' with big=True %}
     {% else %}
-                {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
+            {% include 'bpm/workflow_step.html' with step=object.workflow.current_state big=True %}
     {% endif %}
 {% endif %}
 </div>
@@ -67,14 +78,7 @@
         {% endif %}
 
         {% if perms.social_balance.mespermission_can_add_balance_comments %}
-        <button class="btn btn-light btn-lg" type="button" data-toggle="collapse" data-target="#commentContainer" aria-expanded="false" aria-controls="commentContainer">
-        Añadir comentario
-        </button>
-
-        <div class="collapse" id="commentContainer">
-            {{comment_form.as_p}}
-            <input type="submit" name="add_comment" class="btn btn-lg btn-light" value="Enviar" />
-        </div>
+            {% include 'bpm/comment_form.html' %}
         {% endif %}
         {% csrf_token %}
 
@@ -97,7 +101,7 @@
           <div class="modal-body text-center">
               <div class="mb-4 display-2 text-muted"> <i class="material-icons">error_outline</i></div>
               <p class="lead">¿Estás segura de que deseas cancelar el proceso?</p>
-               Esta acción cerrará el proceso de acogida en negativo.
+               Esta acción cerrará el proceso de balance en negativo (lo guardará como "No hecho").
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -120,10 +124,16 @@
 
 {% endblock %}
 
-        {% block scripts %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
-        <script type="text/javascript">
-            new ClipboardJS('.copy-clipboard');
-        </script>
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+<script type="text/javascript">
+    new ClipboardJS('.copy-clipboard');
+    $(function(){
+        $('#edit-sponsor').on('click', function(){
+            $(this).parent().addClass('hidden');
+            $('#sponsor-form').removeClass('hidden');
+        });
+    });
+</script>
 
-        {% endblock %}
+{% endblock %}

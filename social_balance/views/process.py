@@ -4,36 +4,24 @@ from __future__ import unicode_literals
 import django_filters
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponseNotFound
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
+from django.views.generic import UpdateView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
 
-from accounts.forms.process import SignupProcessForm
-from accounts.models import SignupProcess
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
-from mes import settings
-from payments.models import PendingPayment
-from payments.views import generate_payment_form
 from simple_bpm.custom_filters import WorkflowFilter
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
+from simple_bpm.views import cancel_process
+from social_balance.forms.process import ProcessSponsorForm
 from social_balance.models import BalanceProcess
-
-import operator
-
-import django_filters
-from django import db
-from django.db.models import Q
-
-from simple_bpm.models import CurrentProcess, Process, ProcessStep
 
 
 class SponsorFilter(django_filters.BooleanFilter):
@@ -79,14 +67,15 @@ class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListI
 class BalanceProcessDetail(UpdateView):
     template_name = 'balance/process/detail.html'
     queryset = BalanceProcess.objects.all()
-    form_class = BalanceProcessForm
+    form_class = ProcessSponsorForm
     model = BalanceProcess
 
     def get_success_url(self):
-        return reverse('accounts:signup_detail', kwargs={'pk': self.object.pk})
+        return reverse('balance:process_detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        self.object.sponsor_updated(self.request.user)
         messages.success(self.request, _('Datos actualizados correctamente.'))
         return response
 
@@ -96,12 +85,13 @@ class BalanceProcessDetail(UpdateView):
         if self.object.workflow.is_first_step():
             context['first_step'] = True
 
-
         form = WorkflowEventForm(initial={
             'workflow':context['object'].workflow,
-            'redirect_to': reverse('accounts:signup_detail', kwargs={'pk': self.object.pk})
+            'redirect_to': reverse('balance:process_detail', kwargs={'pk': self.object.pk})
         })
         context['comment_form'] = form
         return context
 
 
+def cancel(request):
+    return cancel_process(request, BalanceProcess)

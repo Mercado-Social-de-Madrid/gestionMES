@@ -6,11 +6,8 @@
     <th scope="col">Fecha creación</th>
 {% endblock %}
 
-
 {% block item_row %}
-
-<td class="entity-td">{{item.title}}</td>
-<td>{{item.member_type}}</td>
-<td>{{item.created|date:'d/m/Y H:i'}}</td>
-
+    <td class="entity-td">{{item.title}}</td>
+    <td>{{item.member_type|default:'todas'}}</td>
+    <td>{{item.created|date:'d/m/Y H:i'}}</td>
 {% endblock %}

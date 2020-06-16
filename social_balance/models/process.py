@@ -64,6 +64,16 @@ class BalanceProcess(AccountProcess):
 
     objects = BalanceManager()
 
+
+    def sponsor_updated(self, user):
+        if self.sponsor:
+            message = _('Madrina actualizada: {}').format(self.sponsor)
+            self.workflow.add_comment(user, message)
+
+            if self.workflow.is_first_step():
+                self.workflow.complete_current_step(user)
+        # TODO: In the future, notify users?
+
     def update(self, event):
         if event.workflow.completed:
             pass
@@ -76,7 +86,7 @@ def update_process_event(sender, instance, **kwargs):
     if instance.special:
         return
 
-    process = BalanceManager.objects.filter(workflow=instance.workflow).first()
+    process = BalanceProcess.objects.filter(workflow=instance.workflow).first()
     if not process:
         return
 

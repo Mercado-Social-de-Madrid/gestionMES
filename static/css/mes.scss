@@ -76,7 +76,7 @@ $secondary: (
 .jumbotron .breadcrumbs > a{
     color: $black-secondary;
 }
-.hidden{ display:none; }
+.hidden{ display:none !important; }
 .filter-panel{
     margin-top: $spacer;
 

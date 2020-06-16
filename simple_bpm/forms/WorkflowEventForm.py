@@ -15,6 +15,7 @@ class WorkflowEventForm(forms.ModelForm, BootstrapForm):
         fields_required = ['comment']
 
         widgets = {
+            'comment': forms.Textarea(attrs={'rows': 4}),
             'workflow': forms.HiddenInput()
         }
 

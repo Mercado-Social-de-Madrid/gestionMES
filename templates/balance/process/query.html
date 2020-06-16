@@ -12,7 +12,7 @@
 {% block item_row %}
 
 <td class="entity-td">{% if item.account %} {{item.account.display_name }} {% else %} {{item.name}} {% endif %} </td>
-<td>{{item.sponsor}}</td>
+<td>{{item.sponsor|default:'-'}}</td>
 <td class="px-0">
     {% if item.cancelled %}
         {% include 'bpm/current_state.html' with cancelled=True %}
