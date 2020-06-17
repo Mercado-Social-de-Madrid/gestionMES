@@ -40,8 +40,8 @@ class BalanceManager(models.Manager):
             if created:
                 process.initialize()
 
-    def create_process(self, account):
-        process, created = self.get_or_create(account=account, member_type=account.member_type)
+    def create_process(self, account, year):
+        process, created = self.get_or_create(account=account, member_type=account.member_type, year=year)
         if created:
             process.initialize()
 

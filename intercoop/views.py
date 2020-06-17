@@ -4,17 +4,14 @@ from __future__ import unicode_literals
 import django_filters
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.clickjacking import xframe_options_exempt
-from django.views.generic import CreateView, UpdateView, TemplateView, ListView
+from django.views.generic import CreateView, UpdateView, ListView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
 
-from accounts.models import Account
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
@@ -22,13 +19,10 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
-from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
-from currency.forms.guest import GuestAccountForm
-from currency.forms.invite import GuestInviteForm
-from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
 from intercoop.forms.account import IntercoopAccountForm, IntercoopAccountSignupForm
-from intercoop.models import IntercoopAccount, IntercoopEntity
 from intercoop.forms.entity import IntercoopEntityForm
+from intercoop.models import IntercoopAccount, IntercoopEntity
+
 
 class  IntercoopAccountFilterForm(BootstrapForm):
     field_order = ['o', 'search', ]
@@ -51,7 +45,7 @@ class IntercoopAccountFilter(django_filters.FilterSet):
 
 
 class IntercoopAccountsList(PermissionRequiredMixin, FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-    permission_required = 'intercoop.mespermission_can_manage_entity'
+    permission_required = 'intercoop.mespermission_can_view_accounts'
     model = IntercoopAccount
     queryset = IntercoopAccount.objects.all().order_by('-registration_date')
     objects_url_name = 'account_detail'
@@ -71,8 +65,8 @@ class IntercoopAccountsList(PermissionRequiredMixin, FilterMixin, ExportAsCSVMix
         return context
 
 
-class EntityList(ExportAsCSVMixin, ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
-
+class EntityList(PermissionRequiredMixin, ExportAsCSVMixin, ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+    permission_required = 'intercoop.mespermission_can_manage_entity'
     model = IntercoopEntity
     queryset = IntercoopEntity.objects.all()
     objects_url_name = 'entity_detail'
@@ -86,8 +80,8 @@ class EntityList(ExportAsCSVMixin, ListView, ListItemUrlMixin, AjaxTemplateRespo
 
 
 
-class EntityCreate(CreateView):
-
+class EntityCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'intercoop.mespermission_can_add_entity'
     form_class = IntercoopEntityForm
     model = IntercoopEntity
     template_name = 'intercoop/entity/create.html'
@@ -101,7 +95,8 @@ class EntityCreate(CreateView):
         return reverse('intercoop:entity_list')
 
 
-class EntityDetail(UpdateView):
+class EntityDetail(PermissionRequiredMixin, UpdateView):
+    permission_required = 'intercoop.mespermission_can_manage_entity'
     template_name = 'intercoop/entity/detail.html'
     form_class = IntercoopEntityForm
     model = IntercoopEntity

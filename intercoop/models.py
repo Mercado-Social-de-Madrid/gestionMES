@@ -68,6 +68,7 @@ class IntercoopAccount(models.Model):
         verbose_name = _('Socia intercooperación')
         verbose_name_plural = _('Socias intercooperación')
         permissions = (
+            ("mespermission_can_view_accounts", _("Puede ver las socias de intercooperación")),
             ("mespermission_can_add_account", _("Puede añadir socias de intercooperación")),
             ("mespermission_can_validate_account", _("Puede validar socias de intercooperación")),
         )
