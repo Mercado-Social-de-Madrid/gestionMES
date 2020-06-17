@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load settings_value %}
-{% block title %}Acogida{% endblock %}
+{% block title %}Balance social · {{object.account.display_name}}{% endblock %}
 
 
 {% block content %}
@@ -95,8 +95,9 @@
             {% include 'bpm/comment_form.html' %}
         {% endif %}
         {% csrf_token %}
-
     </form>
+
+    {% include 'bpm/workflow_next_step.html' with step=object.workflow.get_next_step %}
 
      <form method="post" action="{% url 'balance:cancel_process' %}">
          {% csrf_token %}

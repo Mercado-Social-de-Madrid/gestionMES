@@ -1,0 +1,13 @@
+{% if step %}
+<div class="d-flex flex-row align-items-center">
+    <span class="badge badge-secondary mt-0 mr-3 d-block">Siguiente paso</span>
+    <div class="stepper active p-0">
+        <div class="stepper-icon" style="background-color:{%if step.color %}{{step.color}}{%endif%}" ></div>
+        <span class="stepper-text"
+            <h5>{{step.title}}</h5>
+            <span class="font-weight-light"> {{step.description}}</span>
+        </span>
+    </div>
+</div>
+
+{% endif %}

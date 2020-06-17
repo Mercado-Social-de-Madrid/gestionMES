@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
+
 from django.utils.translation import gettext as _
 from django.db import models
 
@@ -95,23 +97,34 @@ class ProcessWorkflow(models.Model):
     def get_first_step(self):
         return ProcessStep.objects.filter(process=self.process).order_by('order').first()
 
+    def get_last_step(self):
+        return ProcessStep.objects.filter(process=self.process).order_by('order').last()
+
+    def get_step(self, order):
+        return ProcessStep.objects.filter(process=self.process, order=order).first()
+
+    def get_next_step(self):
+        order = self.current_state.order if self.current_state != None else 0
+        return ProcessStep.objects.filter(process=self.process, order__gt=order).order_by('order').first()
 
     def is_first_step(self):
         return self.current_state != None and self.get_first_step() == self.current_state
 
-    def add_comment(self, user, comment):
+    def add_comment(self, user, comment, timestamp=None):
 
         event = ProcessWorkflowEvent()
         event.workflow = self
         event.step = None
         event.completed_by = user
         event.comment = comment
+        if timestamp:
+            event.timestamp = timestamp
         event.save()
 
     def complete_current_step(self, user=None):
-        order = self.current_state.order if self.current_state != None else 0
+
         current_step = self.current_state
-        next_step = ProcessStep.objects.filter(process=self.process, order__gt=order).order_by('order').first()
+        next_step = self.get_next_step()
 
         if next_step is None:
             # We are in the last step!
@@ -152,7 +165,7 @@ class ProcessWorkflowEvent(models.Model):
     workflow = models.ForeignKey(ProcessWorkflow, verbose_name=_('Evento de un proceso'), related_name='history_events', on_delete=models.CASCADE)
     step = models.ForeignKey(ProcessStep, null=True, verbose_name=_('Paso del proceso'), on_delete=models.CASCADE)
     completed_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario'), on_delete=models.SET_NULL)
-    timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_('Fecha'))
+    timestamp = models.DateTimeField(verbose_name=_('Fecha'))
     comment = models.TextField(blank=True, null=True, verbose_name=_('Comentario'))
     special = models.BooleanField(default=False, verbose_name=_('Evento especial'))
     special_type = models.CharField(null=True, choices=SPECIAL_EVENTS, max_length=15, verbose_name=_('Tipo de evento especial'))
@@ -162,6 +175,10 @@ class ProcessWorkflowEvent(models.Model):
         verbose_name_plural = _('Eventos de proceso')
         ordering = ['-timestamp']
 
+    def save(self, *args, **kwargs):
+        if self.timestamp is None:
+            self.timestamp = datetime.datetime.now()
+        super().save(*args, **kwargs)
 
 
 

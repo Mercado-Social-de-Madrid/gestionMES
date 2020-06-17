@@ -35,7 +35,7 @@ class BalanceFilterForm(BootstrapForm):
 
 class BalanceFilter(django_filters.FilterSet):
 
-    search = AccountSearchFilter(names=['sponsor__username'], lookup_expr='in', label=_('Buscar...'))
+    search = AccountSearchFilter(names=['sponsor__username', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['account', 'last_update'], field_labels={'account':'Nombre', 'last_update':'Última actualización'})
     status = WorkflowFilter(['social_balance'], filter_cancelled=True, label='Estado')
     sponsor = SponsorFilter(label=_('Amadrinada por mí'), widget=BooleanWidget(attrs={'class':'threestate'}))
