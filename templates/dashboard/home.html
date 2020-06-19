@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}Mercado Social{% endblock%}
+
+
+{% block extra_styles %}
+<style>
+    @font-face {
+      font-family: 'Coolvetica';
+      src: URL('{% static 'fonts/coolvetica.ttf' %}') format('truetype');
+    }
+    .main-header{
+        font-family: 'Coolvetica';
+    }
+</style>
+{% endblock extra_styles %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-primary main-header my-4">Mercado Social <span class="text-black"> {{year}}</span></h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            {% url 'dashboard:accounts' as account_link %}
+            {% include 'common/ajax_wrapper.html' with data_initial=account_link external=True list_id='accounts' %}
+        </div>
+
+        <div class="col-md-6">
+            {% url 'dashboard:signups' as account_link %}
+            {% include 'common/ajax_wrapper.html' with data_initial=account_link external=True list_id='accounts' %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}

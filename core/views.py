@@ -32,11 +32,6 @@ def register(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
-def dashboard(request):
-
-    return render(request, 'user/dashboard.html', {'user': request.user})
-
-
 def edit_profile(request):
     if request.method == 'POST':
         profile_form = ProfileForm(request.POST, instance=request.user)

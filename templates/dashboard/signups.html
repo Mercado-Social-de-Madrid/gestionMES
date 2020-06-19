@@ -1,0 +1,33 @@
+<div class="card mb-3">
+    <div class="card-body">
+        <h3 class="card-title text-primary"><i class="material-icons mr-1">call_received</i> Acogidas</h3>
+        <div class="d-flex">
+            <div class="mr-3 ">
+                <p class="d-flex mb-0">
+                    <span class="display-2 main-header mr-3">{{signups.count}} </span>
+                    <strong class="lead mt-2" style="line-height:1.1;">procesos<br> abiertos </strong>
+                </p>
+                <div class="text-success"><span class="display-3 main-header ml-3">{{closed_signups}}</span>&nbsp;completos</div>
+                <div class="text-danger"><span class="display-3 main-header  ml-3">{{cancelled_signups}}</span>&nbsp;cancelados</div>
+            </div>
+
+            <div id="accounts_chart" class="graph flex-grow-1">
+                <table class="table table-borderless table-sm">
+                    <tbody>
+
+                        {% for key, status in signup_statuses.items %}
+                        <tr>
+                            <td class="main-header py-1 pl-0 pr-2 text-right">{{status.count}}</td>
+                            <td class="p-0">{% include 'bpm/step_pill.html' with step=status.step %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+

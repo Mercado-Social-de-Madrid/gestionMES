@@ -1,17 +1,13 @@
 {% if cancelled %}
         <span class="badge badge-pill text-light px-3 py-1 bg-danger"><i class="fas fa-ban mr-2"></i> Cancelado</span>
-
 {% else %}
     {% if workflow.completed %}
         <span
                 style="background-color:#5fb743"
                 class="badge badge-pill text-light px-3 py-1"><i class="fas fa-check mr-2"></i> Completado</span>
     {% else %}
-
         {% if workflow.current_state %}
-        <span
-                {% if workflow.current_state.color %} style="background-color:{{workflow.current_state.color}}" {% endif %}
-                class="badge badge-pill text-light px-3 py-1"><i class="{{workflow.current_state.fa_icon}} mr-2"></i> {{ workflow.current_state.title }}</span>
+            {% include 'bpm/step_pill.html' with step=workflow.current_state %}
         {% else %}
             No iniciado
         {% endif %}

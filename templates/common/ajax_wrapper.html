@@ -1,4 +1,7 @@
-<div class="ajax-load" id="{{ list_id|default:'results' }}" {% if data_initial %}data-initial="{{data_initial}}" data-preservehistory="true"{% endif %}>
+<div class="ajax-load" id="{{ list_id|default:'results' }}"
+     {% if data_initial %}data-initial="{{data_initial}}" data-preservehistory="true"{% endif %}
+    {% if external %} data-keepurl="true" data-prevent-link="true" {% endif %}
+>
     <div class="results">
         {% if query_template %}
             {% include query_template %}

@@ -1,0 +1,60 @@
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex">
+            <p class="mr-3">
+                <span class="display-2 main-header">{{num_accounts}} </span>  <strong class="display-4">socias </strong> <br>
+                <span class="display-3 main-header ml-3 mr-2">{{num_providers}}</span>&nbsp;proveedoras&nbsp;(+{{provider_signups}})<br>
+                <span class="display-3 main-header ml-3 mr-1">{{num_consumers}}</span>&nbsp;consumidoras&nbsp;(+{{consumer_signups}})<br>
+                <span class="display-3 main-header ml-3 mr-1">{{num_special}}</span>&nbsp;ent.&nbsp;especiales
+            </p>
+
+            <div id="accounts_chart" class="graph flex-grow-1 mt-3" style="height:26vh;">
+                <div class="mes-loader my-2"></div>
+            </div>
+
+        </div>
+
+         <div class="text-right">
+             <a class="btn btn-outline-secondary" href="{% url 'accounts:consumers_list' %}">Consumidoras</a>
+             <a class="btn btn-outline-secondary" href="{% url 'accounts:providers_list' %}">Proveedoras</a>
+             <a class="btn btn-outline-primary" href="{% url 'accounts:accounts_report' %}">Ver informes</a>
+         </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(function(){
+		// Load the Visualization API and the piechart package.
+		google.charts.load('current', {'packages':['corechart']});
+
+		// Set a callback to run when the Google Visualization API is loaded.
+		google.setOnLoadCallback(drawChart);
+		function drawChart() {
+
+			var data = new google.visualization.DataTable();
+			var total = 0;
+			data.addColumn('string', "Mes");
+			data.addColumn('number', "Total");
+
+			data.addRows( {{ signups|length }} );
+			{% for month in signups %}
+				data.setValue({{ forloop.counter0 }}, 0, '{{month.month|date:'M'}}');
+				data.setValue({{ forloop.counter0 }}, 1, {{month.total}});
+			{% endfor %}
+
+	        var chart = new google.visualization.ColumnChart(document.getElementById('accounts_chart'));
+	        chart.draw(data, {
+	            width: "100%",
+                vAxis: { maxLines:2, format: 'number' },
+                colors: ['#9c27b0', '#4caf50', '#f44336'],
+                seriesType: 'bars',
+                bar: {groupWidth: "25%"},
+                lineWidth: 2,
+                pointSize: 0,
+                chartArea: {left:0,top:0,width:"100%",height:"90%"},
+                backgroundColor: 'transparent',
+
+                });
+	      }
+	});
+</script>

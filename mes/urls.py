@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^intercoop/', include('intercoop.urls', namespace='intercoop')),
     url(r'^', include('social_balance.urls', namespace='balance')),
     url(r'^pay/', include('sermepa.urls')),
+    url(r'^dashboard/', include('dashboard.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(get_api('v1').urls)),
 
