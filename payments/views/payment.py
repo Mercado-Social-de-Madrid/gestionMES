@@ -110,6 +110,7 @@ class PaymentsListView(PermissionRequiredMixin, FilterMixin, FilterView, ExportA
 
 
 class PaymentCreate(PermissionRequiredMixin, CreateView):
+    permission_required = 'payments.mespermission_can_edit_payments'
     template_name = 'payments/create.html'
     form_class = PaymentForm
     model = PendingPayment
@@ -171,4 +172,11 @@ def update_payment(request, pk):
     return HttpResponse(status=400)
 
 
-
+def payment_delete(request, pk):
+    if request.method == "POST":
+        payment = PendingPayment.objects.get(pk=pk)
+        payment.delete()
+        messages.success(request, _('Pago eliminado correctamente.'))
+        return redirect(reverse('payments:payments_list'))
+    else:
+        return HttpResponse(status=400)

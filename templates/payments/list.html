@@ -26,9 +26,10 @@
                 </ul>
             </div>
                 <div class="col-md-5 text-right">
-
                     Total pendiente: <h3 class="d-inline ml-2">{{ total_pending | intcomma }} €</h3>
+                    {% if perms.payments.mespermission_can_edit_payments %}
                     <a href="{% url 'payments:create_payment' %}" class="btn btn-primary ml-3 mb-2">Nuevo pago</a>
+                    {% endif %}
                 </div>
 
         </div>
