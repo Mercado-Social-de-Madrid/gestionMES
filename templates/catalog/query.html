@@ -30,7 +30,7 @@
          <div class="text-center">
             <div style="max-width:450px;" class="text-center m-auto">
                {% if balance.report %} <a href="{{balance.report.url}}" target="_blank">{% endif %}
-               {% include 'balance/current_balance.html' with balance=balance badge=current_badge %}
+               {% include 'balance/current_balance.html' with balance=balance badge=current_badge hide_controls=True %}
                {% if balance.report %}</a>{% endif %}
             </div>
          </div>

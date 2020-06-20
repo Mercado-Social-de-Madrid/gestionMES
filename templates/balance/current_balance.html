@@ -10,7 +10,7 @@
            <img class="img-fluid" src="{{badge.undone_img.url}}">
         {% endif %}
         <br>
-        {% if perms.social_balance.mespermission_can_view_social_balances %}
+        {% if perms.social_balance.mespermission_can_view_social_balances and not hide_controls %}
         <form class="mt-3 gen-badge-btn" method="post" action="{% url 'balance:generate_badge' entity_pk=balance.entity.pk year=balance.year %}">
             {% csrf_token %}
             <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
