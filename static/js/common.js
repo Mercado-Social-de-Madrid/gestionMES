@@ -182,6 +182,22 @@ $(function(){
 
     });
 
+    // To avoid validation issues in Chrome with hidden inputs in expansion panels, we check for them before submitting the form
+    $('form').find('[type="submit"]').on('click', function(e){
+        $(this).parents('form').find('input[required],select[required]').each(function(){
+            var input = $(this);
+            if (input.val() == null || input.val() == '' || input.val().length == 0){
+                // Check if it is inside an expansion panel to be able to show the HTML5 validation
+                var containerPanel = input.parents('.expansion-panel');
+                if (containerPanel.length > 0){
+                    if (!containerPanel.hasClass('show')){
+                        containerPanel.find('.expansion-panel-toggler').click();
+                    }
+                }
+            }
+        });
+    });
+
     initElems($('body'));
 
 });
