@@ -84,20 +84,45 @@
 
 
 {% if not object.workflow.completed and not object.cancelled%}
-    <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
-        {% if not first_step %}
-        {% if perms.social_balance.mespermission_can_manage_balance_process %}
-        <input type="submit" name="complete_step" class="btn btn-lg btn-primary mr-3" value="Completar paso" />
-        {% endif %}
-        {% endif %}
 
-        {% if perms.social_balance.mespermission_can_add_balance_comments %}
-            {% include 'bpm/comment_form.html' %}
-        {% endif %}
+    {% if not first_step and perms.social_balance.mespermission_can_manage_balance_process %}
+    <div class="d-flex justify-content-center align-items-stretch">
+
+        <form class="mb-3 text-right mr-4" method="post" action="{% url 'bpm:revert_step' %}">
+            {% csrf_token %}
+            {{step_form.workflow}}
+            {{step_form.redirect_to}}
+            <button type="submit" name="complete_step" class="btn btn-lg btn-primary mb-2"><span class="material-icons mr-2">chevron_left</span> Anterior paso</button>
+            {% include 'bpm/workflow_next_step.html' with step=object.workflow.get_previous_step %}
+        </form>
+
+        <form class="mb-3" method="post" action="{% url 'bpm:add_workflow_event' %}">
+            {% csrf_token %}
+            {{step_form.workflow}}
+            {{step_form.redirect_to}}
+            <button type="submit" name="complete_step" class="btn btn-lg btn-primary mb-2">
+            {% if object.workflow.get_next_step %}
+                Siguiente paso<span class="material-icons ml-2">chevron_right</span>
+            {% else %}
+                Completar proceso<span class="material-icons ml-2">check</span>
+            {% endif %}
+            </button>
+            {% include 'bpm/workflow_next_step.html' with step=object.workflow.get_next_step %}
+        </form>
+
+    </div>
+    {% endif %}
+
+    {% if perms.social_balance.mespermission_can_add_balance_comments %}
+    <form class="mb-4" method="post" action="{% url 'bpm:add_workflow_event' %}">
+            {% include 'bpm/comment_form.html' with comment_form=step_form %}
         {% csrf_token %}
     </form>
+    {% endif %}
 
-    {% include 'bpm/workflow_next_step.html' with step=object.workflow.get_next_step %}
+
+
+
 
      <form method="post" action="{% url 'balance:cancel_process' %}">
          {% csrf_token %}

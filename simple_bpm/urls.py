@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^process/(?P<pk>\d+)/delete/$', views.delete_process, name='delete'),
 
     url(r'^workflow/add_event/$', views.add_workflow_event, name='add_workflow_event'),
+    url(r'^workflow/revert_step/$', views.revert_step, name='revert_step'),
 ]
 
 

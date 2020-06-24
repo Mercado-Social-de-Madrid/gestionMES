@@ -91,7 +91,7 @@ class BalanceProcessDetail(PermissionRequiredMixin, UpdateView):
             'workflow':context['object'].workflow,
             'redirect_to': reverse('balance:process_detail', kwargs={'pk': self.object.pk})
         })
-        context['comment_form'] = form
+        context['step_form'] = form
         return context
 
 

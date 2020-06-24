@@ -5,6 +5,7 @@ import django_filters
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -88,22 +89,30 @@ class ProcessDetailView(DetailView):
 
 
 def add_workflow_event(request):
-
     if request.method == "POST":
         form = WorkflowEventForm(request.POST,)
         if form.is_valid():
             redirect_url = form.cleaned_data['redirect_to']
             event = form.save(commit=False)
-
             if 'add_comment' in request.POST:
                 event.workflow.add_comment(request.user, form.cleaned_data['comment'])
             else:
                 event.workflow.complete_current_step(request.user)
+            return redirect(redirect_url)
 
-        return redirect(redirect_url)
-    else:
-        return False
+    return HttpResponseBadRequest()
 
+
+def revert_step(request):
+    if request.method == "POST":
+        form = WorkflowEventForm(request.POST, )
+        if form.is_valid():
+            redirect_url = form.cleaned_data['redirect_to']
+            event = form.save(commit=False)
+            event.workflow.revert_current_step()
+            return redirect(redirect_url)
+
+    return HttpResponseBadRequest()
 
 def delete_process(request, pk):
     if request.method == "POST":

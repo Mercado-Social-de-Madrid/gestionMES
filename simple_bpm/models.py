@@ -103,6 +103,10 @@ class ProcessWorkflow(models.Model):
     def get_step(self, order):
         return ProcessStep.objects.filter(process=self.process, order=order).first()
 
+    def get_previous_step(self):
+        order = self.current_state.order if self.current_state != None else 0
+        return ProcessStep.objects.filter(process=self.process, order__lt=order).order_by('-order').first()
+
     def get_next_step(self):
         order = self.current_state.order if self.current_state != None else 0
         return ProcessStep.objects.filter(process=self.process, order__gt=order).order_by('order').first()
@@ -120,6 +124,17 @@ class ProcessWorkflow(models.Model):
         if timestamp:
             event.timestamp = timestamp
         event.save()
+
+    def revert_current_step(self):
+        current_step = self.current_state
+        previous_step = self.get_previous_step()
+
+        if previous_step:
+            # We delete the current step event in the history
+            ProcessWorkflowEvent.objects.filter(workflow=self, step__in=[current_step,previous_step]).delete()
+            self.current_state = previous_step
+            self.completed = False
+            self.save()
 
     def complete_current_step(self, user=None):
 
