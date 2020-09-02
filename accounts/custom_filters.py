@@ -4,9 +4,10 @@ from __future__ import unicode_literals
 import operator
 
 import django_filters
+from django import db
 from django.db.models import Q
 
-from accounts.models import Account
+from accounts.models import Account, Collaboration
 from core.filters.SearchFilter import SearchFilter
 
 
@@ -31,3 +32,27 @@ class AccountSearchFilter(SearchFilter):
         print(accounts.count())
         queries.append(Q(account__in=accounts))
         return queries
+
+
+
+class CollaborationFilter(django_filters.ChoiceFilter):
+
+    steps = None
+    filter_cancelled = False
+
+    def __init__(self,*args,**kwargs):
+
+        choices = list()
+        try:
+            collabs =  Collaboration.objects.all()
+            choices = list(collabs.values_list('pk', 'name'))
+        except db.utils.ProgrammingError as e:
+            print("Pending migrations for CollaborationFilter")
+
+        django_filters.ChoiceFilter.__init__(self, choices=choices, *args,**kwargs)
+
+    def filter(self,qs,value):
+        if value not in (None,''):
+            qs = qs.filter(collabs__in=[value])
+
+        return qs
