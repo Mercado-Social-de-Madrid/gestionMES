@@ -19,7 +19,7 @@
         <div class="card-body">
   <form method="post" class="edit-form" >
     {% csrf_token %}
-
+    {{form.next}}
         <div class="form-group">
             <label>Nombre de usuario</label>
             <input class="form-control" id="{{ form.username.id_for_label }}" maxlength="90" name="{{ form.username.html_name }}" type="text" placeholder="Usuario"/>
