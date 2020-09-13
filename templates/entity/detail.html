@@ -15,7 +15,7 @@
             <div class="row">
             <div class="col-sm-8 col-md-8">
                 <h4 class="mb-0 breadcrumbs">
-                    <a href="{% url 'accounts:collaborators_list' %}">Entidades</a>
+                    <a href="{% url 'accounts:entity_list' %}">Entidades</a>
                     <i class="material-icons md-18 ">arrow_forward_ios</i>
                     {{object.display_name}}
                 </h4>
@@ -53,7 +53,7 @@
       <form method="post" class="mt-1 px-4" enctype="multipart/form-data">
             {% csrf_token %}
             {{form.media}}
-            {% include 'collaborator/form.html' %}
+            {% include 'entity/form.html' %}
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
         </div>

@@ -13,10 +13,13 @@ urlpatterns = [
     url(r'^categories/add/$', views.CategoryCreate.as_view(), name='add_category'),
     url(r'^categories/(?P<pk>[0-9a-f-]+)/$', views.CategoryDetailView.as_view(), name='category_detail'),
 
-    url(r'^entities/$', views.EntitiesListView.as_view(), name='collaborators_list'),
-    url(r'^entities/add$', views.CreateEntity.as_view(), name='add_collaborator'),
-    url(r'^entities/(?P<pk>\d+)/$', views.EntityDetailView.as_view(), name='collaborator_detail'),
+    url(r'^collab/$', views.CollaborationListView.as_view(), name='collab_list'),
+    url(r'^collab/add$', views.CollaborationCreate.as_view(), name='collab_new'),
+    url(r'^collab/(?P<pk>\d+)/$', views.CollaborationDetailView.as_view(), name='collab_detail'),
 
+    url(r'^entities/$', views.EntitiesListView.as_view(), name='entity_list'),
+    url(r'^entities/add$', views.CreateEntity.as_view(), name='add_entity'),
+    url(r'^entities/(?P<pk>\d+)/$', views.EntityDetailView.as_view(), name='entity_detail'),
 
     url(r'^providers/$', views.ProvidersListView.as_view(), name='providers_list'),
     url(r'^providers/(?P<pk>\d+)/$', views.ProviderDetailView.as_view(), name='provider_detail'),

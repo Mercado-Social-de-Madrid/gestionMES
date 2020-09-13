@@ -11,16 +11,19 @@ from django.views.generic import UpdateView, CreateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
+from accounts.custom_filters import CollaborationFilter
+from accounts.forms.collab import getCollabsFormset
 from accounts.forms.collaborator import CollaboratorForm
 from accounts.forms.provider import ProviderForm, ProviderSignupForm
 from accounts.mixins.feecomments import FeeCommentsMixin
 from accounts.mixins.signup import SignupFormMixin
-from accounts.models import Provider, SignupProcess, Category, ACTIVE, Colaborator
+from accounts.models import Provider, SignupProcess, Category, ACTIVE, Colaborator, Entity
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
+from core.mixins.FormsetView import FormsetView
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
@@ -34,6 +37,7 @@ class EntityFilterForm(BootstrapForm):
 
 class EntityFilter(django_filters.FilterSet):
 
+    collab = CollaborationFilter(label=_('Modo de colaboración'))
     search = SearchFilter(names=['address', 'cif', 'name', 'business_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['name', 'start_year', 'registration_date'], field_labels={'name':'Nombre', 'start_year':'Año de inicio', 'registration_date':'Fecha de alta'})
 
@@ -48,11 +52,11 @@ class EntityFilter(django_filters.FilterSet):
 
 class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
-    model = Colaborator
-    queryset = Colaborator.objects.all()
-    objects_url_name = 'collaborator_detail'
-    template_name = 'collaborator/list.html'
-    ajax_template_name = 'collaborator/query.html'
+    model = Entity
+    queryset = Entity.objects.filter(collabs__isnull=False)
+    objects_url_name = 'entity_detail'
+    template_name = 'entity/list.html'
+    ajax_template_name = 'entity/query.html'
     filterset_class = EntityFilter
     paginate_by = 15
 
@@ -65,32 +69,44 @@ class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
     field_labels = {'registered_in_app': 'Registrada en la app', 'current_fee': 'Cuota anual', 'has_logo':'Tiene logo'}
 
 
-class CreateEntity(CreateView):
+class CreateEntity(CreateView, FormsetView):
 
     form_class = CollaboratorForm
     model = Colaborator
-    template_name = 'collaborator/create.html'
+    template_name = 'entity/create.html'
+
+    def get_named_formsets(self):
+        return {
+            'collabs': getCollabsFormset(initial=True)
+        }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = Category.objects.all()
         return context
 
+    def formset_collabs_valid(self, collabs, entity):
+        for collab in collabs:
+            collaboration = collab.save(commit=False)
+            collaboration.entity = entity
+            collaboration.save()
+
+
     def get_success_url(self):
         messages.success(self.request, _('Entidad añadida correctamente.'))
-        return reverse('accounts:collaborators_list')
+        return reverse('accounts:entity_list')
 
 
 
 class EntityDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView):
-    template_name = 'collaborator/detail.html'
+    template_name = 'entity/detail.html'
     default_tab = 'details'
     available_tabs = ['details', 'payments',]
     form_class = CollaboratorForm
     model = Colaborator
 
     def get_success_url(self):
-        return reverse('accounts:collaborator_detail', kwargs={'pk': self.object.pk})
+        return reverse('accounts:entity_detail', kwargs={'pk': self.object.pk})
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -108,4 +124,3 @@ class EntityDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView):
         context['profile_tab'] = True
 
         return context
-

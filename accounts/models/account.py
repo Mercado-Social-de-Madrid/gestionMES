@@ -8,6 +8,8 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext as _
+from django.utils.timezone import now
+
 from imagekit import ImageSpec, register
 from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFit
@@ -15,6 +17,7 @@ from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 
 from accounts.models import Category, LegalForm
+from accounts.models.collaboration import Collaboration
 
 from helpers import RandomFileName
 
@@ -208,6 +211,8 @@ class Entity(Account):
 
     hidden_in_catalog = models.BooleanField(default=False, verbose_name=_('Oculta en el catálogo'), help_text='No mostrar esta entidad en el catálogo de la web')
 
+    collabs = models.ManyToManyField(Collaboration, verbose_name=_('Colaboraciones'), related_name='entities', through='EntityCollaboration')
+
     class Meta:
         verbose_name = _('Entidad')
         verbose_name_plural = _('Entidades')
@@ -220,6 +225,10 @@ class Entity(Account):
     @property
     def display_name(self):
         return self.name
+
+    @property
+    def detail_url(self):
+        return 'accounts:entity_detail'
 
     @property
     def category_list(self):
@@ -239,7 +248,7 @@ class Colaborator(Entity):
 
     @property
     def detail_url(self):
-        return 'accounts:collaborator_detail'
+        return 'accounts:entity_detail'
 
     @property
     def current_fee(self):
@@ -272,3 +281,18 @@ class Provider(Entity):
     @property
     def has_logo(self):
         return bool(self.logo)
+
+
+class EntityCollaboration(models.Model):
+    entity = models.ForeignKey(Entity, related_name='entity_colabs', on_delete=models.SET_NULL, null=True)
+    order = models.IntegerField(verbose_name=_('Orden'), null=True, blank=True)
+    collaboration = models.ForeignKey(Collaboration, related_name='entities_collab', on_delete=models.SET_NULL, null=True, blank=True)
+    special_agreement = models.TextField(blank=True, verbose_name=_('Acuerdos especiales'))
+    custom_fee = models.FloatField(null=True, blank=True, verbose_name=_('Cuota específica'))
+    started =  models.DateField(verbose_name=_('Inicio de la colaboración'), default=now)
+    ended =  models.DateField(verbose_name=_('Fin de la colaboración'), null=True, blank=True)
+
+    class Meta:
+        verbose_name = _('Colaboración de entidad')
+        verbose_name_plural = _('Colaboraciones con entidad')
+        ordering = ['-started']

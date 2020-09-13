@@ -13,7 +13,7 @@ Menu.add_item("main",PermissionsMenuItem(_("Acogidas"), reverse('accounts:signup
 Menu.add_item("main",PermissionsMenuItem(_("Proveedoras"), reverse('accounts:providers_list')+'?status=activa', weight=ACCOUNTS_MENU_WEIGHT+20, icon="store"))
 Menu.add_item("main",PermissionsMenuItem(_("Consumidoras"), reverse('accounts:consumers_list'), weight=ACCOUNTS_MENU_WEIGHT+30, icon="directions_walk"))
 
-Menu.add_item("main",PermissionsMenuItem(_("Entidades esp."), reverse('accounts:collaborators_list'), weight=ACCOUNTS_MENU_WEIGHT+50, icon="grade"))
+Menu.add_item("main",PermissionsMenuItem(_("Entidades esp."), reverse('accounts:entity_list'), weight=ACCOUNTS_MENU_WEIGHT+50, icon="grade"))
 Menu.add_item("main",PermissionsMenuItem(_("Bajas"), reverse('accounts:deletion_list'), weight=ACCOUNTS_MENU_WEIGHT+70, icon="trending_down"))
 
 Menu.add_item("main",PermissionsMenuItem(_("Categorías"), reverse('accounts:category_list'), weight=MANAGEMENT_MENU_WEIGHT+50, icon="label"))

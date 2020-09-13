@@ -5,8 +5,7 @@
     <th scope="col">Forma legal</th>
     {% if not simple_list %}
     <th scope="col">Fecha de alta</th>
-    <th scope="col">Colaboradora</th>
-    <th scope="col">Patrocinadora</th>
+    <th scope="col">Modo de colaboración</th>
     {% endif %}
 {% endblock %}
 
@@ -18,14 +17,9 @@
 {% if not simple_list %}
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
 <td>
-   {% if item.is_collaborator %}
-      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
-   {% endif %}
-</td>
-<td>
-   {% if item.is_sponsor %}
-      <i class="material-icons" data-toggle="tooltip" data-placement="bottom" title="Sincronizada">done</i>
-   {% endif %}
+   {% for collab in item.collabs.all %}
+      {% include 'collab/badge.html' with collab=collab %}
+   {% endfor %}
 </td>
 {% endif %}
 {% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load chunks %}
+
+{% block title %}Nuevo modo de colaboración{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h3 class="mb-0"><a href="{% url 'accounts:collab_list' %}">Modos de colaboración</a><i class="material-icons md-18 ">arrow_forward_ios</i> Nueva colaboración</h3>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post" class="mt-3 p-4">
+            {% csrf_token %}
+
+        <div class="row">
+
+            <div class="col-sm-7 ">
+              {% include "common/forms/field.html" with field=form.name %}
+          </div>
+
+            <div class="col-sm-5 ">
+              {% include "common/forms/field.html" with field=form.default_fee %}
+          </div>
+
+            <div class="col-sm-12 col-md-9">
+              {% include "common/forms/field.html" with field=form.color %}
+            </div>
+
+
+
+            <div class="col-sm-12 ">
+              {% include "common/forms/field.html" with field=form.description %}
+          </div>
+
+
+        </div>
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Crear modo de colaboración</button>
+        </div>
+
+        </form>
+    </div>
+
+{% endblock %}
