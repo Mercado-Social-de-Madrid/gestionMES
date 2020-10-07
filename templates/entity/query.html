@@ -4,8 +4,9 @@
     <th scope="col">Nombre</th>
     <th scope="col">Forma legal</th>
     {% if not simple_list %}
-    <th scope="col">Fecha de alta</th>
+
     <th scope="col">Modo de colaboración</th>
+   <th scope="col">Fecha de alta</th>
     {% endif %}
 {% endblock %}
 
@@ -15,11 +16,11 @@
 <td class="entity-td">{{item.name}} {% include 'category/tag_list.html' with tags=item.categories.all %}</td>
 <td>{% if item.legal_form %} {{item.legal_form.title}} {% else %} - {% endif %}</td>
 {% if not simple_list %}
-<td>{{item.registration_date|date:'d/m/Y'}}</td>
 <td>
    {% for collab in item.collabs.all %}
       {% include 'collab/badge.html' with collab=collab %}
    {% endfor %}
 </td>
+<td>{{item.registration_date|date:'d/m/Y'}}</td>
 {% endif %}
 {% endblock %}

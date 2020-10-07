@@ -1,3 +1,3 @@
 <span
-    {% if collab.color %} style="background-color:{{collab.color}}" {% endif %}
-    class="badge badge-pill text-light px-3 py-1"><i class="{{step.fa_icon}} mr-2"></i> {{ collab.name }}</span>
+    style="background-color:{{ collab.color|default_if_none:'#444' }}"
+    class="badge badge-pill text-light px-3 py-1"> {{ collab.name }}</span>

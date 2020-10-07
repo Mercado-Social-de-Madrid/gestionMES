@@ -49,7 +49,7 @@ class CollaborationCreate(CreateView):
 
 class CollaborationDetailView(UpdateView):
     template_name = 'collab/detail.html'
-    form_class = CategoryForm
+    form_class = CollabForm
     model = Collaboration
 
     def get_success_url(self):

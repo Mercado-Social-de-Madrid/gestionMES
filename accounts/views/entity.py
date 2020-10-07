@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 import django_filters
 from django.conf import settings
 from django.contrib import messages
-from django.http import Http404
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -12,12 +11,10 @@ from django_filters.views import FilterView
 from filters.views import FilterMixin
 
 from accounts.custom_filters import CollaborationFilter
-from accounts.forms.collab import getCollabsFormset
 from accounts.forms.collaborator import CollaboratorForm
-from accounts.forms.provider import ProviderForm, ProviderSignupForm
+from accounts.forms.entity_collab import getCollabsFormset
 from accounts.mixins.feecomments import FeeCommentsMixin
-from accounts.mixins.signup import SignupFormMixin
-from accounts.models import Provider, SignupProcess, Category, ACTIVE, Colaborator, Entity
+from accounts.models import Category, ACTIVE, Colaborator, Entity
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
@@ -26,8 +23,7 @@ from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.FormsetView import FormsetView
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
-from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
-from payments.models import FeeRange, PendingPayment
+from payments.models import PendingPayment
 from social_balance.models import EntitySocialBalance, SocialBalanceBadge
 
 

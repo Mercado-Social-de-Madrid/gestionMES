@@ -2,14 +2,20 @@
 
  {% block table_head %}
     <th scope="col">Nombre</th>
+    <th scope="col">Cuota por defecto</th>
     <th scope="col">Número de entidades</th>
 {% endblock %}
-
 
 {% block item_row %}
 
 <td class="entity-td"> {% include 'category/tag.html' with tag=item big=True %} {{item.name}}</td>
-<td>{{item.entities_collab.all.count}} <a href="{% url 'accounts:entity_list' %}?collab={{item.pk}}">ver</a> </td>
-
+<td>{{item.default_fee|default:'-'}} {% if item.default_fee %}€ {% endif %}</td>
+<td>
+    {{item.entities_collab.all.count}}
+<td>
+    <a class="btn btn-outline btn-narrow text-primary"
+       href="{% url 'accounts:entity_list' %}?collab={{item.pk}}"
+        data-toggle="tooltip" data-placement="bottom" title="Ver entidades"> <i class="material-icons">visibility</i> </a>
+</td>
 
 {% endblock %}
