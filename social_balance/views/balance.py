@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import time
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -8,18 +9,19 @@ from django.db.models import Prefetch
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, FormView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
 from accounts.models import Entity, ACTIVE
 from accounts.views import ProviderFilter
+from core.mixins.AjaxFormResponseMixin import AjaxFormResponseMixin
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from social_balance.forms.entity_year import EntityYearBalanceForm
 from social_balance.models import SocialBalanceBadge, EntitySocialBalance
-
+from social_balance.forms.bulk_import import ImportSocialBalanceForm
 
 class SocialBalanceYear(PermissionRequiredMixin, FilterView, FilterMixin, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
     permission_required = 'social_balance.mespermission_can_view_social_balances'
@@ -74,6 +76,23 @@ class SocialBalanceEditView(UpdateView):
     def get_success_url(self):
         messages.success(self.request, _('Datos de balance actualizados satisfactoriamente.'))
         return reverse('balance:entity_year', kwargs={'entity_pk': self.object.entity.pk, 'year':self.object.year })
+
+
+class ImportSocialBalanceFormView(AjaxFormResponseMixin, FormView):
+    template_name = 'balance/year/import.html'
+    form_class = ImportSocialBalanceForm
+
+    def form_valid(self, form):
+
+        year = form.cleaned_data['year']
+        csv_file = form.cleaned_data['csv_file']
+
+        form.results = EntitySocialBalance.import_data(csv_file, year)
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        messages.success(self.request, _('Datos de balance actualizados satisfactoriamente.'))
+        return reverse('balance:bulk_import')
 
 
 def generate_badge(request, entity_pk, year):

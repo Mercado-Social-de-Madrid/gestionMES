@@ -1,14 +1,8 @@
 import csv
-import json
-import re
 
-import requests
-from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
 
-from accounts.models import Provider, TERR_LOCAL, TERR_COUNTRY, LegalForm, Entity
-from mes import settings
+from accounts.models import Entity
 from social_balance.models import EntitySocialBalance
 
 

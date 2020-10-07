@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load chunks %}
+
+{% block title %}Balance social {{object.year}}{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h3 class="breadcrumbs">
+                    <a href="{% url 'balance:balance' %}">Balance social</a>
+                    <i class="material-icons md-18 ">arrow_forward_ios</i>
+                     Importar datos
+                </h3>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="row mt-4">
+
+            <div class="col-md-6">
+
+                <p>
+                    <span class="typography-subheading">
+                            Importa los datos anuales de Balance Social mediante un fichero CSV separado por comas.
+                        </span>
+                    </p>
+
+
+                <div class="alert alert-warning pl-4">
+
+                    El fichero CSV debe tener una primera fila en la que se define el orden de las columnas de los datos. Estas columnas son:
+                    <ul class="my-2">
+                        <li><code>cif</code>: CIF/NIF para identificar a la entidad a la que corresponde este balance social</li>
+                        <li><code>exenta</code>: indica si la entidad está exenta ese año de realizar el balance</li>
+                        <li><code>realizado</code>: indica si la entidad ha realizado el balance</li>
+                        <li><code>publico</code>: indica si la entidad quiere que su balance pueda consultarse públicamente</li>
+                        <li><code>logro</code>: Logro a destacar durante ese año</li>
+                        <li><code>reto</code>: Reto para el año siguiente</li>
+                        <li><code>facturacion</code>: <strong>opcional</strong>. Facturación anual. Si corresponde con el último año en curso, se actualizará el valor en los datos fiscales de la entidad para el cálculo de cuotas</li>
+                        <li><code>num_trab</code>: <strong>opcional</strong>. Número de trabajadoras (socias y no socias). Si corresponde con el último año en curso, se actualizará el valor en los datos fiscales de la entidad para el cálculo de cuotas</li>
+                    </ul>
+
+                    Para los campos de sí/no, se puede representar mediante <code>0</code> y <code>1</code>, con <code>si</code> y <code>no</code>, o <code>verdadero</code> y <code>falso</code>. Un campo vacío se correspondera con un valor falso.
+                </div>
+
+            </div>
+
+            <div class="col-md-5">
+
+                <div class="card mt-2">
+                    <div class="card-body p-4 pb-5">
+                        <form class="ajax-form" enctype="multipart/form-data" action="{% url 'balance:bulk_import' %}" method="post">
+
+                            {% csrf_token %}
+                            {% include "common/forms/field.html" with field=form.year %}
+                            {% include "common/forms/field.html" with field=form.csv_file %}
+
+                            {% if perms.social_balance.mespermission_can_edit_social_balances %}
+                            <button type="submit" class="btn btn-primary btn-lg mt-4">Enviar</button>
+                            {% endif %}
+
+                            <div class="results">
+                                <div class="progress loading-indicator">
+                                  <div class="progress-bar bg-secondary progress-bar-indeterminate" role="progressbar"></div>
+                                </div>
+                                <div class="alert alert-danger form-errors" style="display:none;"></div>
+                                <ul class="messages alert alert-info pl-4" style="display:none;"></ul>
+                            </div>
+
+
+                        </form>
+
+
+                    </div>
+                </div>
+
+                <p class="mt-3">
+                    Si no tienes claro cómo es el formato, puedes descargar un fichero de ejemplo a continuación:<br>
+                    <a href="{% static 'data/balance_import_ejemplo.csv' %}" class="btn btn-secondary mt-2"> <i class="material-icons mr-2">insert_drive_file</i>   Descargar ejemplo</a>
+                </p>
+
+          </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+

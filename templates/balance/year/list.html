@@ -11,7 +11,7 @@
                 <div class="col-md-3">
                     <h3 class="mb-0 d-inline-block">Balance social</h3>
                 </div>
-                <div class="col-md-9">
+                <div class="col-md-7">
 
                 <ul class="pagination py-0 mb-0">
                     {% for year in years %}
@@ -20,10 +20,13 @@
                         {{year}}
                       </a>
                      </li>
-
                     {% endfor %}
                 </ul>
-                      </div>
+
+                </div>
+                <div class="col-md-2 text-right">
+                    <a class="btn btn-primary" href="{% url 'balance:bulk_import' %}"><i class="material-icons mr-2">upgrade</i> Importar</a>
+                </div>
             </div>
         </div>
     </div>

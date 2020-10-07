@@ -17,6 +17,8 @@ urlpatterns = [
     url(r'^accounts/providers/(?P<entity_pk>\d+)/balance/(?P<year>\d+)/$', views.SocialBalanceEditView.as_view(), name='entity_year'),
     url(r'^accounts/providers/(?P<entity_pk>\d+)/balance/(?P<year>\d+)/renderbadge/$', views.generate_badge, name='generate_badge'),
 
+    url(r'^balance/import/$', views.ImportSocialBalanceFormView.as_view(), name='bulk_import'),
+
     url(r'^balance/processes/$', views.BalanceProcessList.as_view(), name='process_list'),
     url(r'^balance/processes/year/(?P<year>\d+)/$', views.BalanceProcessList.as_view(), name='process_list_year'),
     url(r'^balance/processes/(?P<pk>\d+)/$', views.BalanceProcessDetail.as_view(), name='process_detail'),

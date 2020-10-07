@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import codecs
+import csv
+
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
 from imagekit.models import ProcessedImageField
@@ -8,6 +12,7 @@ from pilkit.processors import ResizeToFit
 
 from accounts.models import Entity
 from helpers import RandomFileName
+from helpers.csv import csv_value_to_boolean
 from social_balance.renderer import BadgeRenderer
 
 
@@ -41,6 +46,44 @@ class EntitySocialBalance(models.Model):
         renderer.configure_webdriver()
         renderer.update_balance_image(self)
 
+    @staticmethod
+    def import_data(csv_file, year):
+
+        results = []
+        reader = csv.DictReader(codecs.iterdecode(csv_file, 'utf-8'), delimiter=';')
+        for row in reader:
+            cif = row['cif']
+            entity = Entity.objects.filter(cif=cif)
+            if not entity.exists():
+
+                results.append( "No se pudo encontrar entidad con CIF {}. ".format(cif))
+                continue
+
+            entity = entity.first()
+            balance, created = EntitySocialBalance.objects.get_or_create(entity=entity, year=year)
+            balance.done = csv_value_to_boolean(row['realizado'])
+            balance.is_exempt = csv_value_to_boolean(row['exenta'])
+            balance.is_public = csv_value_to_boolean(row['publico'])
+            balance.achievement = row['logro']
+            balance.challenge = row['reto']
+            balance.save()
+
+            results.append("Balance {} para {} actualizado. ".format(year, entity.name))
+
+            if (year == settings.CURRENT_BALANCE_YEAR):
+                if 'num_trab' in row:
+                    entity.num_workers = int(row['num_trab'])
+                if 'facturacion' in row:
+                    aprox_income = int(row['facturacion'])
+                    if (aprox_income > 1000):
+                        # we can expect that they gave the total value
+                        aprox_income = aprox_income / 1000
+                    entity.aprox_income = aprox_income
+
+                if 'num_trab' in row or 'facturacion' in row:
+                    entity.save()
+
+        return results
 
     def __str__(self):
         return '{}: {}'.format(self.entity.cif, self.year)
