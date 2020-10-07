@@ -46,14 +46,15 @@ $secondary: (
     left:50%;
     margin-top:-75px;
     margin-left:-75px;
-    display:none;
 }
+.loading-spinner, .loading-indicator{ display:none; }
 .loading-container{
     opacity:0.6;
     position: relative;
-}
-.loading-container .loading-spinner{
-    display:block;
+
+    .loading-spinner, .loading-indicator{
+        display:block;
+    }
 }
 
 @-moz-keyframes spin { 100% { -moz-transform: rotate(-360deg); } }

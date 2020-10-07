@@ -162,7 +162,6 @@ $(function(){
         }
     });
 
-
 	var toastCounter = 1;
     $($('.toast-messages .toast').get().reverse()).each(function(){
         var message = $(this);
@@ -196,6 +195,55 @@ $(function(){
                 }
             }
         });
+    });
+
+    $('form.ajax-form').on('submit', function(e){
+        e.preventDefault();
+        var self = $(this);
+        var results = self.find('.results');
+        var formData = new FormData(this);
+
+        self.find('[type="submit"]').hide();
+        results.addClass('loading-container');
+
+        $.ajax({
+            url: self.attr('action'),
+            type: 'POST',
+            enctype: 'multipart/form-data',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data, status){
+                var messages = results.removeClass('loading-container').find('.messages').show();
+				if ('results' in data){
+                    for (var i=0; i<data['results'].length; i++){
+                        messages.append($('<li>').text(data['results'][i]));
+                    }
+				}
+				results.addClass('success');
+			},
+
+			error: function (response, status, error) {
+			    results.removeClass('loading-container')
+				var result = response.responseJSON;
+				if (result && 'form_errors' in result){
+				    for (var fieldName in result['form_errors']){
+				        if (fieldName == '__all__'){
+                            results.find('.form-errors').text(result['form_errors'][fieldName]).show();
+				            continue;
+				        }
+				        var field = self.find('[name="'+fieldName+'"]');
+				        var fieldContainer = self.find('[name="'+fieldName+'"]').parents('.form-group')
+				        var errorLabel = fieldContainer.find('.form-errors');
+				        if (errorLabel.length == 0){
+				            var errorLabel = $('<div class="d-block invalid-feedback form-errors"></div>').appendTo(fieldContainer);
+				        }
+				        errorLabel.text(result['form_errors'][fieldName]);
+				    }
+				}
+			}
+        });
+
     });
 
     initElems($('body'));
