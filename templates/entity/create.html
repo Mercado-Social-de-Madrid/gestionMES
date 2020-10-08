@@ -23,6 +23,29 @@
         <form method="post" class="mt-3 p-4" enctype="multipart/form-data" target="_parent">
             {% csrf_token %}
 
+            {% with formsets.collabs as collabs_formset %}
+                {{ collabs_formset.management_form }}
+
+                {% for collab_form in collabs_formset %}
+
+                    <div class="row mb-2">
+                        <div class="col-md-5">
+                            {% include "common/forms/field.html" with field=collab_form.collaboration not_floating=True %}
+                            <div class="row">
+                                <div class="col-xl-6">{% include "common/forms/field.html" with field=collab_form.custom_fee %}</div>
+                                 <div class="col-xl-6">{% include "common/forms/field.html" with field=collab_form.started %}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            {% include "common/forms/field.html" with field=collab_form.special_agreement not_floating=True %}
+                        </div>
+                    </div>
+
+
+                {% endfor %}
+
+            {% endwith %}
+
             {% include 'entity/form.html' %}
 
 

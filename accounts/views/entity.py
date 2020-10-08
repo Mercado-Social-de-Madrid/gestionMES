@@ -81,6 +81,10 @@ class CreateEntity(CreateView, FormsetView):
         context['categories'] = Category.objects.all()
         return context
 
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
+
     def formset_collabs_valid(self, collabs, entity):
         for collab in collabs:
             collaboration = collab.save(commit=False)

@@ -11,8 +11,12 @@ class EntityCollabForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = EntityCollaboration
-        fields = ['entity', 'collaboration', 'special_agreement', 'custom_fee', 'started', 'ended']
-        fields_required = ['title', 'order']
+        fields = ['collaboration', 'special_agreement', 'custom_fee', 'started', 'ended']
+        fields_required = ['collaboration', 'special_agreement']
+
+        widgets = {
+            'special_agreement': forms.Textarea(attrs={'rows': 5})
+        }
 
 
 def getCollabsFormset(initial=True):

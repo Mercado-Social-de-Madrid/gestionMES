@@ -284,11 +284,11 @@ class Provider(Entity):
 
 
 class EntityCollaboration(models.Model):
-    entity = models.ForeignKey(Entity, related_name='entity_colabs', on_delete=models.SET_NULL, null=True)
+    entity = models.ForeignKey(Entity, related_name='entity_colabs', verbose_name=_('Entidad'), on_delete=models.SET_NULL, null=True)
     order = models.IntegerField(verbose_name=_('Orden'), null=True, blank=True)
-    collaboration = models.ForeignKey(Collaboration, related_name='entities_collab', on_delete=models.SET_NULL, null=True, blank=True)
+    collaboration = models.ForeignKey(Collaboration, verbose_name=_('Modo de colaboración'), related_name='entities_collab', on_delete=models.SET_NULL, null=True, blank=True)
     special_agreement = models.TextField(blank=True, verbose_name=_('Acuerdos especiales'))
-    custom_fee = models.FloatField(null=True, blank=True, verbose_name=_('Cuota específica'))
+    custom_fee = models.FloatField(null=True, blank=True, verbose_name=_('Cuota específica'), help_text=_('Cuota anual. Si se deja este campo vacío, se utilizará la cuota por defecto definida en el modo de colaboración'))
     started =  models.DateField(verbose_name=_('Inicio de la colaboración'), default=now)
     ended =  models.DateField(verbose_name=_('Fin de la colaboración'), null=True, blank=True)
 

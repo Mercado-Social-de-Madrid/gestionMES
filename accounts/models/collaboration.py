@@ -19,3 +19,7 @@ class Collaboration(models.Model):
         verbose_name = _('Tipos de colaboración')
         verbose_name_plural = _('Tipos de colaboración')
         ordering = ['name']
+
+
+    def __str__(self):
+        return self.name
