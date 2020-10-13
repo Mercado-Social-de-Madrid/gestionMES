@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^entities/$', views.EntitiesListView.as_view(), name='entity_list'),
     url(r'^entities/add$', views.CreateEntity.as_view(), name='add_entity'),
     url(r'^entities/(?P<pk>\d+)/$', views.EntityDetailView.as_view(), name='entity_detail'),
+    url(r'^entities/collab/(?P<pk>\d+)/$', views.EntityCollaborationUpdate.as_view(), name='collab_entity_update'),
 
     url(r'^providers/$', views.ProvidersListView.as_view(), name='providers_list'),
     url(r'^providers/(?P<pk>\d+)/$', views.ProviderDetailView.as_view(), name='provider_detail'),

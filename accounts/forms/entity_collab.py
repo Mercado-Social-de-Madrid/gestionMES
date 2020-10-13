@@ -18,6 +18,19 @@ class EntityCollabForm(forms.ModelForm, BootstrapForm):
             'special_agreement': forms.Textarea(attrs={'rows': 5})
         }
 
+class EditCollabForm(forms.ModelForm, BootstrapForm):
+
+    redirect_to = forms.CharField(widget=forms.HiddenInput())
+
+    class Meta:
+        model = EntityCollaboration
+        exclude = []
+
+        widgets = {
+            'entity': forms.HiddenInput(),
+            'special_agreement': forms.Textarea(attrs={'rows': 4})
+        }
+
 
 def getCollabsFormset(initial=True):
     return forms.formset_factory(EntityCollabForm, min_num=1, extra=0, validate_min=True )

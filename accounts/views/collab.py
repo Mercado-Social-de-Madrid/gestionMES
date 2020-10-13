@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Count
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -12,7 +13,8 @@ from filters.views import FilterMixin
 
 from accounts.forms.category import CategoryForm
 from accounts.forms.collaboration import CollabForm
-from accounts.models import Category, Collaboration
+from accounts.forms.entity_collab import EditCollabForm
+from accounts.models import Category, Collaboration, EntityCollaboration
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 
@@ -28,7 +30,6 @@ class CollaborationListView(PermissionRequiredMixin, FilterMixin, FilterView, Li
 
     def get_queryset(self):
         qs = Collaboration.objects.all().annotate(total=Count('entities_collab'))
-        print(qs)
         return qs
 
 
@@ -59,3 +60,26 @@ class CollaborationDetailView(UpdateView):
         response = super().form_valid(form)
         messages.success(self.request, _('Datos actualizados correctamente.'))
         return response
+
+
+class EntityCollaborationUpdate(UpdateView):
+
+    model = EntityCollaboration
+    form_class = EditCollabForm
+
+    def get_success_url(self):
+        if self.redirect_url:
+            return self.redirect_url
+        else:
+            return reverse('accounts:entity_detail', kwargs={'pk': self.object.entity.pk})
+
+    def form_valid(self, form):
+        self.redirect_url = form.cleaned_data.get('redirect_to')
+        if 'delete' in self.request.POST:
+            self.object.delete()
+            messages.success(self.request, _('Colaboración eliminada correctamente.'))
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            response = super().form_valid(form)
+            messages.success(self.request, _('Datos actualizados correctamente.'))
+            return response

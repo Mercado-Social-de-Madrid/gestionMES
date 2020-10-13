@@ -27,21 +27,7 @@
                 {{ collabs_formset.management_form }}
 
                 {% for collab_form in collabs_formset %}
-
-                    <div class="row mb-2">
-                        <div class="col-md-5">
-                            {% include "common/forms/field.html" with field=collab_form.collaboration not_floating=True %}
-                            <div class="row">
-                                <div class="col-xl-6">{% include "common/forms/field.html" with field=collab_form.custom_fee %}</div>
-                                 <div class="col-xl-6">{% include "common/forms/field.html" with field=collab_form.started %}</div>
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            {% include "common/forms/field.html" with field=collab_form.special_agreement not_floating=True %}
-                        </div>
-                    </div>
-
-
+                    {% include "entity/collab_form.html" with form=collab_form %}
                 {% endfor %}
 
             {% endwith %}

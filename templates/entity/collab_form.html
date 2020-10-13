@@ -1,0 +1,12 @@
+<div class="row mb-2">
+    <div class="col-md-5">
+        {% include "common/forms/field.html" with field=form.collaboration not_floating=True %}
+        <div class="row">
+            <div class="col-xl-6">{% include "common/forms/field.html" with field=form.custom_fee %}</div>
+             <div class="col-xl-6">{% include "common/forms/field.html" with field=form.started %}</div>
+        </div>
+    </div>
+    <div class="col-md-7">
+        {% include "common/forms/field.html" with field=form.special_agreement not_floating=True %}
+    </div>
+</div>

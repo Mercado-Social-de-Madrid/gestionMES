@@ -1,0 +1,27 @@
+<form action="{% url 'accounts:collab_entity_update' form.instance.pk %}" method="post" class="mb-2">
+    {% csrf_token %}
+    {% include "common/forms/redirect_field.html" %}
+    {{form.entity}}
+    <div class="card">
+        <div class="card-body" style="border-left:12px solid {{form.instance.collaboration.color}};">
+            <div class="row">
+                <div class="col-md-5">
+                    {% include "common/forms/field.html" with field=form.collaboration not_floating=True %}
+                    <div class="row">
+                        <div class="col-xl-6">{% include "common/forms/field.html" with field=form.custom_fee %}</div>
+                         <div class="col-xl-6">{% include "common/forms/field.html" with field=form.started %}</div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    {% include "common/forms/field.html" with field=form.special_agreement not_floating=True %}
+                    <div class="text-right">
+                        <input type="submit" name="delete" class="btn btn-danger mb-2" value="Eliminar colaboración">
+                        <input type="submit" name="update" class="btn btn-primary ml-2" value="Guardar cambios">
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
