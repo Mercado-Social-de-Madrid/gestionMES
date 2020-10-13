@@ -40,7 +40,7 @@ class EntityFilter(django_filters.FilterSet):
     o = LabeledOrderingFilter(fields=['name', 'start_year', 'registration_date'], field_labels={'name':'Nombre', 'start_year':'Año de inicio', 'registration_date':'Fecha de alta'})
 
     class Meta:
-        model = Colaborator
+        model = Entity
         form = EntityFilterForm
         fields = { 'status':['exact'], }
 
@@ -51,6 +51,7 @@ class EntityFilter(django_filters.FilterSet):
 class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     model = Entity
+    queryset = Entity.objects.filter( Q(instance_of=Colaborator) | Q(collabs__isnull=False) ).distinct()
     objects_url_name = 'entity_detail'
     template_name = 'entity/list.html'
     ajax_template_name = 'entity/query.html'
@@ -65,8 +66,7 @@ class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
                         'telegram_link', ]
     field_labels = {'registered_in_app': 'Registrada en la app', 'current_fee': 'Cuota anual', 'has_logo':'Tiene logo'}
 
-    def get_queryset(self):
-        Entity.objects.filter( Q(instance_of=Colaborator) | Q(collabs__isnull=False))
+
 
 
 

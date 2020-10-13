@@ -12,6 +12,7 @@ from django_filters.views import FilterView
 from filters.views import FilterMixin
 
 from accounts.forms.provider import ProviderForm, ProviderSignupForm
+from accounts.mixins.entity_collab import EntityCollabFormMixin
 from accounts.mixins.feecomments import FeeCommentsMixin
 from accounts.mixins.signup import SignupFormMixin, SignupUpdateMixin
 from accounts.models import Provider, SignupProcess, Category, ACTIVE
@@ -65,7 +66,7 @@ class ProvidersListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMi
     field_labels = {'registered_in_app': 'Registrada en la app', 'current_fee': 'Cuota anual', 'has_logo':'Tiene logo', 'category_list':'Categorías'}
 
 
-class ProviderDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView):
+class ProviderDetailView(TabbedViewMixin, FeeCommentsMixin, EntityCollabFormMixin, UpdateView):
     template_name = 'provider/detail.html'
     default_tab = 'details'
     available_tabs = ['details', 'payments', 'balances', 'currency']
@@ -74,6 +75,10 @@ class ProviderDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView):
 
     def get_success_url(self):
         return reverse('accounts:provider_detail', kwargs={'pk': self.object.pk})
+
+    def form_invalid(self, form):
+        print(form.errors)
+        return super().form_invalid(form)
 
     def form_valid(self, form):
         response = super(ProviderDetailView, self).form_valid(form)
@@ -103,7 +108,6 @@ class ProviderSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
         process = SignupProcess.objects.create_process(account=self.object)
         process.form_filled(self.object, form)
         return response
-
 
     def get_context_data(self, **kwargs):
         context = super(ProviderSignup, self).get_context_data(**kwargs)

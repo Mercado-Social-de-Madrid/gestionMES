@@ -1,3 +1,11 @@
+
+<form method="post" class="mt-1 py-4" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.media}}
+
+    <!-- hidden submit button to be able to submit it from outside the form -->
+    <button id="provider-form-submit" type="submit" class="btn btn-primary btn-lg" style="display: none;">Guardar</button>
+
 <div class="list-group check-onload-form-errors" id="entity-data">
   <div class="expansion-panel list-group-item">
     <a aria-controls="fiscal" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#fiscal" id="headingOne">
@@ -269,3 +277,44 @@
     </div>
   </div>
 
+</form>
+
+
+<div class="list-group">
+  <div class="expansion-panel list-group-item">
+    <a aria-controls="fiscal" aria-expanded="false" class="expansion-panel-toggler collapsed" data-toggle="collapse" href="#collabs" id="heading-collabs">
+      <span>
+          Acuerdos de colaboración
+          <i class="invisible material-icons text-warning md-18 mb-2">report_problem</i>
+      </span>
+      <div class="expansion-panel-icon ml-3 text-black-secondary">
+        <i class="collapsed-show material-icons">keyboard_arrow_down</i>
+        <i class="collapsed-hide material-icons">keyboard_arrow_up</i>
+      </div>
+    </a>
+    <div aria-labelledby="heading-collabs" class="collapse" data-parent="#entity-data" id="collabs">
+      <div class="expansion-panel-body px-0 pb-0">
+            <a href="#" type="button" data-toggle="collapse" data-target="#addCollaborationContainer" aria-expanded="false" aria-controls="commentContainer" class="btn btn-sm ml-3 mb-3 btn-secondary"><i class="material-icons mr-1">add</i>  Añadir</a>
+
+            <div class="collapse" id="addCollaborationContainer">
+                {% include 'entity/edit_collab_form.html' with form=add_collab_form %}
+            </div>
+
+          {% for collab_form in collabs %}
+                {% include 'entity/edit_collab_form.html' with form=collab_form %}
+            {% empty %}
+                <div class="my-2 ml-3">
+                    La entidad todavía no tiene ningún acuerdo de colaboración...
+                </div>
+            {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="text-center mt-3">
+    <!-- hidden submit button to be able to submit it from outside the form -->
+    <label for="provider-form-submit" role="button" class="btn btn-primary btn-lg">Guardar</label>
+</div>

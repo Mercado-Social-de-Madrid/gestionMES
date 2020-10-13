@@ -1,9 +1,9 @@
-<form action="{{form.action}}" method="post" class="mb-2">
+<form action="{{form.action}}" method="post" class="mt-2">
     {% csrf_token %}
     {% include "common/forms/redirect_field.html" %}
     {{form.entity}}
     <div class="card">
-        <div class="card-body" style="border-left:12px solid {{form.instance.collaboration.color}};">
+        <div class="card-body" style="border-left:12px solid {{form.instance.collaboration.color|default:'#aaa' }};">
             <div class="row">
                 <div class="col-md-5">
                     {% include "common/forms/field.html" with field=form.collaboration not_floating=True %}

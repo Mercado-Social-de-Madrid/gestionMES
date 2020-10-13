@@ -27,3 +27,7 @@
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
 {% endif %}
 {% endblock %}
+
+{% block item_url %}
+    {% url item.detail_url item.pk %}
+{% endblock %}

@@ -53,14 +53,7 @@
 
       <div class="row">
           <div class="{% if fee_comments %}col-lg-8{% else %}col-lg-12{% endif %}">
-              <form method="post" class="mt-1 p-4" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{form.media}}
-                    {% include 'provider/form.html' %}
-                <div class="text-center mt-3">
-                    <button type="submit" class="btn btn-primary btn-lg">Guardar</button>
-                </div>
-              </form>
+              {% include 'provider/form.html' %}
           </div>
 
           {% if fee_comments %}
