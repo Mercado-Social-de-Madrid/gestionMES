@@ -1,8 +1,6 @@
-from django.urls import reverse, resolve
+from django.urls import reverse
 
 from accounts.forms.entity_collab import EditCollabForm
-from payments.forms.FeeComment import FeeCommentForm
-from payments.models import FeeComments
 
 
 class EntityCollabFormMixin(object):
@@ -20,6 +18,5 @@ class EntityCollabFormMixin(object):
                 form = EditCollabForm(instance=collab)
                 form.action = reverse('accounts:collab_entity_update', kwargs={'pk': collab.pk})
                 context['collabs'].append(form)
-
 
         return context

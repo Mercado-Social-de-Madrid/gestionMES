@@ -18,6 +18,7 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.FormsetView import FormsetView
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from core.mixins.RedirectFormMixin import RedirectFormMixin
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
 from simple_bpm.forms.process import ProcessForm, getStepsFormset
 from simple_bpm.models import Process, ProcessStepTask, ProcessWorkflow
@@ -88,19 +89,17 @@ class ProcessDetailView(DetailView):
     template_name = 'bpm/detail.html'
 
 
-def add_workflow_event(request):
-    if request.method == "POST":
-        form = WorkflowEventForm(request.POST,)
-        if form.is_valid():
-            redirect_url = form.cleaned_data['redirect_to']
-            event = form.save(commit=False)
-            if 'add_comment' in request.POST:
-                event.workflow.add_comment(request.user, form.cleaned_data['comment'])
-            else:
-                event.workflow.complete_current_step(request.user)
-            return redirect(redirect_url)
+class AddWorkflowEventView(RedirectFormMixin):
+    form_class = WorkflowEventForm
 
-    return HttpResponseBadRequest()
+    def form_valid(self, form):
+        event = form.save(commit=False)
+        if 'add_comment' in self.request.POST:
+            event.workflow.add_comment(self.request.user, form.cleaned_data['comment'])
+        else:
+            event.workflow.complete_current_step(self.request.user)
+
+        return super().form_valid(form, direct_redirect=True)
 
 
 def revert_step(request):
