@@ -1,4 +1,4 @@
-<form action="{% url 'accounts:collab_entity_update' form.instance.pk %}" method="post" class="mb-2">
+<form action="{{form.action}}" method="post" class="mb-2">
     {% csrf_token %}
     {% include "common/forms/redirect_field.html" %}
     {{form.entity}}
@@ -15,10 +15,13 @@
                 <div class="col-md-7">
                     {% include "common/forms/field.html" with field=form.special_agreement not_floating=True %}
                     <div class="text-right">
+                    {% if form.instance.collaboration %}
                         <input type="submit" name="delete" class="btn btn-danger mb-2" value="Eliminar colaboración">
-                        <input type="submit" name="update" class="btn btn-primary ml-2" value="Guardar cambios">
+                        <input type="submit" name="update" class="btn btn-primary ml-2 mb-2" value="Guardar cambios">
+                    {% else %}
+                        <input type="submit" name="update" class="btn btn-primary ml-2 mb-2" value="Añadir colaboración">
+                    {% endif %}
                     </div>
-
                 </div>
             </div>
 

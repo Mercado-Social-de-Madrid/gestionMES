@@ -50,18 +50,20 @@
 <div class="tab-content">
   <div aria-labelledby="data-tab" class="tab-pane p-4 px-5 {%if details_tab%}show active{%endif%}" id="data-form" role="tabpanel">
 
-      <h4> <span class="badge badge-primary mb-2 mt-2">Acuerdos de colaboración</span> <a href="#" class="btn btn-sm btn-secondary"><i class="material-icons mr-1">add</i>  Añadir</a></h4>
-        {% for collab_form in collabs %}
-            {% include 'entity/edit_collab_form.html' with form=collab_form %}
+      <h4> <span class="badge badge-primary mb-2 mt-2">Acuerdos de colaboración</span>
+          <a href="#" type="button" data-toggle="collapse" data-target="#addCollaborationContainer" aria-expanded="false" aria-controls="commentContainer" class="btn btn-sm btn-secondary"><i class="material-icons mr-1">add</i>  Añadir</a></h4>
 
+        <div class="collapse" id="addCollaborationContainer">
+            {% include 'entity/edit_collab_form.html' with form=add_collab_form %}
+        </div>
+
+      {% for collab_form in collabs %}
+            {% include 'entity/edit_collab_form.html' with form=collab_form %}
         {% empty %}
             <div class="my-2">
                 La entidad todavía no tiene ningún acuerdo de colaboración...
             </div>
-
         {% endfor %}
-
-
 
       <form method="post" class="mt-4" enctype="multipart/form-data">
             {% csrf_token %}

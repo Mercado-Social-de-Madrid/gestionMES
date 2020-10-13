@@ -19,6 +19,9 @@
 <td>
    {% for collab in item.collabs.all %}
       {% include 'collab/badge.html' with collab=collab %}
+
+    {% empty %}
+    Ninguno
    {% endfor %}
 </td>
 <td>{{item.registration_date|date:'d/m/Y'}}</td>

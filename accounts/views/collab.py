@@ -17,6 +17,7 @@ from accounts.forms.entity_collab import EditCollabForm
 from accounts.models import Category, Collaboration, EntityCollaboration
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from core.mixins.RedirectFormMixin import RedirectFormMixin
 
 
 class CollaborationListView(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
@@ -63,7 +64,6 @@ class CollaborationDetailView(UpdateView):
 
 
 class EntityCollaborationUpdate(UpdateView):
-
     model = EntityCollaboration
     form_class = EditCollabForm
 
@@ -78,8 +78,17 @@ class EntityCollaborationUpdate(UpdateView):
         if 'delete' in self.request.POST:
             self.object.delete()
             messages.success(self.request, _('Colaboración eliminada correctamente.'))
-            return HttpResponseRedirect(self.get_success_url())
+            return HttpResponseRedirect(self.redirect_url)
         else:
             response = super().form_valid(form)
             messages.success(self.request, _('Datos actualizados correctamente.'))
             return response
+
+
+class EntityCollaborationCreate(RedirectFormMixin, CreateView):
+    model = EntityCollaboration
+    form_class = EditCollabForm
+
+    def form_valid(self, form):
+        messages.success(self.request, _('Colaboración añadida correctamente.'))
+        return super().form_valid(form)

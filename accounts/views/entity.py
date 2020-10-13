@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.conf import settings
 from django.contrib import messages
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -12,7 +13,8 @@ from filters.views import FilterMixin
 
 from accounts.custom_filters import CollaborationFilter
 from accounts.forms.collaborator import CollaboratorForm
-from accounts.forms.entity_collab import getCollabsFormset, EditCollabForm
+from accounts.forms.entity_collab import getCollabsFormset
+from accounts.mixins.entity_collab import EntityCollabFormMixin
 from accounts.mixins.feecomments import FeeCommentsMixin
 from accounts.models import Category, ACTIVE, Colaborator, Entity
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
@@ -49,7 +51,6 @@ class EntityFilter(django_filters.FilterSet):
 class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     model = Entity
-    queryset = Entity.objects.filter(collabs__isnull=False)
     objects_url_name = 'entity_detail'
     template_name = 'entity/list.html'
     ajax_template_name = 'entity/query.html'
@@ -63,6 +64,10 @@ class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
                         'start_year', 'facebook_link', 'webpage_link', 'twitter_link', 'instagram_link',
                         'telegram_link', ]
     field_labels = {'registered_in_app': 'Registrada en la app', 'current_fee': 'Cuota anual', 'has_logo':'Tiene logo'}
+
+    def get_queryset(self):
+        Entity.objects.filter( Q(instance_of=Colaborator) | Q(collabs__isnull=False))
+
 
 
 class CreateEntity(CreateView, FormsetView):
@@ -98,7 +103,7 @@ class CreateEntity(CreateView, FormsetView):
 
 
 
-class EntityDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView):
+class EntityDetailView(TabbedViewMixin, FeeCommentsMixin, EntityCollabFormMixin, UpdateView):
     template_name = 'entity/detail.html'
     default_tab = 'details'
     available_tabs = ['details', 'payments',]
@@ -122,11 +127,5 @@ class EntityDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView):
         context['current_balance'] = EntitySocialBalance.objects.filter(entity=self.object, year=settings.CURRENT_BALANCE_YEAR).first()
         context['current_badge'] =  SocialBalanceBadge.objects.filter(year=settings.CURRENT_BALANCE_YEAR).first()
         context['profile_tab'] = True
-
-        collabs = self.object.get_active_collaborations()
-        if (len(collabs) > 0):
-            context['collabs'] = []
-            for collab in collabs:
-                context['collabs'].append(EditCollabForm(instance=collab))
 
         return context
