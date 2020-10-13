@@ -45,7 +45,7 @@ class PendingPaymentFilter(django_filters.FilterSet):
 
     search = AccountSearchFilter(names=['concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(
-        choices=(('-added', 'Añadido'), ('-amount', 'Cantidad (descendente)'), ('-timestamp','Pagado'), ('-sepa_batches__attempt','Añadido a remesa')) )
+        choices=(('-added', 'Fecha de emisión'), ('-amount', 'Cantidad (descendente)'), ('-timestamp','Fecha de pago'), ('-sepa_batches__attempt','Añadido a remesa')) )
     account = MemberTypeFilter(label='Tipo de socia')
     completed = django_filters.BooleanFilter(field_name='completed', widget=BooleanWidget(attrs={'class':'threestate'}))
     returned = django_filters.BooleanFilter(field_name='returned', widget=BooleanWidget(attrs={'class': 'threestate'}))
@@ -70,7 +70,10 @@ class PaymentsListView(PermissionRequiredMixin, FilterMixin, FilterView, ExportA
 
     model = PendingPayment
     csv_filename = 'pagos'
-    available_fields = ['account', 'reference', 'amount', 'concept', 'type', 'completed', 'timestamp', 'revised_by', 'comment', 'added' ]
+    available_fields = ['account', 'reference', 'amount', 'concept', 'type', 'completed', 'timestamp', 'revised_by',
+                        'contact_email', 'contact_phone', 'comment', 'added' ]
+    field_labels = {'contact_email': 'Email de contacto', 'contact_phone': 'Telefono de contacto' }
+
 
     def get_paginate_by(self, queryset):
         if 'simple' in self.request.GET:

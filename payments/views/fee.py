@@ -29,9 +29,10 @@ class FeeChargeFilterForm(BootstrapForm):
 class FeeChargeFilter(django_filters.FilterSet):
 
     search = AccountSearchFilter(names=['payment__concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['payment__amount', 'account__member_type', 'timestamp'], field_labels={'payment__amount':'Cuota', 'account__member_type':'Tipo de socia', 'timestamp':'Pagado'})
+    o = LabeledOrderingFilter(fields=['payment__amount', 'payment__added'], field_labels={'payment__amount':'Cuota', 'account__member_type':'Tipo de socia', 'payment__added':'Fecha de emisión'})
     uncalculated = django_filters.BooleanFilter(field_name='payment', lookup_expr='isnull', widget=BooleanWidget(attrs={'class':'threestate'}), label=_('Cuota sin calcular'))
     account__member_type = django_filters.ChoiceFilter(choices=settings.MEMBER_TYPES, label=_('Tipo de socia:'))
+    paid = django_filters.BooleanFilter(field_name='payment__completed', widget=BooleanWidget(attrs={'class':'threestate'}), label=_('Pagado'))
 
     class Meta:
         model = AccountAnnualFeeCharge

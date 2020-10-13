@@ -164,6 +164,14 @@ class PendingPayment(models.Model):
     def is_completed(self):
         return self.completed and not self.returned
 
+    @property
+    def contact_email(self):
+        return self.account.contact_email
+
+    @property
+    def contact_phone(self):
+        return self.account.contact_phone
+
     def paid_by_card(self):
         self.completed = True
         self.type = CREDIT_CARD

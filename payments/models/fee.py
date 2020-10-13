@@ -96,6 +96,7 @@ class AccountAnnualFeeCharge(models.Model):
         verbose_name = _('Cobro anual de cuota a socia')
         verbose_name_plural = _('Cobros anuales de cuota a socias')
 
+
     def payment_updated(self):
         calculated_amount = self.account.current_fee
         self.manually_modified = calculated_amount != self.payment.amount

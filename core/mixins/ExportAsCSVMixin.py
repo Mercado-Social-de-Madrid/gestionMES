@@ -39,7 +39,7 @@ class ExportAsCSVMixin(View):
                     return label
             except FieldDoesNotExist:
                 # If it is not a field, we try to find a property with that name
-                if not field_name in dir(self.model) or not isinstance(getattr(self.model, field_name), property):
+                if field_name in dir(self.model) or isinstance(getattr(self.model, field_name), property):
                     if field_name in self.field_labels:
                         return self.field_labels[field_name]
 
