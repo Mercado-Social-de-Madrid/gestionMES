@@ -3,6 +3,7 @@ import datetime
 
 from django.core.exceptions import FieldDoesNotExist
 from django.http import HttpResponse
+from django.utils import formats
 from django.utils.decorators import classonlymethod
 from django.views import View
 from django_filters.views import BaseFilterView, FilterView
@@ -75,12 +76,39 @@ class ExportAsCSVMixin(View):
         for elem in object_list:
             results = []
             for field in final_fields:
-                value = getattr(elem, field)
-                value = str(value).strip() if value else ''
-                results.append( value )
+                value = self.get_field_value(elem, field)
+                results.append(value)
             writer.writerow(results)
 
         return response
+
+
+    # Method to access a value by field name, traversing the foreign key objects
+    def get_field_value(self, instance, field):
+
+        field_path = field.split('__')
+        attr = instance
+        value = None
+        for elem in field_path:
+            try:
+                attr = getattr(attr, elem)
+                value = self.get_repr(attr)
+            except AttributeError:
+                print("Error!" + elem)
+                pass
+
+        value = '' if value is None else value
+        if isinstance(value, float) or isinstance(value, int):
+            value = formats.localize(value, use_l10n=True)
+        else:
+            value = str(value).strip() if value else ''
+        return value
+
+    def get_repr(self, value):
+        if callable(value):
+            return '%s' % value()
+        return value
+
 
     def get_context_data(self, **kwargs):
         context = super(ExportAsCSVMixin, self).get_context_data(**kwargs)

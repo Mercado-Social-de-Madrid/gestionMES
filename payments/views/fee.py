@@ -40,13 +40,20 @@ class FeeChargeFilter(django_filters.FilterSet):
         fields = { 'account__member_type':['exact'] }
 
 
-class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, AjaxTemplateResponseMixin):
+class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, ExportAsCSVMixin, AjaxTemplateResponseMixin):
     permission_required = 'payments.mespermission_can_view_payments'
     template_name = 'fee/annual.html'
     ajax_template_name = 'fee/query.html'
     filterset_class = FeeChargeFilter
     model = AccountAnnualFeeCharge
     paginate_by = 15
+
+    available_fields = ['manually_modified', 'payment__amount', 'payment__concept', 'account__display_name',
+                        'payment__completed', 'payment__added', 'account__contact_phone', 'account__contact_email']
+    field_labels = {'payment__amount': 'Cantidad', 'payment__concept':'Concepto', 'payment__added':'Fecha de emisión',
+                    'account__display_name':'Cuenta', 'payment__completed':'Realizado',
+                    'account__contact_phone':'Teléfono de contacto', 'account__contact_email': 'Email de contacto'}
+
 
     def get_queryset(self):
         year = int(self.kwargs.get('year'))
