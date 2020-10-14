@@ -48,6 +48,7 @@ class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, Exp
     model = AccountAnnualFeeCharge
     paginate_by = 15
 
+    csv_filename = 'cuotas'
     available_fields = ['manually_modified', 'payment__amount', 'payment__concept', 'account__display_name',
                         'payment__completed', 'payment__added', 'account__contact_phone', 'account__contact_email']
     field_labels = {'payment__amount': 'Cantidad', 'payment__concept':'Concepto', 'payment__added':'Fecha de emisión',

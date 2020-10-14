@@ -70,6 +70,7 @@ class BatchCreate(PermissionRequiredMixin, CreateView):
 
 class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, DetailView):
     permission_required = 'payments.mespermission_can_manage_sepa'
+    filterset_fields = []
     template_name = 'payments/sepa/detail.html'
     queryset = SepaPaymentsBatch.objects.all()
     model = SepaPaymentsBatch
@@ -88,6 +89,7 @@ class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, DetailView):
         return SepaBatchResult.objects.filter(batch=self.get_object()).order_by('-fail_reason', 'order' )
 
     def get_context_data(self, **kwargs):
+        self.object = self.get_object()
         context = super().get_context_data(**kwargs)
         context['batch_results'] = self.get_list_to_export()
         context['batch_success'] = SepaBatchResult.objects.filter(batch=self.object, success=True).count()

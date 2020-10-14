@@ -26,7 +26,7 @@ class ExportAsCSVMixin(View):
                     cls.__csv_fields[field_name] = str(label)
 
     def __init__(self, *args, **kwargs):
-        super(ExportAsCSVMixin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.load_csv_fields(self)
 
     # If None, the field does not exist
@@ -92,6 +92,8 @@ class ExportAsCSVMixin(View):
         for elem in field_path:
             try:
                 attr = getattr(attr, elem)
+                if isinstance(attr, list):
+                    attr = attr[0]
                 value = self.get_repr(attr)
             except AttributeError:
                 print("Error!" + elem)
@@ -130,4 +132,4 @@ class ExportAsCSVMixin(View):
 
             return self.export_csv(request, object_list, filter_list, *args, **kwargs)
 
-        return super(ExportAsCSVMixin, self).get(request, *args, **kwargs)
+        return super().get(request, *args, **kwargs)

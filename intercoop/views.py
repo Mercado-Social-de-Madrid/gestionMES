@@ -44,7 +44,7 @@ class IntercoopAccountFilter(django_filters.FilterSet):
 
 
 
-class IntercoopAccountsList(PermissionRequiredMixin, FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
+class IntercoopAccountsList(PermissionRequiredMixin, FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
     permission_required = 'intercoop.mespermission_can_view_accounts'
     model = IntercoopAccount
     queryset = IntercoopAccount.objects.all().order_by('-registration_date')
@@ -67,6 +67,7 @@ class IntercoopAccountsList(PermissionRequiredMixin, FilterMixin, ExportAsCSVMix
 
 class EntityList(PermissionRequiredMixin, ExportAsCSVMixin, ListView, ListItemUrlMixin, AjaxTemplateResponseMixin):
     permission_required = 'intercoop.mespermission_can_manage_entity'
+    filterset_fields = []
     model = IntercoopEntity
     queryset = IntercoopEntity.objects.all()
     objects_url_name = 'entity_detail'

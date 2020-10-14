@@ -22,9 +22,10 @@
             {% for hidden in filter.form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
-
             {% for field in filter.form.visible_fields %}
-                <input type="hidden" name="{{field.name}}" value="{{field.value|default:''}}" />
+                {% if field.name != 'o' %}
+                <input type="hidden" name="{{field.name}}" value="{{field.value|default_if_none:''|lower}}" />
+                {% endif %}
             {% endfor %}
             {% endif %}
 
