@@ -29,8 +29,13 @@ class SocialBalanceYear(PermissionRequiredMixin, FilterView, FilterMixin, Export
     ajax_template_name = 'balance/year/query.html'
     model = Entity
     queryset = Entity.objects.filter(status=ACTIVE)
-    model = Entity
     paginate_by = 35
+
+    available_fields = ['cif', 'display_name', 'social_balance__is_exempt', 'social_balance__done', 'social_balance__is_public',
+                        'social_balance__achievement', 'social_balance__challenge', 'social_balance__badge_image']
+    field_labels = {'display_name': 'Nombre de la entidad', 'social_balance__is_public': 'Pública',
+                    'social_balance__done': 'Realizado', 'social_balance__badge_image': 'URL sello',
+                    'social_balance__is_exempt': 'Exenta', 'social_balance__achievement':'Logro', 'social_balance__challenge':'Reto'}
 
     filterset_class = ProviderFilter
 
