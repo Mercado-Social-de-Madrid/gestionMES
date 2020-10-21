@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -180,3 +181,13 @@ def validate_account(request, pk):
         return redirect(reverse('intercoop:account_detail', kwargs={'pk': account.pk}))
 
     return False
+
+
+def account_delete(request, pk):
+    if request.method == "POST":
+        account = IntercoopAccount.objects.get(pk=pk)
+        account.delete()
+        messages.success(request, _('Cuenta eliminada correctamente.'))
+        return redirect(reverse('intercoop:accounts_list'))
+    else:
+        return HttpResponse(status=400)
