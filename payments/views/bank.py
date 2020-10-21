@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.db.models import Count
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, TemplateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -73,3 +73,5 @@ class BankUpdate(UpdateView):
     def get_success_url(self):
         return reverse('payments:bank_list')
 
+class BicExplanation(TemplateView):
+    template_name = 'payments/bank/bic_explanation.html'

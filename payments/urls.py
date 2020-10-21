@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/delete/$', views.sepa_delete, name='sepa_delete'),
 
     url(r'^banks/$', views.BankList.as_view(), name='bank_list'),
+    url(r'^banks/bic$', views.BicExplanation.as_view(), name='bic_explanation'),
     url(r'^banks/add/$', views.BankCreate.as_view(), name='bank_create'),
     url(r'^banks/(?P<pk>[0-9a-f-]+)/$', views.BankUpdate.as_view(), name='bank_detail'),
 

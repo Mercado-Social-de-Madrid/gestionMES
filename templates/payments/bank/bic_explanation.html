@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load chunks %}
+
+{% block title %}Código BIC{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h4 class="mb-0">Contabilidad
+                        <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        <a href="{% url 'payments:sepa_list' %}">Remesas SEPA</a>
+                         <i class="material-icons md-18 ">arrow_forward_ios</i> Código BIC
+                </h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container mt-4 mb-5">
+        <h4><span class="badge badge-primary">¿Qué es el código BIC?</span> </h4>
+        <p class="lead">
+             El BIC (Bank Identifier Code), es un <strong>código único que sirve para identificar a cada una de las entidades de crédito</strong> que existen en el mundo.
+
+        </p>
+        Este código proporciona información sobre un banco en concreto y la región en la que se encuentra la cuenta. Es una herramienta muy valiosa para verificar cualquier pago que se quiera enviar o recibir.
+        Se utiliza principalmente en transacciones internacionales. Por ejemplo, si una persona quiere hacer una transferencia internacional, su banco le va a solicitar el código SWIFT o BIC de la entidad financiera al que va a dirigir la transferencia. El objetivo es saber a qué entidad y región pertenece la cuenta a la que envía el dinero.
+
+        <p class="lead mt-2">
+            El estándar de ficheros SEPA para las transacciones bancarias requiere de la inclusión del código BIC para identificar la entidad financiera destinataria.
+        </p>
+
+        <h4><span class="badge badge-primary mt-3">¿Cuál es el problema?</span> </h4>
+
+        <p class="lead">En esta herramienta sólo tenemos el dato del IBAN de la cuenta bancaria, no pedimos el BIC.</p>
+
+        Por suerte, hay una manera de obtenerlo. Una fracción de los dígitos del código IBAN se corresponde con el código de la entidad bancaria,
+        con lo que podemos coger esta parte y utilizarla para sacar a partir de ella el identificador BIC a incluir en la remesa SEPA.
+
+        <div class="text-center">
+            <img src="{% static 'imgs/iban.png' %}" class="img-fluid" alt="Código IBAN">
+        </div>
+
+
+        Entonces, ¿cuál es el problema? Se da una situación ridícula: <strong>Es responsabilidad de cada entidad/herramienta tener un listado actualizado de los códigos BIC destinatarios</strong>. De hecho, algunas
+        entidades bancarias cobran una comisión extra al realizar esto si en un adeudo SEPA no se incluye el código BIC.
+
+        Hay varios listados de códigos BIC de entidades bancarias, pero ninguno parece estar completo (por ejemplo, Fiare no suele aparecer). En la herramienta precargarmos uno
+        de estos listados, pero hay ocasiones en las que no se dispone de la referencia de ese banco,
+
+        <h4><span class="badge badge-primary mt-3">¿Cómo lo solucionamos?</span> </h4>
+
+        En los casos en los que no tengamos identificado el código BIC de un banco aparecerá un rótulo de error junto al pago al realizar la remesa SEPA
+        indicando <span class="bg-warning d-inline-block p-2"><i class="material-icons">check_circle_outline</i> Entidad desconocida</span>.
+
+        Hay servicios online que a partir de un IBAN calculan su código BIC. Internamente lo calculan haciendo la misma traslación que hacemos en la herramienta, pero disponiendo de un
+        listado de BICs actualizados, que por supuesto, no comparten de manera pública...<br><br>
+        Uno de ellos por ejemplo es este: <a href="https://www.ibancalculator.com/" target="_blank">https://www.ibancalculator.com/ <i class="material-icons">check_circle_outline</i> </a><br>
+        <br>
+        En ese enlace podemos pegar el IBAN de la cuenta de la que nos falta el código BIC, y obtener toda la información necesaria. A continuación,
+        en la herramienta podemos ir a la sección de <a href="{% url 'payments:bank_list' %}" class="btn btn-sm btn-secondary mx-1"><i class="material-icons mr-2">business_center</i> Gestionar entidades</a>
+        bajo el apartado de remesas SEPA y añadir la entidad. En el apartado de <strong>código de cuenta</strong>, tenemos que introducir los cuatro dígitos del IBAN correspondientes (en la
+        página anterior se devuelve separado también en un campo denominado "Bank code").
+        <br><br>
+        Una vez añadido el nuevo código BIC, si regeneramos la remesa SEPA la transferencia debería añadirse correctamente.
+    </div>
+
+{% endblock %}
