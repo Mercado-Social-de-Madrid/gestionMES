@@ -61,7 +61,7 @@ class signups(TemplateView):
         context = super().get_context_data()
         year = date.today().year
 
-        signups = SignupProcess.objects.pending().filter(last_update__year=year)
+        signups = SignupProcess.objects.pending().filter(last_update__year=year, cancelled=False)
         signup_statuses = {}
         for signup in signups:
             if signup.workflow.current_state.pk in signup_statuses:
@@ -73,7 +73,7 @@ class signups(TemplateView):
                 }
 
         context['signups'] = signups
-        context['closed_signups'] = SignupProcess.objects.filter(last_update__year=year, workflow__completed=True).count()
+        context['closed_signups'] = SignupProcess.objects.filter(last_update__year=year, cancelled=False, workflow__completed=True).count()
         context['cancelled_signups'] = SignupProcess.objects.filter(last_update__year=year, cancelled=True).count()
         context['signup_statuses'] = signup_statuses
 
