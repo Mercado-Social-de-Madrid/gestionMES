@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^$', views.dashboard.as_view(), name='index'),
     url(r'^accounts/$', views.accounts.as_view(), name='accounts'),
     url(r'^signups/$', views.signups.as_view(), name='signups'),
+    url(r'^intercoop/$', views.intercoop.as_view(), name='intercoop'),
 ]
 
 

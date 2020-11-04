@@ -17,6 +17,7 @@ from accounts.models import Provider, Consumer, Account, OPTED_OUT, Colaborator,
 from core.forms.password import PasswordForm
 from core.forms.profile import ProfileForm
 from core.forms.signup import SignUpForm
+from intercoop.models import IntercoopEntity, IntercoopAccount
 from simple_bpm.models import ProcessStep
 
 
@@ -76,5 +77,29 @@ class signups(TemplateView):
         context['closed_signups'] = SignupProcess.objects.filter(last_update__year=year, cancelled=False, workflow__completed=True).count()
         context['cancelled_signups'] = SignupProcess.objects.filter(last_update__year=year, cancelled=True).count()
         context['signup_statuses'] = signup_statuses
+
+        return context
+
+
+class intercoop(TemplateView):
+    template_name = 'dashboard/intercoop.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        year = date.today().year
+
+        total_accounts = IntercoopAccount.objects.all().count()
+        new_accounts = IntercoopAccount.objects.filter(registration_date__year=year).count()
+        entities = []
+        for entity in IntercoopEntity.objects.all():
+            intercoop_accounts = IntercoopAccount.objects.filter(entity=entity).count()
+            entities.append({
+                'entity': entity,
+                'accounts_count': intercoop_accounts
+            })
+        print(entities)
+        context['total_accounts'] = total_accounts
+        context['new_accounts'] = new_accounts
+        context['entities'] = entities
 
         return context

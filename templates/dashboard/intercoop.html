@@ -1,0 +1,62 @@
+<div class="card mb-3 mt-3">
+    <div class="card-body">
+        <h3 class="card-title text-primary"><i class="material-icons mr-1">extension</i> Intercooperación</h3>
+        <div class="d-flex">
+            <div class="mr-3 ">
+                <p class="d-flex mb-0">
+                    <span class="display-2 main-header mr-3">{{total_accounts}} </span>
+                    <strong class="lead mt-2" style="line-height:1.1;">socias<br> ({{new_accounts}} nuevas) </strong>
+                </p>
+
+                <table class="table mt-2  table-sm">
+                    <tbody>
+
+                        {% for item in entities %}
+                        <tr>
+                            <td class=" pl-0 pr-2">{{item.entity}}</td>
+                            <td class="">{{item.accounts_count}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div id="intercoop_chart" class="graph flex-grow-1 mt-3" style="height:33vh;">
+                <div class="mes-loader my-2"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+		// Load the Visualization API and the piechart package.
+		google.charts.load('current', {'packages':['corechart']});
+
+		// Set a callback to run when the Google Visualization API is loaded.
+		google.setOnLoadCallback(drawChart);
+		function drawChart() {
+
+			var data = new google.visualization.DataTable();
+			var total = 0;
+			data.addColumn('string', "Mes");
+			data.addColumn('number', "Total");
+
+			data.addRows( {{ entities|length }} );
+			{% for item in entities %}
+				data.setValue({{ forloop.counter0 }}, 0, '{{item.entity}}');
+				data.setValue({{ forloop.counter0 }}, 1, {{item.accounts_count}});
+			{% endfor %}
+
+	        var chart = new google.visualization.PieChart(document.getElementById('intercoop_chart'));
+	        chart.draw(data, {
+	            width: "100%",
+                chartArea: {left:0,top:0,width:"100%",height:"90%"},
+                backgroundColor: 'transparent',
+                legend: 'none'
+                });
+	      }
+	});
+</script>
