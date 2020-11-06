@@ -17,8 +17,13 @@
 <td class="text-muted pr-0">{% include "account/type_icon.html" with account=item.account %}</td>
 <td style="max-width:450px;">{{item.account.display_name}}</td>
 
+{% if item.collab %}
+<td colspan="2" class="px-0"><strong>Colaboración:</strong> {{item.collab.collaboration}}</td>
+{% else %}
 <td class="amount px-0" >{% if item.account.business_name %}{{item.account.num_workers}} {% else %} - {% endif %}</td>
 <td class="amount">{% if item.account.business_name %}{{item.account.aprox_income| intcomma}}k {% else %} - {% endif %}</td>
+{% endif %}
+
 <td class="amount">
     {% if item.payment %}
         {{item.payment.amount|floatformat:2}}€

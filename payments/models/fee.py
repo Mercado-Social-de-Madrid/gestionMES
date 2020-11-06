@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.translation import gettext as _
 
-from accounts.models import Account, Provider, Consumer, Colaborator
+from accounts.models import Account, Provider, Consumer, Colaborator, EntityCollaboration
 from core.models import UserComment
 from payments.models import PendingPayment
 
@@ -71,14 +71,27 @@ class AnnualFeeCharges(models.Model):
 
     def create_pending_data(self):
         for account in Account.objects.active().filter(registration_date__year__lt=self.year):
-            charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=account, annual_charge=self)
+            charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=account, annual_charge=self, collab=None)
             fee = account.current_fee
             if fee is not None and fee > 0:
                 if not charge.payment:
                     concept = "Cuota anual {}".format(self.year)
                     charge.payment = PendingPayment.objects.create(
-                        concept=concept, account=account, amount = fee
-                    )
+                        concept=concept, account=account, amount = fee)
+                    charge.save()
+                elif not charge.payment.is_completed and not charge.manually_modified and charge.payment.amount != fee:
+                    # if the payment is not done yet and the fee has changed, update it
+                    charge.payment.amount = fee
+                    charge.payment.save()
+
+        for collab in EntityCollaboration.objects.all():
+            charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=collab.entity, annual_charge=self, collab=collab)
+            fee = collab.custom_fee or collab.collaboration.default_fee
+            if fee is not None and fee > 0:
+                if not charge.payment:
+                    concept = "Cuota anual {}({})".format(self.year, collab.collaboration.name)
+                    charge.payment = PendingPayment.objects.create(
+                        concept=concept, account=collab.entity, amount=fee)
                     charge.save()
                 elif not charge.payment.is_completed and not charge.manually_modified and charge.payment.amount != fee:
                     # if the payment is not done yet and the fee has changed, update it
@@ -88,6 +101,7 @@ class AnnualFeeCharges(models.Model):
 
 class AccountAnnualFeeCharge(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    collab = models.ForeignKey(EntityCollaboration, null=True, on_delete=models.SET_NULL, related_name='fee_charges')
     annual_charge = models.ForeignKey(AnnualFeeCharges, on_delete=models.CASCADE, )
     payment = models.ForeignKey(PendingPayment, null=True, on_delete=models.SET_NULL, related_name='fee_charges')
     manually_modified = models.BooleanField(default=False, verbose_name=_('Modificado manualmente'))

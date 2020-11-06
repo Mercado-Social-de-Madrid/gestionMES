@@ -29,7 +29,7 @@ class AccountSearchFilter(SearchFilter):
             Q(Consumer___first_name__icontains=search_value) | Q(Consumer___last_name__icontains=search_value) |
             Q(Entity___name__icontains=search_value) | Q(Entity___business_name__icontains=search_value)
         )
-        print(accounts.count())
+
         queries.append(Q(account__in=accounts))
         return queries
 
@@ -39,8 +39,11 @@ class CollaborationFilter(django_filters.ChoiceFilter):
 
     steps = None
     filter_cancelled = False
+    collab_field = None
 
-    def __init__(self,*args,**kwargs):
+    def __init__(self, collab_field='collabs', *args,**kwargs):
+
+        self.collab_field = collab_field
 
         choices = list()
         try:
@@ -51,8 +54,9 @@ class CollaborationFilter(django_filters.ChoiceFilter):
 
         django_filters.ChoiceFilter.__init__(self, choices=choices, *args,**kwargs)
 
-    def filter(self,qs,value):
+    def filter(self, qs, value):
         if value not in (None,''):
-            qs = qs.filter(collabs__in=[value])
+            query = Q(**{'{}__in'.format(self.collab_field) : [value] })
+            qs = qs.filter(query)
 
         return qs

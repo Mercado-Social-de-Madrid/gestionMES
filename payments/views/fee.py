@@ -12,7 +12,7 @@ from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
 
-from accounts.custom_filters import AccountSearchFilter
+from accounts.custom_filters import AccountSearchFilter, CollaborationFilter
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
@@ -28,6 +28,7 @@ class FeeChargeFilterForm(BootstrapForm):
 
 class FeeChargeFilter(django_filters.FilterSet):
 
+    collab = CollaborationFilter(label=_('Colaboración'), collab_field='collab__collaboration')
     search = AccountSearchFilter(names=['payment__concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['payment__amount', 'payment__added'], field_labels={'payment__amount':'Cuota', 'account__member_type':'Tipo de socia', 'payment__added':'Fecha de emisión'})
     uncalculated = django_filters.BooleanFilter(field_name='payment', lookup_expr='isnull', widget=BooleanWidget(attrs={'class':'threestate'}), label=_('Cuota sin calcular'))
