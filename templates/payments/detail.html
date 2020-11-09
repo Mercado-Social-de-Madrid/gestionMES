@@ -44,6 +44,14 @@
         <div class="col-md-7">
             <span class="badge badge-primary mb-2">Pago</span>
             {% include 'payments/detail_card.html' with payment=object %}
+            {% with fee_charges=object.fee_charges.all %}
+                {% for fee in fee_charges %}
+                     <span class="badge badge-primary mb-2">Cuota anual</span><br>
+                    Pago relativo a <a href="{% url 'payments:annual_feecharges' fee.annual_charge.year %}" >Cuotas {{ fee.annual_charge.year }}</a>
+                {% empty %}
+                    Nope.
+                {% endfor %}
+            {% endwith %}
 
             {% if sepa_batches %}
                 <span class="badge badge-primary mb-2">Remesa SEPA</span>
