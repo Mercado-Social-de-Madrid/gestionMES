@@ -85,9 +85,10 @@ class AnnualFeeCharges(models.Model):
                     charge.payment.save()
 
         for collab in EntityCollaboration.objects.all():
-            charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=collab.entity, annual_charge=self, collab=collab)
             fee = collab.custom_fee or collab.collaboration.default_fee
             if fee is not None and fee > 0:
+                charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=collab.entity,
+                                                                               annual_charge=self, collab=collab)
                 if not charge.payment:
                     concept = "Cuota anual {}({})".format(self.year, collab.collaboration.name)
                     charge.payment = PendingPayment.objects.create(
