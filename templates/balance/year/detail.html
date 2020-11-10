@@ -24,14 +24,16 @@
     </div>
 
     <div class="container">
-        <form method="post" class="p-2" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{form.year}}
-            {{form.entity}}
+
 
         <div class="row">
 
             <div class="col-md-7">
+
+                <form method="post" class="p-2" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form.year}}
+                {{form.entity}}
 
                 {% include "common/forms/checkbox.html" with field=form.done %}
                 {% include "common/forms/checkbox.html" with field=form.is_public %}
@@ -45,7 +47,17 @@
 
                 <label>Informe (PDF)</label><br>
                 {{ form.report }}
-          </div>
+
+
+                <div class="text-center mt-4 mb-4">
+                    {% if perms.social_balance.mespermission_can_edit_social_balances %}
+                    <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+                    {% endif %}
+                </div>
+
+                </form>
+
+            </div>
 
             <div class="col-md-5 mt-4">
                 {% include 'balance/current_balance.html' with balance=object badge=badge %}
@@ -53,19 +65,10 @@
 
 
 
-            <div class="col-sm-12 ">
-              {% include "common/forms/field.html" with field=form.description %}
-          </div>
 
 
         </div>
-        <div class="text-center mt-3">
-            {% if perms.social_balance.mespermission_can_edit_social_balances %}
-            <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
-            {% endif %}
-        </div>
 
-        </form>
     </div>
 
 {% endblock %}
