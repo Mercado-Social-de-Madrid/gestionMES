@@ -44,14 +44,34 @@
         <div class="col-md-7">
             <span class="badge badge-primary mb-2">Pago</span>
             {% include 'payments/detail_card.html' with payment=object %}
-            {% with fee_charges=object.fee_charges.all %}
-                {% for fee in fee_charges %}
-                     <span class="badge badge-primary mb-2">Cuota anual</span><br>
-                    Pago relativo a <a href="{% url 'payments:annual_feecharges' fee.annual_charge.year %}" >Cuotas {{ fee.annual_charge.year }}</a>
-                {% empty %}
-                    Nope.
-                {% endfor %}
-            {% endwith %}
+            {% if annual_fee %}
+                <span class="badge badge-primary mb-2">Cuota anual</span><br>
+                Pago relativo a <a href="{% url 'payments:annual_feecharges' annual_fee %}" >Cuotas {{ annual_fee }}</a>
+                <form method="post" action="{% url 'payments:assign_fee' object.pk %}" class="d-inline-block form-inline">
+                        <input type="hidden" name="action" value="remove">
+                        {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm px-2 ml-2"> <i class="material-icons mr-1">close</i> Quitar </button>
+                </form>
+            {% else %}
+                El pago no pertenece a un proceso de cobro anual de cuotas
+                <button class="btn btn-secondary btn-sm px-2 ml-2" type="button" data-toggle="collapse" data-target="#annual-fee-form" aria-expanded="false" aria-controls="annual-fee-form">
+                    Asignar
+                </button>
+
+                <div class="collapse" id="annual-fee-form">
+                    <form method="post" action="{% url 'payments:assign_fee' object.pk %}" class="form-inline">
+                        <input type="hidden" name="action" value="add">
+                        {% csrf_token %}
+                       <i class="material-icons text-primary mr-2">menu_book</i>
+                        <select name="annual_fee" class="custom-select mr-3">
+                        {% for fee in annual_fees %}
+                            <option value="{{fee}}">Cuotas anuales {{fee}}</option>
+                        {% endfor %}
+                        </select>
+                        <input type="submit" name="assign" class="btn btn-light" value="Asignar" />
+                    </form>
+                </div>
+            {% endif %}
 
             {% if sepa_batches %}
                 <span class="badge badge-primary mb-2">Remesa SEPA</span>

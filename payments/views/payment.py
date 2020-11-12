@@ -23,7 +23,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.payment import PaymentForm, UpdatePaymentForm
-from payments.models import PendingPayment, SepaPaymentsBatch
+from payments.models import PendingPayment, SepaPaymentsBatch, AnnualFeeCharges, AccountAnnualFeeCharge
 
 
 class MemberTypeFilter(django_filters.ChoiceFilter):
@@ -137,6 +137,12 @@ class PaymentDetailView(UpdateView):
         context['sepa_batches'] = SepaPaymentsBatch.objects\
             .annotate(payments_count=Count('batch_payments'))\
             .filter(batch_payments__payment=self.object)
+
+        fee = self.object.fee_charges.all().first()
+        if fee:
+            context['annual_fee'] = fee.annual_charge.year
+        else:
+            context['annual_fees'] = AnnualFeeCharges.objects.values_list('year', flat=True)
         return context
 
     def form_valid(self, form):
@@ -149,6 +155,33 @@ class PaymentDetailView(UpdateView):
 
     def get_success_url(self):
         return reverse('payments:payment_detail', kwargs={'pk': self.object.pk})
+
+
+def assign_payment_to_annualfeecharge(request, pk):
+    if request.method == "POST":
+        payment = PendingPayment.objects.get(pk=pk)
+
+
+        action = request.POST.get('action', None)
+        if action == 'add':
+            year = request.POST.get('annual_fee', None)
+            if year:
+                annualCharge = AnnualFeeCharges.objects.get(year=year)
+                charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=payment.account, annual_charge=annualCharge, collab=None)
+                charge.payment = payment
+                charge.manually_modified = True
+                charge.save()
+                messages.success(request, _('Pago asignado correctamente.'))
+                return redirect(reverse('payments:payment_detail', kwargs={'pk': pk}))
+
+        if action == 'remove':
+            fee = payment.fee_charges.all().first()
+            if fee:
+                fee.delete()
+                messages.success(request, _('Relación eliminada correctamente.'))
+                return redirect(reverse('payments:payment_detail', kwargs={'pk': pk}))
+
+    return HttpResponse(status=400)
 
 
 def update_payment(request, pk):

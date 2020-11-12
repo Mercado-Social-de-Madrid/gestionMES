@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^(?P<pk>[0-9a-f-]+)$', views.PaymentDetailView.as_view(), name='payment_detail'),
     url(r'^(?P<pk>[0-9a-f-]+)/update/$', views.update_payment, name='update_payment'),
     url(r'^(?P<pk>[0-9a-f-]+)/delete/$', views.payment_delete, name='payment_delete'),
+    url(r'^(?P<pk>[0-9a-f-]+)/fee/$', views.assign_payment_to_annualfeecharge, name='assign_fee'),
     url(r'^card/$', views.CardPaymentsListView.as_view(), name='card_payments_list'),
     url(r'^card/(?P<pk>[0-9a-f-]+)/$', views.CardPaymentDetailView.as_view(), name='card_payment_detail'),
     url(r'^pay/(?P<uuid>[0-9a-f-]+)/$', views.form, name='payment_form'),
