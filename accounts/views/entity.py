@@ -87,7 +87,6 @@ class CreateEntity(CreateView, FormsetView):
         return context
 
     def form_invalid(self, form):
-        print(form.errors)
         return super().form_invalid(form)
 
     def formset_collabs_valid(self, collabs, entity):
