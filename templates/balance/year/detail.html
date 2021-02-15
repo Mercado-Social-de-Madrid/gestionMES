@@ -72,3 +72,11 @@
     </div>
 
 {% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">
+    $(function(){
+        $('.gen-badge-btn').on('click', '.btn', function(){ $(this).hide(); });
+    });
+</script>
+{% endblock scripts %}
