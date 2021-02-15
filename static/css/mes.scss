@@ -128,7 +128,7 @@ tr.link-row:hover{ cursor: pointer; }
 .color-container{ position:relative; }
 .color-container > * {
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
--webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
 }
 .color-container > .sp-replacer{
     position:absolute;
@@ -175,4 +175,33 @@ td.assigned-fee{
   @include media-breakpoint-only(xl) {
     column-count: 3;
   }
+}
+
+.link-explanation{
+    position:relative;
+
+    .cover-explanation{
+        opacity:0;
+        transition:.4s all;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position:absolute;
+        width:100%;
+        height:100%;
+        background-color: $mes-primary;
+        color:#fff;
+
+        div{
+            margin-top:-150px;
+            text-align:center;
+            display:block;
+            transition:.4s all;
+        }
+    }
+
+    &:hover{
+        .cover-explanation{ opacity:0.75; }
+        .cover-explanation div { margin-top:0; }
+    }
 }
