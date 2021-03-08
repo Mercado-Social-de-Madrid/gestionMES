@@ -85,7 +85,7 @@ Los campos marcados con <span class="text-primary lead">*</span> son obligatorio
 
     <div class="col-md-12 col-lg-12">
 
-        <div class="custom-control custom-switch mt-3">
+        <div class="custom-control custom-switch my-3">
             {{form.newsletter_check}}
               <span class="custom-control-track"></span>
               <label class="custom-control-label" for="{{form.newsletter_check.id_for_label}}">
@@ -94,6 +94,8 @@ Los campos marcados con <span class="text-primary lead">*</span> son obligatorio
 
             {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
         </div>
+
+         {% include "common/forms/field.html" with field=form.referral_source not_floating=True %}
 
         <hr class="my-4">
         {% include 'signup/privacy_policy_check.html' %}

@@ -62,6 +62,7 @@ class IntercoopAccount(models.Model):
     external_code = models.CharField(null=True, blank=True, max_length=150, verbose_name=_('Identificador de socia externo'))
     validated = models.BooleanField(default=False, verbose_name=_('Validada'))
     newsletter_check = models.BooleanField(default=False, verbose_name=_('Acepta alta en listas de correo'))
+    referral_source = models.TextField(null=True, blank=True, verbose_name=_('Cómo nos has conocido?'))
     last_updated = models.DateTimeField(verbose_name=_('Última actualización'), null=True, blank=True)
 
     class Meta:

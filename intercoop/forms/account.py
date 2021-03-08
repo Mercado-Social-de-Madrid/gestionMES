@@ -11,6 +11,7 @@ class IntercoopAccountForm(forms.ModelForm, BootstrapForm):
         exclude = []
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
+            'referral_source': forms.Textarea(attrs={'rows': 4}),
         }
 
 class IntercoopAccountSignupForm(BaseSignupForm):
@@ -23,6 +24,6 @@ class IntercoopAccountSignupForm(BaseSignupForm):
         exclude = []
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
+            'referral_source': forms.Textarea(attrs={'rows': 4}),
             'entity': forms.HiddenInput(),
-            
         }

@@ -36,13 +36,10 @@ class IntercoopAccountFilter(django_filters.FilterSet):
     validated = django_filters.BooleanFilter(field_name='validated',
                                              widget=BooleanWidget(attrs={'class': 'threestate'}))
 
-
     class Meta:
         model = IntercoopAccount
         form = IntercoopAccountFilterForm
         fields = { 'entity':['exact']}
-
-
 
 
 class IntercoopAccountsList(PermissionRequiredMixin, FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
@@ -57,7 +54,7 @@ class IntercoopAccountsList(PermissionRequiredMixin, FilterMixin, FilterView, Ex
 
     csv_filename = 'intercoop'
     available_fields = ['cif', 'entity', 'first_name', 'last_name', 'contact_email',
-                        'registration_date', 'contact_phone', ]
+                        'registration_date', 'contact_phone', 'referral_source']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -147,7 +144,7 @@ class AccountSlugCreate(CreateView):
     def get_success_url(self):
         if self.request.user.is_authenticated:
             messages.success(self.request, _('Usuario añadido correctamente.'))
-            return reverse('intercoop:signup_list')
+            return reverse('intercoop:accounts_list')
         else:
             return reverse('accounts:signup_success')
 
