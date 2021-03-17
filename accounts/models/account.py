@@ -287,7 +287,7 @@ class Provider(Entity):
 
 
 class EntityCollaboration(models.Model):
-    entity = models.ForeignKey(Entity, related_name='entity_colabs', verbose_name=_('Entidad'), on_delete=models.SET_NULL, null=True)
+    entity = models.ForeignKey(Entity, related_name='entity_colabs', verbose_name=_('Entidad'), on_delete=models.CASCADE, null=True)
     order = models.IntegerField(verbose_name=_('Orden'), null=True, blank=True)
     collaboration = models.ForeignKey(Collaboration, verbose_name=_('Modo de colaboración'), related_name='entities_collab', on_delete=models.SET_NULL, null=True, blank=True)
     special_agreement = models.TextField(blank=True, verbose_name=_('Acuerdos especiales'))
