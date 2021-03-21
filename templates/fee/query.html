@@ -25,6 +25,7 @@
 {% endif %}
 
 <td class="amount">
+    {{ item.count }}
     {% if item.payment %}
         {{item.payment.amount|floatformat:2}}€
         {% if item.manually_modified %}
@@ -43,6 +44,12 @@
     <a class="btn btn-outline btn-narrow  {% if item.payment.completed %}bg-success text-white{% else %}text-primary{% endif %}"
        href="{% url 'payments:payment_detail' item.payment.pk %}"
         data-toggle="tooltip" data-placement="bottom" title="Ver pago{% if item.payment.completed %} (realizado){% endif %}"> <i class="material-icons">receipt</i> </a>
+
+        {% if not item.payment.completed %}
+        <a class="btn btn-outline btn-narrow text-primary"
+       href="{% url 'payments:split_feecharge' current_year item.pk %}"
+        data-toggle="tooltip" data-placement="bottom" title="Fraccionar pago"> <i class="material-icons">dynamic_feed</i> </a>
+        {% endif %}
     {% endif %}
 </td>
 

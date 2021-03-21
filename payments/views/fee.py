@@ -5,9 +5,10 @@ import django_filters
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Sum
+from django.db.models import Sum, Count
 from django.shortcuts import redirect
 from django.utils.translation import gettext as _
+from django.views.generic import FormView, DetailView, UpdateView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from filters.views import FilterMixin
@@ -17,8 +18,10 @@ from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
+from core.mixins.FormsetView import FormsetView
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.FeeComment import FeeCommentForm
+from payments.forms.feecharge import getFeeSplitFormset, AccountFeeSplitForm
 from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges
 
 
@@ -68,6 +71,7 @@ class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, Exp
 
         return annualFee.accountannualfeecharge_set.all()
 
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['total_amount'] = self.object_list.aggregate(sum=Sum('payment__amount'))['sum']
@@ -87,3 +91,24 @@ def add_fee_comment(request):
             comment.save()
             messages.success(request, _('Comentario añadido correctamente.'))
             return redirect(redirect_url)
+
+
+class SplitFeeCharge(UpdateView, FormsetView):
+
+    model = AccountAnnualFeeCharge
+    form_class = AccountFeeSplitForm
+    template_name = 'fee/split.html'
+
+    def get_named_formsets(self):
+        return{ 'split': getFeeSplitFormset(initial=True) }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['current_year'] = int(self.kwargs.get('year'))
+        return context
+
+    def formset_split_valid(self, splits, annualcharge):
+
+        for split in splits:
+            pass
+

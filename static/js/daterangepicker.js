@@ -382,7 +382,7 @@
         if (!this.timePicker) {
             this.startDate = this.startDate.startOf('day');
             this.endDate = this.endDate.endOf('day');
-            this.container.find('.calendar-time').hide();
+            this.container.find('.calendar-time').attr('style', 'display: none !important');
         }
 
         //can't be used together for now

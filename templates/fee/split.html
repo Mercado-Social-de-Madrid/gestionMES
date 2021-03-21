@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load settings_value %}
+{% load chunks %}
+
+{% block title %}Fraccionar cuota{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2 mb-4">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                <h4 class="mb-0"><a href="{% url 'payments:annual_feecharges' current_year %}">Cuotas anuales</a>
+                    <i class="material-icons md-18 ">arrow_forward_ios</i> {{current_year}}
+                    <i class="material-icons md-18 ">arrow_forward_ios</i> Fraccionamiento de cuota
+                </h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <form method="post" class="mt-3 auto-fill-order">
+            {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                {% include 'account/simple_profile.html' with account=object.account %}
+
+                <div class="ml-3">
+                    <span class="badge badge-primary mt-4">Cantidad original</span><br>
+                    <span class="lead">{{object.amount}} €</span><br>
+
+                    <span class="badge badge-warning mt-2">Nueva cantidad</span><br>
+                    <span class="lead" id="new-total">{{object.amount}} €</span>
+
+                    <p class="mt-2 text-muted">
+                        Introduce los distintos pagos fraccionados con sus fechas. Si la suma de los pagos es diferente
+                        a la suma original, se considerará que se quiere modificar la cantidad a cobrar.
+                    </p>
+                    <p class="mt-2">
+                        Puedes introducir a continuación un comentario sobre el motivo del fraccionamiento o la propuesta
+                        que realizó la socia para el mismo en el formulario.
+                    </p>
+
+                    {% include "common/forms/field.html" with field=form.comments  not_floating=True %}
+                </div>
+
+
+            </div>
+
+
+        <div class="col-md-8">
+
+            {% with formsets.split as steps_formset %}
+                {{ steps_formset.management_form }}
+
+            <div class="auto-fill-order-group autoupdate-input" id="steps">
+              {% for split_form in steps_formset %}
+                <div class="step-formset formset-item">
+                <div class="card mb-3">
+                <div id="{{ split_form.prefix }}-body" aria-labelledby="{{ split_form.prefix }}-heading" data-parent="#steps">
+                  <div class="card-body px-4">
+                        <div class="row">
+                            <div class="col-sm-4">
+                              {% include "common/forms/field.html" with field=split_form.date %}
+                            </div>
+                             <div class="col-sm-3">
+                                {% include "common/forms/field.html" with field=split_form.amount %}
+                            </div>
+                            <div class="col-sm-5">
+                              {% include "common/forms/field.html" with field=split_form.concept %}
+                            </div>
+                       </div>
+                  </div>
+                </div>
+              </div>
+                </div>
+
+                {% endfor %}
+            </div>
+            {% endwith %}
+
+
+
+        </div>
+            </div>
+
+             <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Fraccionar cuota</button>
+                 </div>
+
+            </form>
+
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/moment.min.js' %}?v=7"></script>
+<script src="{% static 'js/daterangepicker.js' %}?v=7"></script>
+<script type="text/javascript" src="{% static 'js/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+
+    $('input[name$="-date"]').each(function(){
+        initDatePicker($(this));
+    });
+    var newTotal = $('#new-total');
+    updateConcepts();
+
+    $('.step-formset').formset({
+        addText: '<div class="btn btn-lg float-right btn-secondary mt-2"><i class="material-icons">add</i> Añadir pago</div>',
+        deleteText: '<i class="material-icons close">cancel</i>',
+        added: function(row, elem){
+            initDatePicker(row.find('input[name$="-date"]'));
+            initElems(row);
+            updateConcepts();
+        },
+        removed: function(row, elem){
+            updateConcepts();
+        }
+    });
+
+    $('form').on('change paste keyup', 'input[name$="-amount"]', recalculateTotal);
+
+    function updateConcepts(){
+        var charges = $('input[name$="-concept"]');
+        var numCharges = charges.length;
+        charges.each(function(i, elem){
+            $(elem).val('Cuota {{current_year}} (' + (i+1) + '/' + numCharges + ')');
+        });
+
+    }
+
+    function recalculateTotal(){
+        var total = 0;
+        $('input[name$="-amount"]').each(function(){
+            if ($(this).val() != null && $(this).val() != '')
+                total += parseFloat($(this).val());
+        });
+        newTotal.text(total.toFixed(2) + ' €');
+    }
+
+    function initDatePicker(input){
+          input.daterangepicker({
+            singleDatePicker: true,
+            timePicker: false,
+            timePicker24Hour: false,
+            locale: {
+                "format": "DD/MM/YYYY",
+                "weekLabel": "W",
+                "firstDay": 1
+            },
+          });
+          input.on('apply.daterangepicker', function(ev, picker) {
+              $(this).val(picker.startDate.format('DD/MM/YYYY'));
+          });
+    }
+
+    $('form').on('submit', function(event ){
+        $('.step-formset').each(function(){
+            var $step = $(this);
+            var step_tasks = $step.find('.step_tasks input[type="text"]').map(function() {
+                return this.value !== '' ? this.value : null;
+            }).get().join('{% settings_value 'INLINE_INPUT_SEPARATOR'|escape|safe %}');
+            $step.find('input[id$="checklist_tasks"]').val(step_tasks);
+        });
+
+    });
+
+    var task = $('.step_task').first().clone();
+    $('form')
+        .on('click', '.step_tasks .add-task', function(e){
+            $(this).before(task.clone());
+        })
+        .on('click', '.step_tasks .remove-task', function(e){
+            $(this).parents('.step_task').remove();
+        });
+    </script>
+{% endblock %}
