@@ -26,17 +26,27 @@
 
 <td class="amount">
     {{ item.count }}
+    {% if item.manually_modified %}
+        <i class="material-icons text-danger" data-toggle="tooltip" data-placement="bottom" title="Modificada manualmente ({{item.account.current_fee|floatformat:2}}€)">outlined_flag</i>
+    {% endif %}
     {% if item.payment %}
         {{item.payment.amount|floatformat:2}}€
-        {% if item.manually_modified %}
-        <i class="material-icons text-danger" data-toggle="tooltip" data-placement="bottom" title="Modificada manualmente ({{item.account.current_fee|floatformat:2}}€)">outlined_flag</i>
-        {% endif %}
     {% else %}
+        {% if item.split %}
+        {{item.amount|floatformat:2}}€
+        {% else %}
         <strong>No calculada</strong>
+        {% endif %}
     {% endif %}
 </td>
-<td class="px-0">{{item.payment.added|date:'d/m/Y'}}</td>
-<td>
+<td class="px-0">
+    {% if item.split %}
+        Fraccionada ({{item.payments.count}})
+    {% else %}
+        {{item.payment.added|date:'d/m/Y'}}
+    {% endif %}
+</td>
+<td class="px-0">
     <a class="btn btn-outline btn-narrow text-primary"
        href="{% url item.account.detail_url item.account.pk %}"
         data-toggle="tooltip" data-placement="bottom" title="Ver detalle de socia"> <i class="material-icons">visibility</i> </a>
@@ -44,15 +54,31 @@
     <a class="btn btn-outline btn-narrow  {% if item.payment.completed %}bg-success text-white{% else %}text-primary{% endif %}"
        href="{% url 'payments:payment_detail' item.payment.pk %}"
         data-toggle="tooltip" data-placement="bottom" title="Ver pago{% if item.payment.completed %} (realizado){% endif %}"> <i class="material-icons">receipt</i> </a>
+    {% else %}
+        {% if item.split%}
+            {% if item.payments.count > 3 %}
+                <a class="btn btn-outline btn-narrow mr-1"
+                   href="{% url item.account.detail_url item.account.pk %}?tab=payments"
+                    data-toggle="tooltip" data-placement="bottom" title="Ver pagos"> <i class="material-icons">library_books</i> <i class="fas fa-ellipsis-h"></i></a>
 
-        {% if not item.payment.completed %}
-        <a class="btn btn-outline btn-narrow text-primary"
-       href="{% url 'payments:split_feecharge' current_year item.pk %}"
-        data-toggle="tooltip" data-placement="bottom" title="Fraccionar pago"> <i class="material-icons">dynamic_feed</i> </a>
+            {% else %}
+                {% for payment in item.payments.all %}
+                    <a class="btn-narrow mr-1 {% if payment.completed %}text-success{% else %}text-dark{% endif %}"
+                   href="{% url 'payments:payment_detail' payment.pk %}"
+                    data-toggle="tooltip" data-placement="bottom" title="{{payment.concept}}"> <i class="material-icons">library_books</i> </a>
+                {% endfor %}
+            {% endif %}
         {% endif %}
+    {% endif %}
+</td>
+<td class="px-0">
+    {% if not item.payment.completed and not item.split %}
+    <a class="btn btn-outline btn-narrow text-primary"
+   href="{% url 'payments:split_feecharge' current_year item.pk %}"
+    data-toggle="tooltip" data-placement="bottom" title="Fraccionar pago"> <i class="material-icons">dynamic_feed</i> </a>
     {% endif %}
 </td>
 
 {% endblock %}
 
-{% block row_class %}{% if not item.payment %}bg-light-1{% endif %}{% endblock %}
+{% block row_class %}{% if not item.payment and not item.split %}bg-light-1{% endif %}{% endblock %}

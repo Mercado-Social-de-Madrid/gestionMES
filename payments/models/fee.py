@@ -77,13 +77,13 @@ class AnnualFeeCharges(models.Model):
                 if charge.amount == 0:
                     charge.amount = fee
                     charge.save()
-                if not charge.payment:
+                if not charge.split and not charge.payment:
                     concept = "Cuota anual {}".format(self.year)
                     charge.payment = PendingPayment.objects.create(
                         concept=concept, account=account, amount = fee)
                     charge.amount = fee
                     charge.save()
-                elif not charge.payment.is_completed and not charge.manually_modified and charge.payment.amount != fee:
+                elif not charge.split and   not charge.payment.is_completed and not charge.manually_modified and charge.payment.amount != fee:
                     # if the payment is not done yet and the fee has changed, update it
                     charge.amount = fee
                     charge.payment.amount = fee

@@ -43,7 +43,7 @@
                         Puedes introducir a continuación un comentario sobre el motivo del fraccionamiento o la propuesta
                         que realizó la socia para el mismo en el formulario.
                     </p>
-
+                    {{form.new_amount}}
                     {% include "common/forms/field.html" with field=form.comments  not_floating=True %}
                 </div>
 
@@ -58,6 +58,9 @@
 
             <div class="auto-fill-order-group autoupdate-input" id="steps">
               {% for split_form in steps_formset %}
+
+
+
                 <div class="step-formset formset-item">
                 <div class="card mb-3">
                 <div id="{{ split_form.prefix }}-body" aria-labelledby="{{ split_form.prefix }}-heading" data-parent="#steps">
@@ -81,15 +84,15 @@
                 {% endfor %}
             </div>
             {% endwith %}
-
-
+                <div class="clearfix"></div>
+             <div class="text-center mt-4">
+                 <button type="submit" class="btn btn-primary btn-lg">Fraccionar cuota</button>
+             </div>
 
         </div>
             </div>
 
-             <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary btn-lg">Fraccionar cuota</button>
-                 </div>
+
 
             </form>
 
@@ -106,6 +109,7 @@
         initDatePicker($(this));
     });
     var newTotal = $('#new-total');
+    var amountField = $('#{{form.new_amount.id_for_label}}');
     updateConcepts();
 
     $('.step-formset').formset({
@@ -129,7 +133,6 @@
         charges.each(function(i, elem){
             $(elem).val('Cuota {{current_year}} (' + (i+1) + '/' + numCharges + ')');
         });
-
     }
 
     function recalculateTotal(){
@@ -139,6 +142,7 @@
                 total += parseFloat($(this).val());
         });
         newTotal.text(total.toFixed(2) + ' €');
+        amountField.val(total.toFixed(2));
     }
 
     function initDatePicker(input){
@@ -157,24 +161,5 @@
           });
     }
 
-    $('form').on('submit', function(event ){
-        $('.step-formset').each(function(){
-            var $step = $(this);
-            var step_tasks = $step.find('.step_tasks input[type="text"]').map(function() {
-                return this.value !== '' ? this.value : null;
-            }).get().join('{% settings_value 'INLINE_INPUT_SEPARATOR'|escape|safe %}');
-            $step.find('input[id$="checklist_tasks"]').val(step_tasks);
-        });
-
-    });
-
-    var task = $('.step_task').first().clone();
-    $('form')
-        .on('click', '.step_tasks .add-task', function(e){
-            $(this).before(task.clone());
-        })
-        .on('click', '.step_tasks .remove-task', function(e){
-            $(this).parents('.step_task').remove();
-        });
     </script>
 {% endblock %}

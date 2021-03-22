@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Sum, Count
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import FormView, DetailView, UpdateView
 from django_filters.views import FilterView
@@ -22,7 +23,7 @@ from core.mixins.FormsetView import FormsetView
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.FeeComment import FeeCommentForm
 from payments.forms.feecharge import getFeeSplitFormset, AccountFeeSplitForm
-from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges
+from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPayment
 
 
 class FeeChargeFilterForm(BootstrapForm):
@@ -107,8 +108,39 @@ class SplitFeeCharge(UpdateView, FormsetView):
         context['current_year'] = int(self.kwargs.get('year'))
         return context
 
+    def get_success_url(self):
+        return reverse('payments:annual_feecharges', kwargs={'year': int(self.kwargs.get('year'))})
+
     def formset_split_valid(self, splits, annualcharge):
 
+        annualcharge.split = True
+        for payment in annualcharge.payments.all():
+            payment.delete()
+
         for split in splits:
-            pass
+            payment = PendingPayment.objects.create(
+                        concept=split.cleaned_data['concept'],
+                        account=annualcharge.account,
+                        amount= split.cleaned_data['amount'])
+            print(split.cleaned_data['date'])
+            payment.added = split.cleaned_data['date']
+            payment.save()
+            annualcharge.payments.add(payment)
+            annualcharge.save()
+
+    def post_form_valid(self, form):
+        if self.object.payments.count() > 0:
+            # If we split the annual charge, we need to remove the unique one
+            if self.object.payment:
+                self.object.payment.delete()
+                self.object.payment = None
+            self.object.split = True
+
+        fee = form.cleaned_data['new_amount']
+        if self.object.amount != fee:
+            self.object.amount = fee
+            self.object.manually_modified = True
+
+        self.object.save()
+
 

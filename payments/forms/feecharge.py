@@ -6,17 +6,19 @@ from payments.models import AccountAnnualFeeCharge
 
 class FeeSplitForm(BootstrapForm):
     date = forms.DateField(label='Fecha', required=True)
-    amount = forms.FloatField(label='Cantidad', required=True, min_value=0)
+    amount = forms.FloatField(label='Cantidad', required=True, min_value=0, initial=0)
     concept = forms.CharField(label='Concepto', required=True)
 
 
 class AccountFeeSplitForm(forms.ModelForm, BootstrapForm):
 
+    new_amount = forms.FloatField(widget=forms.HiddenInput())
+
     class Meta:
         model = AccountAnnualFeeCharge
-        fields = ['amount', 'comments']
+        fields = ['new_amount', 'comments']
         widgets = {
-            'comments': forms.Textarea(attrs={'rows':3})
+            'comments': forms.Textarea(attrs={'rows':3}),
         }
 
 
