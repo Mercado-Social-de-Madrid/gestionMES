@@ -26,7 +26,9 @@ urlpatterns = [
     url(r'^sepa/$', views.SepaBatchListView.as_view(), name='sepa_list'),
     url(r'^sepa/add/$', views.BatchCreate.as_view(), name='sepa_create'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/$', views.BatchDetail.as_view(), name='sepa_detail'),
+    url(r'^sepa/(?P<pk>[0-9a-f-]+)/regenerate/$', views.sepa_regenerate, name='sepa_regenerate'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/delete/$', views.sepa_delete, name='sepa_delete'),
+    url(r'^sepa/(?P<pk>[0-9a-f-]+)/(?P<batch_pk>[0-9a-f-]+)\.pdf$', views.batch_payment_pdf, name='batch_payment_pdf'),
 
     url(r'^banks/$', views.BankList.as_view(), name='bank_list'),
     url(r'^banks/bic$', views.BicExplanation.as_view(), name='bic_explanation'),

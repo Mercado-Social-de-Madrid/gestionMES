@@ -25,6 +25,9 @@ class SepaPaymentsBatch(models.Model):
     payments = models.ManyToManyField(PendingPayment, through='SepaBatchResult', verbose_name=_('Pagos incluídos'), related_name='sepa_batches')
     sepa_file = models.FileField(null=True, blank=True, upload_to='sepa', verbose_name=_('Fichero SEPA'))
 
+    invoice_prefix = models.CharField(null=True, blank=True, verbose_name=_('Serie facturación'), max_length=20)
+    invoice_start = models.IntegerField(default=1, verbose_name=_('Número de facturación inicio'))
+
     class Meta:
         verbose_name = _('Remesa SEPA')
         verbose_name_plural = _('Remesas SEPA')
@@ -33,6 +36,9 @@ class SepaPaymentsBatch(models.Model):
             ("mespermission_can_manage_sepa", _("Puede gestionar remesas de pagos SEPA")),
         )
 
+    @property
+    def get_invoice_prefix(self):
+        return self.invoice_prefix if self.invoice_prefix else '-'
 
     def preprocess_batch(self):
         for batch_result in SepaBatchResult.objects.filter(batch=self):
@@ -147,6 +153,11 @@ class SepaBatchResult(models.Model):
     @property
     def fail_reason_display(self):
         return self.get_fail_reason_display()
+
+    @property
+    def invoice_code(self):
+        invoice_number = self.batch.invoice_start + self.order
+        return '{}{}{:03d}'.format(self.batch.attempt.year, self.batch.get_invoice_prefix, invoice_number)
 
 
 class BankBICCode(models.Model):

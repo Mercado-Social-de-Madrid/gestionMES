@@ -11,7 +11,7 @@
 
 {% block item_row %}
 
-<td class="text-truncate" style="max-width:250px;">{{item.account_name|default:'-'}}</td>
+<td class="text-truncate" style="max-width:250px;">{{item.order|add:1}}. {{item.account_name|default:'-'}}</td>
 <td class="amount">{{item.payment_amount|floatformat:2}} €</td>
 <td>
     <small>{{item.account_iban|default:'-'}}/{{item.bic_code|default:'-'}}</small>
@@ -22,6 +22,9 @@
 <td {% if not item.success %} class="bg-warning" {% endif %}>
     {% if item.success %}
         <i class="material-icons">check_circle_outline</i>
+        <a href="{% url 'payments:batch_payment_pdf' sepa.pk item.pk %}" target="_blank"
+           class="btn btn-narrow btn-outline-primary"
+            data-toggle="tooltip" data-placement="bottom" title="Ver factura"><span class="material-icons">picture_as_pdf</span></a>
     {% else %}
         {{item.fail_reason_display}}
     {% endif %}

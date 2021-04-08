@@ -8,7 +8,7 @@ from django.db.models import Count
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -18,7 +18,8 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
-from payments.forms.sepa import SepaBatchForm
+from helpers.pdf import render_pdf_response
+from payments.forms.sepa import SepaBatchForm, UpdateBatchForm
 from payments.models import SepaBatchResult
 from payments.models import SepaPaymentsBatch
 
@@ -68,8 +69,9 @@ class BatchCreate(PermissionRequiredMixin, CreateView):
         return reverse('payments:sepa_detail', kwargs={'pk': self.object.pk})
 
 
-class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, DetailView):
+class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, UpdateView):
     permission_required = 'payments.mespermission_can_manage_sepa'
+    form_class = UpdateBatchForm
     filterset_fields = []
     template_name = 'payments/sepa/detail.html'
     queryset = SepaPaymentsBatch.objects.all()
@@ -86,7 +88,7 @@ class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, DetailView):
                     'fail_reason_display':'Motivo fallo'}
 
     def get_list_to_export(self):
-        return SepaBatchResult.objects.filter(batch=self.get_object()).order_by('-fail_reason', 'order' )
+        return SepaBatchResult.objects.filter(batch=self.get_object()).order_by('order' )
 
     def get_context_data(self, **kwargs):
         self.object = self.get_object()
@@ -95,13 +97,22 @@ class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, DetailView):
         context['batch_success'] = SepaBatchResult.objects.filter(batch=self.object, success=True).count()
         return context
 
-    def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+    def form_valid(self, form):
         self.object.preprocess_batch()
         self.object.generate_batch()
-        messages.success(request, _('Remesa SEPA generada correctamente.'))
-        return redirect(reverse('payments:sepa_detail', kwargs={'pk': self.object.pk}))
+        messages.success(self.request, _('Remesa SEPA generada correctamente.'))
+        return super().form_valid(form)
 
+    def get_success_url(self):
+        return reverse('payments:sepa_detail', kwargs={'pk': self.object.pk})
+
+
+def sepa_regenerate(request, pk):
+    sepa = SepaPaymentsBatch.objects.get(pk=pk)
+    sepa.preprocess_batch()
+    sepa.generate_batch()
+    messages.success(request, _('Remesa SEPA generada correctamente.'))
+    return redirect(reverse('payments:sepa_detail', kwargs={'pk': sepa.pk}))
 
 
 def sepa_delete(request, pk):
@@ -109,3 +120,12 @@ def sepa_delete(request, pk):
     sepa.delete()
     messages.success(request, _('Remesa SEPA eliminada correctamente.'))
     return redirect(reverse('payments:sepa_list'))
+
+
+def batch_payment_pdf(request, pk, batch_pk):
+    sepa = SepaPaymentsBatch.objects.get(pk=pk)
+    payment =  SepaBatchResult.objects.get(pk=batch_pk)
+
+    invoice_code = payment.invoice_code
+    filename = 'factura_{}'.format( invoice_code)
+    return render_pdf_response(request, 'pdf/invoice.html', {'payment':payment, 'sepa':sepa, 'invoice_code':invoice_code}, filename=filename)

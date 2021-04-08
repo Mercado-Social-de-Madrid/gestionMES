@@ -1,0 +1,186 @@
+<!doctype html>
+<html>
+  <head>
+      {% load staticfiles settings_value %}
+    <meta charset="utf-8">
+      <!--<link href="{% static 'css/pdf/invoice.css' %}" media="print" rel="stylesheet" >-->
+    <title>Factura</title>
+    <meta name="description" content="Factura" />
+    <meta name="author" content="MES" />
+      <style media="print">
+
+@charset "UTF-8";
+@page {
+  margin: 2cm;
+ }
+body {
+  word-spacing: 0.1em;
+}
+html {
+  font-family: Arial;
+  font-size: 11pt;
+  line-height: 1.6; }
+  html body { margin: 0; }
+
+ html table {
+    border-collapse: collapse;
+    width: 100%; }
+
+ html table th {
+      border-bottom: .3mm solid #99bb14;
+      color: #99bb14;
+      font-size: 10pt;
+      font-weight: 400;
+      padding-bottom: .15cm;
+      text-transform: uppercase;
+  }
+#header{
+    margin-bottom:1cm;
+}
+#header img{
+    width:41%;
+    padding-top:.2cm;
+    margin-right:.50cm;
+}
+#header img, #header p{
+float:left;
+}
+#from{
+    color:#111;
+    line-height:1.4;
+    font-size:10pt;
+}
+#from h1{
+    font-size:12pt;
+    margin-bottom:0;
+}
+h2 span{
+    color:#653776;
+}
+a{ color:#653776; }
+p.info{ margin:0; }
+.info span{
+    background-color:#653776;
+    padding:0.1cm;
+    color:#fff;
+}
+.third{
+    width:29.3333%;
+    float:left;
+    padding-right:0.9cm;
+}
+.third-2{
+    width:57.6666%;
+    float:left;
+    padding-right:0.9cm;
+}
+
+.third table, .third-2 table{
+    padding:1cm;
+}
+
+table{
+    margin-top:1.5cm;
+}
+table.total{
+    width:100%;
+}
+table.total th{padding-left: .2cm; }
+table.total td{
+    padding-left: .2cm;
+    border-bottom: .2mm solid #ddd;
+}
+th.em{ background-color: #99bb14; color: #fff; }
+td.em{ background-color: #f0f0f0; }
+
+.invoice{ background-color: #f0f0f0; padding:0.3cm; }
+.invoice table{ margin-top:0; vertical-align: top;}
+
+</style>
+  </head>
+
+ <body>
+
+<div id="header">
+<img src="{% static '/imgs/mes_logo.png' %}">
+<div id="from">
+<h1>MERCADO SOCIAL DE MADRID SDAD COOP</h1>
+CIF: F87198107<br>
+C/ Duque de Alba 13, planta baja<br>
+28012 Madrid (Madrid) España<br><br>
+<span>madrid@mercadosocial.net</span> |
+<a href="https://madrid.mercadosocial.net/">madrid.mercadosocial.net</a>
+</div>
+</div>
+
+<hr>
+<h2><span>Factura:</span>F{{payment.invoice_code}}</h2>
+
+<div class="invoice">
+    <table>
+        <tr>
+            <td style="width:33%;vertical-align: top;">
+                <p class="info"><span>Fecha factura:</span> {{sepa.attempt|date:'d/m/Y'}}</p>
+                <p class="info"><span>Número:</span> {{payment.order|add:1}}</p>
+                <p class="info"><span>Serie:</span> {{sepa.invoice_prefix|default:'-'}}</p>
+            </td>
+            <td  style="width:63%;vertical-align: top;">
+                <p class="info"><span>Cliente:</span> {{payment.payment.account.display_name}}</p>
+                <p class="info"><span>CIF:</span> {{payment.payment.account.cif}}</p>
+                <p class="info"><span>Dirección:</span> {{payment.payment.account.address|safe|default:''}} - {{payment.payment.account.postalcode|default:''}}
+                {{payment.payment.account.city|default:''}} ({{payment.payment.account.province|default:''}})</p>
+            </td>
+        </tr>
+    </table>
+</div>
+<br/>
+
+<table>
+  <thead>
+  <tr>
+    <th>Referencia / Descripción</th>
+    <th>Precio</th>
+    <th>Cant.</th>
+    <th>Neto</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="width:63%;">{{payment.payment.concept}}</td>
+      <td style="width:12%;">{{payment.payment.amount|floatformat:2}}</td>
+      <td style="width:12%;">1</td>
+      <td style="width:12%;">{{payment.payment.amount|floatformat:2}}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="third-2">
+<table class="total" style="width:90%;">
+    <tr>
+        <th colspan="2" class="em">Forma de pago</th></tr>
+    <tr>
+    <td colspan="2" class="em">{{payment.payment.get_type_display}}</td>
+  </tr>
+<tr>
+  <th>IBAN</th><td>{{payment.payment.account.iban_code}}</td></tr>
+  <tr>
+  <th>Recibo</th><td>1</td></tr>
+      <tr>
+    <th>Importe</th><td>{{payment.payment.amount|floatformat:2}}</td></tr>
+<tr>
+<th>Vencimiento</th><td>Pagado</td></tr>
+</table></div>
+
+ <div class="third">
+<table class="total">
+  <tr>
+      <th>Divisa</th><td>EURO</td></tr>
+      <tr>
+    <th>Neto</th><td>{{payment.payment.amount|floatformat:2}}</td></tr>
+    <tr>
+    <th class="em">Total</th><td class="em">{{payment.payment.amount|floatformat:2}}</td>
+  </tr>
+</table></div>
+
+  </body>
+</html>

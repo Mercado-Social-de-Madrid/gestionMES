@@ -19,46 +19,62 @@
                     </h4>
             </div>
         </div>
-        </div>
-    </div>
-
-
-    <div class="container mt-2">
-        <div class="row">
+            <div class="row mt-3">
             <div class="col-sm-3 col-md-2 lead">
-                <label class="text-secondary">Núm de recibos incluídos</label><br>
+                <label class="text-primary">Núm de recibos incluídos</label><br>
                 {{batch_success}}/{{object.payments.count}}
             </div>
 
               <div class="col-sm-3 col-md-2 lead">
-                <label class="text-secondary">Importe total</label><br>
+                <label class="text-primary">Importe total</label><br>
                 {{ object.amount|floatformat:2 }} €
             </div>
 
             <div class="col-sm-3 col-md-2 lead">
-                <label class="text-secondary">Generado</label><br>
+                <label class="text-primary">Generado</label><br>
                 {{object.attempt|date:'d/m/Y'}}
             </div>
 
-            <div class="col-sm-3 col-md-2 lead">
-                <label class="text-secondary">Por</label><br>
+            <div class="col-sm-3 col-md-4 lead">
+                <label class="text-primary">Por</label><br>
                 {% include 'user/simple_profile.html' with user=object.generated_by %}
             </div>
 
-            <div class="col-md-4 mt-3">
+        </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="container mt-2">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="row mt-4">
+                <div class="col-md-2">{% include "common/forms/field.html" with field=form.invoice_prefix  %}</div>
+                <div class="col-md-3">{% include "common/forms/field.html" with field=form.invoice_start  %}</div>
+                <div class="col-md-3"><button type="submit" class="btn btn-primary mt-2">Actualizar</button></div>
+
+                <div class="col-md-4 mt-2">
                 {% if object.sepa_file %}
                     <a class="btn btn-primary" href="{{object.sepa_file.url}}"> <i class="material-icons mr-2 ">save_alt</i> Fichero SEPA</a>
                 {% endif %}
                 <a class="btn btn-secondary" href="?export=csv"> <i class="material-icons mr-2 ">save_alt</i> CSV</a>
             </div>
-        </div>
+
+            </div>
+        </form>
+
+
         <p class="lead">
 
         </p>
 
-        {% include 'payments/sepa/batch_result.html' with valign=True object_list=batch_results hide_controls=True object_url_name='payments:payment_detail' %}
+        {% include 'payments/sepa/batch_result.html' with valign=True sepa=object object_list=batch_results hide_controls=True object_url_name='payments:payment_detail' %}
 
-        <form method="post">
+        <form method="post" action="{% url 'payments:sepa_regenerate' object.pk %}">
             {% csrf_token %}
             <div class="row mb-5">
                 <div class="col-md-7 text-dark-3">
