@@ -49,3 +49,9 @@ class SepaBatchForm(forms.ModelForm, BootstrapForm):
 
         return instance
 
+
+class UpdateBatchForm(forms.ModelForm, BootstrapForm):
+
+    class Meta:
+        model = SepaPaymentsBatch
+        exclude = ['sepa_file', 'amount', 'attempt', 'payments', 'generated_by', 'title' ]

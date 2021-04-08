@@ -54,6 +54,14 @@
 
         <div class="text-center mt-2">
             {% include 'common/forms/field.html' with field=form.title %}
+
+            <div class="row">
+                <div class="col-md-5 mt-2">{% include "common/forms/field.html" with field=form.invoice_prefix not_floating=True %}</div>
+                <div class="col-md-7">{% include "common/forms/field.html" with field=form.invoice_start not_floating=True %}</div>
+            </div>
+
+
+
             <button type="submit" class="btn btn-primary btn-lg">Generar remesa</button>
         </div>
             </form>
