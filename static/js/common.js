@@ -149,6 +149,25 @@ $(function(){
 
     });
 
+    $('.form-photo').on('change', 'input[type="file"]', function(){
+        var input = this;
+        var imgTarget = $(input).parents('.file-field').attr('data-img-target');
+        var target = $(imgTarget);
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                if (imgTarget){
+                    target.attr('src', e.target.result);
+                }
+                else{
+                    target.css('background-image', 'url(' + e.target.result + ')');
+                    target.parent().addClass('uploaded');
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    });
+
      $(".gallery-form").on('change', '.form-photo > input', function(){
         var input = this;
         var target = $(input).siblings('.thumb');
