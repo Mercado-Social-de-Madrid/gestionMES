@@ -122,11 +122,10 @@
 
         <div class="row">
         <div class="col-md-6 ">
-
+                    {% include "common/forms/image_field.html" with field=form.logo %}
                     {% include "common/forms/field.html" with field=form.description not_floating=True%}
                     {% include "common/forms/field.html" with field=form.short_description not_floating=True%}
                     {% include "common/forms/field.html" with field=form.public_address not_floating=True %}
-                    {% include "common/forms/field.html" with field=form.territory not_floating=True %}
                     <h5 class="text-primary mt-5">Redes sociales</h5>
                     {% include "common/forms/field.html" with field=form.facebook_link %}
                     {% include "common/forms/field.html" with field=form.webpage_link %}
@@ -137,7 +136,7 @@
                 </div>
 
                 <div class="col-md-6">
-
+                    {% include "common/forms/field.html" with field=form.territory not_floating=True %}
                     {% include "common/forms/field.html" with field=form.start_year %}
                     {% include "common/forms/multiselect.html" with field=form.categories tags=categories %}
                     <div class="mb-3">
