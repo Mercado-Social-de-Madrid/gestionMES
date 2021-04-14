@@ -138,6 +138,10 @@ class PendingPayment(models.Model):
     returned_timestamp = models.DateTimeField(null=True, blank=True, verbose_name=_('Fecha de devolución'))
     returned_reason = models.CharField(null=True, blank=True, max_length=30, choices=RETURN_REASONS, verbose_name=_('Motivo de devolución'))
 
+    invoice_prefix = models.CharField(null=True, blank=True, verbose_name=_('Serie facturación'), max_length=20)
+    invoice_number = models.IntegerField(default=1, verbose_name=_('Número de facturación'))
+    invoice_date = models.DateTimeField(null=True, blank=True, verbose_name=_('Fecha de factura'))
+
     objects = PaymentsManager()
 
     class Meta:
@@ -171,6 +175,11 @@ class PendingPayment(models.Model):
     @property
     def contact_phone(self):
         return self.account.contact_phone
+
+    @property
+    def invoice_code(self):
+        prefix = self.invoice_prefix if self.invoice_prefix else '-'
+        return '{}{}{:03d}'.format(self.added.year, prefix, self.invoice_number)
 
     def paid_by_card(self):
         self.completed = True

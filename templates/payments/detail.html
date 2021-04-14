@@ -11,15 +11,15 @@
 <div class="jumbotron py-4 px-2">
         <div class="container">
             <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <h4 class="mb-0"><a href="{% url 'payments:payments_list' %}">Pagos</a><i class="material-icons md-18 ">arrow_forward_ios</i> Ref. {{object.reference}}</h4>
             </div>
+            <div class="col-md-6 text-right">
+                 <a class="btn btn-secondary" target="_blank" href="{% url 'payments:invoice_pdf' object.pk %}"><i class="material-icons mr-2">picture_as_pdf</i> Ver factura</a>
                 {% if not object.completed and perms.payments.mespermission_can_edit_payments %}
-                <div class="col-md-4 text-right">
-                    <a class="btn btn-primary" href="#" data-toggle="modal" data-target="#delete-payment"><i class="material-icons mr-2 ">cancel</i>  Eliminar</a><br>
-                </div>
+                    <a class="btn btn-danger ml-2" href="#" data-toggle="modal" data-target="#delete-payment"><i class="material-icons mr-2 ">cancel</i>  Eliminar</a><br>
                 {% endif %}
-
+                </div>
         </div>
         </div>
     </div>
@@ -39,6 +39,8 @@
              </div>
                 </div>
             </div>
+
+
         </div>
 
         <div class="col-md-7">
@@ -73,8 +75,10 @@
                 </div>
             {% endif %}
 
+
             {% if sepa_batches %}
-                <span class="badge badge-primary mb-2">Remesa SEPA</span>
+                <br>
+                <span class="badge badge-primary my-2">Remesa SEPA</span>
                 {% include 'payments/sepa/query.html' with valign=True hide_header=True object_list=sepa_batches hide_controls=True object_url_name='payments:sepa_detail' %}
             {% endif %}
         </div>
@@ -89,7 +93,19 @@
                 {% include "common/forms/display_value.html" with value=object.added label='Añadido' %}-->
                 {% include "common/forms/field.html" with field=form.amount %}
                 {% include "common/forms/field.html" with field=form.concept not_floating=True %}
+
+
+                <div class="row">
+                    <div class="col-md-3"><span class="badge badge-primary  mt-4">Facturación</span></div>
+                    <div class="col-md-4 pl-0">{% include "common/forms/field.html" with field=form.invoice_prefix %}</div>
+                    <div class="col-md-5">{% include "common/forms/field.html" with field=form.invoice_number %}</div>
+
+                </div>
                 {% include "common/forms/field.html" with field=form.comment not_floating=True %}
+
+
+
+
             </div>
             <div class="col-md-6">
                 <div class="mb-3">

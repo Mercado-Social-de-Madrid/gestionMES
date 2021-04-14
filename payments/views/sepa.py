@@ -8,7 +8,7 @@ from django.db.models import Count
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, UpdateView
 from django_filters.views import FilterView
 from filters.views import FilterMixin
 
@@ -18,7 +18,6 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
-from helpers.pdf import render_pdf_response
 from payments.forms.sepa import SepaBatchForm, UpdateBatchForm
 from payments.models import SepaBatchResult
 from payments.models import SepaPaymentsBatch
@@ -124,8 +123,12 @@ def sepa_delete(request, pk):
 
 def batch_payment_pdf(request, pk, batch_pk):
     sepa = SepaPaymentsBatch.objects.get(pk=pk)
-    payment =  SepaBatchResult.objects.get(pk=batch_pk)
+    batch_pay =  SepaBatchResult.objects.get(pk=batch_pk)
 
-    invoice_code = payment.invoice_code
-    filename = 'factura_{}'.format( invoice_code)
-    return render_pdf_response(request, 'pdf/invoice.html', {'payment':payment, 'sepa':sepa, 'invoice_code':invoice_code}, filename=filename)
+    payment = batch_pay.payment
+    payment.invoice_prefix = sepa.invoice_prefix
+    payment.invoice_number = batch_pay.invoice_number
+    payment.invoice_date = sepa.attempt
+    payment.save()
+
+    return redirect(reverse('payments:invoice_pdf', kwargs={'pk': payment.pk}))

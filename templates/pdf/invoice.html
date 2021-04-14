@@ -120,15 +120,14 @@ C/ Duque de Alba 13, planta baja<br>
     <table>
         <tr>
             <td style="width:33%;vertical-align: top;">
-                <p class="info"><span>Fecha factura:</span> {{sepa.attempt|date:'d/m/Y'}}</p>
-                <p class="info"><span>Número:</span> {{payment.order|add:1}}</p>
-                <p class="info"><span>Serie:</span> {{sepa.invoice_prefix|default:'-'}}</p>
+                <p class="info"><span>Fecha factura:</span> {% if payment.invoice_date %} {{payment.invoice_date|date:'d/m/Y'}} {% else %} {{payment.added|date:'d/m/Y'}}{% endif %}</p>
+                <p class="info"><span>Número:</span> {{payment.invoice_code}}</p>
             </td>
             <td  style="width:63%;vertical-align: top;">
-                <p class="info"><span>Cliente:</span> {{payment.payment.account.display_name}}</p>
-                <p class="info"><span>CIF:</span> {{payment.payment.account.cif}}</p>
-                <p class="info"><span>Dirección:</span> {{payment.payment.account.address|safe|default:''}} - {{payment.payment.account.postalcode|default:''}}
-                {{payment.payment.account.city|default:''}} ({{payment.payment.account.province|default:''}})</p>
+                <p class="info"><span>Cliente:</span> {{payment.account.display_name}}</p>
+                <p class="info"><span>CIF:</span> {{payment.account.cif}}</p>
+                <p class="info"><span>Dirección:</span> {{payment.account.address|safe|default:''}} - {{payment.account.postalcode|default:''}}
+                {{payment.payment.account.city|default:''}} ({{payment.account.province|default:''}})</p>
             </td>
         </tr>
     </table>
@@ -146,41 +145,42 @@ C/ Duque de Alba 13, planta baja<br>
   </thead>
   <tbody>
     <tr>
-      <td style="width:63%;">{{payment.payment.concept}}</td>
-      <td style="width:12%;">{{payment.payment.amount|floatformat:2}}</td>
+      <td style="width:63%;">{{payment.concept}}</td>
+      <td style="width:12%;">{{payment.amount|floatformat:2}}</td>
       <td style="width:12%;">1</td>
-      <td style="width:12%;">{{payment.payment.amount|floatformat:2}}</td>
+      <td style="width:12%;">{{payment.amount|floatformat:2}}</td>
     </tr>
   </tbody>
 </table>
 
+
 <div class="third-2">
 <table class="total" style="width:90%;">
-    <tr>
-        <th colspan="2" class="em">Forma de pago</th></tr>
-    <tr>
-    <td colspan="2" class="em">{{payment.payment.get_type_display}}</td>
-  </tr>
 <tr>
-  <th>IBAN</th><td>{{payment.payment.account.iban_code}}</td></tr>
-  <tr>
-  <th>Recibo</th><td>1</td></tr>
-      <tr>
-    <th>Importe</th><td>{{payment.payment.amount|floatformat:2}}</td></tr>
+<th colspan="2" class="em">Forma de pago</th></tr>
 <tr>
-<th>Vencimiento</th><td>Pagado</td></tr>
+<td colspan="2" class="em">{{payment.get_type_display}}</td>
+</tr>
+
+<tr><th>Cuenta</th>
+<td>{% if not payment.completed %}{{iban}}{% else %}{{payment.account.iban_code}}{% endif %}</td>
+</tr>
+<tr>
+<th>Importe</th><td>{{payment.amount|floatformat:2}}</td></tr>
+<tr>
+<th>Vencimiento</th><td>{% if payment.completed %}Pagado{% else %}Noventa dias{% endif %}</td></tr>
 </table></div>
 
- <div class="third">
+<div class="third">
 <table class="total">
   <tr>
       <th>Divisa</th><td>EURO</td></tr>
       <tr>
-    <th>Neto</th><td>{{payment.payment.amount|floatformat:2}}</td></tr>
+    <th>Neto</th><td>{{payment.amount|floatformat:2}}</td></tr>
     <tr>
-    <th class="em">Total</th><td class="em">{{payment.payment.amount|floatformat:2}}</td>
+    <th class="em">Total</th><td class="em">{{payment.amount|floatformat:2}}</td>
   </tr>
 </table></div>
 
-  </body>
+</body>
 </html>

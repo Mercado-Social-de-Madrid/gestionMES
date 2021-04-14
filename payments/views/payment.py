@@ -22,6 +22,7 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from helpers.pdf import render_pdf_response
 from payments.forms.payment import PaymentForm, UpdatePaymentForm
 from payments.models import PendingPayment, SepaPaymentsBatch, AnnualFeeCharges, AccountAnnualFeeCharge
 
@@ -110,8 +111,6 @@ class PaymentsListView(PermissionRequiredMixin, FilterMixin, FilterView, ExportA
         return context
 
 
-
-
 class PaymentCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'payments.mespermission_can_edit_payments'
     template_name = 'payments/create.html'
@@ -150,7 +149,11 @@ class PaymentDetailView(UpdateView):
         fee = self.object.fee_charges.first()
         if fee:
             fee.payment_updated()
+        return response
 
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        print(form.errors)
         return response
 
     def get_success_url(self):
@@ -216,3 +219,14 @@ def payment_delete(request, pk):
         return redirect(reverse('payments:payments_list'))
     else:
         return HttpResponse(status=400)
+
+
+def invoice_pdf(request, pk):
+    payment = PendingPayment.objects.get(pk=pk)
+
+    invoice_code = payment.invoice_code
+    filename = 'factura_{}'.format(invoice_code)
+    return render_pdf_response(request, 'pdf/invoice.html',
+               {'payment': payment,
+                'invoice_code': invoice_code,
+                'iban': settings.SEPA_CONFIG['IBAN']}, filename=filename)

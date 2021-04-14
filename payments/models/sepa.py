@@ -94,6 +94,11 @@ class SepaPaymentsBatch(models.Model):
                 sepa.add_payment(pay)
                 payments.append(batch_result.payment)
 
+                payment.invoice_prefix = self.invoice_prefix
+                payment.invoice_number = batch_result.invoice_number
+                payment.invoice_date = self.attempt
+                payment.save()
+
 
         if (len(payments) > 0):
             sepa_xml = sepa.export(validate=True)
@@ -155,9 +160,9 @@ class SepaBatchResult(models.Model):
         return self.get_fail_reason_display()
 
     @property
-    def invoice_code(self):
-        invoice_number = self.batch.invoice_start + self.order
-        return '{}{}{:03d}'.format(self.batch.attempt.year, self.batch.get_invoice_prefix, invoice_number)
+    def invoice_number(self):
+        return self.batch.invoice_start + self.order
+
 
 
 class BankBICCode(models.Model):

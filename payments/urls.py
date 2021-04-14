@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^end/success/$', views.payment_success, name='payment_success'),
     url(r'^end/error/$', views.payment_error, name='payment_error'),
 
+    url(r'^(?P<pk>[0-9a-f-]+)/factura.pdf$', views.invoice_pdf, name='invoice_pdf'),
+
     url(r'^annual/(?P<year>\d+)/$', views.AnnualFeeChargesList.as_view(), name='annual_feecharges'),
     url(r'^annual/(?P<year>\d+)/fee/(?P<pk>\d+)$', views.SplitFeeCharge.as_view(), name='split_feecharge'),
 
@@ -28,7 +30,7 @@ urlpatterns = [
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/$', views.BatchDetail.as_view(), name='sepa_detail'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/regenerate/$', views.sepa_regenerate, name='sepa_regenerate'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/delete/$', views.sepa_delete, name='sepa_delete'),
-    url(r'^sepa/(?P<pk>[0-9a-f-]+)/(?P<batch_pk>[0-9a-f-]+)\.pdf$', views.batch_payment_pdf, name='batch_payment_pdf'),
+    url(r'^sepa/(?P<pk>[0-9a-f-]+)/(?P<batch_pk>[0-9a-f-]+)/invoice$', views.batch_payment_pdf, name='batch_payment_pdf'),
 
     url(r'^banks/$', views.BankList.as_view(), name='bank_list'),
     url(r'^banks/bic$', views.BicExplanation.as_view(), name='bic_explanation'),

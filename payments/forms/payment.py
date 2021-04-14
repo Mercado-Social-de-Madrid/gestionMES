@@ -27,4 +27,4 @@ class UpdatePaymentForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = PendingPayment
-        exclude = ['reference', 'revised_by', 'completed', 'amount', 'concept', 'comment', 'type', 'account']
+        exclude = ['reference', 'revised_by', 'completed', 'amount', 'concept', 'comment', 'type', 'account', 'invoice_number', 'invoice_prefix']
