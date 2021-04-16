@@ -16,7 +16,7 @@ django-tastypie==0.14.2
 fcm-django==0.2.13
 idna==2.7
 libsass==0.15.0
-mysqlclient==1.3.12
+mysqlclient
 olefile==0.45.1
 pilkit==2.0
 Pillow==4.2.1
@@ -29,7 +29,7 @@ requests==2.20.0
 requests-toolbelt==0.8.0
 rjsmin==1.0.12
 selenium==3.141.0
-six==1.11.0
+six
 sepaxml==2.2.0
 WeasyPrint==52.4
 webdriver-manager==2.4.0
