@@ -60,6 +60,14 @@
             </div>
             <div class="col-md-6">
                 {% include "common/forms/field.html" with field=form.concept not_floating=True %}
+
+                <div class="row">
+                    <div class="col-md-3"><span class="badge badge-primary  mt-4">Facturación</span></div>
+                    <div class="col-md-4 pl-0">{% include "common/forms/field.html" with field=form.invoice_prefix %}</div>
+                    <div class="col-md-5">{% include "common/forms/field.html" with field=form.invoice_number %}</div>
+
+                </div>
+                
                 {% include "common/forms/field.html" with field=form.comment not_floating=True %}
 
             </div>
