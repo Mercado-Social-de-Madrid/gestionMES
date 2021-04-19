@@ -159,11 +159,11 @@ C/ Duque de Alba 13, planta baja<br>
 <tr>
 <th colspan="2" class="em">Forma de pago</th></tr>
 <tr>
-<td colspan="2" class="em">{{payment.get_type_display}}</td>
+<td colspan="2" class="em">{% if payment.type %}{{payment.get_type_display}}{% else %}Transferencia{% endif %}</td>
 </tr>
 
 <tr><th>Cuenta</th>
-<td>{% if not payment.completed %}{{iban}}{% else %}{{payment.account.iban_code}}{% endif %}</td>
+<td>{% if not payment.completed or payment.type == 'transferencia' %}{{iban}}{% else %}{{payment.account.iban_code}}{% endif %}</td>
 </tr>
 <tr>
 <th>Importe</th><td>{{payment.amount|floatformat:2}}</td></tr>
