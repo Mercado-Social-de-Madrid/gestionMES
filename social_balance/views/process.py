@@ -62,8 +62,8 @@ class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListI
         if year:
             year = int(year)
             BalanceProcess.objects.create_pending_processes(year)
-            return BalanceProcess.objects.filter(year=year)
-        return BalanceProcess.objects.all()
+            return BalanceProcess.objects.filter(year=year).order_by('-last_update')
+        return BalanceProcess.objects.pending().order_by('-last_update')
 
 class BalanceProcessDetail(PermissionRequiredMixin, UpdateView):
     permission_required = 'social_balance.mespermission_can_view_balance_process'
