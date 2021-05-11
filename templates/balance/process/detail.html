@@ -159,6 +159,22 @@
     <div class="col-md-6">
         <h5>Historial</h5>
         {% include 'bpm/history.html' with workflow=object.workflow %}
+
+        {% if previous_balance %}
+        <span class="badge badge-primary mt-2">Proceso anterior ({{previous_balance.year}})</span><br>
+            {% if previous_balance.cancelled %}
+                {% include 'bpm/workflow_step_cancelled.html' with object=previous_balance %}
+            {% else %}
+                {% if previous_balance.workflow.completed %}
+                        {% include 'bpm/workflow_step_completed.html' with object=previous_balance %}
+                {% else %}
+                        {% include 'bpm/workflow_step.html' with step=previous_balance.workflow.current_state  %}
+                {% endif %}
+            {% endif %}
+            {% if previous_balance.sponsor %}
+                    {% include 'balance/process/sponsor.html' with sponsor=previous_balance.sponsor %}
+            {% endif %}
+        {% endif %}
     </div>
 </div>
 

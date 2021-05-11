@@ -37,14 +37,12 @@ class BalanceFilter(django_filters.FilterSet):
 
     search = AccountSearchFilter(names=['sponsor__username', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['account', 'last_update'], field_labels={'account':'Nombre', 'last_update':'Última actualización'})
-    status = WorkflowFilter(['social_balance'], filter_cancelled=True, label='Estado')
+    status = WorkflowFilter(['social_balance'], filter_cancelled=False, label='Estado')
     sponsor = SponsorFilter(label=_('Amadrinada por mí'), widget=BooleanWidget(attrs={'class':'threestate'}))
 
     class Meta:
-        model = BalanceProcess
         form = BalanceFilterForm
         fields = { }
-
 
 
 class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
@@ -63,7 +61,9 @@ class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListI
             year = int(year)
             BalanceProcess.objects.create_pending_processes(year)
             return BalanceProcess.objects.filter(year=year).order_by('-last_update')
-        return BalanceProcess.objects.pending().order_by('-last_update')
+
+        return super().get_queryset()
+
 
 class BalanceProcessDetail(PermissionRequiredMixin, UpdateView):
     permission_required = 'social_balance.mespermission_can_view_balance_process'
@@ -83,6 +83,8 @@ class BalanceProcessDetail(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        context['previous_balance'] = BalanceProcess.objects.filter(account=self.object.account, year=(self.object.year-1)).first()
 
         if self.object.workflow.is_first_step():
             context['first_step'] = True

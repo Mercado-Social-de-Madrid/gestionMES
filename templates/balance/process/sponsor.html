@@ -1,0 +1,15 @@
+<div class="stepper active pt-0">
+    <div class="stepper-icon mr-3 bg-light-1 {% if big %} big {% endif %}"  >
+      <i class="material-icons text-dark">person</i>
+    </div>
+    <span class="stepper-text">
+        {% if big %}
+        <h4>Completado!</h4>
+        <span class="font-weight-light">No quedan más tareas pendientes asociadas al proceso.</span>
+        {% else %}
+        <span> Madrina </span><br>
+            {% include 'user/simple_profile.html' with user=sponsor %}
+        {% endif %}
+
+    </span>
+  </div>
