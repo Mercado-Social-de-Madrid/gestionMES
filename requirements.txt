@@ -1,4 +1,4 @@
-Django==2.1.12
+Django==2.2.24
 django-appconf==1.0.2
 django-ckeditor==5.4.0
 django-compressor==2.2
