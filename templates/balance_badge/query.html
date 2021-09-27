@@ -11,9 +11,9 @@
 {% block item_row %}
 
 <td class="entity-td"> {{item.year}}</td>
-<td> <img class="img-fluid" style="max-width:250px;" src="{{item.base_img.url}}"> </td>
-<td> <img class="img-fluid" style="max-width:250px;" src="{{item.exempt_img.url}}"> </td>
-<td> <img class="img-fluid" style="max-width:250px;" src="{{item.undone_img.url}}"> </td>
+<td> <img class="img-fluid" style="max-width:250px;" src="{% if item.base_img %}{{item.base_img.url}}{% endif %}"> </td>
+<td> <img class="img-fluid" style="max-width:250px;" src="{% if item.exempt_img %}{{item.exempt_img.url}}{% endif %}"> </td>
+<td> <img class="img-fluid" style="max-width:250px;" src="{% if item.undone_img %}{{item.undone_img.url}}{% endif %}"> </td>
 <td>
     <div class="dropdown dropdown-chip">
       <button class="btn btn-outline-primary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
