@@ -91,8 +91,9 @@ class ImportSocialBalanceFormView(AjaxFormResponseMixin, FormView):
 
         year = form.cleaned_data['year']
         csv_file = form.cleaned_data['csv_file']
+        delimiter = form.cleaned_data['delimiter']
 
-        form.results = EntitySocialBalance.import_data(csv_file, year)
+        form.results = EntitySocialBalance.import_data(csv_file, year, delimiter)
         return super().form_valid(form)
 
     def get_success_url(self):

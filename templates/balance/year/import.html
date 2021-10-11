@@ -60,6 +60,7 @@
                             {% csrf_token %}
                             {% include "common/forms/field.html" with field=form.year %}
                             {% include "common/forms/field.html" with field=form.csv_file %}
+                            {% include "common/forms/field.html" with field=form.delimiter not_floating=True %}
 
                             {% if perms.social_balance.mespermission_can_edit_social_balances %}
                             <button type="submit" class="btn btn-primary btn-lg mt-4">Enviar</button>

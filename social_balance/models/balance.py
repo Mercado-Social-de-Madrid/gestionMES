@@ -47,10 +47,10 @@ class EntitySocialBalance(models.Model):
         renderer.update_balance_image(self)
 
     @staticmethod
-    def import_data(csv_file, year):
+    def import_data(csv_file, year, delimiter=';'):
 
         results = []
-        reader = csv.DictReader(codecs.iterdecode(csv_file, 'utf-8'), delimiter=';')
+        reader = csv.DictReader(codecs.iterdecode(csv_file, 'utf-8'), delimiter=delimiter)
         for row in reader:
             cif = row['cif']
             entity = Entity.objects.filter(cif=cif)
