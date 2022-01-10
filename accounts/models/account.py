@@ -111,6 +111,10 @@ class Account(PolymorphicModel):
         return self.cif
 
     @property
+    def invoice_name(self):
+        return self.cif
+
+    @property
     def is_active(self):
         return self.status == ACTIVE or self.status == INITIAL_PAYMENT or self.status == PENDING_PAYMENT
 
@@ -225,6 +229,10 @@ class Entity(Account):
     @property
     def display_name(self):
         return self.name
+
+    @property
+    def invoice_name(self):
+        return self.cif
 
     @property
     def detail_url(self):
