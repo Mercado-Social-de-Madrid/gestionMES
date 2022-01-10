@@ -232,7 +232,7 @@ class Entity(Account):
 
     @property
     def invoice_name(self):
-        return self.cif
+        return self.business_name
 
     @property
     def detail_url(self):
