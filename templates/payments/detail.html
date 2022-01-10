@@ -174,7 +174,7 @@
 <script src="{% static 'js/daterangepicker.js' %}?v=7"></script>
 <script>
 $(function() {
-  var dateinput = $('input[name="{{ form.timestamp.name }}"], input[name="{{ form.returned_timestamp.name }}"]');
+  var dateinput = $('input[name="{{ form.timestamp.name }}"], input[name="{{ form.returned_timestamp.name }}"], input[name="{{ form.invoice_date.name }}"]');
   dateinput.daterangepicker({
     singleDatePicker: true,
     timePicker: true,
