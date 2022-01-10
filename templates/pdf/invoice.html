@@ -120,7 +120,7 @@ C/ Duque de Alba 13, planta baja<br>
     <table>
         <tr>
             <td style="width:33%;vertical-align: top;">
-                <p class="info"><span>Fecha factura:</span> {% if payment.timestamp %} {{payment.invoice_date|date:'d/m/Y'}} {% else %} {{payment.added|date:'d/m/Y'}}{% endif %}</p>
+                <p class="info"><span>Fecha factura:</span> {% if payment.invoice_date %} {{payment.invoice_date|date:'d/m/Y'}} {% else %} {{payment.added|date:'d/m/Y'}}{% endif %}</p>
                 <p class="info"><span>Número:</span> {{payment.invoice_code}}</p>
             </td>
             <td  style="width:63%;vertical-align: top;">

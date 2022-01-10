@@ -151,6 +151,10 @@ class Consumer(Account):
         return "{} {}".format(self.first_name, self.last_name)
 
     @property
+    def invoice_name(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+    @property
     def current_fee(self):
         from payments.models import FeeRange
         return FeeRange.DEFAULT_CONSUMER_FEE
