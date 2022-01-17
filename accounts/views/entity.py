@@ -5,6 +5,7 @@ import django_filters
 from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
+from django import db
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
@@ -51,7 +52,10 @@ class EntityFilter(django_filters.FilterSet):
 class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     model = Entity
-    queryset = Entity.objects.filter( Q(instance_of=Colaborator) | Q(collabs__isnull=False) ).distinct()
+    try:
+        queryset = Entity.objects.filter( Q(instance_of=Colaborator) | Q(collabs__isnull=False) ).distinct()
+    except (db.utils.ProgrammingError, db.utils.OperationalError) as e:
+        print("Pending migrations")
     objects_url_name = 'entity_detail'
     template_name = 'entity/list.html'
     ajax_template_name = 'entity/query.html'

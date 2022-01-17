@@ -26,7 +26,7 @@ class WorkflowFilter(django_filters.ChoiceFilter):
                 processes = Process.objects.all().values_list('pk', flat=True)
             self.steps = ProcessStep.objects.filter(process__in=processes)
             choices = list(self.steps.values_list('pk', 'title'))
-        except db.utils.ProgrammingError as e:
+        except (db.utils.ProgrammingError, db.utils.OperationalError) as e:
             print("Pending migrations for WorkflowFilter")
 
         if filter_cancelled:

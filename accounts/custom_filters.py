@@ -49,7 +49,7 @@ class CollaborationFilter(django_filters.ChoiceFilter):
         try:
             collabs =  Collaboration.objects.all()
             choices = list(collabs.values_list('pk', 'name'))
-        except db.utils.ProgrammingError as e:
+        except (db.utils.ProgrammingError, db.utils.OperationalError) as e:
             print("Pending migrations for CollaborationFilter")
 
         django_filters.ChoiceFilter.__init__(self, choices=choices, *args,**kwargs)
