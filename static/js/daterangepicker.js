@@ -47,7 +47,7 @@
         this.timePickerIncrement = 1;
         this.timePickerSeconds = false;
         this.linkedCalendars = true;
-        this.autoUpdateInput = true;
+        this.autoUpdateInput = false;
         this.alwaysShowCalendars = false;
         this.ranges = {};
 
