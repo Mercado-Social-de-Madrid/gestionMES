@@ -72,7 +72,7 @@ class PaymentsListView(PermissionRequiredMixin, FilterMixin, FilterView, ExportA
     model = PendingPayment
     csv_filename = 'pagos'
     available_fields = ['account', 'reference', 'amount', 'concept', 'type', 'completed', 'timestamp', 'revised_by',
-                        'contact_email', 'contact_phone', 'comment', 'added' ]
+                        'contact_email', 'contact_phone', 'comment', 'added', 'returned', 'returned_timestamp', 'returned_reason' ]
     field_labels = {'contact_email': 'Email de contacto', 'contact_phone': 'Telefono de contacto' }
 
 
