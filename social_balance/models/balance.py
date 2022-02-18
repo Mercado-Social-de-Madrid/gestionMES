@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import codecs
 import csv
+import os
 
 from django.conf import settings
 from django.db import models
@@ -14,6 +15,16 @@ from accounts.models import Entity
 from helpers import RandomFileName
 from helpers.csv import csv_value_to_boolean
 from social_balance.renderer import BadgeRenderer
+
+from django.core.files.storage import FileSystemStorage
+
+
+class OverwriteStorage(FileSystemStorage):
+
+    def get_available_name(self, name, max_length=None):
+        if self.exists(name):
+            os.remove(os.path.join(settings.MEDIA_ROOT, name))
+        return name
 
 
 class EntitySocialBalance(models.Model):
@@ -29,7 +40,7 @@ class EntitySocialBalance(models.Model):
     challenge = models.TextField(null=True, blank=True, verbose_name=_('Reto'))
 
     badge_image = ProcessedImageField(null=True, blank=True, upload_to='balances', verbose_name=_('Imagen del sello'), format='PNG')
-    report = models.FileField(null=True, blank=True, upload_to='reports', verbose_name=_('Informe'))
+    report = models.FileField(null=True, blank=True, upload_to='reports', verbose_name=_('Informe'), storage=OverwriteStorage())
 
     class Meta:
         verbose_name = _('Informe de balance social')
