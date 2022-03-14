@@ -10,7 +10,7 @@
         <th scope="col">Núm. trabajadoras</th>
         {% for income in income_ranges %}
 
-        <th scope="col"> {{income.min_income}} {% if income.max_income == 9999 %} + {% else %} - {{income.max_income}} {% endif %} </th>
+        <th scope="col"> {{income.min_income}} {% if income.max_income == 9999 %} + {% else %} - {{income.max_income|add:-1}} {% endif %} </th>
         {% endfor %}
     </tr>
     </thead>
