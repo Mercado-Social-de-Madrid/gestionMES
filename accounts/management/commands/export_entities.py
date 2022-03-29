@@ -1,11 +1,8 @@
 import json
-import re
 
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
 
-from accounts.models import Provider, TERR_LOCAL, TERR_COUNTRY, LegalForm, OPTED_OUT, Entity
-from mes import settings
+from accounts.models import Entity
 
 
 
