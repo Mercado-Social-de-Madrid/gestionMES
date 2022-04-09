@@ -63,7 +63,7 @@ class DeletionDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DeletionDetailView, self).get_context_data(**kwargs)
 
-        if self.object.workflow and self.object.workflow.is_first_step():
+        if self.object.workflow.is_first_step():
             context['first_step'] = True
 
         form = WorkflowEventForm(initial={
