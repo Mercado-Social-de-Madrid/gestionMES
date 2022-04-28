@@ -25,16 +25,17 @@ def get_social_balance_statuses(entity, years):
 class Command(BaseCommand):
     help = 'Export list of entities with social balace status of last years'
 
+    def add_arguments(self, parser):
+
+        parser.add_argument('year_start', type=int, help='Year start')
+        parser.add_argument('year_end', type=int, help='Year end')
+
     def handle(self, *args, **options):
 
-        # --- Configure years:
+        year_start = options['year_start']
+        year_end = options['year_end']
 
-        year_begin = 2018
-        year_end = 2021
-
-        # --------------------
-
-        years = list(range(year_begin, year_end + 1))
+        years = list(range(year_start, year_end + 1))
 
         headers = ['Nombre', 'Email', 'Telefono'] + years
         data = []
