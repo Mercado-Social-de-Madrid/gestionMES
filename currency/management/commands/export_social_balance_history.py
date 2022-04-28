@@ -28,9 +28,6 @@ def get_social_balance_statuses(entity, years):
 class Command(BaseCommand):
     help = 'Export list of entities with social balace status of last years'
 
-    def add_arguments(self, parser):
-
-
     def handle(self, *args, **options):
 
         # --- Configure years:
@@ -47,6 +44,8 @@ class Command(BaseCommand):
 
         entities = Entity.objects.active()
 
+        print(f'Active entities: {len(entities)}')
+
         for entity in entities:
             name = entity.name
             email = entity.contact_email
@@ -56,10 +55,11 @@ class Command(BaseCommand):
 
             data.append([name, email, phone] + sb)
 
-
         with open('balances_sociales.csv', 'w') as f:
             write = csv.writer(f, delimiter=';')
             write.writerow(headers)
             write.writerows(data)
+
+        print("Exported")
 
 
