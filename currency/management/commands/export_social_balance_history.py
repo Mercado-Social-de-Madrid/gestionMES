@@ -1,7 +1,4 @@
-import json
-import datetime
 from django.core.management.base import BaseCommand
-from wallets.models.transaction import Transaction
 import csv
 from social_balance.models.balance import EntitySocialBalance
 from accounts.models.account import Entity
