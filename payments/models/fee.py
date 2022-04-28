@@ -78,7 +78,7 @@ class AnnualFeeCharges(models.Model):
                     charge.amount = fee
                     charge.save()
                 if not charge.split and not charge.payment:
-                    concept = "Cuota anual {}".format(self.year)
+                    concept = "Cuota anual Mercado Social de Madrid {}".format(self.year)
                     charge.payment = PendingPayment.objects.create(
                         concept=concept, account=account, amount=fee)
                     charge.amount = fee
