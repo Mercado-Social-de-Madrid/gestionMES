@@ -47,7 +47,7 @@ class BalanceFilter(django_filters.FilterSet):
 
 class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
     permission_required = 'social_balance.mespermission_can_view_balance_process'
-    queryset = BalanceProcess.objects.all().order_by('-last_update')
+    queryset = BalanceProcess.objects.all().order_by('-year')
     objects_url_name = 'process_detail'
     template_name = 'balance/process/list.html'
     ajax_template_name = 'balance/process/query.html'

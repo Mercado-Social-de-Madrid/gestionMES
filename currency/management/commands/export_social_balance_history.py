@@ -26,7 +26,7 @@ def get_social_balance_statuses(entity, years):
 
 def get_sponsor_last_year(entity, year):
     last_process = BalanceProcess.objects.filter(account=entity, year=year).first()
-    if last_process:
+    if last_process and last_process.sponsor:
         sponsor = last_process.sponsor.first_name + " " + last_process.sponsor.last_name
     else:
         sponsor = ""
