@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 import csv
 from social_balance.models.balance import EntitySocialBalance
-from accounts.models.account import Entity
+from accounts.models.account import Entity, Provider
 
 
 def get_social_balance_statuses(entity, years):
@@ -40,7 +40,7 @@ class Command(BaseCommand):
         headers = ['Nombre', 'Email', 'Telefono'] + years
         data = []
 
-        entities = Entity.objects.active()
+        entities = Provider.objects.active()
 
         print(f'Active entities: {len(entities)}')
 
