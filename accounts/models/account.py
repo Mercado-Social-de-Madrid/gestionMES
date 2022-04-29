@@ -249,6 +249,7 @@ class Entity(Account):
     def get_active_collaborations(self):
         return EntityCollaboration.objects.filter(entity=self, ended__isnull=True)
 
+
 class Colaborator(Entity):
     is_sponsor = models.BooleanField(default=False, verbose_name=_('Es patrocinadora'))
     is_collaborator = models.BooleanField(default=False, verbose_name=_('Es colaboradora'))
