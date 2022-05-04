@@ -13,7 +13,7 @@ class PaymentForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = PendingPayment
-        exclude = ['reference', 'revised_by']
+        exclude = ['reference']
         widgets = {
             'account': forms.HiddenInput(),
             'concept': forms.Textarea(attrs={'rows':3}),

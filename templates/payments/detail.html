@@ -115,7 +115,7 @@
                 <div id="payment-data" {% if not object.completed %} style="display:none;" {% endif %}>
                     {% include "common/forms/field.html" with field=form.timestamp %}
                     {% include "common/forms/field.html" with field=form.type not_floating=True %}
-                    {% include "common/forms/display_value.html" with value=object.revised_by label='Revisado por' %}
+                    {% include "common/forms/field.html" with field=form.revised_by not_floating=True label='Revisado por' %}
 
                     <div class="mb-3">
                         {% include "common/forms/switch.html" with field=form.returned %}
