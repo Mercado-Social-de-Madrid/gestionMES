@@ -124,7 +124,7 @@ class PaymentsManager(models.Manager):
 class PendingPayment(models.Model):
 
     account = models.ForeignKey(Account, null=True, related_name='pending_payments', verbose_name=_('Socia'), on_delete=models.CASCADE)
-    revised_by = models.ForeignKey(User, null=True, verbose_name=_('Usuario que revisó'), on_delete=models.SET_NULL)
+    revised_by = models.ForeignKey(User, null=True, blank=True, verbose_name=_('Usuario que revisó'), on_delete=models.SET_NULL)
     type = models.CharField(null=True, blank=True, max_length=30, choices=PAYMENT_METHODS, verbose_name=_('Modo de pago'))
     amount = models.FloatField(default=0, verbose_name=_('Cantidad'))
     concept = models.TextField(null=True, blank=True, verbose_name=_('Concepto'))
