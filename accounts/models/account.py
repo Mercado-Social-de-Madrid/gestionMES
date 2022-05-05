@@ -65,7 +65,7 @@ class AccountsManager(PolymorphicManager):
 class Account(PolymorphicModel):
 
     status = models.CharField(null=False, default=ACTIVE, max_length=20, choices=ACCOUNT_STATUSES, verbose_name=_('Estado'))
-    cif = models.CharField(max_length=30, null=False, blank=False, verbose_name=_('NIF/CIF'), unique=True)
+    cif = models.CharField(max_length=30, null=False, blank=False, verbose_name=_('NIF/CIF/Pasaporte'), unique=True)
     legal_form = models.ForeignKey(LegalForm, null=True, verbose_name=_('Forma legal'), on_delete=models.SET_NULL)
     contact_phone = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('Teléfono de contacto'))
     contact_email = models.EmailField(null=False, verbose_name=_('Email de contacto'))
