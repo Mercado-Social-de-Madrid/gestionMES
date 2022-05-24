@@ -29,8 +29,22 @@ class SponsorFilter(django_filters.BooleanFilter):
     def filter(self, qs, value):
         return qs.filter(sponsor=self.parent.request.user) if value == True else qs
 
+
+class BalanceProcessYearFilter(django_filters.ChoiceFilter):
+
+    def __init__(self, *args,**kwargs):
+        years_map = list(BalanceProcess.objects.values('year').distinct().order_by('year'))
+        years = list(map(lambda x: str(x['year']), years_map))
+        django_filters.ChoiceFilter.__init__(self, choices=years, *args,**kwargs)
+
+    def filter(self, qs, value):
+        if value:
+            qs = qs.filter(year=value)
+        return qs
+
+
 class BalanceFilterForm(BootstrapForm):
-    field_order = ['o', 'search', 'status', ]
+    field_order = ['o', 'search', 'status', 'year' ]
 
 
 class BalanceFilter(django_filters.FilterSet):
@@ -38,6 +52,7 @@ class BalanceFilter(django_filters.FilterSet):
     search = AccountSearchFilter(names=['sponsor__username', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['account', 'last_update'], field_labels={'account':'Nombre', 'last_update':'Última actualización'})
     status = WorkflowFilter(['social_balance'], filter_cancelled=True, label='Estado')
+    year = BalanceProcessYearFilter(label='Año')
     sponsor = SponsorFilter(label=_('Amadrinada por mí'), widget=BooleanWidget(attrs={'class':'threestate'}))
 
     class Meta:
@@ -56,7 +71,7 @@ class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListI
 
     def get_queryset(self):
 
-        year = self.kwargs.get('year', None)
+        year = self.kwargs.get('year_create', None)
         if year:
             year = int(year)
             BalanceProcess.objects.create_pending_processes(year)
