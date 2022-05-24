@@ -35,7 +35,8 @@ class BalanceProcessYearFilter(django_filters.ChoiceFilter):
     def __init__(self, *args,**kwargs):
         years_map = list(BalanceProcess.objects.values('year').distinct().order_by('year'))
         years = list(map(lambda x: str(x['year']), years_map))
-        django_filters.ChoiceFilter.__init__(self, choices=years, *args,**kwargs)
+        years_labeled = list(zip(years, years))
+        django_filters.ChoiceFilter.__init__(self, choices=years_labeled, *args,**kwargs)
 
     def filter(self, qs, value):
         if value:
