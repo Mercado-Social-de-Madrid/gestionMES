@@ -9,7 +9,6 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView, DetailView, TemplateView
 from django_filters.views import FilterView
-from filters.views import FilterMixin
 
 from accounts.forms.process import SignupProcessForm
 from accounts.models import SignupProcess
@@ -18,6 +17,7 @@ from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from helpers import FilterMixin
 from mes import settings
 from payments.models import PendingPayment
 from payments.views import generate_payment_form

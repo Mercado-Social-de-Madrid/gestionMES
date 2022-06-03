@@ -12,7 +12,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import FormView, DetailView, UpdateView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
-from filters.views import FilterMixin
+from helpers import FilterMixin
 
 from accounts.custom_filters import AccountSearchFilter, CollaborationFilter
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter

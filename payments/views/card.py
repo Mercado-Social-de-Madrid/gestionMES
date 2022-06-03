@@ -6,7 +6,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView
 from django_filters.views import FilterView
-from filters.views import FilterMixin
+from helpers import FilterMixin
 
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
 from core.filters.SearchFilter import SearchFilter

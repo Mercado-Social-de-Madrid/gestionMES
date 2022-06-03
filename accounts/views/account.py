@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import django_filters
 from django.utils.translation import gettext as _
 from django_filters.views import FilterView
-from filters.views import FilterMixin
+from helpers import FilterMixin
 
 from accounts.models import ACTIVE
 from accounts.models import Account

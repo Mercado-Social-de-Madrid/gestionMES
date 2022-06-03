@@ -5,8 +5,7 @@ import django_filters
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Sum, Count, Max
-from django.db.models.functions import Coalesce
+from django.db.models import Sum, Count
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -14,7 +13,6 @@ from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
-from filters.views import FilterMixin
 
 from accounts.custom_filters import AccountSearchFilter
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
@@ -22,6 +20,7 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from helpers import FilterMixin
 from helpers.pdf import render_pdf_response
 from payments.forms.payment import PaymentForm, UpdatePaymentForm
 from payments.models import PendingPayment, SepaPaymentsBatch, AnnualFeeCharges, AccountAnnualFeeCharge

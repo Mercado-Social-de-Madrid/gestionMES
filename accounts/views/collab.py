@@ -9,12 +9,11 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
 from django_filters.views import FilterView
-from filters.views import FilterMixin
+from helpers import FilterMixin
 
-from accounts.forms.category import CategoryForm
 from accounts.forms.collaboration import CollabForm
 from accounts.forms.entity_collab import EditCollabForm
-from accounts.models import Category, Collaboration, EntityCollaboration
+from accounts.models import Collaboration, EntityCollaboration
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.RedirectFormMixin import RedirectFormMixin

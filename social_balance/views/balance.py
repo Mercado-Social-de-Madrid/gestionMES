@@ -11,7 +11,7 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, FormView
 from django_filters.views import FilterView
-from filters.views import FilterMixin
+from helpers import FilterMixin
 
 from accounts.models import Entity, ACTIVE
 from accounts.views import ProviderFilter

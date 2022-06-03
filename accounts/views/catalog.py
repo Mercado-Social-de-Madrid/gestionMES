@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models import Prefetch
 from django.utils.translation import gettext as _
 from django_filters.views import FilterView
-from filters.views import FilterMixin
+from helpers import FilterMixin
 
 from accounts.models import Provider, ACTIVE
 from core.filters.SearchFilter import SearchFilter
