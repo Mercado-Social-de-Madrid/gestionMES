@@ -213,7 +213,7 @@ class CardPayment(models.Model):
 
     @property
     def concept(self):
-        if self.type == PENDING_PAYMENT:
+        if self.type == PENDING_PAYMENT and self.pending_payment:
             return self.pending_payment.concept
         elif self.type == CURRENCY_BUY:
             return  'Compra ({} etics)'.format(self.amount)
