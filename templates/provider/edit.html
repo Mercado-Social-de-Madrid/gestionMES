@@ -37,16 +37,16 @@
 
             {% include 'provider/signup.html' %}
 
-        <h4 class="text-primary mt-4">Aceptación de principios y compromisos del MES</h4>
+        <h4 class="text-primary mt-4">Aceptación de principios y compromisos de REAS</h4>
 
-            <a href="https://madrid.mercadosocial.net/valores-y-compromisos-del-mercado-social/" target="_blank">Lee los valores y compromisos del MESM</a>
+            <a href="https://reas.red/wp-content/uploads/2022/08/Carta_de_la_Economia_Solidaria_2022_cast.pdf" target="_blank">Lee los valores y compromisos de REAS</a>
             <div class="row">
                 <div class="col-md-12 col-lg-8">
                 <div class="custom-control custom-switch mt-3">
                     {{form.check_conditions}}
                       <span class="custom-control-track"></span>
                       <label class="custom-control-label" for="{{form.check_conditions.id_for_label}}">
-                            Las personas que conformamos la entidad hemos leído el documento "Valores y compromisos del MESM". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
+                            Las personas que conformamos la entidad hemos leído el documento "Valores y compromisos de REAS". Nos comprometemos a cumplir con las disposiciones desarrolladas en el mismo y a guiarse por los principios y valores éticos que lo inspiran.
                     </label>
                     {% if form.check_conditions.errors %} <div class="valid-feedback"> {{form.check_conditions.errors}}</div> {% endif %}
                 </div>
