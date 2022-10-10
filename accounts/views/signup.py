@@ -107,13 +107,13 @@ class SignupSuccessView(TemplateView):
         context = super(SignupSuccessView, self).get_context_data(**kwargs)
         payment_uuid = self.request.GET.get('payment', None)
 
-        if payment_uuid:
-            paid, card_payment, form = generate_payment_form(payment_uuid)
-            if not paid and card_payment:
-                context['payment'] = True
-                context['uuid'] = payment_uuid
-                context['form'] = form
-                context['card_payment'] = card_payment
+        # if payment_uuid:
+        #     paid, card_payment, form = generate_payment_form(payment_uuid)
+        #     if not paid and card_payment:
+        #         context['payment'] = True
+        #         context['uuid'] = payment_uuid
+        #         context['form'] = form
+        #         context['card_payment'] = card_payment
 
         return context
 
