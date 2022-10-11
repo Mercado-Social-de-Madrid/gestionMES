@@ -16,7 +16,6 @@ idna==2.7
 mysqlclient==2.1.0
 olefile==0.45.1
 pilkit==2.0
-Pillow==9.1.1
 pyDes==2.0.1
 python-dateutil==2.6.1
 python-mimeparse==1.6.0
