@@ -12,7 +12,6 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.generic import CreateView, UpdateView, TemplateView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
-from filters.views import FilterMixin
 
 from accounts.models import Account
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
@@ -26,6 +25,7 @@ from currency.forms.guest import GuestAccountForm
 from currency.forms.invite import GuestInviteForm
 from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
 from currency_server.fetch_account_info import fetch_account
+from helpers import FilterMixin
 
 
 class  InvitesFilterForm(BootstrapForm):
