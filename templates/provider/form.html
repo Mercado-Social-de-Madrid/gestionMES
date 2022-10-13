@@ -36,8 +36,10 @@
                 </div>
 
                 <div class="col-lg-12">
+                    {% if perms.accounts.mespermission_can_view_banking_info %}
                         {% include "common/forms/field.html" with field=form.iban_code not_floating=True %}
                         {% include "common/forms/switch.html" with field=form.pay_by_debit %}
+                    {% endif %}
                         {% include "common/forms/field.html" with field=form.address not_floating=True %}
                 </div>
 
@@ -60,8 +62,10 @@
             </div>
             <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.num_workers %}</div>
             <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.aprox_income %}</div>
-            <div class="col-sm-6 col-md-4">{% include "common/forms/display_value.html" with value=object.current_fee label='Cuota anual' %}</div>
-            </div>
+            {% if perms.accounts.mespermission_can_view_banking_info %}
+                <div class="col-sm-6 col-md-4">{% include "common/forms/display_value.html" with value=object.current_fee label='Cuota anual' %}</div>
+            {% endif %}
+        </div>
         </div>
 
 

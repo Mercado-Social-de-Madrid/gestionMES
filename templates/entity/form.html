@@ -46,8 +46,11 @@
                 </div>
 
                 <div class="col-lg-12">
-                        {% include "common/forms/field.html" with field=form.iban_code not_floating=True %}
-                        {% include "common/forms/switch.html" with field=form.pay_by_debit %}
+
+                        {% if perms.accounts.mespermission_can_view_banking_info %}
+                            {% include "common/forms/field.html" with field=form.iban_code not_floating=True %}
+                            {% include "common/forms/switch.html" with field=form.pay_by_debit %}
+                        {% endif %}
                         {% include "common/forms/field.html" with field=form.address not_floating=True %}
                 </div>
 
@@ -67,7 +70,9 @@
              <h5 class="text-primary mb-0">Cuota</h5>
                 <div class="row">
                     <div class="col-md-4">
+                    {% if perms.accounts.mespermission_can_view_banking_info %}
                         {% include "common/forms/field.html" with field=form.custom_fee %}
+                    {% endif %}
                     </div>
                     <div class="col-md-6">
                         Existe una cuota fija para patrocinadoras y colaboradoras, pero mediante este valor puede

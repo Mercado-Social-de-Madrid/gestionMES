@@ -96,6 +96,7 @@ class Account(PolymorphicModel):
         permissions = (
             ("mespermission_can_view_accounts", _("Puede ver la lista de socias")),
             ("mespermission_can_view_reports", _("Puede ver los informes de socias")),
+            ("mespermission_can_view_banking_info", _("Puede ver información bancaria")),
         )
 
     @property

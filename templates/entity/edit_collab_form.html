@@ -8,7 +8,9 @@
                 <div class="col-md-5">
                     {% include "common/forms/field.html" with field=form.collaboration not_floating=True %}
                     <div class="row">
-                        <div class="col-xl-6">{% include "common/forms/field.html" with field=form.custom_fee %}</div>
+                        {% if perms.accounts.mespermission_can_view_banking_info %}
+                            <div class="col-xl-6">{% include "common/forms/field.html" with field=form.custom_fee %}</div>
+                        {% endif %}
                          <div class="col-xl-6">{% include "common/forms/field.html" with field=form.started %}</div>
                     </div>
                 </div>
