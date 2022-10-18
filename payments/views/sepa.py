@@ -68,6 +68,16 @@ class BatchCreate(PermissionRequiredMixin, CreateView):
         return reverse('payments:sepa_detail', kwargs={'pk': self.object.pk})
 
 
+class BatchUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = 'payments.mespermission_can_manage_sepa'
+    form_class = UpdateBatchForm
+    model = SepaPaymentsBatch
+    template_name = 'payments/sepa/update.html'
+
+    def get_success_url(self):
+        return reverse('payments:sepa_detail', kwargs={'pk': self.kwargs.get("pk")})
+
+
 class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, UpdateView):
     permission_required = 'payments.mespermission_can_manage_sepa'
     form_class = UpdateBatchForm

@@ -35,9 +35,13 @@
                 {{object.attempt|date:'d/m/Y'}}
             </div>
 
-            <div class="col-sm-3 col-md-4 lead">
+            <div class="col-sm-3 col-md-2 lead">
                 <label class="text-primary">Por</label><br>
                 {% include 'user/simple_profile.html' with user=object.generated_by %}
+            </div>
+
+            <div class="col-sm-3 col-md-4 lead">
+                <a class="btn btn-primary" href="{% url 'payments:sepa_update' object.pk %}"> <i class="material-icons mr-2 ">edit</i> Editar remesa</a>
             </div>
 
         </div>

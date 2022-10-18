@@ -32,12 +32,12 @@
 <td class="text-truncate {% if 'simple' in request.GET %}px-2{% else %}px-3{% endif %} {% if item.completed %}{% if item.returned %}bg-info{% else %}bg-success{% endif %}{% else %}bg-warning{% endif %}">
     {% if item.completed %}
         {% if item.returned %}
-            <i class="material-icons">new_releases</i> <small> {% if not 'simple' in request.GET %}Devuelto{% endif %}</small>
+            <i name="payment-returned" class="material-icons">new_releases</i> <small> {% if not 'simple' in request.GET %}Devuelto{% endif %}</small>
         {% else %}
-            <i class="material-icons">check_circle_outline</i> <small> {% if not 'simple' in request.GET %}Pagado{% endif %}</small>
+            <i name="payment-paid" class="material-icons">check_circle_outline</i> <small> {% if not 'simple' in request.GET %}Pagado{% endif %}</small>
         {% endif %}
     {% else %}
-        <i class="material-icons">access_time</i> <small> {% if not 'simple' in request.GET %}Pendiente{% endif %}</small>
+        <i name="payment-pending" class="material-icons">access_time</i> <small> {% if not 'simple' in request.GET %}Pendiente{% endif %}</small>
     {% endif %}
 </td>
 {% if not hide_entity_name %}

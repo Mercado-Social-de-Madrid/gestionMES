@@ -46,12 +46,24 @@ class SepaBatchForm(forms.ModelForm, BootstrapForm):
             instance.preprocess_batch()
             instance.generate_batch()
 
-
         return instance
 
 
 class UpdateBatchForm(forms.ModelForm, BootstrapForm):
+    payments = forms.ModelMultipleChoiceField(queryset=PendingPayment.objects.filter(), required=False, )
+    payments_order = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = SepaPaymentsBatch
-        exclude = ['sepa_file', 'amount', 'attempt', 'payments', 'generated_by', 'title' ]
+        exclude = ['sepa_file', 'amount', 'attempt', 'generated_by']
+
+    def save(self, commit=True):
+        instance = forms.ModelForm.save(self, False)
+        if commit:
+            total_amount = 0
+            for payment in self.cleaned_data['payments']:
+                total_amount += payment.amount
+            instance.amount = total_amount
+            instance.save()
+
+        return super().save(self)

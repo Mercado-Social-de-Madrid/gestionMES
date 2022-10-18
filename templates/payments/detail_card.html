@@ -5,12 +5,12 @@
             <h3 class="text-black-50">{{payment.amount}}€</h3>
              {% if payment.completed %}
                 {% if payment.returned %}
-                    <i class="material-icons">new_releases</i> <small>Devuelto</small>
+                    <i name="payment-returned" class="material-icons">new_releases</i> <small>Devuelto</small>
                 {% else %}
-                    <i class="material-icons">check_circle_outline</i> <small>Pagado</small>
+                    <i name="payment-paid" class="material-icons">check_circle_outline</i> <small>Pagado</small>
                 {% endif %}
             {% else %}
-                <i class="material-icons">access_time</i> <small>Pendiente</small>
+                <i name="payment-pending" class="material-icons">access_time</i> <small>Pendiente</small>
             {% endif %}
         </div>
         <div>

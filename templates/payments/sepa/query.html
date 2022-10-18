@@ -20,6 +20,7 @@
         <i class="material-icons">more_vert</i>
       </button>
       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="{% url 'payments:sepa_update' item.pk %}"><span class="material-icons mr-2">edit</span> Editar remesa</a>
           {% if item.sepa_file %}
         <a class="dropdown-item" href="{{item.sepa_file.url}}" download> <span class="material-icons mr-2">description</span> Descargar fichero</a>
           {% endif %}

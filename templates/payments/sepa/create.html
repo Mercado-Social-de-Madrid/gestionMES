@@ -4,21 +4,23 @@
 
 {% block content %}
 
-    <div class="jumbotron py-4 px-2">
-        <div class="container">
-            <div class="row">
-            <div class="col-sm-12">
-                    <h4 class="mb-0">
-                        <a href="{% url 'payments:payments_list' %}">Pagos</a>
-                        <i class="material-icons md-18 ">arrow_forward_ios</i>
-                        <a href="{% url 'payments:sepa_list' %}">Remesas SEPA</a>
-                        <i class="material-icons md-18 ">arrow_forward_ios</i>
-                        Nueva remesa
-                    </h4>
-                </div>
+    {% block navbar %}
+        <div class="jumbotron py-4 px-2">
+            <div class="container">
+                <div class="row">
+                <div class="col-sm-12">
+                        <h4 class="mb-0">
+                            <a href="{% url 'payments:payments_list' %}">Pagos</a>
+                            <i class="material-icons md-18 ">arrow_forward_ios</i>
+                            <a href="{% url 'payments:sepa_list' %}">Remesas SEPA</a>
+                            <i class="material-icons md-18 ">arrow_forward_ios</i>
+                            Nueva remesa
+                        </h4>
+                    </div>
+            </div>
+            </div>
         </div>
-        </div>
-    </div>
+    {% endblock navbar %}
 
     <div class="container mt-2  p-3">
 
@@ -33,19 +35,25 @@
                 {% include 'common/forms/hidden_value.html' with field=form.generated_by hidden_value=request.user.pk %}
             </div>
         <div class="current-members" data-selector="current">
-                <h5 class="card-title mt-3"> Seleccionados <span id="selected-count" class="badge badge-sm badge-light">0</span></h5>
+                <h5 class="card-title mt-3"> Seleccionados
+                    <span id="selected-count" class="badge badge-sm badge-light">
+                        {% block selected-count %} 0 {% endblock %}
+                    </span>
+                </h5>
                 <div class="custom-selector-panel">
                     <div class="table-responsive mb-4">
                     <table class="table table-hover">
-                      <thead>
+                    <thead>
                         <tr>
                             <th scope="col" class="px-0"></th>
-                          <th scope="col">Nombre</th>
+                            <th scope="col">Nombre</th>
                             <th scope="col">Cantidad</th>
                         </tr>
-                      </thead>
-                      <tbody class="selected">
-                      </tbody>
+                    </thead>
+                    <tbody class="selected">
+                        {% block selected %}
+                        {% endblock selected %}
+                    </tbody>
                     </table>
                 </div>
         </div>
@@ -62,7 +70,7 @@
 
 
 
-            <button type="submit" class="btn btn-primary btn-lg">Generar remesa</button>
+            <button type="submit" class="btn btn-primary btn-lg">{% block submit-button-text%}Generar remesa{% endblock%}</button>
         </div>
             </form>
 
@@ -90,7 +98,7 @@
 
     </div>
 
-{% endblock %}
+{% endblock content %}
 
 {% block scripts %}
 <script type="text/javascript">
@@ -100,11 +108,13 @@
         var selected = $('.selected');
         var selectedCount = $('#selected-count');
         $('.selected').on('click', 'tr', function(){
-            $(this).remove();
-            selectedCount.text(selected.children().length);
+            if ($(this).find("[name='payment-pending']").length) {
+                $(this).remove();
+                selectedCount.text(selected.children().length);
+            }
         });
 
-        $('.future-members').on('click', 'tr', function(){
+        $('.future-members').on('click', 'tr:gt(0)', function(){
             var pay = $(this).clone();
             pay.find('.hide-select').hide();
             if (selected.find('[data-pk="' + pay.attr('data-pk') + '"]').length == 0){
@@ -114,13 +124,18 @@
         });
 
         $('form').on('submit', function(e){
-
+            $(window).off('beforeunload');
             var selPayments = [];
             selected.find('tr').each(function(){
                 selPayments.push($(this).attr('data-pk'));
             });
             paymentsOrder.val(selPayments.join('{% settings_value 'INLINE_INPUT_SEPARATOR'|escape|safe %}'));
             payments.val(selPayments);
+        });
+
+        $(window).on('beforeunload', function (e) {
+            e.preventDefault();
+            return '';
         });
     });
 

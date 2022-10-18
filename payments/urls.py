@@ -27,6 +27,7 @@ urlpatterns = [
 
     url(r'^sepa/$', views.SepaBatchListView.as_view(), name='sepa_list'),
     url(r'^sepa/add/$', views.BatchCreate.as_view(), name='sepa_create'),
+    url(r'^sepa/update/(?P<pk>[0-9a-f-]+)/$', views.BatchUpdate.as_view(), name='sepa_update'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/$', views.BatchDetail.as_view(), name='sepa_detail'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/regenerate/$', views.sepa_regenerate, name='sepa_regenerate'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/delete/$', views.sepa_delete, name='sepa_delete'),

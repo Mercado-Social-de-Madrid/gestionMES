@@ -1,0 +1,49 @@
+{% extends 'payments/sepa/create.html' %}
+{% load settings_value %}
+{% block title %}Editar remesa SEPA{% endblock %}
+
+{% block navbar %}
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-sm-12">
+                    <h4 class="mb-0">
+                        <a href="{% url 'payments:payments_list' %}">Pagos</a>
+                        <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        <a href="{% url 'payments:sepa_list' %}">Remesas SEPA</a>
+                        <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        <a href="{% url 'payments:sepa_detail' object.pk %}">{{ object.title }}</a>
+                        <i class="material-icons md-18 ">arrow_forward_ios</i>
+                        Editar remesa
+                    </h4>
+                </div>
+        </div>
+        </div>
+    </div>
+{% endblock navbar %}
+
+{% block selected-count %}
+    {{ object.payments.count }}
+{% endblock selected-count %}
+
+{% block submit-button-text%}Editar remesa{% endblock%}
+
+{% block selected %}
+    {% for payment in object.payments.all %}
+        <tr data-pk="{{payment.pk}}">
+            <td class="text-truncate px-2 {% if payment.completed %}{% if payment.returned %}bg-info{% else %}bg-success{% endif %}{% else %}bg-warning{% endif %}">
+                {% if payment.completed %}
+                    {% if payment.returned %}
+                        <i name="payment-returned" class="material-icons">new_releases</i>
+                    {% else %}
+                        <i name="payment-paid" class="material-icons">check_circle_outline</i>
+                    {% endif %}
+                {% else %}
+                    <i name="payment-pending" class="material-icons">access_time</i>
+                {% endif %}
+            </td>
+            <td>{{ payment.account }}</td>
+            <td>{{ payment.amount }}</td>
+        </tr>
+    {% endfor %}
+{% endblock selected %}
