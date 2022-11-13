@@ -3,6 +3,7 @@
  {% block table_head %}
     <th scope="col">Nombre</th>
     <th scope="col">Alta</th>
+    <th scope="col">Baja</th>
     <th scope="col">Últ. actualización</th>
     <th scope="col" class="px-0">Sincr. en app</th>
 {% endblock %}
@@ -12,6 +13,7 @@
 
 <td class="entity-td">{{item.display_name}}</td>
 <td>{{item.registration_date|date:'d/m/Y'}}</td>
+<td>{{item.opted_out_date|date:'d/m/Y'}}</td>
 <td><small>{{item.last_updated|date:'d/m/Y H:i'}}</small></td>
 <td class="px-0">
    {%if item.app_user.exists %}

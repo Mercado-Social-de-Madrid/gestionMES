@@ -34,7 +34,8 @@ class ProviderFilterForm(BootstrapForm):
 class ProviderFilter(django_filters.FilterSet):
 
     search = SearchFilter(names=['address', 'cif', 'name', 'business_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['name', 'start_year', 'registration_date'], field_labels={'name':'Nombre', 'start_year':'Año de inicio', 'registration_date':'Fecha de alta'})
+    o = LabeledOrderingFilter(fields=['name', 'start_year', 'registration_date', 'opted_out_date'],
+                              field_labels={'name':'Nombre', 'start_year':'Año de inicio', 'registration_date':'Fecha de alta', 'opted_out_date':'Fecha de baja'})
 
     class Meta:
         model = Provider
@@ -59,7 +60,7 @@ class ProvidersListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMi
     csv_filename = 'proveedoras'
     available_fields = ['cif', 'name', 'business_name', 'public_address', 'address',  'contact_email', 'contact_phone', 'contact_person', 'territory',
                         'description', 'short_description', 'registered_in_app', 'num_workers', 'aprox_income', 'current_fee', 'has_logo',
-                        'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'is_physical_store',
+                        'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'opted_out_date', 'is_physical_store',
                         'bonus_percent_entity', 'bonus_percent_general', 'max_percent_payment', 'start_year', 'facebook_link', 'webpage_link', 'twitter_link', 'instagram_link',
                         'telegram_link', 'category_list']
     field_labels = {'registered_in_app': 'Registrada en la app', 'current_fee': 'Cuota anual', 'has_logo':'Tiene logo', 'category_list':'Categorías'}

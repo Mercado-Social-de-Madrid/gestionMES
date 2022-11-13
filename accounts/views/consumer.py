@@ -32,7 +32,8 @@ class ConsumerFilterForm(BootstrapForm):
 class ConsumerFilter(django_filters.FilterSet):
 
     search = SearchFilter(names=['address', 'cif', 'first_name', 'last_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
-    o = LabeledOrderingFilter(fields=['last_name', 'registration_date'], field_labels={'last_name':'Apellido', 'registration_date':'Fecha de alta'})
+    o = LabeledOrderingFilter(fields=['last_name', 'registration_date', 'opted_out_date'],
+                              field_labels={'last_name':'Apellido', 'registration_date':'Fecha de alta', 'opted_out_date':'Fecha de baja'})
 
     class Meta:
         model = Consumer
@@ -52,7 +53,8 @@ class ConsumersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMi
 
     csv_filename = 'consumidoras'
     available_fields = ['cif', 'first_name', 'last_name', 'address', 'display_name', 'contact_email', 'contact_phone',
-                        'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'registered_in_app']
+                        'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'opted_out_date',
+                        'registered_in_app']
     field_labels = {'display_name': 'Nombre completo', 'registered_in_app':'Registrada en la app'}
 
 
