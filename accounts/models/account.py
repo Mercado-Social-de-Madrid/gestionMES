@@ -7,6 +7,8 @@ from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Q
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.utils.translation import gettext as _
 from django.utils.timezone import now
 
@@ -277,6 +279,9 @@ class Provider(Entity):
     is_physical_store = models.BooleanField(default=False, verbose_name=_('Es tienda física'))
     num_workers = models.IntegerField(default=1, verbose_name=_('Número de trabajadoras'))
     aprox_income = models.IntegerField(default=0, verbose_name=_('Facturación último año'))
+    custom_fee = models.FloatField(null=True, blank=True, verbose_name=_('Cuota específica'))
+    payment_in_kind = models.BooleanField(default=False, verbose_name=_('Pago en especie'))
+    payment_in_kind_concept = models.CharField(null=False, blank=True, default='', max_length=100, verbose_name=_('Concepto pago en especie'))
 
     class Meta:
         verbose_name = _('Proveedora')
@@ -293,11 +298,16 @@ class Provider(Entity):
     @property
     def current_fee(self):
         from payments.models import FeeRange
-        return FeeRange.calculate_provider_fee(self)
+        return self.custom_fee if self.custom_fee is not None else FeeRange.calculate_provider_fee(self)
 
     @property
     def has_logo(self):
         return bool(self.logo)
+
+
+@receiver(pre_save, sender=Provider)
+def fill_provider_custom_fee(sender, instance, **kwargs):
+    instance.custom_fee = instance.current_fee
 
 
 class EntityCollaboration(models.Model):

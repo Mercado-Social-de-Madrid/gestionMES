@@ -19,8 +19,8 @@ class FeeRange(models.Model):
 
     DEFAULT_PROVIDER_FEE = 100.0
     DEFAULT_CONSUMER_FEE = 20.0
-    DEFAULT_PROVIDER_SHARE = 20.0
-    DEFAULT_CONSUMER_SHARE = 10.0
+    DEFAULT_PROVIDER_SOCIAL_CAPITAL = 20.0
+    DEFAULT_CONSUMER_SOCIAL_CAPITAL = 10.0
     DEFAULT_SPECIAL_FEE = 500.0
 
     class Meta:
@@ -73,12 +73,17 @@ class AnnualFeeCharges(models.Model):
         for account in Account.objects.active().filter(registration_date__year__lt=self.year):
             charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=account, annual_charge=self, collab=None)
             fee = account.current_fee
-            if fee is not None and fee > 0:
+            if fee is not None:
                 if charge.amount == 0:
                     charge.amount = fee
                     charge.save()
                 if not charge.split and not charge.payment:
                     concept = "Cuota anual Mercado Social de Madrid {}".format(self.year)
+
+                    if account.get_real_instance_class() is Provider:
+                        if account.payment_in_kind:
+                            concept += ' - Pago en especie. {}'.format(account.payment_in_kind_concept)
+
                     charge.payment = PendingPayment.objects.create(
                         concept=concept, account=account, amount=fee)
                     charge.amount = fee
@@ -92,14 +97,14 @@ class AnnualFeeCharges(models.Model):
 
         for collab in EntityCollaboration.objects.all():
             fee = collab.custom_fee or collab.collaboration.default_fee
-            if fee is not None and fee > 0:
+            if fee is not None:
                 charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=collab.entity,
                                                                                annual_charge=self, collab=collab)
                 if charge.amount == 0:
                     charge.amount = fee
                     charge.save()
                 if not charge.payment:
-                    concept = "Cuota anual {}({})".format(self.year, collab.collaboration.name)
+                    concept = "Cuota anual Mercado Social de Madrid {}({})".format(self.year, collab.collaboration.name)
                     charge.payment = PendingPayment.objects.create(
                         concept=concept, account=collab.entity, amount=fee)
                     charge.amount = fee

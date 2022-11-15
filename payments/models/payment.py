@@ -47,9 +47,9 @@ class PaymentsManager(models.Manager):
         from payments.models import FeeRange
         fee = account.current_fee
         if account.get_real_instance_class() is Provider:
-            share = FeeRange.DEFAULT_PROVIDER_SHARE
+            share = FeeRange.DEFAULT_PROVIDER_SOCIAL_CAPITAL
         else:
-            share = FeeRange.DEFAULT_CONSUMER_SHARE
+            share = FeeRange.DEFAULT_CONSUMER_SOCIAL_CAPITAL
 
         print('Creating initial payment!')
         amount = fee + share
