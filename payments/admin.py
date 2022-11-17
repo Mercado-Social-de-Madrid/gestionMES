@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 from django.contrib import admin
 
 # Register your models here.
-from payments.models import FeeRange, PendingPayment, CardPayment, SepaPaymentsBatch, BankBICCode
+from payments.models import FeeRange, PendingPayment, CardPayment, SepaPaymentsBatch, BankBICCode, AnnualFeeCharges
 
 
 class BICAdmin(admin.ModelAdmin):
@@ -18,3 +18,4 @@ admin.site.register(PendingPayment)
 admin.site.register(CardPayment)
 admin.site.register(SepaPaymentsBatch)
 admin.site.register(BankBICCode, BICAdmin)
+admin.site.register(AnnualFeeCharges)

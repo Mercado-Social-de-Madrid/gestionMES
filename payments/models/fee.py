@@ -41,7 +41,7 @@ class FeeRange(models.Model):
         elif account.get_real_instance_class() is Colaborator:
             return FeeRange.DEFAULT_SPECIAL_FEE
         else:
-            return  None
+            return None
 
 
     @staticmethod
@@ -78,12 +78,7 @@ class AnnualFeeCharges(models.Model):
                     charge.amount = fee
                     charge.save()
                 if not charge.split and not charge.payment:
-                    concept = "Cuota anual Mercado Social de Madrid {}".format(self.year)
-
-                    if account.get_real_instance_class() is Provider:
-                        if account.payment_in_kind:
-                            concept += ' - Pago en especie. {}'.format(account.payment_in_kind_concept)
-
+                    concept = account.fee_concept(self.year)
                     charge.payment = PendingPayment.objects.create(
                         concept=concept, account=account, amount=fee)
                     charge.amount = fee
@@ -104,7 +99,7 @@ class AnnualFeeCharges(models.Model):
                     charge.amount = fee
                     charge.save()
                 if not charge.payment:
-                    concept = "Cuota anual Mercado Social de Madrid {}({})".format(self.year, collab.collaboration.name)
+                    concept = "Cuota anual Mercado Social de Madrid {} ({})".format(self.year, collab.collaboration.name)
                     charge.payment = PendingPayment.objects.create(
                         concept=concept, account=collab.entity, amount=fee)
                     charge.amount = fee
@@ -116,6 +111,8 @@ class AnnualFeeCharges(models.Model):
                     charge.payment.amount = fee
                     charge.payment.save()
 
+    def __str__(self):
+        return "{}".format(self.year)
 
 class AccountAnnualFeeCharge(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -137,7 +134,7 @@ class AccountAnnualFeeCharge(models.Model):
         if self.payment:
             self.amount = self.payment.amount
 
-        self.manually_modified =  calculated_amount != self.amount
+        self.manually_modified = calculated_amount != self.amount
 
         self.save()
 

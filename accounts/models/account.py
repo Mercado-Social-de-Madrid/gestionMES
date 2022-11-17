@@ -20,6 +20,7 @@ from polymorphic.models import PolymorphicModel
 
 from accounts.models import Category, LegalForm
 from accounts.models.collaboration import Collaboration
+from accounts.models.social_capital import SocialCapital
 
 from helpers import RandomFileName
 
@@ -89,6 +90,8 @@ class Account(PolymorphicModel):
     registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
     opted_out_date = models.DateField(verbose_name=_('Fecha de baja'), null=True, blank=True)
 
+    social_capital = models.OneToOneField(SocialCapital, null=True, on_delete=models.SET_NULL)
+
     # Custom model manager
     objects = AccountsManager()
 
@@ -127,7 +130,10 @@ class Account(PolymorphicModel):
 
     @property
     def current_fee(self):
-        return None # there is no general fee defined for all the account types
+        return None  # there is no general fee defined for all the account types
+
+    def fee_concept(self, year):
+        return "Cuota anual Mercado Social de Madrid {}".format(year)
 
     def __str__(self):
         return self.display_name
@@ -304,10 +310,12 @@ class Provider(Entity):
     def has_logo(self):
         return bool(self.logo)
 
+    def fee_concept(self, year):
+        if self.payment_in_kind:
+            return 'Cuota EN ESPECIE {}. {}'.format(year, self.payment_in_kind_concept)
+        else:
+            return super().fee_concept(year)
 
-@receiver(pre_save, sender=Provider)
-def fill_provider_custom_fee(sender, instance, **kwargs):
-    instance.custom_fee = instance.current_fee
 
 
 class EntityCollaboration(models.Model):

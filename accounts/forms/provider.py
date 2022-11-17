@@ -4,7 +4,7 @@ from localflavor.es.forms import ESIdentityCardNumberField
 from localflavor.generic.forms import IBANFormField
 
 from accounts.forms.signup import BaseSignupForm
-from accounts.models import Category, Provider
+from accounts.models import Category, Provider, SocialCapital
 from core.forms.BootstrapForm import BootstrapForm
 from mes.settings import MEMBER_PROV
 
@@ -17,11 +17,14 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
     iban_code = IBANFormField(label=_('Cuenta bancaria (IBAN)'), required=False, widget=forms.TextInput(
         attrs={'class':'iban-code', 'placeholder':'ES0000000000000000000000'}))
 
+    social_capital_amount = forms.FloatField(required=False, widget=forms.NumberInput(attrs={'min':0}), label='Capital social')
+
     required_fields = ['name', 'business_name',]
 
     class Meta:
         model = Provider
-        exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date', 'cyclos_user', 'last_updated', 'collabs']
+        exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date', 'cyclos_user',
+                   'last_updated', 'collabs', 'social_capital']
 
         widgets = {
             'contact_person': forms.TextInput(),
@@ -43,7 +46,7 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
             'aprox_income': _('Expresado en miles de €')
         }
 
-    # Overriding __init__ here allows us to provide initial data for permissions
+    # Overriding __init__ here allows us to provide initial data for categories
     def __init__(self, *args, **kwargs):
         # Only in case we build the form from an instance
         # (otherwise, 'toppings' list should be empty)
@@ -52,6 +55,8 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
             # The widget for a ModelMultipleChoiceField expects
             # a list of primary key for the selected data.
             initial['categories'] = [t.pk for t in kwargs['instance'].categories.all()]
+            if kwargs['instance'].social_capital:
+                initial['social_capital_amount'] = kwargs['instance'].social_capital.amount
 
         forms.ModelForm.__init__(self, *args, **kwargs)
 
@@ -60,6 +65,14 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
         is_new = self.instance.pk is None
         instance = forms.ModelForm.save(self, False)
         instance.member_type = MEMBER_PROV
+
+        if is_new:
+            from payments.models import FeeRange
+            instance.custom_fee = FeeRange.calculate_provider_fee(instance)
+            instance.social_capital = SocialCapital.objects.create(amount=FeeRange.DEFAULT_PROVIDER_SOCIAL_CAPITAL)
+        else:
+            instance.social_capital.amount = self.cleaned_data['social_capital_amount']
+            instance.social_capital.save()
 
         if not instance.public_address or instance.public_address == '':
             instance.public_address = instance.address

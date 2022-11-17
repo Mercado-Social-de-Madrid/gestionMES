@@ -13,8 +13,11 @@
                 <div class="col-lg-12">
 
 
+                    {% if perms.accounts.mespermission_can_view_banking_info %}
                         {% include "common/forms/field.html" with field=form.iban_code not_floating=True %}
                         {% include "common/forms/switch.html" with field=form.pay_by_debit %}
+                        {% include "common/forms/field.html" with field=form.social_capital_amount %}
+                    {% endif %}
                         {% include "common/forms/field.html" with field=form.address not_floating=True %}
                 </div>
 

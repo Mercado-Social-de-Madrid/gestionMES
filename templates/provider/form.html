@@ -63,6 +63,7 @@
             <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.num_workers %}</div>
             <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.aprox_income %}</div>
             {% if perms.accounts.mespermission_can_view_banking_info %}
+                <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.social_capital_amount %}</div>
                 <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.custom_fee %}</div>
                 <div class="col-sm-6 col-md-4">{% include "common/forms/checkbox.html" with field=form.payment_in_kind %}</div>
                 <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.payment_in_kind_concept %}</div>

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from django.conf import settings
+
 import uuid
 from datetime import datetime
 
@@ -43,24 +45,34 @@ RETURN_REASONS = (
 class PaymentsManager(models.Manager):
 
     def create_initial_payment(self, account):
-        payment, created =  PendingPayment.objects.get_or_create(account=account)
-        from payments.models import FeeRange
-        fee = account.current_fee
-        if account.get_real_instance_class() is Provider:
-            share = FeeRange.DEFAULT_PROVIDER_SOCIAL_CAPITAL
-        else:
-            share = FeeRange.DEFAULT_CONSUMER_SOCIAL_CAPITAL
 
-        print('Creating initial payment!')
-        amount = fee + share
-        payment.concept = "Pago inicial: {}€ ({} capital social + {} cuota anual)".format(amount, share, fee)
-        payment.amount = amount
-        if account.pay_by_debit == True:
-            payment.type = DEBIT
+        # Two different payments: Social capital and fee
 
-        payment.save()
+        social_capital_payment = PendingPayment.objects.create(account=account)
+        social_capital_payment.amount = account.social_capital.amount
+        social_capital_payment.concept = "Capital social"
 
-        return payment
+        if account.pay_by_debit:
+            social_capital_payment.type = DEBIT
+
+        social_capital_payment.save()
+
+        fee_payment = PendingPayment.objects.create(account=account)
+        fee_payment.amount = account.current_fee
+        fee_payment.concept = account.fee_concept(settings.CURRENT_FEECHARGES_YEAR)
+
+        if account.pay_by_debit:
+            fee_payment.type = DEBIT
+
+        fee_payment.save()
+
+        # Add payment to annual fee charge
+        from payments.models import AnnualFeeCharges, AccountAnnualFeeCharge
+        annual_charge = AnnualFeeCharges.objects.get(year=settings.CURRENT_FEECHARGES_YEAR)
+        charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=account, annual_charge=annual_charge, collab=None)
+        charge.payment = fee_payment
+        charge.amount = fee_payment.amount
+        charge.save()
 
     def get_card_payment(self, reference):
         try:
