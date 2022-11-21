@@ -53,7 +53,7 @@ class FeeRange(models.Model):
             min_num_workers__lte=account.num_workers,
             max_num_workers__gte=account.num_workers,
             min_income__lte=account.aprox_income,
-            max_income__gte=account.aprox_income).first()
+            max_income__gt=account.aprox_income).first()
 
         if fee_range:
             return fee_range.fee
