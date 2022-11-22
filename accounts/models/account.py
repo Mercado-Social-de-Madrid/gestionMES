@@ -132,6 +132,29 @@ class Account(PolymorphicModel):
     def current_fee(self):
         return None  # there is no general fee defined for all the account types
 
+    # --- Social capital data for csv export ---
+    @property
+    def social_capital_amount(self):
+        return self.social_capital.amount
+
+    @property
+    def social_capital_paid(self):
+        return 'SI' if self.social_capital.paid else 'NO'
+
+    @property
+    def social_capital_paid_timestamp(self):
+        return self.social_capital.paid_timestamp
+
+    @property
+    def social_capital_returned(self):
+        return 'SI' if self.social_capital.returned else 'NO'
+
+    @property
+    def social_capital_returned_timestamp(self):
+        return self.social_capital.returned_timestamp
+
+    # ---
+
     def fee_concept(self, year):
         return "Cuota anual Mercado Social de Madrid {}".format(year)
 

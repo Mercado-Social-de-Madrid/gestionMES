@@ -54,8 +54,15 @@ class ConsumersListView(FilterMixin, ExportAsCSVMixin, FilterView, ListItemUrlMi
     csv_filename = 'consumidoras'
     available_fields = ['cif', 'first_name', 'last_name', 'address', 'display_name', 'contact_email', 'contact_phone',
                         'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'opted_out_date',
-                        'registered_in_app']
-    field_labels = {'display_name': 'Nombre completo', 'registered_in_app':'Registrada en la app'}
+                        'registered_in_app', 'social_capital_amount', 'social_capital_paid', 'social_capital_paid_timestamp',
+                        'social_capital_returned', 'social_capital_returned_timestamp']
+    field_labels = {'display_name': 'Nombre completo',
+                    'registered_in_app':'Registrada en la app',
+                    'social_capital_amount': 'Capital social',
+                    'social_capital_paid': 'C.S. Pagado',
+                    'social_capital_paid_timestamp': 'Fecha pago C.S.',
+                    'social_capital_returned': 'C.S. Devuelto',
+                    'social_capital_returned_timestamp': 'Fecha devolución C.S.', }
 
 
 class ConsumerSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
