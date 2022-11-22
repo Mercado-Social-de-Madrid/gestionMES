@@ -111,5 +111,6 @@ class ConsumerDetailView(TabbedViewMixin, FeeCommentsMixin, UpdateView ):
         context['payments'] = PendingPayment.objects.filter(account=self.object)
         context['profile_tab'] = True
         context['signup'] = self.object.signup_process.first()
+        context['social_capital_id'] = self.object.social_capital.id
         return context
 

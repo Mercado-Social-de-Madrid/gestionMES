@@ -17,6 +17,7 @@
                         {% include "common/forms/field.html" with field=form.iban_code not_floating=True %}
                         {% include "common/forms/switch.html" with field=form.pay_by_debit %}
                         {% include "common/forms/field.html" with field=form.social_capital_amount %}
+                    <a href="/admin/accounts/socialcapital/{{ social_capital_id }}" target="_blank">Detalles capital social</a>
                     {% endif %}
                         {% include "common/forms/field.html" with field=form.address not_floating=True %}
                 </div>
