@@ -148,11 +148,9 @@ class SignupProcess(AccountProcess):
 
         return self.workflow.current_state.is_named_step(STEP_PAYMENT) or self.workflow.current_state.is_named_step(STEP_CONSUMER_PAYMENT)
 
-
     def should_show_payment(self):
         if self.account.get_real_instance_class() is Consumer:
             return self.is_in_payment_step()
-
 
     def update(self, event):
         if self.is_in_payment_step():

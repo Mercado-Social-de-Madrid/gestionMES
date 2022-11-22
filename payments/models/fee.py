@@ -114,6 +114,7 @@ class AnnualFeeCharges(models.Model):
     def __str__(self):
         return "{}".format(self.year)
 
+
 class AccountAnnualFeeCharge(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     collab = models.ForeignKey(EntityCollaboration, null=True, on_delete=models.SET_NULL, related_name='fee_charges')

@@ -1,7 +1,6 @@
 import requests
 from django.conf import settings
 
-from accounts.models import Account
 from currency.models import GuestAccount
 
 
@@ -11,13 +10,14 @@ def account_id(account):
     else:
         return account.cif
 
+
 def add_transaction(account, amount, concept=None):
     api_url = '{}api/v1/wallet/currency_purchased/'.format(settings.CURRENCY_SERVER_BASE_URL)
     headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
 
     transaction_data = {
         "account": account_id(account),
-	    "amount": amount,
+        "amount": amount,
         "concept": concept,
     }
 

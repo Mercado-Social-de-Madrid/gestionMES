@@ -8,49 +8,32 @@ from datetime import datetime
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import gettext as _
 
-from accounts.models import Account, Provider
+from accounts.models import Account
 from core.models import User
 from currency_server import wallet_transaction
 from sermepa.models import SermepaResponse
-
-CREDIT_CARD = 'tarjeta'
-TRANSFER = 'transferencia'
-DEBIT = 'domiciliacion'
-
-PAYMENT_METHODS = (
-    (CREDIT_CARD, 'Pago con tarjeta'),
-    (TRANSFER, 'Transferencia'),
-    (DEBIT, 'Domiciliación bancaria'),
-)
-
-PENDING_PAYMENT = 'pago'
-CURRENCY_BUY = 'compramoneda'
-
-CARD_PAYMENT_TYPES = (
-    (PENDING_PAYMENT, 'Pago pendiente'),
-    (CURRENCY_BUY, 'Compra de Etics'),
-)
-
-RETURN_REASONS = (
-    ('noexiste', 'Cuenta no existe'),
-    ('cancelada','Cuenta cancelada'),
-    ('devuelto','Devuelto por cliente'),
-    ('sinfondos','Devuelto por el banco (falta de fondos)'),
-    ('otros','Otros'),
-)
+from payments.models.payment_constants import *
 
 
 class PaymentsManager(models.Manager):
 
     def create_initial_payment(self, account):
 
+        # This is a workaround to solve a bug in which an initial payment is created twice for consumers
+        social_capital_already_created = PendingPayment.objects.filter(account=account, is_social_capital=True).first()
+        if social_capital_already_created:
+            return
+
         # Two different payments: Social capital and fee
 
         social_capital_payment = PendingPayment.objects.create(account=account)
         social_capital_payment.amount = account.social_capital.amount
-        social_capital_payment.concept = "Capital social"
+        social_capital_payment.concept = _("Capital social")
+        social_capital_payment.is_social_capital = True
 
         if account.pay_by_debit:
             social_capital_payment.type = DEBIT
@@ -154,6 +137,8 @@ class PendingPayment(models.Model):
     invoice_number = models.IntegerField(default=1, verbose_name=_('Número de facturación'))
     invoice_date = models.DateTimeField(null=True, blank=True, verbose_name=_('Fecha de factura'))
 
+    is_social_capital = models.BooleanField(default=False, verbose_name=_('Es Capital Social'))
+
     objects = PaymentsManager()
 
     class Meta:
@@ -203,6 +188,19 @@ class PendingPayment(models.Model):
 
     def __str__(self):
         return '{}:{}'.format(self.account.display_name, self.amount)
+
+
+# If this payment is linked to Capital social, modify also the capital social of the account
+@receiver(post_save, sender=PendingPayment)
+def update_social_capital(sender, instance, created, **kwargs):
+    if instance.is_social_capital:
+        instance.account.social_capital.amount = instance.amount
+        instance.account.social_capital.paid = instance.completed
+        instance.account.social_capital.paid_timestamp = instance.timestamp
+        instance.account.social_capital.paid_type = instance.type
+        instance.account.social_capital.returned = instance.returned
+        instance.account.social_capital.returned_timestamp = instance.returned_timestamp
+        instance.account.social_capital.save()
 
 
 class CardPayment(models.Model):

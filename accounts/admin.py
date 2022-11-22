@@ -5,7 +5,7 @@ from django.contrib import admin
 
 # Register your models here.
 from accounts.models import LegalForm, Category, SignupProcess, Provider, Consumer, DeletionProcess, Colaborator, \
-    Collaboration, EntityCollaboration
+    Collaboration, EntityCollaboration, SocialCapital
 
 
 class ProviderAdmin(admin.ModelAdmin):
@@ -27,3 +27,4 @@ admin.site.register(Provider, ProviderAdmin)
 admin.site.register(Colaborator, ProviderAdmin)
 admin.site.register(Collaboration)
 admin.site.register(EntityCollaboration, ColabAdmin)
+admin.site.register(SocialCapital)
