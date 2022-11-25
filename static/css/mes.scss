@@ -205,3 +205,36 @@ td.assigned-fee{
         .cover-explanation div { margin-top:0; }
     }
 }
+
+.error-404 {
+    position: absolute;
+    height: 70%;
+    top:0;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    padding-left: 10%;
+
+    h1 {
+        font-size: 4em;
+        font-weight: 900;
+        margin-bottom: 24px;
+    }
+
+    h2 {
+        font-size: 2em;
+        font-weight: bold;
+        color: $mes-primary;
+        margin: 0;
+    }
+
+}
+
+.error-500 {
+    @extend .error-404;
+    justify-content: center;
+
+    h3 {
+        margin-bottom: 24px;
+    }
+}
