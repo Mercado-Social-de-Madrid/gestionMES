@@ -225,7 +225,7 @@ class Entity(Account):
     bonus_percent_general = models.FloatField(default=0, verbose_name='Porcentaje de bonificación general',
                                               validators=[MinValueValidator(0), MaxValueValidator(100)])
     max_percent_payment = models.FloatField(default=0, verbose_name='Máximo porcentaje de pago aceptado',
-                                            validators=[MinValueValidator(0), MaxValueValidator(10)])
+                                            validators=[MinValueValidator(0), MaxValueValidator(100)])
     payment_conditions = models.TextField(null=True, blank=True, verbose_name=_('Condiciones uso Etics'))
 
     # Social links
