@@ -106,11 +106,11 @@ def fetch_account(account):
                 account.latitude = account_data['latitude']
             if 'address' in account_data and account_data['address']:
                 account.public_address = account_data['address']
-            if 'max_percent_payment' in account_data and account_data['max_percent_payment']:
+            if 'max_percent_payment' in account_data:
                 account.max_percent_payment = account_data['max_percent_payment']
-            if 'bonus_percent_general' in account_data and account_data['bonus_percent_general']:
+            if 'bonus_percent_general' in account_data:
                 account.bonus_percent_general = account_data['bonus_percent_general']
-            if 'bonus_percent_entity' in account_data and account_data['bonus_percent_entity']:
+            if 'bonus_percent_entity' in account_data:
                 account.bonus_percent_entity = account_data['bonus_percent_entity']
 
             if 'logo' in account_data and account_data['logo']:
