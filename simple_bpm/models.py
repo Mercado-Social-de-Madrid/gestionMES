@@ -34,7 +34,7 @@ class ProcessStep(models.Model):
     title = models.CharField(null=True, blank=True, verbose_name=_('Título'), max_length=250)
     description = models.TextField(null=True, blank=True, verbose_name=_('Descripción'))
     fa_icon = models.CharField(null=True, blank=True, verbose_name=_('Icono del paso'), max_length=50)
-    color = models.CharField(max_length=20, blank=True, default="#FFFFFF")
+    color = models.CharField(max_length=20, blank=True, default="#653776")
 
     class Meta:
         verbose_name = _('Paso de un proceso')
