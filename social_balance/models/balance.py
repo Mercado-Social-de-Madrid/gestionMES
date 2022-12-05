@@ -5,6 +5,8 @@ import codecs
 import csv
 import os
 
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext as _
@@ -41,6 +43,7 @@ class EntitySocialBalance(models.Model):
 
     badge_image = ProcessedImageField(null=True, blank=True, upload_to='balances', verbose_name=_('Imagen del sello'), format='PNG')
     report = models.FileField(null=True, blank=True, upload_to='reports', verbose_name=_('Informe'), storage=OverwriteStorage())
+    report_filename = models.CharField(null=True, blank=True, verbose_name=_('Nombre archivo infografía'), max_length=100)
 
     class Meta:
         verbose_name = _('Informe de balance social')
@@ -102,6 +105,15 @@ class EntitySocialBalance(models.Model):
     def __unicode__(self):
         return '{}: {}'.format(self.entity.cif, self.year)
 
+
+# @receiver(pre_save, sender=EntitySocialBalance)
+# def set_report_filename(sender, instance, **kwargs):
+#     if instance.report:
+#         if not instance.report_filename:
+#             entity_name = instance.entity.name.replace(' ', '_')
+#             instance.report_filename = f'Mercado_Social_Madrid_Infografia_Balance_Social_{entity_name}.pdf'
+#
+#         instance.report.name = instance.report_filename
 
 
 class SocialBalanceBadge(models.Model):
