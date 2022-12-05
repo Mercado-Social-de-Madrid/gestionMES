@@ -57,7 +57,7 @@ class ExportAsCSVMixin(View):
         response['Content-Disposition'] = 'attachment; filename="{}_{}.csv'.format(self.csv_filename, now.strftime('%Y%m%d'))
 
         response.write(u'\ufeff'.encode('utf-8'))
-        writer = csv.writer(response, dialect='excel', delimiter=str(';'), quotechar=str('"'))
+        writer = csv.writer(response, dialect='excel', delimiter=str(';'), quotechar=str('"'), quoting=csv.QUOTE_ALL)
 
         # If no field was selected, we export all of them
         if filter_list is None or len(filter_list) == 0:
