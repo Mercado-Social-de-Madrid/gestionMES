@@ -96,8 +96,10 @@ class ExportAsCSVMixin(View):
                     attr = attr[0]
                 value = self.get_repr(attr)
             except AttributeError:
-                print("Error!" + elem)
-                pass
+                print("AttributeError!" + elem)
+            except IndexError:
+                print("IndexError!" + elem)
+
 
         value = '' if value is None else value
         if isinstance(value, float) or isinstance(value, int):
