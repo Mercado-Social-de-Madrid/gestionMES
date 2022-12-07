@@ -22,7 +22,7 @@ from simple_bpm.custom_filters import WorkflowFilter
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
 from simple_bpm.views import cancel_process
 from social_balance.forms.process import ProcessSponsorForm
-from social_balance.models import BalanceProcess
+from social_balance.models import BalanceProcess, BALANCE_TYPES
 
 
 class SponsorFilter(django_filters.BooleanFilter):
@@ -45,14 +45,15 @@ class BalanceProcessYearFilter(django_filters.ChoiceFilter):
 
 
 class BalanceFilterForm(BootstrapForm):
-    field_order = ['o', 'search', 'status', 'year' ]
+    field_order = ['o', 'search', 'balance_type', 'status', 'year']
 
 
 class BalanceFilter(django_filters.FilterSet):
 
     search = AccountSearchFilter(names=['sponsor__username', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['account', 'last_update'], field_labels={'account':'Nombre', 'last_update':'Última actualización'})
-    status = WorkflowFilter(['social_balance'], filter_cancelled=True, label='Estado')
+    status = WorkflowFilter(['social_balance'], filter_cancelled=True, filter_completed=True, label='Estado')
+    balance_type = django_filters.ChoiceFilter(choices=BALANCE_TYPES, label=_('Tipo:'))
     year = BalanceProcessYearFilter(label='Año')
     sponsor = SponsorFilter(label=_('Amadrinada por mí'), widget=BooleanWidget(attrs={'class':'threestate'}))
 

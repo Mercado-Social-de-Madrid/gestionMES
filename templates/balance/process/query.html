@@ -5,6 +5,7 @@
     <th scope="col" class="px-0">Tipo</th>
     <th scope="col">Madrina</th>
     <th scope="col" class="px-0">Estado</th>
+    <th scope="col">Año</th>
     <th scope="col">Última actualización</th>
 
 {% endblock %}
@@ -22,6 +23,7 @@
         {% include 'bpm/current_state.html' with workflow=item.workflow %}
     {% endif %}
 </td>
+<td>{{item.year}}</td>
 <td>{{item.last_update|date:'d/m/Y H:i'}}</td>
 
 {% endblock %}
