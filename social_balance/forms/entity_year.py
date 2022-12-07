@@ -10,7 +10,7 @@ class EntityYearBalanceForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = EntitySocialBalance
-        exclude = ['badge_image', 'external_id', 'report_filename']
+        exclude = ['badge_image', 'external_id', ]
 
         widgets = {
             'entity': forms.HiddenInput(),

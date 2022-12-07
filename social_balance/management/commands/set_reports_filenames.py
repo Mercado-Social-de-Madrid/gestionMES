@@ -13,6 +13,6 @@ class Command(BaseCommand):
         social_balances = EntitySocialBalance.objects.filter(year=2020)
         for social_balance in social_balances:
             if social_balance.report:
-                social_balance.report_filename = os.path.basename(social_balance.report.name)
-                social_balance.save()
+                social_balance.entity.report_filename = os.path.basename(social_balance.report.name)
+                social_balance.entity.save()
 

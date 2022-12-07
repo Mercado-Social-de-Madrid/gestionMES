@@ -251,6 +251,8 @@ class Entity(Account):
 
     collabs = models.ManyToManyField(Collaboration, verbose_name=_('Colaboraciones'), related_name='entities', through='EntityCollaboration')
 
+    report_filename = models.CharField(null=True, blank=True, verbose_name=_('Nombre archivo infografía'), max_length=100)
+
     class Meta:
         verbose_name = _('Entidad')
         verbose_name_plural = _('Entidades')
