@@ -105,15 +105,15 @@ class EntitySocialBalance(models.Model):
         return '{}: {}'.format(self.entity.cif, self.year)
 
 
-# @receiver(pre_save, sender=EntitySocialBalance)
-# def set_report_filename(sender, instance, **kwargs):
-#     if instance.report:
-#         if not instance.entity.report_filename:
-#             entity_name = instance.entity.name.replace(' ', '_')
-#             instance.entity.report_filename = f'Mercado_Social_Madrid_Infografia_Balance_Social_{entity_name}.pdf'
-#             instance.entity.save()
-#
-#         instance.report.name = instance.entity.report_filename
+@receiver(pre_save, sender=EntitySocialBalance)
+def set_report_filename(sender, instance, **kwargs):
+    if instance.report:
+        if not instance.entity.report_filename:
+            entity_name = instance.entity.name.replace(' ', '_')
+            instance.entity.report_filename = f'Mercado_Social_Madrid_Infografia_Balance_Social_{entity_name}.pdf'
+            instance.entity.save()
+
+        instance.report.name = instance.entity.report_filename
 
 
 class SocialBalanceBadge(models.Model):
