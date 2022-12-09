@@ -95,6 +95,41 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mes.wsgi.application'
 
+
+# Logging configuration
+LOGGING_DIR = os.path.join(BASE_DIR, 'logs')
+os.makedirs(LOGGING_DIR, exist_ok=True)
+LOGGING_LEVEL = "INFO"
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+        },
+        'file': {
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(LOGGING_DIR, 'mes.log'),
+            'when': 'midnight',
+            'backupCount': 10,
+            'formatter': 'default',
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console', 'file'],
+            'level': LOGGING_LEVEL,
+            'propagate': False,
+        },
+    },
+}
+
 MEMBER_CONSUMER = 'consumidora'
 MEMBER_COLAB = 'colaboradora'
 MEMBER_PROV = 'proveedora'

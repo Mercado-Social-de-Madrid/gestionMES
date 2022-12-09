@@ -2,3 +2,4 @@
 .idea/
 */settings_secret.py
 ghostdriver.log
+/logs
