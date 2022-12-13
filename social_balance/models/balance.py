@@ -83,12 +83,12 @@ class EntitySocialBalance(models.Model):
 
             results.append("Balance {} para {} actualizado. ".format(year, entity.name))
 
-            if (year == settings.CURRENT_BALANCE_YEAR):
+            if year == settings.CURRENT_BALANCE_YEAR:
                 if 'num_trab' in row:
                     entity.num_workers = int(row['num_trab'])
                 if 'facturacion' in row:
                     aprox_income = int(row['facturacion'])
-                    if (aprox_income > 1000):
+                    if aprox_income > 1000:
                         # we can expect that they gave the total value
                         aprox_income = aprox_income / 1000
                     entity.aprox_income = aprox_income
