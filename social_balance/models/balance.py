@@ -63,13 +63,15 @@ class EntitySocialBalance(models.Model):
     def import_data(csv_file, year, delimiter=';'):
 
         results = []
+        success = 0
+        failures = 0
         reader = csv.DictReader(codecs.iterdecode(csv_file, 'utf-8'), delimiter=delimiter)
         for row in reader:
             cif = row['cif']
             entity = Entity.objects.filter(cif=cif)
             if not entity.exists():
-
                 results.append( "No se pudo encontrar entidad con CIF {}. ".format(cif))
+                failures += 1
                 continue
 
             entity = entity.first()
@@ -81,7 +83,7 @@ class EntitySocialBalance(models.Model):
             balance.challenge = row['reto']
             balance.save()
 
-            results.append("Balance {} para {} actualizado. ".format(year, entity.name))
+            success += 1
 
             if year == settings.CURRENT_BALANCE_YEAR:
                 if 'num_trab' in row:
@@ -96,6 +98,7 @@ class EntitySocialBalance(models.Model):
                 if 'num_trab' in row or 'facturacion' in row:
                     entity.save()
 
+        results.append("Total entidades {}. OK: {}. No encontradas {}. ".format(success+failures, success, failures))
         return results
 
     def __str__(self):
