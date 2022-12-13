@@ -26,6 +26,7 @@ class Command(BaseCommand):
                 print('{}: No balance. Passing...'.format(entity.display_name))
                 continue
 
+            print('{}: Generating badge...'.format(entity.display_name))
             balance = balance.first()
             renderer.update_balance_image(balance)
 
