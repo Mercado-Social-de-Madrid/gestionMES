@@ -85,18 +85,18 @@ class EntitySocialBalance(models.Model):
 
             success += 1
 
-            if year == settings.CURRENT_BALANCE_YEAR:
-                if 'num_trab' in row:
-                    entity.num_workers = int(row['num_trab'])
-                if 'facturacion' in row:
-                    aprox_income = int(row['facturacion'])
-                    if aprox_income > 1000:
-                        # we can expect that they gave the total value
-                        aprox_income = aprox_income / 1000
-                    entity.aprox_income = aprox_income
-
-                if 'num_trab' in row or 'facturacion' in row:
-                    entity.save()
+            # if year == settings.CURRENT_BALANCE_YEAR:
+            #     if 'num_trab' in row:
+            #         entity.num_workers = int(row['num_trab'])
+            #     if 'facturacion' in row:
+            #         aprox_income = int(row['facturacion'])
+            #         if aprox_income > 1000:
+            #             # we can expect that they gave the total value
+            #             aprox_income = aprox_income / 1000
+            #         entity.aprox_income = aprox_income
+            #
+            #     if 'num_trab' in row or 'facturacion' in row:
+            #         entity.save()
 
         results.append("Total entidades {}. OK: {}. No encontradas {}. ".format(success+failures, success, failures))
         return results
