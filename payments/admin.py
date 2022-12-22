@@ -14,10 +14,16 @@ class BICAdmin(admin.ModelAdmin):
         'bank_code',
     )
 
+class AccountAnnualFeeChargeAdmin(admin.ModelAdmin):
+    list_display = ('cif',)
+    search_fields = (
+        'cif',
+    )
+
 admin.site.register(FeeRange)
 admin.site.register(PendingPayment)
 admin.site.register(CardPayment)
 admin.site.register(SepaPaymentsBatch)
 admin.site.register(BankBICCode, BICAdmin)
 admin.site.register(AnnualFeeCharges)
-admin.site.register(AccountAnnualFeeCharge)
+admin.site.register(AccountAnnualFeeCharge, AccountAnnualFeeChargeAdmin)
