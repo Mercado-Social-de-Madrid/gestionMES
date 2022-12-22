@@ -119,7 +119,7 @@ class AccountAnnualFeeCharge(models.Model):
     annual_charge = models.ForeignKey(AnnualFeeCharges, on_delete=models.CASCADE, )
     amount = models.FloatField(default=0, verbose_name=_('Cantidad'))
     payment = models.ForeignKey(PendingPayment, null=True, blank=True, on_delete=models.SET_NULL, related_name='fee_charges')
-    payments = models.ManyToManyField(PendingPayment, related_name='fee_split_charges', null=True, blank=True)
+    payments = models.ManyToManyField(PendingPayment, related_name='fee_split_charges', blank=True)
     split = models.BooleanField(default=False, verbose_name=_('Pago fraccionado'))
     manually_modified = models.BooleanField(default=False, verbose_name=_('Modificado manualmente'))
     comments = models.TextField(blank=True, null=True, verbose_name=_('Comentarios'))
