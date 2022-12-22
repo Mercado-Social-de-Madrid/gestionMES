@@ -136,7 +136,8 @@ class AccountAnnualFeeCharge(models.Model):
         self.manually_modified = calculated_amount != self.amount
 
         self.save()
-
+    def __str__(self):
+        return "{} - {}".format(self.account.cif, self.annual_charge.year)
 
 class FeeComments(UserComment):
     account = models.ForeignKey(Account, related_name='fee_comments', on_delete=models.CASCADE)

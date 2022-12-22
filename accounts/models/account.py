@@ -354,3 +354,6 @@ class EntityCollaboration(models.Model):
         verbose_name = _('Colaboración de entidad')
         verbose_name_plural = _('Colaboraciones con entidad')
         ordering = ['-started']
+
+    def __str__(self):
+        return f'{self.entity.name} - {self.custom_fee}'
