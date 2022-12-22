@@ -65,10 +65,11 @@ class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, Exp
         year = int(self.kwargs.get('year'))
         annualFee, created = AnnualFeeCharges.objects.get_or_create(year=year)
 
-        if not 'page' in self.request.GET and not self.request.is_ajax():
-            annualFee.create_pending_data()
-            if created:
-                messages.success(self.request, _('Proceso anual de cobro creado correctamente.'))
+        # Disable automatic generation of pending payments (https://trello.com/c/0ng43qhW/6-1-hay-pagos-que-se-crean-automaticamente)
+        # if not 'page' in self.request.GET and not self.request.is_ajax():
+        #     annualFee.create_pending_data()
+        #     if created:
+        #         messages.success(self.request, _('Proceso anual de cobro creado correctamente.'))
 
         return annualFee.accountannualfeecharge_set.all()
 
