@@ -29,6 +29,7 @@ AUTH_USER_MODEL = 'core.User'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+INTERNAL_IPS = ['127.0.0.1', ]
 
 
 # Application definition
@@ -117,7 +118,7 @@ LOGGING = {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': os.path.join(LOGGING_DIR, 'mes.log'),
             'when': 'midnight',
-            'backupCount': 10,
+            'backupCount': 30,
             'formatter': 'default',
         }
     },

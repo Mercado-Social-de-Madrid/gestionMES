@@ -1,19 +1,24 @@
 {% load staticfiles %}
 
-<nav class="navbar navbar-expand bg-secondary navbar-drawer sticky-top" id="top-bar">
-     <div class="container">
+<nav class="navbar navbar-expand bg-secondary {% if debug %} bg-warning {% endif %}navbar-drawer sticky-top" id="top-bar">
+    <div class="container">
 
-        <button class="navbar-toggler always-show" type="button" data-toggle="navdrawer" data-target="#doc-navdrawer" aria-controls="doc-navdrawer" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-         <a class="navbar-brand" href="{% url 'dashboard:index' %}"><img src="{% static '/imgs/brand.png' %}" height="30" class="d-inline-block align-top" alt=""></a>
+        <button class="navbar-toggler always-show" type="button" data-toggle="navdrawer" data-target="#doc-navdrawer"
+                aria-controls="doc-navdrawer" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="{% url 'dashboard:index' %}">
+            <img src="{% static '/imgs/brand.png' %}" height="30" class="d-inline-block align-top" alt="">
+        </a>
 
-      <div class="collapse navbar-collapse" id="navbar-collapse">
-        <ul class="navbar-nav ml-auto mt-0">
-            {% include 'navbar/login.html' %}
-        </ul>
-      </div>
-     </div>
+        {% if debug %}<h4 class="m-0">DEBUG SERVER</h4>{% endif %}
+
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="navbar-nav ml-auto mt-0">
+                {% include 'navbar/login.html' %}
+            </ul>
+        </div>
+    </div>
 </nav>
 
 <div class="navdrawer navdrawer-permanent-lg doc-navdrawer" id="doc-navdrawer" tabindex="-1" aria-hidden="true">
