@@ -48,6 +48,7 @@ class ConsumerForm(forms.ModelForm, BootstrapForm):
         if is_new:
             from payments.models import FeeRange
             instance.social_capital = SocialCapital.objects.create(amount=FeeRange.DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+            instance.social_capital.save()
         else:
             instance.social_capital.amount = self.cleaned_data['social_capital_amount']
             instance.social_capital.save()

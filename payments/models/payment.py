@@ -17,7 +17,10 @@ from core.models import User
 from currency_server import wallet_transaction
 from sermepa.models import SermepaResponse
 from payments.models.payment_constants import *
+import logging
 
+
+log = logging.getLogger(__name__)
 
 class PaymentsManager(models.Manager):
 
@@ -31,7 +34,22 @@ class PaymentsManager(models.Manager):
         # Two different payments: Social capital and fee
 
         social_capital_payment = PendingPayment.objects.create(account=account)
+
+        # This checking is temporal. It can be removed if Social capital null error is not happening again
+        if not account.social_capital.amount:
+            log.warning(f'Social capital is null. Account {account}')
+            from accounts.models import Consumer
+            from payments.models import FeeRange
+            if isinstance(account, Consumer):
+                account.social_capital.amount = FeeRange.DEFAULT_CONSUMER_SOCIAL_CAPITAL
+            else:
+                account.social_capital.amount = FeeRange.DEFAULT_PROVIDER_SOCIAL_CAPITAL
+
+            account.social_capital.save()
+        # ---------------------------------
+
         social_capital_payment.amount = account.social_capital.amount
+
         social_capital_payment.concept = _("Capital social")
         social_capital_payment.is_social_capital = True
 

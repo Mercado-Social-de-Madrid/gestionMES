@@ -70,6 +70,7 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
             from payments.models import FeeRange
             instance.custom_fee = FeeRange.calculate_provider_fee(instance)
             instance.social_capital = SocialCapital.objects.create(amount=FeeRange.DEFAULT_PROVIDER_SOCIAL_CAPITAL)
+            instance.social_capital.save()
         else:
             instance.social_capital.amount = self.cleaned_data['social_capital_amount']
             instance.social_capital.save()
