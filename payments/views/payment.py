@@ -16,6 +16,7 @@ from django_filters.widgets import BooleanWidget
 
 from accounts.custom_filters import AccountSearchFilter
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
+from core.filters.MemberTypeFilter import MemberTypeFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
@@ -24,17 +25,6 @@ from helpers import FilterMixin
 from helpers.pdf import render_pdf_response
 from payments.forms.payment import PaymentForm, UpdatePaymentForm
 from payments.models import PendingPayment, SepaPaymentsBatch, AnnualFeeCharges, AccountAnnualFeeCharge
-
-
-class MemberTypeFilter(django_filters.ChoiceFilter):
-
-    def __init__(self, *args,**kwargs):
-        django_filters.ChoiceFilter.__init__(self, choices=settings.MEMBER_TYPES, *args,**kwargs)
-
-    def filter(self,qs,value):
-        if value not in (None,''):
-            qs = qs.filter(account__member_type=value)
-        return qs
 
 
 class PendingPaymentFilterForm(BootstrapForm):

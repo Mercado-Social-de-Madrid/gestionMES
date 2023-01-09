@@ -51,6 +51,9 @@ urlpatterns = [
     url(r'^catalogo/$', views.CatalogListView.as_view(), name='catalog_list'),
 
     url(r'^reports/$', views.AccountsReportView.as_view(), name='accounts_report'),
+
+    url(r'^capitales_sociales/$', views.SocialCapitalListView.as_view(), name='social_capital_list'),
+    url(r'^capitales_sociales/(?P<pk>\d+)/$', views.SocialCapitalDetailView.as_view(), name='social_capital_detail'),
 ]
 
 

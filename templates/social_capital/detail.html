@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% load settings_value %}
+{% load staticfiles %}
+
+{% block title %}Detalles del capital social{% endblock %}
+
+
+{% block content %}
+
+
+<div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+            <div class="col-md-6">
+                <h4 class="mb-0"><a href="{% url 'accounts:social_capital_list' %}">Capital social</a><i class="material-icons md-18 ">arrow_forward_ios</i>{{object.account.display_name}}</h4>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
+<div class="container pt-4">
+
+    <div class="row">
+         <div class="col-md-5 mb-3">
+             <span class="badge badge-primary mb-2">Socia</span>
+            <div class="card mb-3">
+                <div class="card-body">
+            {% include 'account/simple_profile.html' with account=object.account %}
+             <div class="text-right">
+                 <a class="btn btn-outline-secondary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}?tab=payments">Ver pagos</a>
+                 <a class="btn btn-outline-primary" href="{% settings_value 'BASESITE_URL' %}{% url object.account.detail_url object.account.pk %}">Ver perfil</a>
+             </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        {% if payment %}
+            <div class="col-md-7">
+                <span class="badge badge-primary mb-2">Pago</span>
+                {% include 'social_capital/payment_detail.html' with payment=payment %}
+            </div>
+        {% endif %}
+    </div>
+
+    <form method="post" class="{% if sepa_batches %}mt-0 px-4 pb-4{% else %}mt-3 p-4{% endif %}">
+            {% csrf_token %}
+            {{form.account}}
+        <div class="row">
+            <div class="col-md-6">
+                {% include "common/forms/field.html" with field=form.amount %}
+            </div>
+            <div class="col-md-6">
+                <div class="mb-3">
+                    {% include "common/forms/switch.html" with field=form.paid %}
+                </div>
+                <div id="payment-data" {% if not object.paid %} style="display:none;" {% endif %}>
+                    {% include "common/forms/field.html" with field=form.paid_timestamp %}
+                    {% include "common/forms/field.html" with field=form.paid_type not_floating=True %}
+
+                    <div class="mb-3">
+                        {% include "common/forms/switch.html" with field=form.returned %}
+                    </div>
+                    <div id="return-data" {% if not object.returned %} style="display:none;" {% endif %}>
+                        {% include "common/forms/field.html" with field=form.returned_timestamp %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Guardar cambios</button>
+        </div>
+
+    </form>
+</div>
+
+
+
+{% endblock %}
+
+
+{% block scripts %}
+<script src="{% static 'js/moment.min.js' %}?v=7"></script>
+<script src="{% static 'js/daterangepicker.js' %}?v=7"></script>
+<script>
+$(function() {
+  var dateinput = $('input[name="{{ form.paid_timestamp.name }}"], input[name="{{ form.returned_timestamp.name }}"], input[name="{{ form.invoice_date.name }}"]');
+  dateinput.daterangepicker({
+    singleDatePicker: true,
+    timePicker: true,
+    timePicker24Hour: true,
+    drops:'up',
+    locale: {
+        "format": "DD/MM/YYYY HH:mm",
+        "weekLabel": "W",
+        "firstDay": 1
+    },
+  });
+  dateinput.on('apply.daterangepicker', function(ev, picker) {
+      $(this).val(picker.startDate.format('DD/MM/YYYY HH:mm'));
+  });
+
+  $('input[name="{{form.paid.name}}"]').on('change', function(){
+    $('#payment-data').toggle(this.checked);
+   });
+
+   $('input[name="{{form.returned.name}}"]').on('change', function(){
+    $('#return-data').toggle(this.checked);
+   });
+});
+</script>
+
+{% endblock %}

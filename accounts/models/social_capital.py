@@ -19,3 +19,6 @@ class SocialCapital(models.Model):
     class Meta:
         verbose_name = _('Capital social')
         verbose_name_plural = _('Capitales sociales')
+        permissions = (
+            ("mespermission_can_view_social_capital", _("Puede ver los capitales sociales")),
+        )

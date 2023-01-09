@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}Capitales sociales{% endblock %}
+
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-7 col-md-4">
+                    <h3 class="mb-0">Capitales sociales</h3>
+                </div>
+
+             </div>
+        </div>
+    </div>
+
+    <div class="container-fluid" id="payments-list">
+        {% include 'common/list/filter_form.html' %}
+        {% include 'common/ajax_wrapper.html' with query_template='social_capital/query.html' valign=True %}
+    </div>
+
+{% endblock %}
+

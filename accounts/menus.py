@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 
 from core.menu_item import PermissionsMenuItem
 from management.menus import MANAGEMENT_MENU_WEIGHT
+from payments.menus import PAYMENTS_MENU_WEIGHT
 
 ACCOUNTS_MENU_WEIGHT = 100
 
@@ -18,3 +19,5 @@ Menu.add_item("main",PermissionsMenuItem(_("Entidades esp."), reverse('accounts:
 
 Menu.add_item("main",PermissionsMenuItem(_("Categorías"), reverse('accounts:category_list'), weight=MANAGEMENT_MENU_WEIGHT+50, icon="label"))
 Menu.add_item("main",PermissionsMenuItem(_("Informes"), reverse('accounts:accounts_report'), weight=MANAGEMENT_MENU_WEIGHT+60, icon="assessment"))
+
+Menu.add_item("main",PermissionsMenuItem(_("Capitales sociales"), reverse('accounts:social_capital_list'), weight=PAYMENTS_MENU_WEIGHT+50, icon="diversity_3"))

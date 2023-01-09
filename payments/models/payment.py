@@ -196,6 +196,10 @@ class PendingPayment(models.Model):
         prefix = self.invoice_prefix if self.invoice_prefix else '-'
         return '{}{}{:03d}'.format(self.added.year, prefix, self.invoice_number)
 
+    @property
+    def detail_url(self):
+        return 'payments:payment_detail'
+
     def paid_by_card(self):
         self.completed = True
         self.type = CREDIT_CARD

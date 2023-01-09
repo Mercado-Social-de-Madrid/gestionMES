@@ -65,7 +65,7 @@
             {% if perms.accounts.mespermission_can_view_banking_info %}
                 <div class="col-sm-6 col-md-4">
                     {% include "common/forms/field.html" with field=form.social_capital_amount %}
-                    <a href="/admin/accounts/socialcapital/{{ social_capital_id }}" target="_blank">Detalles capital social</a>
+                    <a href="{% url 'accounts:social_capital_detail' social_capital_id %}">Detalles capital social</a>
                 </div>
                 <div class="col-sm-6 col-md-4">{% include "common/forms/field.html" with field=form.custom_fee %}</div>
                 <div class="col-sm-6 col-md-4">{% include "common/forms/checkbox.html" with field=form.payment_in_kind %}</div>

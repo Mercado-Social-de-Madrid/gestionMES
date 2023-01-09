@@ -1,0 +1,33 @@
+{% extends 'common/list/base.html' %}
+
+ {% block table_head %}
+    <th scope="col">Entidad</th>
+    <th scope="col">Total</th>
+    <th scope="col">Fecha pago</th>
+    <th scope="col">Fecha devolución</th>
+    <th scope="col">Estado</th>
+{% endblock %}
+
+
+{% block item_row %}
+
+<td>{{item.account.display_name}}</td>
+<td class="amount">{{item.amount|floatformat:2}} €</td>
+<td>{{item.paid_timestamp|date:'d/m/Y'}}</td>
+<td>{{item.returned_timestamp|date:'d/m/Y'}}</td>
+<td>
+    {% if item.returned %}
+        <i data-toggle="tooltip" data-placement="bottom" title="Devuelto"  class="md-24 material-icons text-warning">change_circle</i>
+    {% else %}
+        {% if item.paid %}
+            <i data-toggle="tooltip" data-placement="bottom" title="Pagado"  class="md-24 material-icons text-success">check_circle</i>
+        {% else %}
+            <i data-toggle="tooltip" data-placement="bottom" title="No pagado"  class="md-24 material-icons text-danger">cancel</i>
+        {% endif %}
+    {% endif %}
+</td>
+{% endblock %}
+
+{% block item_url %}
+    {% url 'accounts:social_capital_detail' item.pk %}
+{% endblock %}

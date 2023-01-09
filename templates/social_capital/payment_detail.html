@@ -1,0 +1,10 @@
+{% extends 'payments/detail_card.html' %}
+{% load settings_value %}
+
+{% block actions %}
+
+     <div class="mt-2">
+          <a class="btn btn-outline-primary" href="{% settings_value 'BASESITE_URL' %}{% url payment.detail_url payment.pk %}">Ver pago</a>
+     </div>
+
+{% endblock %}

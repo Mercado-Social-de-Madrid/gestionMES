@@ -14,8 +14,13 @@ class ProviderAdmin(admin.ModelAdmin):
         'name',
     )
 
+
 class ColabAdmin(admin.ModelAdmin):
     list_display = ('entity', 'collaboration', 'started')
+
+
+class SocialCapitalAdmin(admin.ModelAdmin):
+    list_display = ('account', 'amount', 'paid_type', 'paid', 'paid_timestamp', 'returned', 'returned_timestamp')
 
 
 admin.site.register(LegalForm)
@@ -27,4 +32,4 @@ admin.site.register(Provider, ProviderAdmin)
 admin.site.register(Colaborator, ProviderAdmin)
 admin.site.register(Collaboration)
 admin.site.register(EntityCollaboration, ColabAdmin)
-admin.site.register(SocialCapital)
+admin.site.register(SocialCapital, SocialCapitalAdmin)
