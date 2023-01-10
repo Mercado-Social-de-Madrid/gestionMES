@@ -30,5 +30,5 @@ sepaxml==2.2.0
 WeasyPrint==52.4
 webdriver-manager==2.4.0
 libsass==0.22.0
-
+django-honeypot==1.0.3
 

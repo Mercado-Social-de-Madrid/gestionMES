@@ -1,16 +1,21 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
+
 import django_filters
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView, UpdateView, ListView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
+from honeypot.decorators import check_honeypot
+
 from helpers import FilterMixin
 
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
@@ -23,6 +28,8 @@ from core.mixins.TabbedViewMixin import TabbedViewMixin
 from intercoop.forms.account import IntercoopAccountForm, IntercoopAccountSignupForm
 from intercoop.forms.entity import IntercoopEntityForm
 from intercoop.models import IntercoopAccount, IntercoopEntity
+
+log = logging.getLogger(__name__)
 
 
 class  IntercoopAccountFilterForm(BootstrapForm):
@@ -109,6 +116,7 @@ class EntityDetail(PermissionRequiredMixin, UpdateView):
         return response
 
 
+@method_decorator(check_honeypot, name='post')
 class AccountSlugCreate(CreateView):
 
     form_class = IntercoopAccountSignupForm
@@ -133,12 +141,14 @@ class AccountSlugCreate(CreateView):
 
     def form_invalid(self, form):
         response = super().form_invalid(form)
-        print(form.errors)
+        log.error(form.errors)
         return response
 
     def form_valid(self, form):
         response = super().form_valid(form)
-        messages.success(self.request, _('Entidad añadida correctamente.'))
+        success_msg = _('Entidad añadida correctamente.')
+        log.info(success_msg + f" [{self.object.display_name}]")
+        messages.success(self.request, success_msg)
         return response
 
     def get_success_url(self):
@@ -161,7 +171,7 @@ class AccountDetail(TabbedViewMixin, UpdateView):
 
     def form_invalid(self, form):
         response = super().form_invalid(form)
-        print(form.errors)
+        log.error(form.errors)
         return response
 
     def form_valid(self, form):

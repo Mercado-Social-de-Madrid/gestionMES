@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load honeypot %}
 
 {% block title %}Nueva socia intercoop.{% endblock %}
 
@@ -115,6 +116,9 @@ Los campos marcados con <span class="text-primary lead">*</span> son obligatorio
 
 
 </div>
+
+        {% render_honeypot_field %}
+
         <div class="text-center mt-5 mb-5">
             <button type="submit" class="btn btn-primary btn-lg">Enviar solicitud</button>
         </div>
