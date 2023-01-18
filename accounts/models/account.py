@@ -88,7 +88,7 @@ class Account(PolymorphicModel):
     registration_date = models.DateField(verbose_name=_('Fecha de alta'), null=True, blank=True)
     opted_out_date = models.DateField(verbose_name=_('Fecha de baja'), null=True, blank=True)
 
-    social_capital = models.OneToOneField(SocialCapital, null=True, on_delete=models.SET_NULL)
+    social_capital = models.OneToOneField(SocialCapital, null=True, blank=True, on_delete=models.SET_NULL)
 
     # Custom model manager
     objects = AccountsManager()
