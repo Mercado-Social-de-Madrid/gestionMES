@@ -21,7 +21,9 @@ class Command(BaseCommand):
         failed = []
         for consumer in consumers:
             try:
-                create_account.post_consumer(consumer)
+                success, uuid = create_account.post_consumer(consumer)
+                if not success:
+                    failed.append(consumer)
             except:
                 print('{}: Failed!'.format(consumer))
                 failed.append(consumer)

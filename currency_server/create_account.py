@@ -63,6 +63,7 @@ def post_consumer(consumer):
         uuid = result['person']['id']
         return True, uuid
     else:
+        print("post_consumer error. Status code {}, message: {}".format(r.status_code, r.text))
         return False, None
 
 
