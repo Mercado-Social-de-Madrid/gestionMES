@@ -131,6 +131,7 @@ class CurrencyAppUsersManager(models.Manager):
             user.is_pushed = result
             user.uuid = uuid
             user.save()
+        # TODO else: (show any warning message)
 
     def create_app_intercoop_user(self, intercoop):
 
@@ -140,6 +141,7 @@ class CurrencyAppUsersManager(models.Manager):
             user.is_pushed = result
             user.uuid = uuid
             user.save()
+        # TODO else: (show any warning message)
 
 
     def create_app_user(self, account):
