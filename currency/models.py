@@ -144,7 +144,6 @@ class CurrencyAppUsersManager(models.Manager):
 
     def create_app_user(self, account):
 
-        user = self.create(cif=account.cif, account=account)
         action = None
 
         if account.get_real_instance_class() is Provider:
@@ -154,10 +153,12 @@ class CurrencyAppUsersManager(models.Manager):
 
         if action:
             result, uuid = action(account)
-            user.is_pushed = result
             if result:
+                user = self.create(cif=account.cif, account=account)
+                user.is_pushed = True
                 user.uuid = uuid
-            user.save()
+                user.save()
+            # TODO else: (show any warning message)
 
 
 

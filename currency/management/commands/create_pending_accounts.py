@@ -19,6 +19,7 @@ class Command(BaseCommand):
 
         consumers = Consumer.objects.filter(status=ACTIVE, app_user__isnull=True)
         failed = []
+        print("Active consumers without app user: ".format(len(consumers)))
         for consumer in consumers:
             try:
                 success, uuid = create_account.post_consumer(consumer)
