@@ -125,18 +125,18 @@ class CurrencyAppUsersManager(models.Manager):
 
     def create_app_invited_user(self, guest_account):
 
-        user = self.create(is_guest=True, cif=guest_account.guest_reference, guest_account=guest_account)
         result, uuid = create_account.post_guest(guest_account)
         if result:
+            user = self.create(is_guest=True, cif=guest_account.guest_reference, guest_account=guest_account)
             user.is_pushed = result
             user.uuid = uuid
             user.save()
 
     def create_app_intercoop_user(self, intercoop):
 
-        user = self.create(intercoop=True, cif=intercoop.cif, intercoop_account=intercoop)
         result, uuid = create_account.post_intercoop(intercoop)
         if result:
+            user = self.create(intercoop=True, cif=intercoop.cif, intercoop_account=intercoop)
             user.is_pushed = result
             user.uuid = uuid
             user.save()
