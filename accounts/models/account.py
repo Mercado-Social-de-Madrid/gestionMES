@@ -298,6 +298,9 @@ class Colaborator(Entity):
     def detail_url(self):
         return 'accounts:entity_detail'
 
+    def fee_concept(self, year):
+        return "Cuota anual Mercado Social de Madrid {}. ({})".format(year, self.collaboration)
+
     @property
     def current_fee(self):
         from payments.models import FeeRange
@@ -354,6 +357,9 @@ class EntityCollaboration(models.Model):
         verbose_name = _('Colaboración de entidad')
         verbose_name_plural = _('Colaboraciones con entidad')
         ordering = ['-started']
+
+    def fee_concept(self, year):
+        return "Cuota anual Mercado Social de Madrid {}. ({})".format(year, self.collaboration.name)
 
     def __str__(self):
         return f'{self.entity.name} - {self.custom_fee}'
