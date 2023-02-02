@@ -58,7 +58,7 @@ class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
     filterset_class = EntityFilter
     paginate_by = 15
 
-    csv_filename = 'proveedoras'
+    csv_filename = 'entidades_especiales'
     available_fields = ['cif', 'name', 'business_name', 'public_address', 'address',  'contact_email', 'contact_phone', 'contact_person', 'territory',
                         'description', 'short_description', 'registered_in_app', 'current_fee', 'has_logo',
                         'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'is_physical_store',

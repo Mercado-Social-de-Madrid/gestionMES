@@ -2,7 +2,7 @@
 
 from django.core.management.base import BaseCommand
 
-from accounts.models import Consumer, Entity, Colaborator
+from accounts.models import Entity, Colaborator
 from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPayment
 
 
@@ -25,7 +25,7 @@ class Command(BaseCommand):
 
         for entity in entities:
             entity_colabs = entity.entity_colabs.all() #filter(custom_fee__isnull=False, custom_fee__gt=0)
-            print(f'Entity {entity.display_name}. Collaborations: {len(entity_colabs)}')
+            print(f'\nEntity {entity.display_name}. Collaborations: {len(entity_colabs)}')
             for entity_colab in entity_colabs:
                 fee = entity_colab.custom_fee
                 if fee:
@@ -41,24 +41,26 @@ class Command(BaseCommand):
                     print(f'Non fee: {fee}')
 
         # Collaborators
-        collaborators = Colaborator.objects.filter(registration_date__year__lt=year,
-                                                   custom_fee__isnull=False, custom_fee__gt=0)
+        collaborators = Colaborator.objects.filter(custom_fee__isnull=False, custom_fee__gt=0)
         print(f'\nCollaborators with non 0€ fee: {len(collaborators)}\n')
         for collaborator in collaborators:
 
             fee = collaborator.custom_fee
+            print(f'\n{collaborator.display_name}. Fee {fee}')
 
-            print(f'{collaborator.display_name}. Fee {fee}')
+            if fee:
 
-            charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=collaborator, annual_charge=annual_charge,
-                                                                           collab=None)
-            if not charge.split and not charge.payment:
-                concept = collaborator.fee_concept(year)
-                charge.payment = PendingPayment.objects.create(concept=concept, account=collaborator, amount=fee)
-                charge.amount = fee
-                charge.save()
+                charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=collaborator, annual_charge=annual_charge,
+                                                                               collab=None)
+                if not charge.split and not charge.payment:
+                    concept = collaborator.fee_concept(year)
+                    charge.payment = PendingPayment.objects.create(concept=concept, account=collaborator, amount=fee)
+                    charge.amount = fee
+                    charge.save()
+                else:
+                    print(f'Entity fee already exists: {collaborator.display_name}')
+
             else:
-                print(f'Entity fee already exists: {collaborator.display_name}')
+                print(f'Non fee: {fee}')
 
-        print("")
 

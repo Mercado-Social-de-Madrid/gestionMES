@@ -299,7 +299,8 @@ class Colaborator(Entity):
         return 'accounts:entity_detail'
 
     def fee_concept(self, year):
-        return "Cuota anual Mercado Social de Madrid {}. ({})".format(year, self.collaboration)
+        collab_name = self.collabs.first().name if self.collabs.count() > 0 else '---'
+        return "Cuota anual Mercado Social de Madrid {}. ({})".format(year, collab_name)
 
     @property
     def current_fee(self):
