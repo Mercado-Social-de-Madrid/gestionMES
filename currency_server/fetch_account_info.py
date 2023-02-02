@@ -66,7 +66,7 @@ def fetch_account(account):
 
         if result['type'] == 'person':
             if account.get_real_instance_class() is not Consumer:
-                print('Wrong account type! {}'.format(result['type']))
+                print('Wrong account type! {} - {}. Cif: {}. Email: {}'.format(result['type'], type(account.get_real_instance_class()), account.cif, account.contact_email))
                 return False
 
             account_data = result['person']
@@ -82,7 +82,7 @@ def fetch_account(account):
 
         elif result['type'] == 'entity':
             if account.get_real_instance_class() is not Provider:
-                print('Wrong account type! {}'.format(result['type']))
+                print('Wrong account type! {} - {}. Cif: {}. Email: {}'.format(result['type'], type(account.get_real_instance_class()), account.cif, account.contact_email))
                 return False
 
             account_data = result['entity']
