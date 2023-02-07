@@ -7,7 +7,7 @@ from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPay
 
 
 class Command(BaseCommand):
-    help = 'Generate annual fee charges for Collaborators (special entities)'
+    help = 'Generate annual fee charges for Collaboration agreements (special entities, Providers and Collaborators)'
 
     def add_arguments(self, parser):
         parser.add_argument('year', type=int, help='Year for annual fee charges generation')
@@ -17,14 +17,19 @@ class Command(BaseCommand):
         year = options['year']
         annual_charge, created = AnnualFeeCharges.objects.get_or_create(year=year)
 
-        # Providers with collaboration agreement
-        entities = Entity.objects.active().filter(registration_date__year__lt=year, entity_colabs__isnull=False,
+        # Entities (Providers and Colaborators) with collaboration agreement
+        entities = Entity.objects.active().filter(entity_colabs__isnull=False,
                                                   entity_colabs__custom_fee__isnull=False, entity_colabs__custom_fee__gt=0)
+
+        """ 
+        TODO Previous filter should add registration_date__year__lt=year, to avoid autogenerate payments for entities 
+        registered the current year. But there is a but in Colaborators and registration_date is not being auto generating
+        """
 
         print(f'Entities with non 0€ collaboration: {len(entities)}')
 
         for entity in entities:
-            entity_colabs = entity.entity_colabs.all() #filter(custom_fee__isnull=False, custom_fee__gt=0)
+            entity_colabs = entity.entity_colabs.all()
             print(f'\nEntity {entity.display_name}. Collaborations: {len(entity_colabs)}')
             for entity_colab in entity_colabs:
                 fee = entity_colab.custom_fee
@@ -40,27 +45,5 @@ class Command(BaseCommand):
                 else:
                     print(f'Non fee: {fee}')
 
-        # Collaborators
-        collaborators = Colaborator.objects.filter(custom_fee__isnull=False, custom_fee__gt=0)
-        print(f'\nCollaborators with non 0€ fee: {len(collaborators)}\n')
-        for collaborator in collaborators:
-
-            fee = collaborator.custom_fee
-            print(f'\n{collaborator.display_name}. Fee {fee}')
-
-            if fee:
-
-                charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=collaborator, annual_charge=annual_charge,
-                                                                               collab=None)
-                if not charge.split and not charge.payment:
-                    concept = collaborator.fee_concept(year)
-                    charge.payment = PendingPayment.objects.create(concept=concept, account=collaborator, amount=fee)
-                    charge.amount = fee
-                    charge.save()
-                else:
-                    print(f'Entity fee already exists: {collaborator.display_name}')
-
-            else:
-                print(f'Non fee: {fee}')
 
 
