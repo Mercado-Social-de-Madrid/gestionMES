@@ -104,6 +104,7 @@ class ProviderDetailView(TabbedViewMixin, FeeCommentsMixin, EntityCollabFormMixi
         context['current_badge'] =  SocialBalanceBadge.objects.filter(year=settings.CURRENT_BALANCE_YEAR).first()
         context['profile_tab'] = True
         context['social_capital_id'] = self.object.social_capital.id
+        context['corresponding_fee'] = self.object.corresponding_fee
 
         return context
 

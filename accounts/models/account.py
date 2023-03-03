@@ -330,8 +330,12 @@ class Provider(Entity):
 
     @property
     def current_fee(self):
+        return self.custom_fee if self.custom_fee is not None else self.corresponding_fee
+
+    @property
+    def corresponding_fee(self):
         from payments.models import FeeRange
-        return self.custom_fee if self.custom_fee is not None else FeeRange.calculate_provider_fee(self)
+        return FeeRange.calculate_provider_fee(self)
 
     @property
     def has_logo(self):
