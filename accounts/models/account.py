@@ -151,6 +151,10 @@ class Account(PolymorphicModel):
     def social_capital_returned_timestamp(self):
         return self.social_capital.returned_timestamp
 
+    @property
+    def legal_form_title(self):
+        return self.legal_form.title
+
     # ---
 
     def fee_concept(self, year):
