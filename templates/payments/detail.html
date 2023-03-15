@@ -49,11 +49,15 @@
             {% if annual_fee %}
                 <span class="badge badge-primary mb-2">Cuota anual</span><br>
                 Pago relativo a <a href="{% url 'payments:annual_feecharges' annual_fee %}" >Cuotas {{ annual_fee }}</a>
+                {% if split_fee %}
+                    (Pago fraccionado)
+                {% else %}
                 <form method="post" action="{% url 'payments:assign_fee' object.pk %}" class="d-inline-block form-inline">
                         <input type="hidden" name="action" value="remove">
                         {% csrf_token %}
                     <button type="submit" class="btn btn-danger btn-sm px-2 ml-2"> <i class="material-icons mr-1">close</i> Quitar </button>
                 </form>
+                {% endif %}
             {% else %}
                 El pago no pertenece a un proceso de cobro anual de cuotas
                 <button class="btn btn-secondary btn-sm px-2 ml-2" type="button" data-toggle="collapse" data-target="#annual-fee-form" aria-expanded="false" aria-controls="annual-fee-form">

@@ -200,6 +200,13 @@ class PendingPayment(models.Model):
     def detail_url(self):
         return 'payments:payment_detail'
 
+    @property
+    def related_fee(self):
+        split_fee = self.fee_split_charges.all().first()
+        if split_fee is not None:
+            return split_fee
+        return self.fee_charges.all().first()
+
     def paid_by_card(self):
         self.completed = True
         self.type = CREDIT_CARD

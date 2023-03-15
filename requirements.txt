@@ -3,6 +3,7 @@ django-ckeditor==5.4.0
 django-compressor==3.1
 django-imagekit==4.1.0
 django-filter==2.3.0
+django-filters-mixin==0.1.4
 django-jet==1.0.8
 django-js-asset==1.1.0
 django-localflavor==2.1
@@ -13,7 +14,7 @@ django-sass-processor==0.7.1
 django-tastypie==0.14.2
 fcm-django==0.2.13
 idna==2.7
-mysqlclient==2.1.0
+mysqlclient
 olefile==0.45.1
 pilkit==2.0
 pyDes==2.0.1

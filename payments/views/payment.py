@@ -126,9 +126,10 @@ class PaymentDetailView(UpdateView):
             .annotate(payments_count=Count('batch_payments'))\
             .filter(batch_payments__payment=self.object)
 
-        fee = self.object.fee_charges.all().first()
+        fee = self.object.related_fee
         if fee:
             context['annual_fee'] = fee.annual_charge.year
+            context['split_fee'] = fee.split
         else:
             context['annual_fees'] = AnnualFeeCharges.objects.values_list('year', flat=True)
         return context
@@ -152,7 +153,6 @@ class PaymentDetailView(UpdateView):
 def assign_payment_to_annualfeecharge(request, pk):
     if request.method == "POST":
         payment = PendingPayment.objects.get(pk=pk)
-
 
         action = request.POST.get('action', None)
         if action == 'add':
