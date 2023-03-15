@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Sum, Count
+from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -63,8 +64,10 @@ class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, Exp
 
     def get_queryset(self):
         year = int(self.kwargs.get('year'))
-        annualFee, created = AnnualFeeCharges.objects.get_or_create(year=year)
-
+        try:
+           annualFee = AnnualFeeCharges.objects.get(year=year)
+        except AnnualFeeCharges.DoesNotExist:
+            raise Http404
         # Disable automatic generation of pending payments (https://trello.com/c/0ng43qhW/6-1-hay-pagos-que-se-crean-automaticamente)
         # if not 'page' in self.request.GET and not self.request.is_ajax():
         #     annualFee.create_pending_data()
