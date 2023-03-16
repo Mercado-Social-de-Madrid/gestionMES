@@ -170,6 +170,11 @@ class SignupProcess(AccountProcess):
 
 
         if event.workflow.completed:
+            # Assign a new member id
+            self.account.member_id = Account.get_new_member_id()
+            self.account.save()
+
+            # Include the user in the external app
             from currency.models import CurrencyAppUser
             CurrencyAppUser.objects.create_app_user(self.account)
 

@@ -47,6 +47,7 @@ class IntercoopAccount(models.Model):
     entity = models.ForeignKey(IntercoopEntity, null=False, verbose_name=_('Entidad asociada'), related_name='accounts', on_delete=models.CASCADE)
     active = models.BooleanField(default=True, verbose_name=_('Activa'))
     cif = models.CharField(null=False,max_length=30, verbose_name=_('NIF/CIF'), unique=True)
+    member_id = models.CharField(null=True, blank=True, max_length=20, verbose_name=_('Número de socia'))
     first_name = models.CharField(null=False,max_length=250, verbose_name=_('Nombre'))
     last_name = models.CharField(null=False,max_length=250, verbose_name=_('Apellidos'))
 
@@ -76,7 +77,9 @@ class IntercoopAccount(models.Model):
 
     def validate_account(self):
         self.validated = True
+        self.member_id = IntercoopAccount.get_new_member_id()
         self.save()
+
         from currency.models import CurrencyAppUser
         CurrencyAppUser.objects.create_app_intercoop_user(self)
 
@@ -92,10 +95,17 @@ class IntercoopAccount(models.Model):
     def get_status_display(self):
         return 'Validada' if self.validated else 'Pendiente de validación'
 
-
     @property
     def is_active(self):
         return self.active and self.validated
+
+    @staticmethod
+    def get_new_member_id():
+        last_account = IntercoopAccount.objects.exclude(member_id__isnull=True).order_by('-registration_date', '-pk').first()
+        last_id = int(last_account.member_id[6:]) if last_account is not None else 0
+        new_id = last_id + 1
+        formatted = "ICOOP-{:05d}".format(new_id)
+        return formatted
 
     def __str__(self):
         return self.display_name

@@ -71,6 +71,7 @@ class Account(PolymorphicModel):
     contact_phone = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('Teléfono de contacto'))
     contact_email = models.EmailField(null=False, verbose_name=_('Email de contacto'))
     member_type = models.CharField(null=True, blank=True, max_length=30, choices=settings.MEMBER_TYPES, verbose_name=_('Tipo de socia'))
+    member_id = models.CharField(null=True, blank=True, max_length=20, verbose_name=_('Número de socia'))
     address = models.TextField(null=True, blank=True, verbose_name=_('Dirección'))
     city = models.CharField(null=True, blank=True, max_length=250, verbose_name=_('Municipio'))
     province = models.CharField(null=True, blank=True, max_length=100, verbose_name=_('Provincia'))
@@ -154,6 +155,14 @@ class Account(PolymorphicModel):
     @property
     def legal_form_title(self):
         return self.legal_form.title
+
+
+    @staticmethod
+    def get_new_member_id():
+        last_account = Account.objects.exclude(member_id__isnull=True).order_by('-registration_date', '-pk').first()
+        new_id = (int(last_account.member_id) + 1) if last_account is not None else 1
+        formatted = "{:05d}".format(new_id)
+        return formatted
 
     # ---
 

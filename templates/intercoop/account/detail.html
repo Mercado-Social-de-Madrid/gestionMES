@@ -56,9 +56,12 @@
                            {% include 'common/utils/check.html' with check=object.validated %}
                            </div>
                       <div class="float-left">
-                          <label>Estado</label><br>
-                            {{object.get_status_display}}
-                      </div></div>
+                          <label>Estado: </label>{{object.get_status_display}}<br>
+                          {% if object.member_id %}
+                          <label>Núm. socia: </label>  <code>{{object.member_id}}</code>
+                          {% endif %}
+                      </div>
+                      </div>
                       <div class="clearfix">
                           {% include 'common/utils/check.html' with check=object.newsletter_check %}
                           Inclusión en listas de correo
