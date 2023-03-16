@@ -7,9 +7,9 @@
 {% block content %}
 
     <div class="jumbotron py-4 px-2">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
-            <div class="col-md-7 d-flex">
+            <div class="col-md-9 d-flex">
                 <h3 class="mb-0 mr-3">Cobro de cuotas anuales</h3>
                 <ul class="pagination py-0 mb-0">
                 {% for year in years %}
@@ -25,7 +25,7 @@
                 {% endfor %}
                 </ul>
             </div>
-                <div class="col-md-5 text-right">
+                <div class="col-md-3 text-right">
                     Total: <h3 class="d-inline ml-2">{{ total_amount | intcomma }} €</h3>
                 </div>
 

@@ -10,8 +10,10 @@
                   {% endif %}
                        </div>
                   <div class="float-left">
-                      <label>Estado</label><br>
-                        {{object.get_status_display}}
+                      <label>Estado: </label> {{object.get_status_display}}<br>
+                      {% if object.member_id %}
+                      <label>Núm. socia: </label>  <code>{{object.member_id}}</code>
+                      {% endif %}
                   </div>
 
                   </div>

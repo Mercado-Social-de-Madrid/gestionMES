@@ -6,7 +6,7 @@
 {% block content %}
 
     <div class="jumbotron py-4 px-2">
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
             <div class="col-sm-12">
                 <h3 class="mb-0">{% if request.user.is_authenticated %}<a href="{% url 'accounts:consumers_list' %}">Consumidoras</a>{% else %} Acogidas {% endif %}<i class="material-icons md-18 ">arrow_forward_ios</i> {{object.display_name|default:"Nueva socia consumidora" }}</h3>
