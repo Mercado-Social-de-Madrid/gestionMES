@@ -101,7 +101,7 @@ class IntercoopAccount(models.Model):
 
     @staticmethod
     def get_new_member_id():
-        last_account = IntercoopAccount.objects.exclude(member_id__isnull=True).order_by('-registration_date', '-pk').first()
+        last_account = IntercoopAccount.objects.exclude(member_id__isnull=True).order_by('pk').last()
         last_id = int(last_account.member_id[6:]) if last_account is not None else 0
         new_id = last_id + 1
         formatted = "ICOOP-{:05d}".format(new_id)

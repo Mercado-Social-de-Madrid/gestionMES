@@ -19,7 +19,7 @@ class Command(BaseCommand):
             account.member_id = new_member_id
             account.save()
 
-            print('"member_id:":"{}", "cif":"{}"'.format(new_member_id, account.cif))
+            print('"member_id":"{}", "cif":"{}"'.format(new_member_id, account.cif))
 
         print("\nSocias de intercooperación")
         print("==========================")
@@ -30,4 +30,4 @@ class Command(BaseCommand):
             account.member_id = new_member_id
             account.save()
 
-            print('"member_id:":"{}", "cif":"{}"'.format(new_member_id, account.cif))
+            print('"member_id":"{}", "cif":"{}"'.format(new_member_id, account.cif))
