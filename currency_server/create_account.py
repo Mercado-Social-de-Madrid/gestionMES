@@ -78,6 +78,7 @@ def post_intercoop(account):
         "member_id": account.member_id,
         "name": account.first_name,
         "surname": account.last_name,
+        "is_intercoop": True,
         "is_guest_account": False,
         "city": settings.CITY_ID,
     }
