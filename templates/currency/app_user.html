@@ -26,6 +26,7 @@ Esta socia no tiene aún un usuario creado en la app del Mercado social<br>
      {% csrf_token %}
     <input type="hidden" name="redirect_to" value="{{redirect_to|default:request.path }}">
     <input type="hidden" name="account" value="{{account.pk}}">
+    {% if is_intercoop %} <input type="hidden" name="is_intercoop" value="{{is_intercoop}}"> {% endif %}
 
  <div class="modal fade" id="create-currency-user" tabindex="-1" role="dialog" aria-labelledby="create-currency-user-label" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">

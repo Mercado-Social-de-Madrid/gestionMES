@@ -26,6 +26,7 @@ from currency.forms.invite import GuestInviteForm
 from currency.models import GuestInvitation, GuestAccount, CurrencyAppUser
 from currency_server.fetch_account_info import fetch_account
 from helpers import FilterMixin
+from intercoop.models import IntercoopAccount
 
 
 class  InvitesFilterForm(BootstrapForm):
@@ -110,11 +111,17 @@ def add_app_user(request):
     if request.method == "POST":
         redirect_url = request.POST.get('redirect_to', '')
         account_pk = request.POST.get('account', None)
+        is_intercoop = request.POST.get('is_intercoop', None)
 
         if redirect_url and account_pk:
-            account = Account.objects.filter(pk=account_pk).first()
-            if account:
-                CurrencyAppUser.objects.create_app_user(account)
+            if is_intercoop:
+                account = IntercoopAccount.objects.filter(pk=account_pk).first()
+                if account:
+                    CurrencyAppUser.objects.create_app_intercoop_user(account)
+            else:
+                account = Account.objects.filter(pk=account_pk).first()
+                if account:
+                    CurrencyAppUser.objects.create_app_user(account)
 
             return redirect(redirect_url)
 
