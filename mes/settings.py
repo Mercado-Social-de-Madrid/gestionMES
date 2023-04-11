@@ -115,6 +115,9 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'default',
         },
+        'null': {
+            'class': 'logging.NullHandler',
+        },
         'file': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': os.path.join(LOGGING_DIR, 'mes.log'),
@@ -124,6 +127,10 @@ LOGGING = {
         }
     },
     'loggers': {
+        'django.security.DisallowedHost': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
         '': {
             'handlers': ['console', 'file'],
             'level': LOGGING_LEVEL,
