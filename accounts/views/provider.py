@@ -63,7 +63,7 @@ class ProvidersListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMi
                         'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'opted_out_date', 'is_physical_store',
                         'bonus_percent_entity', 'bonus_percent_general', 'max_percent_payment', 'start_year', 'facebook_link', 'webpage_link', 'twitter_link', 'instagram_link',
                         'telegram_link', 'category_list', 'social_capital_amount', 'social_capital_paid', 'social_capital_paid_timestamp',
-                        'social_capital_returned', 'social_capital_returned_timestamp']
+                        'social_capital_returned', 'social_capital_returned_timestamp', 'balance_url']
     field_labels = {'registered_in_app': 'Registrada en la app',
                     'current_fee': 'Cuota anual',
                     'has_logo':'Tiene logo',
@@ -73,7 +73,8 @@ class ProvidersListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMi
                     'social_capital_paid_timestamp': 'Fecha pago C.S.',
                     'social_capital_returned': 'C.S. Devuelto',
                     'social_capital_returned_timestamp': 'Fecha devolución C.S.',
-                    'legal_form_title': 'Forma legal'}
+                    'legal_form_title': 'Forma legal',
+                    'balance_url': "Enlace balance"}
 
 
 class ProviderDetailView(TabbedViewMixin, FeeCommentsMixin, EntityCollabFormMixin, UpdateView):

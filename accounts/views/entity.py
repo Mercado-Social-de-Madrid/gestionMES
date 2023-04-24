@@ -63,8 +63,11 @@ class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
                         'description', 'short_description', 'registered_in_app', 'current_fee', 'has_logo',
                         'postalcode', 'city', 'address', 'province', 'iban_code', 'registration_date', 'is_physical_store',
                         'start_year', 'facebook_link', 'webpage_link', 'twitter_link', 'instagram_link',
-                        'telegram_link', ]
-    field_labels = {'registered_in_app': 'Registrada en la app', 'current_fee': 'Cuota anual', 'has_logo':'Tiene logo'}
+                        'telegram_link', 'balance_url']
+    field_labels = {'registered_in_app': 'Registrada en la app',
+                    'current_fee': 'Cuota anual',
+                    'has_logo':'Tiene logo',
+                    'balance_url': "Enlace balance"}
 
 
 

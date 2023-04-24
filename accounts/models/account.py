@@ -156,6 +156,10 @@ class Account(PolymorphicModel):
     def legal_form_title(self):
         return self.legal_form.title
 
+    @property
+    def balance_url(self):
+        return f'{settings.CURRENCY_SERVER_BASE_URL}balance/{self.member_id}'
+
 
     @staticmethod
     def get_new_member_id():
