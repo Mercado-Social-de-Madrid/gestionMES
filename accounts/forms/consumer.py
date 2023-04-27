@@ -25,7 +25,7 @@ class ConsumerForm(forms.ModelForm, BootstrapForm):
     class Meta:
         model = Consumer
         exclude = ['group', 'status', 'legal_form', 'member_type', 'cr_member', 'registration_date', 'cyclos_user',
-                   'social_capital']
+                   'social_capital', 'member_id']
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
         }

@@ -15,19 +15,21 @@ class Command(BaseCommand):
 
         accounts = Account.objects.all()
         for account in accounts:
-            new_member_id = Account.get_new_member_id()
-            account.member_id = new_member_id
-            account.save()
+            if not account.member_id:
+                new_member_id = Account.get_new_member_id()
+                account.member_id = new_member_id
+                account.save()
 
-            print('"member_id":"{}", "cif":"{}"'.format(new_member_id, account.cif))
+                print('"member_id":"{}", "cif":"{}"'.format(new_member_id, account.cif))
 
         print("\nSocias de intercooperación")
         print("==========================")
 
         intercoop = IntercoopAccount.objects.all()
         for account in intercoop:
-            new_member_id = IntercoopAccount.get_new_member_id()
-            account.member_id = new_member_id
-            account.save()
+            if not account.member_id:
+                new_member_id = IntercoopAccount.get_new_member_id()
+                account.member_id = new_member_id
+                account.save()
 
-            print('"member_id":"{}", "cif":"{}"'.format(new_member_id, account.cif))
+                print('"member_id":"{}", "cif":"{}"'.format(new_member_id, account.cif))

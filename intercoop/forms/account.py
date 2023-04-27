@@ -8,7 +8,7 @@ class IntercoopAccountForm(forms.ModelForm, BootstrapForm):
 
     class Meta:
         model = IntercoopAccount
-        exclude = []
+        exclude = ['member_id']
         widgets = {
             'address': forms.Textarea(attrs={'rows': 3}),
             'referral_source': forms.Textarea(attrs={'rows': 4}),

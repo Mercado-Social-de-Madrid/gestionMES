@@ -18,7 +18,7 @@ class CollaboratorForm(forms.ModelForm, BootstrapForm):
     class Meta:
         model = Colaborator
         exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date', 'cyclos_user',
-                   'bonus_percent_entity', 'bonus_percent_general', 'max_percent_payment', 'collabs']
+                   'bonus_percent_entity', 'bonus_percent_general', 'max_percent_payment', 'collabs', 'member_id']
 
         widgets = {
             'contact_person': forms.TextInput(),

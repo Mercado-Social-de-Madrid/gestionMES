@@ -24,7 +24,7 @@ class ProviderForm(forms.ModelForm, BootstrapForm):
     class Meta:
         model = Provider
         exclude = ['group', 'status', 'member_type', 'cr_member', 'registration_date', 'cyclos_user',
-                   'last_updated', 'collabs', 'social_capital', 'report_filename']
+                   'last_updated', 'collabs', 'social_capital', 'report_filename', 'member_id']
 
         widgets = {
             'contact_person': forms.TextInput(),
