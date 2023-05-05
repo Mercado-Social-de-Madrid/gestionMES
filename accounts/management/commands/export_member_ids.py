@@ -26,10 +26,13 @@ class Command(BaseCommand):
         data = []
         for account in accounts:
 
+            app_uuid = str(account.app_user.first().uuid) if account.app_user.first() else None
+
             data.append({
                 'name': account.display_name,
                 'cif': account.cif,
                 'member_id': account.member_id,
+                'app_uuid': app_uuid,
             })
 
         json_data = {
