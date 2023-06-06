@@ -63,7 +63,7 @@
 
                 <div class="col-md-4 mt-2">
                 {% if object.sepa_file %}
-                    <a class="btn btn-primary" href="{{object.sepa_file.url}}"> <i class="material-icons mr-2 ">save_alt</i> Fichero SEPA</a>
+                    <a class="btn btn-primary" href="{% url 'payments:sepa_regenerate' object.pk %}"> <i class="material-icons mr-2 ">save_alt</i> Fichero SEPA</a>
                 {% endif %}
                 <a class="btn btn-secondary" href="?export=csv"> <i class="material-icons mr-2 ">save_alt</i> CSV</a>
             </div>
@@ -78,20 +78,6 @@
 
         {% include 'payments/sepa/batch_result.html' with valign=True sepa=object object_list=batch_results hide_controls=True object_url_name='payments:payment_detail' %}
 
-        <form method="post" action="{% url 'payments:sepa_regenerate' object.pk %}">
-            {% csrf_token %}
-            <div class="row mb-5">
-                <div class="col-md-7 text-dark-3">
-                    <span class="typography-subheading text-muted"> El fichero SEPA se genera en el momento de crear la remesa. </span><br>
-                    Si corriges alguno de los errores de los recibos no incluídos, puedes regenerar
-                    la remesa para que se incluyan en el fichero.
-                </div>
-                <div class="col-md-5">
-                    <button type="submit" class="btn mt-3"><span class="material-icons mr-2">cached</span> Regenerar remesa</button>
-                </div>
-            </div>
-
-        </form>
     </div>
 
 

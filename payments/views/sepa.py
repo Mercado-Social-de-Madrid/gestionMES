@@ -5,6 +5,7 @@ import django_filters
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Count
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -18,7 +19,7 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
-from payments.forms.sepa import SepaBatchForm, UpdateBatchForm
+from payments.forms.sepa import SepaBatchForm
 from payments.models import SepaBatchResult
 from payments.models import SepaPaymentsBatch
 
@@ -70,7 +71,7 @@ class BatchCreate(PermissionRequiredMixin, CreateView):
 
 class BatchUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = 'payments.mespermission_can_manage_sepa'
-    form_class = UpdateBatchForm
+    form_class = SepaBatchForm
     model = SepaPaymentsBatch
     template_name = 'payments/sepa/update.html'
 
@@ -80,7 +81,7 @@ class BatchUpdate(PermissionRequiredMixin, UpdateView):
 
 class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, UpdateView):
     permission_required = 'payments.mespermission_can_manage_sepa'
-    form_class = UpdateBatchForm
+    form_class = SepaBatchForm
     filterset_fields = []
     template_name = 'payments/sepa/detail.html'
     queryset = SepaPaymentsBatch.objects.all()
@@ -121,7 +122,13 @@ def sepa_regenerate(request, pk):
     sepa.preprocess_batch()
     sepa.generate_batch()
     messages.success(request, _('Remesa SEPA generada correctamente.'))
-    return redirect(reverse('payments:sepa_detail', kwargs={'pk': sepa.pk}))
+    if request.GET.get('download'):
+        with open(sepa.sepa_file.path, 'rb') as file:
+            response = HttpResponse(file.read(), content_type='application/xml')
+            response['Content-Disposition'] = f'attachment; filename="{sepa.sepa_file.name}"'
+            return response
+    else:
+        return redirect(sepa.sepa_file.url)
 
 
 def sepa_delete(request, pk):
