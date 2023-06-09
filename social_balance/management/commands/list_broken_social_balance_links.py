@@ -28,6 +28,8 @@ class Command(BaseCommand):
                         entity_info = f'- {balance.entity.name}, {balance.year}, {balance.report.name}\n'
                         affected_reports += entity_info
                         logger.info(entity_info)
+                except PermissionError:
+                    pass
         print(affected_reports)
         if affected_reports:
             self.send_email(affected_reports)
