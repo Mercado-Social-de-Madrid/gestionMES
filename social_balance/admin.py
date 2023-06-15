@@ -10,6 +10,9 @@ from social_balance.models import EntitySocialBalance, SocialBalanceBadge, Balan
 class BalanceAdmin(admin.ModelAdmin):
     list_display = ('entity', 'year', 'is_exempt', 'done')
 
+class ProcessAdmin(admin.ModelAdmin):
+    list_display = ('account', 'year', 'balance_type')
+
 admin.site.register(EntitySocialBalance, BalanceAdmin)
 admin.site.register(SocialBalanceBadge)
-admin.site.register(BalanceProcess)
+admin.site.register(BalanceProcess, ProcessAdmin)
