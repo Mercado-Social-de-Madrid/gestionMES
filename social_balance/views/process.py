@@ -1,26 +1,27 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
+
 import django_filters
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, FormView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
-from helpers import FilterMixin
 
 from accounts.custom_filters import AccountSearchFilter
 from core.filters.LabeledOrderingFilter import LabeledOrderingFilter
-from core.filters.SearchFilter import SearchFilter
 from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
+from helpers import FilterMixin
 from simple_bpm.custom_filters import WorkflowFilter
 from simple_bpm.forms.WorkflowEventForm import WorkflowEventForm
 from simple_bpm.views import cancel_process
+from social_balance.forms.generate_process import GenerateProcessForm
 from social_balance.forms.process import ProcessSponsorForm
 from social_balance.models import BalanceProcess, BALANCE_TYPES
 
@@ -81,6 +82,23 @@ class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListI
 
         return super().get_queryset()
 
+
+class BalanceProcessGenerate(PermissionRequiredMixin, FormView):
+    permission_required = 'social_balance.mespermission_can_view_balance_process'
+    template_name = 'balance/process/generate.html'
+    form_class = GenerateProcessForm
+    success_url = reverse_lazy('balance:process_list')
+
+    def get_initial(self):
+        return { 'year': datetime.now().year - 1 }
+
+    def form_valid(self, form):
+        year = form.cleaned_data['year']
+        balance_type = form.cleaned_data['balance_type']
+
+        BalanceProcess.objects.create_pending_processes(year, balance_type)
+        messages.success(self.request, _('Procesos anuales generados correctamente.'))
+        return super().form_valid(form)
 
 class BalanceProcessDetail(PermissionRequiredMixin, UpdateView):
     permission_required = 'social_balance.mespermission_can_view_balance_process'

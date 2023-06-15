@@ -34,10 +34,11 @@ class BalanceManager(models.Manager):
         else:
             return query.filter(workflow__completed=False)
 
-    def create_pending_processes(self, year):
+    def create_pending_processes(self, year, balance_type=None):
         for account in Entity.objects.active():
             process, created = self.get_or_create(account=account, year=year)
             if created:
+                process.balance_type = balance_type
                 process.initialize()
 
     def create_process(self, account, year):

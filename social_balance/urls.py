@@ -20,6 +20,7 @@ urlpatterns = [
     url(r'^balance/import/$', views.ImportSocialBalanceFormView.as_view(), name='bulk_import'),
 
     url(r'^balance/processes/$', views.BalanceProcessList.as_view(), name='process_list'),
+    url(r'^balance/processes/generate/$', views.BalanceProcessGenerate.as_view(), name='process_generate'),
     url(r'^balance/processes/year/(?P<year_create>\d+)/$', views.BalanceProcessList.as_view(), name='process_list_year'),
     url(r'^balance/processes/(?P<pk>\d+)/$', views.BalanceProcessDetail.as_view(), name='process_detail'),
     url(r'^balance/processes/cancel/$', views.cancel, name='cancel_process'),

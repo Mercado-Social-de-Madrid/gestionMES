@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}Balance social {{object.year}}{% endblock %}
+
+{% block content %}
+
+    <div class="jumbotron py-4 px-2">
+        <div class="container-fluid">
+            <div class="row">
+            <div class="col-sm-12">
+                <h3 class="breadcrumbs">
+                    <a href="{% url 'balance:process_list' %}">Balance social</a>
+                    <i class="material-icons md-18 ">arrow_forward_ios</i>
+                     Generar procesos anuales
+                </h3>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row mt-4">
+
+            <div class="col-md-7">
+
+                <p>
+                    <span class="typography-subheading">
+                        Desde aquí puedes generar los procesos de balance anual para un año concreto. Se generará un
+                        proceso para todas las entidades activas, con el mismo tipo de balance (Acotado/Largo) por defecto
+                        que se elija en el formulario.<br>
+                        Si para una entidad ya existe un proceso de balance para ese año, no se duplicará el proceso.
+
+                    </span>
+                </p>
+                        <form method="post">
+
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {% include "common/forms/field.html" with field=form.year not_floating=True  %}
+                                </div>
+                                <div class="col-md-4">
+                                    {% include "common/forms/field.html" with field=form.balance_type not_floating=True %}
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-primary btn-lg mt-3">Generar</button>
+                                </div>
+                            </div>
+                        </form>
+                    <div class="alert alert-warning">
+                            El año a introducir es el año al que corresponden los datos de balance social
+                            (por ejemplo, en la campaña de 2020 los datos son los de 2019)
+                        </div>
+
+          </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
