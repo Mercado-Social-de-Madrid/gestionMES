@@ -51,8 +51,8 @@ class WorkflowFilter(django_filters.ChoiceFilter):
         if value not in (None,''):
             qs = qs.filter(workflow__current_state=value)
 
-        if self.filter_cancelled:
-            qs = qs.filter(cancelled=False)
+        # if self.filter_cancelled:
+        #     qs = qs.filter(cancelled=False)
 
         # if self.filter_completed:
         #     qs = qs.filter(workflow__completed=False)
