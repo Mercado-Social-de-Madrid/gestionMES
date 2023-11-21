@@ -124,6 +124,7 @@ class SignupProcess(AccountProcess):
 
     newsletter_check = models.BooleanField(default=False, verbose_name=_('Acepta alta en listas de correo'))
     reference = models.TextField(null=True, blank=True, verbose_name=_('Cómo nos conocisste'))
+    reas_worker = models.TextField(null=True, blank=True, verbose_name=_('¿Trabajas en alguna entidad del MES-Madrid y/o REAS estatal?'))
     from_app = models.BooleanField(default=False, verbose_name=_('Registro desde la app'))
 
     objects = SignupsManager()
@@ -184,6 +185,7 @@ class SignupProcess(AccountProcess):
         if form.is_valid():
             self.newsletter_check = form.cleaned_data['newsletter_check']
             self.reference = form.cleaned_data['reference']
+            self.reas_worker = form.cleaned_data['reas_worker']
             print(form.cleaned_data['from_app'])
             self.from_app = form.cleaned_data['from_app']
             self.save()

@@ -49,6 +49,7 @@ class SignupUpdateMixin(object):
         initial['from_app'] = process.from_app
         initial['newsletter_check'] = process.newsletter_check
         initial['reference'] = process.reference
+        initial['reas_worker'] = process.reas_worker
         return initial
 
     def get_object(self, queryset=None):
