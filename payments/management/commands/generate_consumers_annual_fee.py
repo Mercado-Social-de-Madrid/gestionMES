@@ -3,7 +3,8 @@
 from django.core.management.base import BaseCommand
 
 from accounts.models import Consumer
-from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPayment
+from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPayment, SepaPaymentsBatch
+import datetime
 
 
 class Command(BaseCommand):
@@ -15,10 +16,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         year = options['year']
-        consumers = Consumer.objects.active().filter(registration_date__year__lt=year)
+        consumers = Consumer.objects.active().filter(registration_date__lt=datetime.date(2023, 10, 1))
         annual_charge, created = AnnualFeeCharges.objects.get_or_create(year=year)
 
         total = len(consumers)
+
+        sepa = SepaPaymentsBatch.objects.create(title="Cuotas anuales " + str(year))
 
         for index, consumer in enumerate(consumers):
             charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=consumer, annual_charge=annual_charge, collab=None)
@@ -30,10 +33,13 @@ class Command(BaseCommand):
                     charge.payment = PendingPayment.objects.create(concept=concept, account=consumer, amount=fee)
                     charge.amount = fee
                     charge.save()
+                    sepa.payments.add(charge.payment)
                 else:
                     print(f'Consumer fee already created: {consumer.display_name}')
             else:
                 print(f'Fee is None for {consumer.display_name}')
+
+        sepa.save()
 
         print("")
 
