@@ -8,20 +8,35 @@ import datetime
 
 
 class Command(BaseCommand):
-    help = 'Generate annual fee charges for Consumers'
+    help = 'Generate annual fee charges for Consumers by month'
 
     def handle(self, *args, **options):
 
         current_year= datetime.datetime.now().year
-        consumers = Consumer.objects.active().filter(registration_date__lt=datetime.date(2023, 10, 1))
+        current_month = datetime.datetime.now().month
+
+        current_year = 2025
+
+        consumers = (Consumer.objects.active()
+                     .filter(registration_date__gte=datetime.date(2023, 10, 1))
+                     .filter(registration_date__year__lt=current_year)
+                     .filter(registration_date__month__lte=current_month))
+
         annual_charge, created = AnnualFeeCharges.objects.get_or_create(year=current_year)
 
         total = len(consumers)
 
-        sepa = SepaPaymentsBatch.objects.create(title="Cuotas anuales " + str(current_year))
+        print("Consumidoras: {}".format(len(consumers)))
+
+        sepa = SepaPaymentsBatch.objects.create(title="Cuotas anuales {}/{}".format(current_month, current_year))
 
         for index, consumer in enumerate(consumers):
             charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=consumer, annual_charge=annual_charge, collab=None)
+
+            if not created:
+                print("Consumer {} already has annual fee charge created".format(consumer.display_name))
+                continue
+
             fee = consumer.current_fee
             if fee is not None:
                 if not charge.split and not charge.payment:
