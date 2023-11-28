@@ -52,6 +52,7 @@ class Command(BaseCommand):
                 print(f'Fee is None for {consumer.display_name}')
 
         if sepa.payments.all():
+            sepa.amount = sum(payment.amount for payment in sepa.payments.all())
             sepa.save()
         else:
             sepa.delete()
