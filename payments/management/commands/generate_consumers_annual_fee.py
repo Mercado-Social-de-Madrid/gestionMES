@@ -3,12 +3,16 @@
 from django.core.management.base import BaseCommand
 
 from accounts.models import Consumer
+from core.models import User
 from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPayment, SepaPaymentsBatch
 import datetime
 
 
 class Command(BaseCommand):
     help = 'Generate annual fee charges for Consumers'
+
+    def add_arguments(self, parser):
+        parser.add_argument('--user', type=User, help='User that started the request', default=None)
 
     def handle(self, *args, **options):
 
@@ -36,8 +40,9 @@ class Command(BaseCommand):
             else:
                 print(f'Fee is None for {consumer.display_name}')
 
-        if sepa.payments.all():
+        if sepa.payments.exists():
             sepa.amount = sum(payment.amount for payment in sepa.payments.all())
+            sepa.generated_by = options.get("user")
             sepa.save()
         else:
             sepa.delete()

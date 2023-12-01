@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from datetime import datetime
 import django_filters
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Sum, Count
+from django.core.management import call_command
+from django.db.models import Sum
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils import formats
 from django.utils.translation import gettext as _
-from django.views.generic import FormView, DetailView, UpdateView
+from django.views import View
+from django.views.generic import UpdateView
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 from helpers import FilterMixin
@@ -21,7 +25,6 @@ from core.forms.BootstrapForm import BootstrapForm
 from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.FormsetView import FormsetView
-from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.FeeComment import FeeCommentForm
 from payments.forms.feecharge import getFeeSplitFormset, AccountFeeSplitForm
 from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPayment
@@ -82,6 +85,7 @@ class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, Exp
         context['total_amount'] = self.object_list.aggregate(sum=Sum('payment__amount'))['sum']
         context['years'] = AnnualFeeCharges.objects.values_list('year', flat=True)
         context['current_year'] = int(self.kwargs.get('year'))
+        context['current_month'] = formats.date_format(datetime.now(), format='F').lower()
         return context
 
 
@@ -148,3 +152,14 @@ class SplitFeeCharge(UpdateView, FormsetView):
         self.object.save()
 
 
+class GenerateFeesView(View):
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+
+            if request.POST.get("type") == "month":
+                call_command('generate_consumers_annual_fee_by_month', user=request.user)
+            elif request.POST.get("type") == "year":
+                call_command('generate_consumers_annual_fee', user=request.user)
+
+            return redirect(reverse('payments:annual_feecharges', kwargs={"year": datetime.now().year}))

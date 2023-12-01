@@ -39,5 +39,6 @@ urlpatterns = [
     url(r'^banks/(?P<pk>[0-9a-f-]+)/$', views.BankUpdate.as_view(), name='bank_detail'),
 
     url(r'^fees/add_comment/$', views.add_fee_comment, name='add_fee_comment'),
+    url(r'^fees/generate/$', views.GenerateFeesView.as_view(), name='generate_fees'),
 ]
 
