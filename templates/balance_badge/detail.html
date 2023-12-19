@@ -114,10 +114,19 @@ $('#achievement,#challenge').css('font-size', min_font+'px');
 
 var entity = $('#entity-name');
 var info = $('#info');
-var padding = parseFloat(entity.css('padding-right'));
-var translate = entity.outerWidth() - entity.find('span').width() - padding;
-var position = parseFloat(info.css('left'));
-info.css('left', (position - translate) + 'px');
+
+var infoLeftPos = parseFloat(info.css('left'));
+var infoTopPos = parseFloat(info.css('top'));
+var entityLeftPos =  parseFloat(entity.css('left')) + entity.outerWidth();
+var entityBottomPos = parseFloat(entity.css('top')) + entity.outerHeight();
+
+// Only reposition the info textbox if it was located to the left of the entity name
+if ((infoLeftPos > entityLeftPos) && (infoTopPos < entityBottomPos)){
+    var padding = parseFloat(entity.css('padding-right'));
+    var translate = entity.outerWidth() - entity.find('span').width() - padding*2;
+    info.css('left', (infoLeftPos - translate) + 'px');
+}
+
 
 </script>
 {% endblock %}
