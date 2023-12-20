@@ -53,6 +53,10 @@ class EntitySocialBalance(models.Model):
             ("mespermission_can_edit_social_balances", _("Puede editar los informes de balance social")),
         )
 
+    @property
+    def report_filename(self):
+        entity_name = self.entity.name.replace(' ', '_')[:40] # Default FileField name length is 100
+        return f'Mercado_Social_Madrid_Infografia_Balance_Social_{entity_name}.pdf'
 
     def render_badge(self):
         badge = SocialBalanceBadge.objects.get(year=self.year)
@@ -113,11 +117,10 @@ class EntitySocialBalance(models.Model):
 def set_report_filename(sender, instance, **kwargs):
     if instance.report:
         if not instance.entity.report_filename:
-            entity_name = instance.entity.name.replace(' ', '_')
-            instance.entity.report_filename = f'Mercado_Social_Madrid_Infografia_Balance_Social_{entity_name}.pdf'
+            instance.entity.report_filename = instance.report_filename
             instance.entity.save()
 
-        instance.report.name = instance.entity.report_filename
+        instance.report.name = instance.report_filename
 
 
 class SocialBalanceBadge(models.Model):
