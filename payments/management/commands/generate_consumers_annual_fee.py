@@ -13,11 +13,13 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('--user', type=User, help='User that started the request', default=None)
+        parser.add_argument('--year', type=int, help='Year of annual fee charges', default=datetime.datetime.now().year)
 
     def handle(self, *args, **options):
 
-        current_year= datetime.datetime.now().year
+        current_year = options.get("year")
         consumers = Consumer.objects.active().filter(registration_date__lt=datetime.date(2023, 10, 1))
+
         annual_charge, created = AnnualFeeCharges.objects.get_or_create(year=current_year)
 
         total = len(consumers)

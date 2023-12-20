@@ -20,13 +20,16 @@ class Command(BaseCommand):
         renderer.configure_webdriver()
 
         entities = Entity.objects.filter(social_balances__isnull=False).distinct()
+        total = len(entities)
+        actual = 0
         for entity in entities:
+            actual += 1
             balance = EntitySocialBalance.objects.filter(entity=entity, year=year)
             if not balance.exists():
-                print('{}: No balance. Passing...'.format(entity.display_name))
+                print('{}/{} - {}: No balance. Passing...'.format(actual, total, entity.display_name))
                 continue
 
-            print('{}: Generating badge...'.format(entity.display_name))
+            print('{}/{} - {}: Generating badge...'.format(actual, total, entity.display_name))
             balance = balance.first()
             renderer.update_balance_image(balance)
 

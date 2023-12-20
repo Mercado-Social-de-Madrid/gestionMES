@@ -157,9 +157,11 @@ class GenerateFeesView(View):
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
 
-            if request.POST.get("type") == "month":
-                call_command('generate_consumers_annual_fee_by_month', user=request.user)
-            elif request.POST.get("type") == "year":
-                call_command('generate_consumers_annual_fee', user=request.user)
+            year = datetime.now().year
 
-            return redirect(reverse('payments:annual_feecharges', kwargs={"year": datetime.now().year}))
+            if request.POST.get("type") == "month":
+                call_command('generate_consumers_annual_fee_by_month', user=request.user, year=year)
+            elif request.POST.get("type") == "year":
+                call_command('generate_consumers_annual_fee', user=request.user, year=year)
+
+            return redirect(reverse('payments:annual_feecharges', kwargs={"year": year}))

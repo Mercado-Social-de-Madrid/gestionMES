@@ -49,7 +49,7 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="generate-annual-fee-label">Generar cuotas anuales</h5>
+                        <h5 class="modal-title" id="generate-annual-fee-label">Generar cuotas anuales {{current_year}}</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -61,6 +61,7 @@
                             <input type="hidden" name="type" value="month">
                         {% else %}
                             <p class="lead">¿Deseas generar las cuotas de las consumidoras anteriores al 01/10/2023?</p>
+                            <p>Este proceso puede durar mas de 1 minuto.<br>Si pulsas "Confirmar" no salgas de la página hasta que termine.</p>
                             <input type="hidden" name="type" value="year">
                         {% endif %}
                     </div>
