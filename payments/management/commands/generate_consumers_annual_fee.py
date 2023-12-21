@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
         total = len(consumers)
 
-        sepa = SepaPaymentsBatch.objects.create(title="Cuotas anuales " + str(current_year))
+        sepa = SepaPaymentsBatch.objects.create(title="Cuotas anuales consumidoras " + str(current_year))
 
         for index, consumer in enumerate(consumers):
             charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=consumer, annual_charge=annual_charge, collab=None)

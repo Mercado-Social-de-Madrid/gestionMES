@@ -30,7 +30,7 @@ class Command(BaseCommand):
 
         print("Consumidoras: {}".format(len(consumers)))
 
-        sepa = SepaPaymentsBatch.objects.create(title="Cuotas anuales {}/{}".format(current_month, current_year))
+        sepa = SepaPaymentsBatch.objects.create(title="Cuotas anuales consumidoras {}/{}".format(current_month, current_year))
 
         for index, consumer in enumerate(consumers):
             charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=consumer, annual_charge=annual_charge, collab=None)
