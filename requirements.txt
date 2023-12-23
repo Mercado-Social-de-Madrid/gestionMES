@@ -2,7 +2,7 @@ Django==2.2.28
 django-ckeditor==5.4.0
 django-compressor==3.1
 django-imagekit==4.1.0
-django-filter==2.3.0
+django-filter==2.4.0
 django-jet==1.0.8
 django-js-asset==1.1.0
 django-localflavor==2.1
