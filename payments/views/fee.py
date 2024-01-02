@@ -84,7 +84,13 @@ class AnnualFeeChargesList(PermissionRequiredMixin, FilterMixin, FilterView, Exp
         context = super().get_context_data(**kwargs)
         context['total_amount'] = self.object_list.aggregate(sum=Sum('payment__amount'))['sum']
         context['years'] = AnnualFeeCharges.objects.values_list('year', flat=True)
+
+        # 'current_year' is actually the year selected in the panel
         context['current_year'] = int(self.kwargs.get('year'))
+
+        # this field was added the new fee generation system (issue 164). Previously there was a bug
+        context['real_current_year'] = year = datetime.now().year
+
         context['current_month'] = formats.date_format(datetime.now(), format='F').lower()
         return context
 

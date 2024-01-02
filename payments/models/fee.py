@@ -18,7 +18,7 @@ class FeeRange(models.Model):
     fee = models.FloatField(verbose_name=_('Cuota'))
 
     DEFAULT_PROVIDER_FEE = 100.0
-    DEFAULT_CONSUMER_FEE = 20.0
+    DEFAULT_CONSUMER_FEE = 25.0
     DEFAULT_PROVIDER_SOCIAL_CAPITAL = 20.0
     DEFAULT_CONSUMER_SOCIAL_CAPITAL = 10.0
     DEFAULT_SPECIAL_FEE = 500.0
@@ -29,7 +29,7 @@ class FeeRange(models.Model):
         ordering = ['min_num_workers', 'max_num_workers', 'min_income', 'max_income']
 
     def __str__(self):
-        return "{} - {}".format(self.min_num_workers, self.max_num_workers).encode('utf-8')
+        return "{} - {}".format(self.min_num_workers, self.max_num_workers)
 
 
     @staticmethod
