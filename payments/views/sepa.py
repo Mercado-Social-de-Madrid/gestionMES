@@ -105,6 +105,7 @@ class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['batch_results'] = self.get_list_to_export()
         context['batch_success'] = SepaBatchResult.objects.filter(batch=self.object, success=True).count()
+        context['warning'] = SepaBatchResult.objects.filter(batch=self.object, success=False).count() > 0
         return context
 
     def form_valid(self, form):
