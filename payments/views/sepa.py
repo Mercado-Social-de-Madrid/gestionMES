@@ -129,7 +129,7 @@ def sepa_regenerate(request, pk):
             response['Content-Disposition'] = f'attachment; filename="{sepa.sepa_file.name}"'
             return response
     else:
-        return redirect(sepa.sepa_file.url)
+        return redirect(reverse('payments:sepa_detail', kwargs={'pk': pk}))
 
 
 def sepa_delete(request, pk):
