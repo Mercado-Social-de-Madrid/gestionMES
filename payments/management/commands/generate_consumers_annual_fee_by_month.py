@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 
 from accounts.models import Consumer
 from core.models import User
-from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPayment, SepaPaymentsBatch
+from payments.models import AccountAnnualFeeCharge, AnnualFeeCharges, PendingPayment, SepaPaymentsBatch, SepaBatchResult
 import datetime
 
 
@@ -32,6 +32,8 @@ class Command(BaseCommand):
 
         sepa = SepaPaymentsBatch.objects.create(title="Cuotas anuales consumidoras {}/{}".format(current_month, current_year))
 
+        order = 1
+
         for index, consumer in enumerate(consumers):
             charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=consumer, annual_charge=annual_charge, collab=None)
 
@@ -48,6 +50,12 @@ class Command(BaseCommand):
                     charge.amount = fee
                     charge.save()
                     sepa.payments.add(charge.payment)
+                    SepaBatchResult.objects.update_or_create(
+                        payment=charge.payment,
+                        batch=sepa,
+                        defaults={'order': order}
+                    )
+                    order += 1
                 else:
                     print(f'Consumer fee already created: {consumer.display_name}')
             else:
@@ -56,6 +64,8 @@ class Command(BaseCommand):
         if sepa.payments.exists():
             sepa.amount = sum(payment.amount for payment in sepa.payments.all())
             sepa.generated_by = options.get("user")
+            sepa.preprocess_batch()
+            sepa.generate_batch()
             sepa.save()
         else:
             sepa.delete()
