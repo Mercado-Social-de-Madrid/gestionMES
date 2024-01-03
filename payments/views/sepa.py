@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import datetime
+
 import django_filters
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -20,7 +22,7 @@ from core.mixins.AjaxTemplateResponseMixin import AjaxTemplateResponseMixin
 from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from payments.forms.sepa import SepaBatchForm
-from payments.models import SepaBatchResult
+from payments.models import SepaBatchResult, DEBIT
 from payments.models import SepaPaymentsBatch
 
 
@@ -150,3 +152,17 @@ def batch_payment_pdf(request, pk, batch_pk):
     payment.save()
 
     return redirect(reverse('payments:invoice_pdf', kwargs={'pk': payment.pk}))
+
+
+def sepa_set_paid(request, pk):
+    sepa = SepaPaymentsBatch.objects.get(pk=pk)
+    for payment in sepa.payments.filter(completed=False):
+        payment.completed = True
+        payment.timestamp = datetime.datetime.now()
+        payment.comment = f"Marcado como pagado desde remesa {pk}\n" + (payment.comment if payment.comment else "")
+        payment.revised_by = request.user
+        payment.type = DEBIT
+        payment.save()
+
+    messages.success(request, _('Pagos de remesa marcados como pagados.'))
+    return redirect(reverse('payments:sepa_detail', kwargs={'pk': pk}))

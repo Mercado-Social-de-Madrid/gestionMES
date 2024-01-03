@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/regenerate/$', views.sepa_regenerate, name='sepa_regenerate'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/delete/$', views.sepa_delete, name='sepa_delete'),
     url(r'^sepa/(?P<pk>[0-9a-f-]+)/(?P<batch_pk>[0-9a-f-]+)/invoice$', views.batch_payment_pdf, name='batch_payment_pdf'),
+    url(r'^sepa/(?P<pk>[0-9a-f-]+)/set-paid/$', views.sepa_set_paid, name='sepa_set_paid'),
 
     url(r'^banks/$', views.BankList.as_view(), name='bank_list'),
     url(r'^banks/bic$', views.BicExplanation.as_view(), name='bic_explanation'),

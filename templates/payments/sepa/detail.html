@@ -42,6 +42,7 @@
 
             <div class="col-sm-3 col-md-4 lead">
                 <a class="btn btn-primary" href="{% url 'payments:sepa_update' object.pk %}"> <i class="material-icons mr-2 ">edit</i> Editar remesa</a>
+                <a class="btn btn-secondary" href="{% url 'payments:sepa_set_paid' object.pk %}"> <i class="material-icons mr-2 ">check_box</i> Marcar pagados</a>
             </div>
 
         </div>
