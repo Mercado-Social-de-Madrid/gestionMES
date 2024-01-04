@@ -24,7 +24,8 @@ log = logging.getLogger(__name__)
 
 class PaymentsManager(models.Manager):
 
-    def create_initial_payment(self, account):
+    @staticmethod
+    def create_initial_payment(account):
 
         # This is a workaround to solve a bug in which an initial payment is created twice for consumers
         social_capital_already_created = PendingPayment.objects.filter(account=account, is_social_capital=True).first()
@@ -69,7 +70,7 @@ class PaymentsManager(models.Manager):
 
         # Add payment to annual fee charge
         from payments.models import AnnualFeeCharges, AccountAnnualFeeCharge
-        annual_charge = AnnualFeeCharges.objects.get(year=settings.CURRENT_FEECHARGES_YEAR)
+        annual_charge, created = AnnualFeeCharges.objects.get_or_create(year=settings.CURRENT_FEECHARGES_YEAR)
         charge, created = AccountAnnualFeeCharge.objects.get_or_create(account=account, annual_charge=annual_charge, collab=None)
         charge.payment = fee_payment
         charge.amount = fee_payment.amount
