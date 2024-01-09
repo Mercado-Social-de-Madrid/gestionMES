@@ -3,12 +3,11 @@ from __future__ import unicode_literals
 
 import django_filters
 from django.contrib import messages
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
 from django_filters.views import FilterView
-from helpers import FilterMixin
 
 from accounts.forms.consumer import ConsumerForm, ConsumerSignupForm
 from accounts.mixins.feecomments import FeeCommentsMixin
@@ -22,7 +21,8 @@ from core.mixins.ExportAsCSVMixin import ExportAsCSVMixin
 from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
-from payments.models import PendingPayment
+from helpers import FilterMixin
+from payments.models import PendingPayment, FeeRange
 
 
 class ConsumerFilterForm(BootstrapForm):
@@ -90,6 +90,11 @@ class ConsumerSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
 
             return reverse('accounts:signup_success')
 
+    def get_context_data(self, **kwargs):
+        context = super(ConsumerSignup, self).get_context_data(**kwargs)
+        context['consumer_annual_fee'] = int(FeeRange.DEFAULT_CONSUMER_FEE)
+        context['consumer_social_capital'] = int(FeeRange.DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+        return context
 
 
 class ConsumerUpdateView(SignupUpdateMixin, UpdateView):
