@@ -33,7 +33,7 @@ class ProviderFilterForm(BootstrapForm):
 
 class ProviderFilter(django_filters.FilterSet):
 
-    search = SearchFilter(names=['address', 'cif', 'name', 'business_name', 'contact_email'], lookup_expr='in', label=_('Buscar...'))
+    search = SearchFilter(names=['address', 'cif', 'name', 'business_name', 'contact_email', 'member_id'], lookup_expr='in', label=_('Buscar...'))
     o = LabeledOrderingFilter(fields=['name', 'start_year', 'registration_date', 'opted_out_date'],
                               field_labels={'name':'Nombre', 'start_year':'Año de inicio', 'registration_date':'Fecha de alta', 'opted_out_date':'Fecha de baja'})
 
