@@ -120,7 +120,7 @@ def set_report_filename(sender, instance, **kwargs):
             instance.entity.report_filename = instance.report_filename
             instance.entity.save()
 
-        instance.report.name = instance.report_filename
+        instance.report.name = instance.entity.report_filename
 
 
 class SocialBalanceBadge(models.Model):
