@@ -10,6 +10,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
 
+        parser.add_argument('year', type=int, help='Balance year')
         parser.add_argument('jsonfile', type=str, help='Indicates the JSON file to export data')
 
 
@@ -21,7 +22,7 @@ class Command(BaseCommand):
 
         jsonfile = options['jsonfile']
 
-        year_balance = 2021
+        year_balance = options['year']
         providers = Provider.objects.filter(social_balances__year=year_balance)
 
         data = []
