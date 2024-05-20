@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.conf import settings
 from re import compile
 
+from django.middleware.csrf import CsrfViewMiddleware
 from django.utils.deprecation import MiddlewareMixin
 
 EXEMPT_URLS = [compile(settings.LOGIN_URL.lstrip('/'))]
@@ -32,3 +33,12 @@ loaded. You'll get an error if they aren't.
             path = request.path_info.lstrip('/')
             if not any(m.match(path) for m in EXEMPT_URLS):
                 return HttpResponseRedirect('%s?next=%s' % (settings.LOGIN_URL, request.path))
+
+
+class CustomCSRFMiddleware(CsrfViewMiddleware):
+    def process_response(self, request, response):
+        csrf_cookie = response.cookies.get('csrftoken')
+        if csrf_cookie:
+            csrf_cookie['samesite'] = 'None'
+        return response
+
