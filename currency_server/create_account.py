@@ -3,6 +3,7 @@ from django.conf import settings
 
 def post_entity(entity):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
+    headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
 
     entity_dict = {
         "address": entity.public_address,
@@ -28,10 +29,12 @@ def post_entity(entity):
     }
 
 
-    r = requests.post(api_url, json={
-        'email': entity.contact_email,
-        'entity': entity_dict
-    })
+    r = requests.post(api_url,
+                      json={
+                          'email': entity.contact_email,
+                          'entity': entity_dict
+                      },
+                      headers=headers)
 
 
     if r.ok:
@@ -44,6 +47,7 @@ def post_entity(entity):
 
 def post_consumer(consumer):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
+    headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
     consumer_dict = {
         "address": consumer.address,
         "nif": consumer.cif,
@@ -55,10 +59,12 @@ def post_consumer(consumer):
         "city": settings.CITY_ID,
     }
 
-    r = requests.post(api_url, json={
-        'email': consumer.contact_email,
-        'person': consumer_dict
-    })
+    r = requests.post(api_url,
+                      json={
+                          'email': consumer.contact_email,
+                            'person': consumer_dict
+                      },
+                      headers=headers)
 
     if r.ok:
         result = r.json()
@@ -71,6 +77,7 @@ def post_consumer(consumer):
 
 def post_intercoop(account):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
+    headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
     consumer_dict = {
         "address": account.address,
         "nif": account.cif,
@@ -83,10 +90,12 @@ def post_intercoop(account):
         "city": settings.CITY_ID,
     }
 
-    r = requests.post(api_url, json={
-        'email': account.contact_email,
-        'person': consumer_dict
-    })
+    r = requests.post(api_url,
+                      json={
+                          'email': account.contact_email,
+                          'person': consumer_dict
+                      },
+                      headers=headers)
 
     if r.ok:
         result = r.json()
@@ -98,6 +107,7 @@ def post_intercoop(account):
 
 def post_guest(guest):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
+    headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
     guest_dict = {
         "nif": str(guest.guest_reference),
         "email": guest.contact_email,
@@ -110,10 +120,12 @@ def post_guest(guest):
     if guest.address:
         guest_dict["address"] = guest.address
 
-    r = requests.post(api_url, json={
-        'email': guest.contact_email,
-        'person': guest_dict
-    })
+    r = requests.post(api_url,
+                      json={
+                          'email': guest.contact_email,
+                          'person': guest_dict
+                      },
+                      headers=headers)
     print(r.status_code)
 
     if r.ok:
