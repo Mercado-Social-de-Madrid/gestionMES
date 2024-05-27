@@ -16,6 +16,7 @@ from pilkit.processors import ResizeToFit
 from accounts.models import Entity
 from helpers import RandomFileName
 from helpers.csv import csv_value_to_boolean
+from helpers.url import remove_special_chars
 from social_balance.renderer import BadgeRenderer
 
 from django.core.files.storage import FileSystemStorage
@@ -56,7 +57,8 @@ class EntitySocialBalance(models.Model):
     @property
     def report_filename(self):
         entity_name = self.entity.name.replace(' ', '_')[:40] # Default FileField name length is 100
-        return f'Mercado_Social_Madrid_Infografia_Balance_Social_{entity_name}.pdf'
+        pdf_url = f'Mercado_Social_Madrid_Infografia_Balance_Social_{entity_name}.pdf'
+        return remove_special_chars(pdf_url)
 
     def render_badge(self):
         badge = SocialBalanceBadge.objects.get(year=self.year)

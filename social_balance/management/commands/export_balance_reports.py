@@ -14,10 +14,6 @@ class Command(BaseCommand):
         parser.add_argument('jsonfile', type=str, help='Indicates the JSON file to export data')
 
 
-    def list_categories(entity):
-        entity.cate
-
-
     def handle(self, *args, **options):
 
         jsonfile = options['jsonfile']
