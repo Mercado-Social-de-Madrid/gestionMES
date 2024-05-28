@@ -7,27 +7,24 @@ def post_entity(entity):
     headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
 
     entity_dict = {
-        "address": entity.public_address,
-	    "bonus_percent_entity": entity.bonus_percent_entity,
-        "bonus_percent_general": entity.bonus_percent_general,
 	    "cif": entity.cif,
+	    "name": entity.name,
         "member_id": entity.member_id,
 	    "description": entity.description,
-	    "email": entity.contact_email,
-	    "facebook_link": entity.facebook_link,
-	    "instagram_link": entity.instagram_link,
-	    "latitude": entity.latitude,
-	    "legal_form": entity.legal_form.title,
-	    "longitude": entity.longitude,
-	    "max_percent_payment": entity.max_percent_payment,
-	    "name": entity.name,
-	    "num_workers": entity.num_workers,
 	    "short_description": entity.short_description,
+	    "email": entity.contact_email,
+        "contact_phone": entity.contact_phone,
+        "address": entity.public_address,
+        "city": entity.city,
+	    "latitude": entity.latitude,
+	    "longitude": entity.longitude,
+	    "legal_form": entity.legal_form.title,
+	    "num_workers": entity.num_workers,
 	    "telegram_link": entity.telegram_link,
 	    "twitter_link": entity.twitter_link,
 	    "webpage_link": entity.webpage_link,
-        "city": settings.CITY_ID,
-        "contact_phone": entity.contact_phone,
+	    "facebook_link": entity.facebook_link,
+	    "instagram_link": entity.instagram_link,
         "categories": [str(cat.id) for cat in entity.categories.all()]
     }
 
@@ -59,8 +56,6 @@ def post_consumer(consumer):
         "member_id": consumer.member_id,
         "name": consumer.first_name,
         "surname": consumer.last_name,
-        "is_guest_account": False,
-        "city": settings.CITY_ID,
         "contact_phone": consumer.contact_phone,
     }
 
@@ -91,8 +86,6 @@ def post_intercoop(account):
         "name": account.first_name,
         "surname": account.last_name,
         "is_intercoop": True,
-        "is_guest_account": False,
-        "city": settings.CITY_ID,
     }
 
     r = requests.post(api_url,

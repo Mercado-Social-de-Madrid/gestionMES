@@ -42,6 +42,8 @@ def update_social_profile_links(account, data):
                 account.twitter_link = social_profile['url']
             elif social_profile['name'] == "Facebook":
                 account.facebook_link = social_profile['url']
+            elif social_profile['name'] == "Instagram":
+                account.instagram_link = social_profile['url']
 
 
 def fetch_account(account):
@@ -88,6 +90,13 @@ def fetch_account(account):
                 account.last_name = account_data['last_name']
             if 'email' in account_data and account_data['email']:
                 account.contact_email = account_data['email']
+            if 'phone_number' in account_data and account_data['phone_number']:
+                account.contact_phone = account_data['phone_number']
+            if 'address' in account_data and account_data['address']:
+                account.address = account_data['address']
+            if 'city' in account_data and account_data['city']:
+                account.city = account_data['city']
+
             uuid = account_data['id']
             account.last_updated = timezone.now()
             account.save()
