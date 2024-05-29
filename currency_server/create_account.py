@@ -1,6 +1,7 @@
 import requests
 from django.conf import settings
 
+
 def post_entity(entity):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
     headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
@@ -26,6 +27,8 @@ def post_entity(entity):
 	    "twitter_link": entity.twitter_link,
 	    "webpage_link": entity.webpage_link,
         "city": settings.CITY_ID,
+        "contact_phone": entity.contact_phone,
+        "categories": [str(cat.id) for cat in entity.categories.all()]
     }
 
 
@@ -42,6 +45,7 @@ def post_entity(entity):
         uuid = result['entity']['id']
         return True, uuid
     else:
+        print("post_entity error. Status code {}, message: {}".format(r.status_code, r.text))
         return False, None
 
 
@@ -57,6 +61,7 @@ def post_consumer(consumer):
         "surname": consumer.last_name,
         "is_guest_account": False,
         "city": settings.CITY_ID,
+        "contact_phone": consumer.contact_phone,
     }
 
     r = requests.post(api_url,
