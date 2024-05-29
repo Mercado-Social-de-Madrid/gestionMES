@@ -50,13 +50,14 @@ def post_consumer(consumer):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
     headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
     consumer_dict = {
-        "address": consumer.address,
-        "nif": consumer.cif,
-        "email": consumer.contact_email,
+        "cif": consumer.cif,
         "member_id": consumer.member_id,
         "name": consumer.first_name,
         "surname": consumer.last_name,
+        "email": consumer.contact_email,
         "contact_phone": consumer.contact_phone,
+        "address": consumer.address,
+        "city": consumer.city,
     }
 
     r = requests.post(api_url,
@@ -79,12 +80,14 @@ def post_intercoop(account):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
     headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
     consumer_dict = {
-        "address": account.address,
-        "nif": account.cif,
-        "email": account.contact_email,
+        "cif": account.cif,
         "member_id": account.member_id,
         "name": account.first_name,
         "surname": account.last_name,
+        "email": account.contact_email,
+        "contact_phone": account.contact_phone,
+        "address": account.address,
+        "city": account.city,
         "is_intercoop": True,
     }
 
@@ -103,6 +106,7 @@ def post_intercoop(account):
         return False, None
 
 
+# No longer syncing in new HA, consider remove
 def post_guest(guest):
     api_url = '{}api/v1/preregister/'.format(settings.CURRENCY_SERVER_BASE_URL)
     headers = {'Authorization': settings.CURRENCY_SERVER_AUTH_HEADER}
