@@ -245,8 +245,6 @@ STATICFILES_FINDERS = [
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
-EMAIL_SEND_FROM = 'noreply@mercadosocial.net'
-
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
