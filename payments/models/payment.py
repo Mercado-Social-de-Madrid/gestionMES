@@ -44,9 +44,9 @@ class PaymentsManager(models.Manager):
             from accounts.models import Consumer
             from payments.models import FeeRange
             if isinstance(account, Consumer):
-                account.social_capital.amount = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+                account.social_capital.amount = SettingProperties.get_float(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
             else:
-                account.social_capital.amount = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_PROVIDER_SOCIAL_CAPITAL)
+                account.social_capital.amount = SettingProperties.get_float(constants.PAYMENTS_DEFAULT_PROVIDER_SOCIAL_CAPITAL)
 
             account.social_capital.save()
         # ---------------------------------

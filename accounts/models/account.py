@@ -164,7 +164,7 @@ class Account(PolymorphicModel):
 
     @staticmethod
     def get_new_member_id():
-        last_id = SettingProperties.int_value(constants.ACCOUNTS_LAST_MEMBER_ID)
+        last_id = SettingProperties.get_int(constants.ACCOUNTS_LAST_MEMBER_ID)
         new_id = last_id + 1
         SettingProperties.set_int(constants.ACCOUNTS_LAST_MEMBER_ID, new_id)
         formatted = "{:05d}".format(new_id)
@@ -203,7 +203,7 @@ class Consumer(Account):
 
     @property
     def current_fee(self):
-        return SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
+        return SettingProperties.get_float(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
 
 
 class Entity(Account):
@@ -321,7 +321,7 @@ class Colaborator(Entity):
     @property
     def current_fee(self):
         from payments.models import FeeRange
-        return self.custom_fee if (self.custom_fee and self.custom_fee > 0) else SettingProperties.float_value(constants.PAYMENTS_DEFAULT_SPECIAL_FEE)
+        return self.custom_fee if (self.custom_fee and self.custom_fee > 0) else SettingProperties.get_float(constants.PAYMENTS_DEFAULT_SPECIAL_FEE)
 
 
 class Provider(Entity):

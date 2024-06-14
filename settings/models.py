@@ -48,7 +48,7 @@ class SettingProperties(models.Model):
         return default_value
 
     @staticmethod
-    def get_int(property_key, default_value):
+    def get_int(property_key, default_value=None):
         try:
             prop = SettingProperties.objects.get(key=property_key)
             if prop.int_value is not None:
@@ -58,7 +58,7 @@ class SettingProperties(models.Model):
         return default_value
 
     @staticmethod
-    def get_string(property_key, default_value):
+    def get_string(property_key, default_value=None):
         try:
             prop = SettingProperties.objects.get(key=property_key)
             if prop.str_value is not None:
@@ -68,7 +68,7 @@ class SettingProperties(models.Model):
         return default_value
 
     @staticmethod
-    def get_bool(property_key, default_value):
+    def get_bool(property_key, default_value=None):
         try:
             prop = SettingProperties.objects.get(key=property_key)
             if prop.bool_value is not None:
@@ -78,7 +78,7 @@ class SettingProperties(models.Model):
         return default_value
 
     @staticmethod
-    def get_float(property_key, default_value):
+    def get_float(property_key, default_value=None):
         try:
             prop = SettingProperties.objects.get(key=property_key)
             if prop.float_value is not None:

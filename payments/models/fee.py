@@ -33,9 +33,9 @@ class FeeRange(models.Model):
         if account.get_real_instance_class() is Provider:
             return FeeRange.calculate_provider_fee(account)
         elif account.get_real_instance_class() is Consumer:
-            return SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
+            return SettingProperties.get_float(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
         elif account.get_real_instance_class() is Colaborator:
-            return SettingProperties.float_value(constants.PAYMENTS_DEFAULT_SPECIAL_FEE)
+            return SettingProperties.get_float(constants.PAYMENTS_DEFAULT_SPECIAL_FEE)
         else:
             return None
 
@@ -51,7 +51,7 @@ class FeeRange(models.Model):
 
         if fee_range:
             return fee_range.fee
-        return SettingProperties.float_value(constants.PAYMENTS_DEFAULT_PROVIDER_FEE)
+        return SettingProperties.get_float(constants.PAYMENTS_DEFAULT_PROVIDER_FEE)
 
 
 class AnnualFeeCharges(models.Model):

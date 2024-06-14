@@ -103,7 +103,7 @@ class IntercoopAccount(models.Model):
 
     @staticmethod
     def get_new_member_id():
-        last_intercoop_id = SettingProperties.int_value(constants.ACCOUNTS_LAST_INTERCOOP_ID)
+        last_intercoop_id = SettingProperties.get_int(constants.ACCOUNTS_LAST_INTERCOOP_ID)
         new_id = last_intercoop_id + 1
         SettingProperties.set_int(constants.ACCOUNTS_LAST_INTERCOOP_ID, new_id)
         formatted = "ICOOP-{:05d}".format(new_id)

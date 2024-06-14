@@ -45,7 +45,7 @@ class ConsumerForm(forms.ModelForm, BootstrapForm):
         instance.member_type = MEMBER_CONSUMER
 
         if is_new:
-            capital = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+            capital = SettingProperties.get_float(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
             instance.social_capital = SocialCapital.objects.create(amount=capital)
             instance.social_capital.save()
         else:

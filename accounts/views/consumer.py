@@ -94,8 +94,8 @@ class ConsumerSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ConsumerSignup, self).get_context_data(**kwargs)
-        consumer_capital = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
-        consumer_fee = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
+        consumer_capital = SettingProperties.get_float(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+        consumer_fee = SettingProperties.get_float(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
         context['consumer_annual_fee'] = int(consumer_fee)
         context['consumer_social_capital'] = int(consumer_capital)
         return context

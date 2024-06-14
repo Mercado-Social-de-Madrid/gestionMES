@@ -19,13 +19,13 @@ class Command(BaseCommand):
         for prov in providers:
             actual += 1
             print(f'Processing {actual} of {total}')
-            social_capital = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_PROVIDER_SOCIAL_CAPITAL)
+            social_capital = SettingProperties.get_float(constants.PAYMENTS_DEFAULT_PROVIDER_SOCIAL_CAPITAL)
             prov.social_capital = SocialCapital.objects.create(amount=social_capital)
             prov.save()
 
         for consumer in consumers:
             actual += 1
             print(f'Processing {actual} of {total}')
-            social_capital = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+            social_capital = SettingProperties.get_float(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
             consumer.social_capital = SocialCapital.objects.create(amount=social_capital)
             consumer.save()
