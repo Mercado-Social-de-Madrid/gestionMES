@@ -1,14 +1,13 @@
 from django import forms
-from django.contrib.auth.models import Permission, Group
 from django.utils.translation import gettext as _
-from localflavor.es.forms import ESIdentityCardNumberField
 from localflavor.generic.forms import IBANFormField
 
 from accounts.forms.signup import BaseSignupForm
-from accounts.models import Category, Provider, Consumer, SocialCapital
+from accounts.models import Consumer, SocialCapital
 from core.forms.BootstrapForm import BootstrapForm
-from management.models import Comission
 from mes.settings import MEMBER_CONSUMER
+from settings import constants
+from settings.models import SettingProperties
 
 
 class ConsumerForm(forms.ModelForm, BootstrapForm):
@@ -46,8 +45,8 @@ class ConsumerForm(forms.ModelForm, BootstrapForm):
         instance.member_type = MEMBER_CONSUMER
 
         if is_new:
-            from payments.models import FeeRange
-            instance.social_capital = SocialCapital.objects.create(amount=FeeRange.DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+            capital = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+            instance.social_capital = SocialCapital.objects.create(amount=capital)
             instance.social_capital.save()
         else:
             instance.social_capital.amount = self.cleaned_data['social_capital_amount']

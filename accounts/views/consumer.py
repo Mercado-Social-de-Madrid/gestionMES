@@ -22,7 +22,9 @@ from core.mixins.ListItemUrlMixin import ListItemUrlMixin
 from core.mixins.TabbedViewMixin import TabbedViewMixin
 from core.mixins.XFrameExemptMixin import XFrameOptionsExemptMixin
 from helpers import FilterMixin
-from payments.models import PendingPayment, FeeRange
+from payments.models import PendingPayment
+from settings import constants
+from settings.models import SettingProperties
 
 
 class ConsumerFilterForm(BootstrapForm):
@@ -92,8 +94,10 @@ class ConsumerSignup(XFrameOptionsExemptMixin, SignupFormMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(ConsumerSignup, self).get_context_data(**kwargs)
-        context['consumer_annual_fee'] = int(FeeRange.DEFAULT_CONSUMER_FEE)
-        context['consumer_social_capital'] = int(FeeRange.DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+        consumer_capital = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
+        consumer_fee = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
+        context['consumer_annual_fee'] = int(consumer_fee)
+        context['consumer_social_capital'] = int(consumer_capital)
         return context
 
 

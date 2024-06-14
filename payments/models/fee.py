@@ -7,6 +7,8 @@ from django.utils.translation import gettext as _
 from accounts.models import Account, Provider, Consumer, Colaborator, EntityCollaboration
 from core.models import UserComment
 from payments.models import PendingPayment
+from settings import constants
+from settings.models import SettingProperties
 
 
 class FeeRange(models.Model):
@@ -16,12 +18,6 @@ class FeeRange(models.Model):
     min_income = models.IntegerField(default=1, verbose_name=_('Ingresos mínimos'))
     max_income = models.IntegerField(default=1, verbose_name=_('Ingresos máximos'))
     fee = models.FloatField(verbose_name=_('Cuota'))
-
-    DEFAULT_PROVIDER_FEE = 100.0
-    DEFAULT_CONSUMER_FEE = 25.0
-    DEFAULT_PROVIDER_SOCIAL_CAPITAL = 20.0
-    DEFAULT_CONSUMER_SOCIAL_CAPITAL = 10.0
-    DEFAULT_SPECIAL_FEE = 500.0
 
     class Meta:
         verbose_name = _('Rango de cuotas')
@@ -37,9 +33,9 @@ class FeeRange(models.Model):
         if account.get_real_instance_class() is Provider:
             return FeeRange.calculate_provider_fee(account)
         elif account.get_real_instance_class() is Consumer:
-            return FeeRange.DEFAULT_CONSUMER_FEE
+            return SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
         elif account.get_real_instance_class() is Colaborator:
-            return FeeRange.DEFAULT_SPECIAL_FEE
+            return SettingProperties.float_value(constants.PAYMENTS_DEFAULT_SPECIAL_FEE)
         else:
             return None
 
@@ -55,7 +51,7 @@ class FeeRange(models.Model):
 
         if fee_range:
             return fee_range.fee
-        return FeeRange.DEFAULT_PROVIDER_FEE
+        return SettingProperties.float_value(constants.PAYMENTS_DEFAULT_PROVIDER_FEE)
 
 
 class AnnualFeeCharges(models.Model):

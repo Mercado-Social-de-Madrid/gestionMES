@@ -21,6 +21,8 @@ from accounts.models.collaboration import Collaboration
 from accounts.models.social_capital import SocialCapital
 
 from helpers import RandomFileName
+from settings import constants
+from settings.models import SettingProperties
 
 TERR_LOCAL = 'local'
 TERR_COUNTRY = 'estatal'
@@ -160,15 +162,13 @@ class Account(PolymorphicModel):
     def balance_url(self):
         return f'{settings.CURRENCY_SERVER_BASE_URL}balance/{self.member_id}'
 
-
     @staticmethod
     def get_new_member_id():
-        last_account = Account.objects.exclude(member_id__isnull=True).order_by('pk').last()
-        new_id = (int(last_account.member_id) + 1) if last_account is not None else 1
+        last_id = SettingProperties.int_value(constants.ACCOUNTS_LAST_MEMBER_ID)
+        new_id = last_id + 1
+        SettingProperties.set_int(constants.ACCOUNTS_LAST_MEMBER_ID, new_id)
         formatted = "{:05d}".format(new_id)
         return formatted
-
-    # ---
 
     def fee_concept(self, year):
         return "Cuota anual Mercado Social de Madrid {}".format(year)
@@ -203,8 +203,7 @@ class Consumer(Account):
 
     @property
     def current_fee(self):
-        from payments.models import FeeRange
-        return FeeRange.DEFAULT_CONSUMER_FEE
+        return SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_FEE)
 
 
 class Entity(Account):
@@ -322,7 +321,7 @@ class Colaborator(Entity):
     @property
     def current_fee(self):
         from payments.models import FeeRange
-        return self.custom_fee if (self.custom_fee and self.custom_fee > 0) else FeeRange.DEFAULT_SPECIAL_FEE
+        return self.custom_fee if (self.custom_fee and self.custom_fee > 0) else SettingProperties.float_value(constants.PAYMENTS_DEFAULT_SPECIAL_FEE)
 
 
 class Provider(Entity):

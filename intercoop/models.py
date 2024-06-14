@@ -7,6 +7,8 @@ from imagekit.models import ProcessedImageField
 from pilkit.processors import ResizeToFit
 
 from helpers import RandomFileName
+from settings import constants
+from settings.models import SettingProperties
 
 INVITE_DURATION_YEARS = 3
 
@@ -101,9 +103,9 @@ class IntercoopAccount(models.Model):
 
     @staticmethod
     def get_new_member_id():
-        last_account = IntercoopAccount.objects.exclude(member_id__isnull=True).order_by('pk').last()
-        last_id = int(last_account.member_id[6:]) if last_account is not None else 0
-        new_id = last_id + 1
+        last_intercoop_id = SettingProperties.int_value(constants.ACCOUNTS_LAST_INTERCOOP_ID)
+        new_id = last_intercoop_id + 1
+        SettingProperties.set_int(constants.ACCOUNTS_LAST_INTERCOOP_ID, new_id)
         formatted = "ICOOP-{:05d}".format(new_id)
         return formatted
 

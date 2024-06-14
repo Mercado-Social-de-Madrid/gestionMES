@@ -19,6 +19,8 @@ from sermepa.models import SermepaResponse
 from payments.models.payment_constants import *
 import logging
 
+from settings import constants
+from settings.models import SettingProperties
 
 log = logging.getLogger(__name__)
 
@@ -42,9 +44,9 @@ class PaymentsManager(models.Manager):
             from accounts.models import Consumer
             from payments.models import FeeRange
             if isinstance(account, Consumer):
-                account.social_capital.amount = FeeRange.DEFAULT_CONSUMER_SOCIAL_CAPITAL
+                account.social_capital.amount = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
             else:
-                account.social_capital.amount = FeeRange.DEFAULT_PROVIDER_SOCIAL_CAPITAL
+                account.social_capital.amount = SettingProperties.float_value(constants.PAYMENTS_DEFAULT_PROVIDER_SOCIAL_CAPITAL)
 
             account.social_capital.save()
         # ---------------------------------
