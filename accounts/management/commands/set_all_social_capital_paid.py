@@ -2,7 +2,6 @@
 from django.core.management.base import BaseCommand
 
 from accounts.models import SocialCapital
-from payments.models import FeeRange
 
 
 class Command(BaseCommand):

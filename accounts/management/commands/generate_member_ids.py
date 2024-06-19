@@ -1,8 +1,8 @@
 
 from django.core.management.base import BaseCommand
-from accounts.models import Provider, Consumer, SocialCapital, Account
+
+from accounts.models import Account
 from intercoop.models import IntercoopAccount
-from payments.models import FeeRange
 
 
 class Command(BaseCommand):

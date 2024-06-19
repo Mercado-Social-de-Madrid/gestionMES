@@ -42,7 +42,6 @@ class PaymentsManager(models.Manager):
         if not account.social_capital.amount:
             log.warning(f'Social capital is null. Account {account}')
             from accounts.models import Consumer
-            from payments.models import FeeRange
             if isinstance(account, Consumer):
                 account.social_capital.amount = SettingProperties.get_float(constants.PAYMENTS_DEFAULT_CONSUMER_SOCIAL_CAPITAL)
             else:

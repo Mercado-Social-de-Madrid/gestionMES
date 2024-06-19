@@ -320,7 +320,7 @@ class Colaborator(Entity):
 
     @property
     def current_fee(self):
-        from payments.models import FeeRange
+        # Not being used right now
         return self.custom_fee if (self.custom_fee and self.custom_fee > 0) else SettingProperties.get_float(constants.PAYMENTS_DEFAULT_SPECIAL_FEE)
 
 

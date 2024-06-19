@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
         """ 
         TODO Previous filter should add registration_date__year__lt=year, to avoid autogenerate payments for entities 
-        registered the current year. But there is a but in Colaborators and registration_date is not being auto generating
+        registered the current year. But there is a bug in Colaborators and registration_date is not being auto generating
         """
 
         print(f'Entities with non 0€ collaboration: {len(entities)}')
