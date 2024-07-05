@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.generic import UpdateView, CreateView
+from django_filters import Filter
 from django_filters.views import FilterView
 from django_filters.widgets import BooleanWidget
 
@@ -34,6 +35,7 @@ class PendingPaymentFilterForm(BootstrapForm):
 class PendingPaymentFilter(django_filters.FilterSet):
 
     search = AccountSearchFilter(names=['concept', 'account__cif'], lookup_expr='in', label=_('Buscar...'))
+    invoice_number = Filter(field_name='invoice_number', lookup_expr='exact', label=_('Número de factura...'))
     o = LabeledOrderingFilter(
         choices=(('-added', 'Fecha de emisión'), ('-amount', 'Cantidad (descendente)'), ('-timestamp','Fecha de pago'), ('-sepa_batches__attempt','Añadido a remesa')) )
     account = MemberTypeFilter(label='Tipo de socia')
@@ -60,9 +62,10 @@ class PaymentsListView(PermissionRequiredMixin, FilterMixin, FilterView, ExportA
 
     model = PendingPayment
     csv_filename = 'pagos'
-    available_fields = ['account', 'reference', 'amount', 'concept', 'type', 'completed', 'timestamp', 'revised_by',
+    available_fields = ['account', 'reference', 'invoice_code', 'amount', 'concept', 'type', 'completed', 'timestamp', 'revised_by',
                         'contact_email', 'contact_phone', 'comment', 'added', 'returned', 'returned_timestamp', 'returned_reason' ]
-    field_labels = {'contact_email': 'Email de contacto', 'contact_phone': 'Telefono de contacto' }
+    field_labels = {'contact_email': 'Email de contacto', 'contact_phone': 'Telefono de contacto',
+                    'invoice_code': 'Número de factura'}
 
 
     def get_paginate_by(self, queryset):

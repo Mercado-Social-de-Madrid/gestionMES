@@ -22,6 +22,8 @@
             <i class="material-icons" >help_outline</i>
         </a>
 
+    <th scope="col">Número de factura</th>
+
     </th>
 
 {% endblock %}
@@ -71,6 +73,10 @@
     {% else %}
     {{item.added|date:'d/m/Y'}}
     {% endif %}
+</td>
+
+<td >
+    {{item.invoice_code}}
 </td>
 
 {% if not 'simple' in request.GET and not hide_controls %}
