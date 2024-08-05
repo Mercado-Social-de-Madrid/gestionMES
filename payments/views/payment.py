@@ -88,7 +88,8 @@ class PaymentsListView(PermissionRequiredMixin, FilterMixin, FilterView, ExportA
         return qs
 
     def get_current_year(self):
-        by_param = self.kwargs.get('year', None)
+        latest_year = PendingPayment.objects.latest('added').added.year
+        by_param = self.kwargs.get('year', latest_year)
         return int(by_param) if by_param else None
 
 
