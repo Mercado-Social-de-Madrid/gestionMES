@@ -152,6 +152,14 @@ class SepaBatchResult(models.Model):
         return self.payment.account.display_name
 
     @property
+    def legal_name(self):
+        return self.payment.account.legal_name
+
+    @property
+    def cif(self):
+        return self.payment.account.cif
+
+    @property
     def account_iban(self):
         return self.payment.account.iban_code
 

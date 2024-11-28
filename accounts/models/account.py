@@ -118,6 +118,10 @@ class Account(PolymorphicModel):
         return self.cif
 
     @property
+    def legal_name(self):
+        return self.cif
+
+    @property
     def invoice_name(self):
         return self.cif
 
@@ -196,6 +200,10 @@ class Consumer(Account):
     @property
     def display_name(self):
         return "{} {}".format(self.first_name, self.last_name)
+
+    @property
+    def legal_name(self):
+        return self.display_name
 
     @property
     def invoice_name(self):
@@ -281,6 +289,10 @@ class Entity(Account):
     @property
     def display_name(self):
         return self.name
+
+    @property
+    def legal_name(self):
+        return self.business_name
 
     @property
     def invoice_name(self):

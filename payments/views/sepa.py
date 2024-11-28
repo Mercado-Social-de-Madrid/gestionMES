@@ -89,8 +89,10 @@ class BatchDetail(PermissionRequiredMixin, ExportAsCSVMixin, UpdateView):
     queryset = SepaPaymentsBatch.objects.all()
     model = SepaPaymentsBatch
 
-    available_fields = ['account_name', 'payment_amount', 'account_iban', 'iban_code', 'bic_code', 'bank_name', 'success', 'fail_reason_display']
+    available_fields = ['account_name', 'legal_name', 'cif', 'payment_amount', 'account_iban', 'iban_code', 'bic_code', 'bank_name', 'success', 'fail_reason_display']
     field_labels = {'account_name': 'Cuenta',
+                    'legal_name': 'Razón social',
+                    'cif': 'NIF/CIF',
                     'payment_amount': 'Cantidad',
                     'account_iban': 'IBAN',
                     'iban_code': 'Código entidad bancaria',
