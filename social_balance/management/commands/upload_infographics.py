@@ -21,8 +21,9 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR('La carpeta "infographics" no existe.'))
             return
 
-        infographics = [archivo for archivo in os.listdir(infographics_path) if os.path.isfile(os.path.join(infographics_path, archivo))]
-        print(f'infographics count: {len(infographics)}')
+        infographics = [file for file in os.listdir(infographics_path) if os.path.isfile(os.path.join(infographics_path, file))]
+
+        warnings = []
 
         for infographic in infographics:
 
@@ -43,5 +44,9 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f'Infografía subida'))
             else:
                 self.stdout.write(self.style.WARNING(f'No se encontró ninguna Entidad con CIF {cif}'))
+                warnings.append(cif)
 
         self.stdout.write(self.style.SUCCESS('Proceso completado.'))
+        print(f'\nInfografías totales: {len(infographics)}')
+        print(f"\n{len(warnings)} Entidades no encontradas:\n")
+        print("\n".join(warnings))
