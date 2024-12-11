@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
         year = options['year']
 
-        headers = ['Nombre', 'Email', 'CIF', 'Link infografía', 'Público']
+        headers = ['Nombre', 'Email', 'CIF', 'Link infografía', 'Link infografía dinámica', 'Público']
         data = []
 
         entitiesSB = EntitySocialBalance.objects.filter(year=year)
@@ -33,8 +33,9 @@ class Command(BaseCommand):
             email = entitySB.entity.contact_email
             cif = entitySB.entity.cif
             link = BASESITE_URL + MEDIA_URL + entitySB.report.name
+            dynamic_link = entitySB.entity.balance_url
             is_public = entitySB.is_public
-            data.append([name, email, cif, link, is_public])
+            data.append([name, email, cif, link, dynamic_link, is_public])
 
 
         export_path = os.path.abspath(os.path.join(ROOT_DIR, 'export'))
