@@ -15,7 +15,7 @@ Menu.add_item("main",PermissionsMenuItem(_("Proveedoras"), reverse('accounts:pro
 Menu.add_item("main",PermissionsMenuItem(_("Consumidoras"), reverse('accounts:consumers_list'), weight=ACCOUNTS_MENU_WEIGHT+30, icon="directions_walk"))
 
 Menu.add_item("main",PermissionsMenuItem(_("Entidades esp."), reverse('accounts:entity_list'), weight=ACCOUNTS_MENU_WEIGHT+50, icon="grade"))
-#Menu.add_item("main",PermissionsMenuItem(_("Bajas"), reverse('accounts:deletion_list'), weight=ACCOUNTS_MENU_WEIGHT+70, icon="trending_down"))
+Menu.add_item("main",PermissionsMenuItem(_("Bajas"), reverse('accounts:deletion_list'), weight=ACCOUNTS_MENU_WEIGHT+70, icon="trending_down"))
 
 Menu.add_item("main",PermissionsMenuItem(_("Categorías"), reverse('accounts:category_list'), weight=MANAGEMENT_MENU_WEIGHT+50, icon="label"))
 Menu.add_item("main",PermissionsMenuItem(_("Informes"), reverse('accounts:accounts_report'), weight=MANAGEMENT_MENU_WEIGHT+60, icon="assessment"))
