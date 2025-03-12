@@ -5,4 +5,4 @@ from django.apps import AppConfig
 
 
 class SimpleErpConfig(AppConfig):
-    name = 'simple_erp'
+    name = 'simple_bpm'

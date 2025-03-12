@@ -7,7 +7,7 @@ class AjaxFormResponseMixin(object):
     """
 
     def form_valid(self, form):
-        if self.request.is_ajax():
+        if self.is_ajax():
             return JsonResponse({
                 'success': True,
                 'results': form.results if form.results else None,
@@ -17,7 +17,7 @@ class AjaxFormResponseMixin(object):
             return super().form_valid(form)
 
     def form_invalid(self, form):
-        if self.request.is_ajax():
+        if self.is_ajax():
             response = JsonResponse({
                 'success': False,
                 'form_errors': form.errors
@@ -26,3 +26,6 @@ class AjaxFormResponseMixin(object):
             return response
         else:
             return super().form_invalid(form)
+
+    def is_ajax(self):
+        return self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'

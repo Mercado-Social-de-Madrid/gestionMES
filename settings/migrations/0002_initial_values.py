@@ -34,11 +34,11 @@ def add_initial_settings(apps, schema_editor):
 
     Account = apps.get_model("accounts", "Account")
     member = Account.objects.exclude(member_id__isnull=True).order_by('member_id').last()
-    last_member_id = int(member.member_id)
+    last_member_id = int(member.member_id) if member else 1
 
     IntercoopAccount = apps.get_model("intercoop", "IntercoopAccount")
     member = IntercoopAccount.objects.exclude(member_id__isnull=True).order_by('member_id').last()
-    last_intercoop_id = int(member.member_id[6:])
+    last_intercoop_id = int(member.member_id[6:]) if member else 1
 
     add_if_empty(props, constants.SETTING_CATEGORY_ACCOUNTS, constants.ACCOUNTS_LAST_MEMBER_ID, int_value=last_member_id)
     add_if_empty(props, constants.SETTING_CATEGORY_ACCOUNTS, constants.ACCOUNTS_LAST_INTERCOOP_ID, int_value=last_intercoop_id)

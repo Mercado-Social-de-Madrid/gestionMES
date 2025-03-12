@@ -1,5 +1,5 @@
 
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
@@ -7,39 +7,39 @@ app_name = 'payments'
 
 urlpatterns = [
 
-    url(r'^$', views.PaymentsListView.as_view(), name='payments_list'),
-    url(r'^create/$', views.PaymentCreate.as_view(), name='create_payment'),
-    url(r'^year/(?P<year>\d+)/$', views.PaymentsListView.as_view(), name='list_by_year'),
-    url(r'^(?P<pk>[0-9a-f-]+)$', views.PaymentDetailView.as_view(), name='payment_detail'),
-    url(r'^(?P<pk>[0-9a-f-]+)/update/$', views.update_payment, name='update_payment'),
-    url(r'^(?P<pk>[0-9a-f-]+)/delete/$', views.payment_delete, name='payment_delete'),
-    url(r'^(?P<pk>[0-9a-f-]+)/fee/$', views.assign_payment_to_annualfeecharge, name='assign_fee'),
-    url(r'^card/$', views.CardPaymentsListView.as_view(), name='card_payments_list'),
-    url(r'^card/(?P<pk>[0-9a-f-]+)/$', views.CardPaymentDetailView.as_view(), name='card_payment_detail'),
-    url(r'^pay/(?P<uuid>[0-9a-f-]+)/$', views.form, name='payment_form'),
-    url(r'^end/success/$', views.payment_success, name='payment_success'),
-    url(r'^end/error/$', views.payment_error, name='payment_error'),
+    path('', views.PaymentsListView.as_view(), name='payments_list'),
+    path('create/', views.PaymentCreate.as_view(), name='create_payment'),
+    path('year/<int:year>/', views.PaymentsListView.as_view(), name='list_by_year'),
+    path('<pk>', views.PaymentDetailView.as_view(), name='payment_detail'),
+    path('<pk>/update/', views.update_payment, name='update_payment'),
+    path('<pk>/delete/', views.payment_delete, name='payment_delete'),
+    path('<pk>/fee/', views.assign_payment_to_annualfeecharge, name='assign_fee'),
+    path('card/', views.CardPaymentsListView.as_view(), name='card_payments_list'),
+    path('card/<pk>/', views.CardPaymentDetailView.as_view(), name='card_payment_detail'),
+    path('pay/<uuid>/', views.form, name='payment_form'),
+    path('end/success/', views.payment_success, name='payment_success'),
+    path('end/error/', views.payment_error, name='payment_error'),
 
-    url(r'^(?P<pk>[0-9a-f-]+)/factura.pdf$', views.invoice_pdf, name='invoice_pdf'),
+    path('<pk>/factura.pdf', views.invoice_pdf, name='invoice_pdf'),
 
-    url(r'^annual/(?P<year>\d+)/$', views.AnnualFeeChargesList.as_view(), name='annual_feecharges'),
-    url(r'^annual/(?P<year>\d+)/fee/(?P<pk>\d+)$', views.SplitFeeCharge.as_view(), name='split_feecharge'),
+    path('annual/<int:year>/', views.AnnualFeeChargesList.as_view(), name='annual_feecharges'),
+    path('annual/<int:year>/fee/<int:pk>)', views.SplitFeeCharge.as_view(), name='split_feecharge'),
 
-    url(r'^sepa/$', views.SepaBatchListView.as_view(), name='sepa_list'),
-    url(r'^sepa/add/$', views.BatchCreate.as_view(), name='sepa_create'),
-    url(r'^sepa/update/(?P<pk>[0-9a-f-]+)/$', views.BatchUpdate.as_view(), name='sepa_update'),
-    url(r'^sepa/(?P<pk>[0-9a-f-]+)/$', views.BatchDetail.as_view(), name='sepa_detail'),
-    url(r'^sepa/(?P<pk>[0-9a-f-]+)/regenerate/$', views.sepa_regenerate, name='sepa_regenerate'),
-    url(r'^sepa/(?P<pk>[0-9a-f-]+)/delete/$', views.sepa_delete, name='sepa_delete'),
-    url(r'^sepa/(?P<pk>[0-9a-f-]+)/(?P<batch_pk>[0-9a-f-]+)/invoice$', views.batch_payment_pdf, name='batch_payment_pdf'),
-    url(r'^sepa/(?P<pk>[0-9a-f-]+)/set-paid/$', views.sepa_set_paid, name='sepa_set_paid'),
+    path('sepa/', views.SepaBatchListView.as_view(), name='sepa_list'),
+    path('sepa/add/', views.BatchCreate.as_view(), name='sepa_create'),
+    path('sepa/update/<pk>/', views.BatchUpdate.as_view(), name='sepa_update'),
+    path('sepa/<pk>/', views.BatchDetail.as_view(), name='sepa_detail'),
+    path('sepa/<pk>/regenerate/', views.sepa_regenerate, name='sepa_regenerate'),
+    path('sepa/<pk>/delete/', views.sepa_delete, name='sepa_delete'),
+    path('sepa/<pk>/<batch_pk>/invoice', views.batch_payment_pdf, name='batch_payment_pdf'),
+    path('sepa/<pk>/set-paid/', views.sepa_set_paid, name='sepa_set_paid'),
 
-    url(r'^banks/$', views.BankList.as_view(), name='bank_list'),
-    url(r'^banks/bic$', views.BicExplanation.as_view(), name='bic_explanation'),
-    url(r'^banks/add/$', views.BankCreate.as_view(), name='bank_create'),
-    url(r'^banks/(?P<pk>[0-9a-f-]+)/$', views.BankUpdate.as_view(), name='bank_detail'),
+    path('banks/', views.BankList.as_view(), name='bank_list'),
+    path('banks/bic', views.BicExplanation.as_view(), name='bic_explanation'),
+    path('banks/add/', views.BankCreate.as_view(), name='bank_create'),
+    path('banks/<pk>/', views.BankUpdate.as_view(), name='bank_detail'),
 
-    url(r'^fees/add_comment/$', views.add_fee_comment, name='add_fee_comment'),
-    url(r'^fees/generate/$', views.GenerateFeesView.as_view(), name='generate_fees'),
+    path('fees/add_comment/', views.add_fee_comment, name='add_fee_comment'),
+    path('fees/generate/', views.GenerateFeesView.as_view(), name='generate_fees'),
 ]
 

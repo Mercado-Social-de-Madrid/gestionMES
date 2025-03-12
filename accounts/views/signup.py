@@ -7,7 +7,7 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.generic import CreateView, DetailView, TemplateView
+from django.views.generic import CreateView, DetailView, TemplateView, RedirectView
 from django_filters.views import FilterView
 
 from accounts.forms.process import SignupProcessForm
@@ -116,6 +116,20 @@ class SignupSuccessView(TemplateView):
         #         context['card_payment'] = card_payment
 
         return context
+
+class SignupRedirect(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        uuid = self.kwargs.get('uuid')
+
+        process = SignupProcess.objects.filter(uuid=uuid).first()
+
+        if not process:
+            return HttpResponseNotFound('<h1>Proceso de acogida no encontrado...</h1>')
+        if process.member_type == settings.MEMBER_PROV:
+            return reverse('accounts:provider_edit_form', kwargs={'uuid':uuid})
+
+        elif process.member_type == settings.MEMBER_CONSUMER:
+            return reverse('accounts:consumer_edit_form', kwargs={'uuid':uuid})
 
 def signup_form_redirect(request, uuid):
 

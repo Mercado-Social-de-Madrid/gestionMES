@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.contrib.sites.models import Site
 from django.db.models import Sum
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.clickjacking import xframe_options_exempt
@@ -82,27 +82,27 @@ def form(request, uuid):
 
     payment = PendingPayment.objects.filter(reference=uuid).first()
     if payment and payment.completed:
-        return HttpResponse(render_to_response('payments/pay_form_paid.html',
+        return HttpResponse(render(None,'payments/pay_form_paid.html',
                                                {'request': request, 'uuid': uuid, 'payment': payment}))
 
     paid, card_payment, form = generate_payment_form(uuid, URL_params=params)
     if paid:
-        return HttpResponse(render_to_response('payments/pay_form_paid.html',
+        return HttpResponse(render(None,'payments/pay_form_paid.html',
                                                {'request': request, 'uuid': uuid, 'payment': payment,
                                                 'card_payment': card_payment}))
 
-    return HttpResponse(render_to_response('payments/pay_form.html',
+    return HttpResponse(render(None,'payments/pay_form.html',
                                            {'request': request, 'uuid': uuid, 'payment': payment, 'form': form,
                                             'card_payment': card_payment, 'debug': settings.SERMEPA_DEBUG}))
 
 
 @xframe_options_exempt
 def payment_success(request):
-    return HttpResponse(render_to_response('payments/end.html', {}))
+    return HttpResponse(render(None,'payments/end.html', {}))
 
 @xframe_options_exempt
 def payment_error(request):
-    return HttpResponse(render_to_response('payments/error.html', {}))
+    return HttpResponse(render(None,'payments/error.html', {}))
 
 
 def payment_ok(sender, **kwargs):

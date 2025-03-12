@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.conf.urls import url
+from django.urls.conf import re_path
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.urls import reverse
 from tastypie.exceptions import NotFound
@@ -22,10 +22,10 @@ class AccountResource(ModelResource):
 
     def prepend_urls(self):
         return [
-            url(r"^(?P<resource_name>%s)/(?P<pk>[\w0-9/-]*)/invite%s$" % (
+            re_path(r"^(?P<resource_name>%s)/(?P<pk>[\w0-9/-]*)/invite%s$" % (
             self._meta.resource_name, trailing_slash()), self.wrap_view('invite'), name="api_invite"),
 
-            url(r"^(?P<resource_name>%s)/(?P<pk>[\w0-9/-]*)/purchase%s$" % (
+            re_path(r"^(?P<resource_name>%s)/(?P<pk>[\w0-9/-]*)/purchase%s$" % (
                 self._meta.resource_name, trailing_slash()), self.wrap_view('purchase'), name="api_purchase"),
         ]
 

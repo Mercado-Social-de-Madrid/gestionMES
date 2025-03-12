@@ -14,7 +14,7 @@ class AjaxTemplateResponseMixin(TemplateResponseMixin):
         """
 
         response = super(AjaxTemplateResponseMixin, self).render_to_response(context, **response_kwargs)
-        if self.request.is_ajax():
+        if self.is_ajax():
             response['Cache-Control'] = 'no-cache'
             response['Vary'] = 'Accept'
         return response
@@ -27,10 +27,13 @@ class AjaxTemplateResponseMixin(TemplateResponseMixin):
         """
 
         template_names = None
-        if self.request.is_ajax() and self.ajax_template_name is not None:
+        if self.is_ajax() and self.ajax_template_name is not None:
             template_names = [self.ajax_template_name, self.template_name]
 
         if template_names is None:
             template_names = super(AjaxTemplateResponseMixin, self).get_template_names()
 
         return template_names
+
+    def is_ajax(self):
+        return self.request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
