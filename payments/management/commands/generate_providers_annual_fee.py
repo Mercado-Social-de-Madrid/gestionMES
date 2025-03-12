@@ -53,7 +53,7 @@ class Command(BaseCommand):
                     else:
                         print(f'Provider fee already created: {provider.display_name}')
                 else:
-                    print(f'Provider payment in kink: {provider.display_name}')
+                    print(f'Provider payment in kind: {provider.display_name}')
             else:
                 print(f'Fee is None or 0 for {provider.display_name}')
 
