@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from datetime import datetime
 
 import django_filters
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse, reverse_lazy
@@ -34,10 +35,7 @@ class SponsorFilter(django_filters.BooleanFilter):
 class BalanceProcessYearFilter(django_filters.ChoiceFilter):
 
     def __init__(self, *args,**kwargs):
-        years_map = list(BalanceProcess.objects.values('year').distinct().order_by('year'))
-        years = list(map(lambda x: str(x['year']), years_map))
-        years_labeled = list(zip(years, years))
-        django_filters.ChoiceFilter.__init__(self, choices=years_labeled, *args,**kwargs)
+        django_filters.ChoiceFilter.__init__(self, *args,**kwargs)
 
     def filter(self, qs, value):
         if value:
@@ -58,6 +56,16 @@ class BalanceFilter(django_filters.FilterSet):
     year = BalanceProcessYearFilter(label='Año')
     sponsor = SponsorFilter(label=_('Amadrinada por mí'), widget=BooleanWidget(attrs={'class':'threestate'}))
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.request is not None:
+            years_map = list(BalanceProcess.objects.values('year').distinct().order_by('year'))
+            years = list(map(lambda x: str(x['year']), years_map))
+            years_labeled = list(zip(years, years))
+            self.filters['year'].extra['choices'] = years_labeled
+        else:
+            self.filters['year'].extra['choices'] = [(settings.CURRENT_BALANCE_YEAR, str(settings.CURRENT_BALANCE_YEAR))]
+
     class Meta:
         form = BalanceFilterForm
         fields = { }
@@ -65,7 +73,6 @@ class BalanceFilter(django_filters.FilterSet):
 
 class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListItemUrlMixin, AjaxTemplateResponseMixin):
     permission_required = 'social_balance.mespermission_can_view_balance_process'
-    queryset = BalanceProcess.objects.all().order_by('-year')
     objects_url_name = 'process_detail'
     template_name = 'balance/process/list.html'
     ajax_template_name = 'balance/process/query.html'
@@ -79,8 +86,8 @@ class BalanceProcessList(PermissionRequiredMixin, FilterMixin, FilterView, ListI
             year = int(year)
             BalanceProcess.objects.create_pending_processes(year)
             return BalanceProcess.objects.filter(year=year).order_by('-last_update')
-
-        return super().get_queryset()
+        else:
+            return BalanceProcess.objects.all().order_by('-year')
 
 
 class BalanceProcessGenerate(PermissionRequiredMixin, FormView):

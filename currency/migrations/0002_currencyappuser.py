@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CurrencyAppUser',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('is_guest', models.BooleanField(default=False, verbose_name='Es invitada')),
                 ('is_pushed', models.BooleanField(default=False, verbose_name='Actualizado en el servidor')),
                 ('cif', models.CharField(max_length=30, verbose_name='NIF/CIF')),

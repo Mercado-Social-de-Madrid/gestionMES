@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Account',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('status', models.CharField(choices=[('activa', 'Activa'), ('pagoinicial', 'Pendiente de pago inicial'), ('pagopendiente', 'Pago de cuota pendiente'), ('anulada', 'Anulada por impago'), ('bsja', 'Baja')], default='activa', max_length=20, verbose_name='Estado')),
                 ('cif', models.CharField(max_length=30, unique=True, verbose_name='NIF/CIF')),
                 ('contact_phone', models.CharField(blank=True, max_length=50, null=True, verbose_name='Tel\xe9fono de contacto')),
@@ -39,7 +39,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'verbose_name': 'Socia',
-                'manager_inheritance_from_future': True,
                 'verbose_name_plural': 'Socias',
                 'permissions': (('mespermission_can_view_accounts', 'Puede ver la lista de socias'),),
             },
@@ -61,7 +60,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='LegalForm',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=250, verbose_name='Nombre')),
             ],
             options={
@@ -76,9 +75,6 @@ class Migration(migrations.Migration):
                 ('first_name', models.CharField(blank=True, max_length=250, null=True, verbose_name='Nombre')),
                 ('last_name', models.CharField(blank=True, max_length=250, null=True, verbose_name='Apellidos')),
             ],
-            options={
-                'manager_inheritance_from_future': True,
-            },
             bases=('accounts.account',),
         ),
         migrations.CreateModel(
@@ -94,9 +90,6 @@ class Migration(migrations.Migration):
                 ('start_year', models.PositiveSmallIntegerField(blank=True, default=2019, null=True, validators=[django.core.validators.MinValueValidator(1900), django.core.validators.MaxValueValidator(2019)], verbose_name='A\xf1o de inicio del proyecto')),
                 ('contact_person', models.TextField(blank=True, null=True, verbose_name='Persona de contacto')),
             ],
-            options={
-                'manager_inheritance_from_future': True,
-            },
             bases=('accounts.account',),
         ),
         migrations.AddField(
@@ -115,9 +108,6 @@ class Migration(migrations.Migration):
                 ('entity_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='accounts.Entity')),
                 ('collaboration', models.TextField(blank=True, verbose_name='Modo de colaboraci\xf3n')),
             ],
-            options={
-                'manager_inheritance_from_future': True,
-            },
             bases=('accounts.entity',),
         ),
         migrations.CreateModel(
@@ -128,9 +118,6 @@ class Migration(migrations.Migration):
                 ('num_workers', models.IntegerField(default=1, verbose_name='N\xfamero de trabajadoras')),
                 ('aprox_income', models.IntegerField(default=0, verbose_name='Facturaci\xf3n \xfaltimo a\xf1o')),
             ],
-            options={
-                'manager_inheritance_from_future': True,
-            },
             bases=('accounts.entity',),
         ),
         migrations.AddField(

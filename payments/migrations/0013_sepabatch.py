@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SepaBatch',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('attempt', models.DateTimeField(auto_now_add=True, verbose_name='Añadido')),
                 ('amount', models.FloatField(default=0, verbose_name='Cantidad total')),
                 ('sepa_file', models.FileField(blank=True, null=True, upload_to='sepa', verbose_name='Fichero SEPA')),

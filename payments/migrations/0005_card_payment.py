@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CardPayment',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('attempt', models.DateTimeField(auto_now_add=True, verbose_name='A\xf1adido')),
                 ('type', models.CharField(blank=True, choices=[('pago', 'Pago pendiente'), ('compramoneda', 'Compra de Etics')], max_length=30, null=True, verbose_name='Tipo de pago')),
                 ('bank_response', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='sermepa.SermepaResponse', verbose_name='Respuesta TPV')),

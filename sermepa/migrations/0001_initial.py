@@ -16,14 +16,14 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SermepaIdTPV',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('idtpv', models.CharField(max_length=12, unique=True)),
             ],
         ),
         migrations.CreateModel(
             name='SermepaResponse',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('creation_date', models.DateTimeField(auto_now_add=True)),
                 ('Ds_Date', models.DateField()),
                 ('Ds_Hour', models.TimeField()),

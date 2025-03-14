@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='FeeRange',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('min_num_workers', models.IntegerField(default=1, verbose_name='M\xednimo N\xfamero de trabajadoras')),
                 ('max_num_workers', models.IntegerField(default=1, verbose_name='M\xe1ximo N\xfamero de trabajadoras')),
                 ('min_income', models.IntegerField(default=1, verbose_name='Ingresos m\xednimos')),

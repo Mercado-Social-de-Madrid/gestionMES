@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PendingPayment',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('type', models.CharField(blank=True, choices=[('tarjeta', 'Pago con tarjeta'), ('transferencia', 'Transferencia'), ('domiciliacion', 'Domiciliaci\xf3n bancaria')], max_length=30, null=True, verbose_name='Modo de pago')),
                 ('amount', models.FloatField(verbose_name='Cantidad')),
                 ('concept', models.TextField(blank=True, null=True, verbose_name='Concepto')),

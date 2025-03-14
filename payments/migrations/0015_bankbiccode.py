@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BankBICCode',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('bank_code', models.CharField(blank=True, max_length=20, null=True, verbose_name='Código de cuenta')),
                 ('bank_name', models.CharField(blank=True, max_length=180, null=True, verbose_name='Nombre del banco')),
                 ('bic_code', models.CharField(blank=True, max_length=20, null=True, verbose_name='Código BIC')),

@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EntitySocialBalance',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('is_exempt', models.BooleanField(default=False, verbose_name='Est\xe1 exenta')),
                 ('is_public', models.BooleanField(default=True, verbose_name='Informe p\xfablico')),
                 ('done', models.BooleanField(default=False, verbose_name='Realizado')),

@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SignupProcess',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('uuid', models.UUIDField(auto_created=True, verbose_name='Identificador proceso')),
                 ('member_type', models.CharField(blank=True, choices=[(b'consumidora', b'Socia consumidora'), (b'colaboradora', b'Socia colaboradora'), (b'proveedora', b'Socia proveedora')], max_length=30, null=True, verbose_name='Tipo de socia')),
                 ('name', models.CharField(blank=True, max_length=250, null=True, verbose_name='Nombre')),

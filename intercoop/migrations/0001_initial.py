@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='IntercoopAccount',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('active', models.BooleanField(default=True, verbose_name='Activa')),
                 ('cif', models.CharField(max_length=30, unique=True, verbose_name='NIF/CIF')),
                 ('first_name', models.CharField(max_length=250, verbose_name='Nombre')),
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='IntercoopEntity',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, max_length=250, null=True, verbose_name='Nombre')),
                 ('expiration', models.IntegerField(default=3, verbose_name='Años de validez')),
                 ('include_code', models.BooleanField(default=True, verbose_name='Incluir identificador de socia externa para validación')),

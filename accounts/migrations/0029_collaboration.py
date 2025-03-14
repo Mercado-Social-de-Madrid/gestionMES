@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Collaboration',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, max_length=250, null=True, verbose_name='Tipo')),
                 ('description', models.TextField(blank=True, null=True, verbose_name='Descripción')),
                 ('color', models.CharField(blank=True, max_length=30, null=True, verbose_name='Color de etiqueta (código hexadecimal)')),
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EntityCollaboration',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('order', models.IntegerField(blank=True, null=True, verbose_name='Orden')),
                 ('special_agreement', models.TextField(blank=True, verbose_name='Acuerdos especiales')),
                 ('custom_fee', models.FloatField(blank=True, null=True, verbose_name='Cuota específica')),

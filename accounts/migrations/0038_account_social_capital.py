@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SocialCapital',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('amount', models.FloatField(blank=True, default=0, null=True, verbose_name='Capital social')),
                 ('paid', models.BooleanField(default=False, verbose_name='Pagado')),
                 ('paid_timestamp', models.DateTimeField(blank=True, null=True, verbose_name='Fecha pago')),

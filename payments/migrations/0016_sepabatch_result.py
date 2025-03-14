@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SepaBatchResult',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('success', models.BooleanField(default=True, verbose_name='Añadido correctamente')),
                 ('iban_code', models.CharField(blank=True, max_length=20, null=True, verbose_name='Código de cuenta')),
                 ('bic_code', models.CharField(blank=True, max_length=20, null=True, verbose_name='Código BIC')),
@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SepaPaymentsBatch',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('attempt', models.DateTimeField(auto_now_add=True, verbose_name='Añadido')),
                 ('amount', models.FloatField(default=0, verbose_name='Cantidad total')),
                 ('title', models.CharField(blank=True, max_length=180, null=True, verbose_name='Nombre')),

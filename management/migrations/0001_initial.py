@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Comission',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('label_color', models.CharField(blank=True, default='#FFFFFF', max_length=20)),
                 ('group', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='auth.Group')),
             ],

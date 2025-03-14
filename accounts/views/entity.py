@@ -51,7 +51,6 @@ class EntityFilter(django_filters.FilterSet):
 class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMixin, AjaxTemplateResponseMixin):
 
     model = Entity
-    queryset = Entity.objects.filter( Q(instance_of=Colaborator) | Q(collabs__isnull=False) ).distinct()
     objects_url_name = 'entity_detail'
     template_name = 'entity/list.html'
     ajax_template_name = 'entity/query.html'
@@ -69,7 +68,8 @@ class EntitiesListView(FilterMixin, FilterView, ExportAsCSVMixin, ListItemUrlMix
                     'has_logo':'Tiene logo',
                     'balance_url': "Enlace balance"}
 
-
+    def get_queryset(self):
+        return Entity.objects.filter( Q(instance_of=Colaborator) | Q(collabs__isnull=False) ).distinct()
 
 
 

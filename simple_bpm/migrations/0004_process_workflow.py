@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProcessWorkflow',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('start_time', models.DateTimeField(auto_now_add=True, verbose_name='Fecha de inicio')),
                 ('current_state', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='simple_bpm.ProcessStep', verbose_name='Paso actual')),
                 ('process', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='simple_bpm.Process', verbose_name='Proceso que sigue')),
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProcessWorkflowEvent',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('timestamp', models.DateTimeField(auto_now_add=True, verbose_name='Fecha')),
                 ('comment', models.TextField(blank=True, null=True, verbose_name='Comentario')),
                 ('completed_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Usuario')),
@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ProcessWorkflowTask',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('timestamp', models.DateTimeField(auto_now_add=True, verbose_name='Fecha')),
                 ('completed_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Usuario')),
                 ('workflow', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='completed_checklist', to='simple_bpm.ProcessWorkflow', verbose_name='Evento de un proceso')),

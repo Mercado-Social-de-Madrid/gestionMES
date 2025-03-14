@@ -1,0 +1,68 @@
+import os
+
+# Database
+# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # you can use your prefered one though
+        'NAME': 'gestionmes',
+        'USER': 'root',
+        'PASSWORD': 'tastastas',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+
+# Google Maps Javascript API Key
+# To get an API key: https://developers.google.com/maps/documentation/javascript/get-api-key
+
+GMAPS_APIKEY = 'YOUR_GMAPS_APIKEY'
+FCM_SERVER_KEY = 'YOUR_FIREBASE_KEY'
+
+# List of allowed hostnames
+ALLOWED_HOSTS = [ 'localhost', ]
+BASESITE_URL = 'http://localhost:8000/'
+
+# For the connection with the currency server
+CITY_ID = 'mad'
+# Initial latitude and longitude for new venues (center of your city?)
+INITIAL_LATITUDE = 1.0000000000
+INITIAL_LONGITUDE = 1.0000000000
+
+# Email SMTP server configuration (can be local or an online service like SendGrid)
+EMAIL_HOST = 'HOST_URL'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'email_user'
+EMAIL_HOST_PASSWORD = 'email_password'
+EMAIL_USE_TLS = True
+
+SERMEPA_DEBUG = True # Change if you want to use the production environment
+SERMEPA_URL_PRO = 'https://sis.redsys.es/sis/realizarPago'
+SERMEPA_URL_TEST = 'https://sis-t.redsys.es:25443/sis/realizarPago'
+SERMEPA_MERCHANT_CODE = '327234688' #comercio de test
+SERMEPA_TERMINAL = '002'
+SERMEPA_SECRET_KEY = 'qwertyasdf0123456789'
+SERMEPA_BUTTON_IMG = '/site_media/_img/targets.jpg'
+SERMEPA_CURRENCY = '978' #Euros
+
+CURRENCY_SERVER_BASE_URL = 'http://localhost:9000/'
+CURRENCY_SERVER_AUTH_HEADER = 'ApiKey admin:fb563c484afb5d9cd602b409c7d5e886b2d67371'
+
+#### INITIAL VALUES (can be dinamically changed through SettingsProperties model)
+
+# Year to show for the Social balance report/badge
+CURRENT_BALANCE_YEAR = 2021
+
+# Year to show for the annual fee charges
+CURRENT_FEECHARGES_YEAR = 2023
+
+# Initial values only for the first migration
+DEFAULT_PROVIDER_FEE = 100.0
+DEFAULT_CONSUMER_FEE = 25.0
+DEFAULT_PROVIDER_SOCIAL_CAPITAL = 20.0
+DEFAULT_CONSUMER_SOCIAL_CAPITAL = 10.0
+DEFAULT_SPECIAL_FEE = 500.0
+
+
+DEBUG = True

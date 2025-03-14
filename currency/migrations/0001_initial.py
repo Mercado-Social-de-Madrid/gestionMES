@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='GuestAccount',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('active', models.BooleanField(default=True, verbose_name='Activa')),
                 ('cif', models.CharField(max_length=30, unique=True, verbose_name='NIF/CIF')),
                 ('first_name', models.CharField(blank=True, max_length=250, null=True, verbose_name='Nombre')),
@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='GuestInvitation',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('token', models.CharField(max_length=40, verbose_name='Token')),
                 ('used', models.BooleanField(default=False, verbose_name='Utilizado')),
                 ('single_use', models.BooleanField(default=True, verbose_name='De un solo uso')),

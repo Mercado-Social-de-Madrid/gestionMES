@@ -1,0 +1,45 @@
+
+services:
+  web:
+    build: .
+    container_name: "${COMPOSE_PROJECT_NAME}_web"
+    command: gunicorn
+    ports:
+      - "${DJANGO_PORT:-8000}:8000"
+    volumes:
+      - .:/code
+      - ./logs:/var/log/gestionmes/
+      - gunicorn_logs:/var/log/gunicorn/
+      - gunicorn_pid:/var/run/gunicorn/
+      - ../config/logrotate:/etc/logrotate.d
+      - ../config/firebase:/firebase/
+      - ../config:/config/
+      - ../static:/static
+      - ../media:/media
+    env_file:
+      - ./.env
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:17
+    container_name: "${COMPOSE_PROJECT_NAME}_db"
+    ports:
+      - "${DB_PORT:-5432}:${DB_PORT:-5432}"
+    volumes:
+      - postgres_data_17:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PWRD}
+      - POSTGRES_DB=${DB_NAME}
+      - PGPORT=${DB_PORT}
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${DB_USER} -d ${DB_NAME}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+volumes:
+  postgres_data_17:
+  gunicorn_logs:
+  gunicorn_pid:

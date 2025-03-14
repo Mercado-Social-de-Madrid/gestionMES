@@ -2,15 +2,19 @@ Django==5.0.1
 django-ckeditor==6.7.0
 django-compressor==3.1
 django-cookies-samesite==0.9.0
-django-imagekit==4.1.0
+django-environ==0.11.2
 django-filter==23.5
-django-js-asset==1.1.0
+django-honeypot==1.2.1
+django-imagekit==4.1.0
 django-localflavor==4.0
 django-polymorphic==3.1
 django-qrcode==0.3
 django-simple-menu==2.1.3
 django-sass-processor==1.4
 django-tastypie==0.14.7
+
+gunicorn==21.2.0
+psycopg2==2.9.9
 fcm-django==0.2.13
 idna==2.7
 olefile==0.45.1
@@ -18,10 +22,8 @@ pilkit==2.0
 pyDes==2.0.1
 python-dateutil==2.6.1
 python-mimeparse==1.6.0
-pytz==2018.3
 rcssmin==1.1.0
 requests==2.32.0
-requests-toolbelt==0.8.0
 rjsmin==1.2.0
 selenium==3.141.0
 sentry-sdk[django]
@@ -29,5 +31,5 @@ sepaxml==2.2.0
 WeasyPrint==52.4
 webdriver-manager==2.4.0
 libsass==0.22.0
-django-honeypot==1.2.1
+
 

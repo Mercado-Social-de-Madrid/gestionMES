@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BalanceProcess',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('uuid', models.UUIDField(auto_created=True, default=uuid.uuid4, verbose_name='Identificador proceso')),
                 ('last_update', models.DateTimeField(auto_now=True, verbose_name='Última actualización')),
                 ('member_type', models.CharField(blank=True, choices=[('consumidora', 'Socia consumidora'), ('colaboradora', 'Socia colaboradora'), ('proveedora', 'Socia proveedora')], max_length=30, null=True, verbose_name='Tipo de socia')),

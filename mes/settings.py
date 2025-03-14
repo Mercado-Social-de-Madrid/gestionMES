@@ -11,30 +11,38 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-from django.utils.translation import gettext as _
+import environ
+import sentry_sdk
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
 
+# Take environment variables from .env file
+env = environ.Env(DEBUG=(bool, False))
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'uzekt30thl4&hw)p@c#ht=b8mn!3l080kmnuk7ez+g5l%lb*p9'
+SECRET_KEY = env('SECRET_KEY')
 AUTH_USER_MODEL = 'core.User'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+ADMINS = env.list("ADMINS")
 INTERNAL_IPS = ['127.0.0.1', ]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # Main apps
     'dashboard',
     'accounts',
     'simple_bpm',
@@ -43,17 +51,21 @@ INSTALLED_APPS = [
     'social_balance',
     'currency',
     'intercoop',
-    'menu',
     'settings',
     'sermepa',
     'core',
+
+    # External apps
     'django_filters',
     'ckeditor',
+    'simple_menu',
     'qrcode',
     'sass_processor',
     'polymorphic',
     'localflavor',
     'imagekit',
+
+    #Django packages
     'django.contrib.humanize',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -98,82 +110,61 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mes.wsgi.application'
 
 
-# Logging configuration
-LOGGING_DIR = os.path.join(BASE_DIR, 'logs')
+# ======= Logging Configuration ========
+LOGGING_DIR = env('LOGGING_DIR')
 os.makedirs(LOGGING_DIR, exist_ok=True)
-LOGGING_LEVEL = "INFO"
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'default': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        'verbose': {
+            'format': '[%(levelname)s] %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '[%(levelname)s] %(message)s'
         },
     },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'default',
+            'formatter': 'verbose',
         },
-        'null': {
-            'class': 'logging.NullHandler',
+        'multi_thread_file_handler': {
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': os.path.join(LOGGING_DIR, 'mes.log'),
+            'formatter': 'verbose',
         },
-        'file': {
+        'single_thread_file_handler': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
             'filename': os.path.join(LOGGING_DIR, 'mes.log'),
             'when': 'midnight',
-            'backupCount': 30,
-            'formatter': 'default',
-        }
+            'interval': 1,
+            'backupCount': 31,
+            'formatter': 'verbose',
+            'utc': True,
+        },
     },
     'loggers': {
-        'django.security.DisallowedHost': {
-            'handlers': ['null'],
-            'propagate': False,
-        },
         '': {
-            'handlers': ['console', 'file'],
-            'level': LOGGING_LEVEL,
+            'handlers': env.list('LOGGING_HANDLERS'),
+            'level': os.environ.get('LOGLEVEL', 'INFO').upper(),
             'propagate': False,
         },
     },
 }
 
-MEMBER_CONSUMER = 'consumidora'
-MEMBER_COLAB = 'colaboradora'
-MEMBER_PROV = 'proveedora'
-MEMBER_TYPES = (
-    (MEMBER_CONSUMER, 'Socia consumidora'),
-    (MEMBER_COLAB, 'Socia colaboradora'),
-    (MEMBER_PROV, 'Socia proveedora'),
-)
+LOG_VIEWER_FILES = []
+LOG_VIEWER_FILES_PATTERN = '*.log*'
+LOG_VIEWER_FILES_DIR = LOGGING_DIR
+LOG_VIEWER_PAGE_LENGTH = 25  # total log lines per-page
+LOG_VIEWER_MAX_READ_LINES = 1000  # total log lines will be read
+LOG_VIEWER_FILE_LIST_MAX_ITEMS_PER_PAGE = 25  # Max log files loaded in Datatable per page
+LOG_VIEWER_PATTERNS = ['[INFO]', '[DEBUG]', '[WARNING]', '[ERROR]', '[CRITICAL]']
+LOG_VIEWER_EXCLUDE_TEXT_PATTERN = None  # String regex expression to exclude the log from lines
 
-
-
-# Jet admin configs
-
-JET_SIDE_MENU_COMPACT = True
-JET_CHANGE_FORM_SIBLING_LINKS = False
-JET_SIDE_MENU_ITEMS = [  # A list of application or custom item dicts
-    {'label': 'General', 'items': [
-        {'name': 'core.user'},
-    ]},
-    {'label': 'Seguridad', 'items': [
-        {'name': 'auth.group'},
-        {'name': 'auth.permission'},
-    ]},
-]
-JET_THEMES = [
-    {
-        'theme': 'mes',
-        'color': '#cf821c',
-        'title': 'MES'
-    }
-]
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     { 'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
     { 'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
@@ -181,6 +172,19 @@ AUTH_PASSWORD_VALIDATORS = [
     { 'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
 ]
 
+# ======= Database Configuration ========
+# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': env('DB_ENGINE'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PWRD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT')
+    }
+}
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
@@ -195,35 +199,40 @@ SITE_ID = 1
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
-STATIC_ROOT = ROOT_DIR + '/static'
-MEDIA_ROOT = ROOT_DIR + '/media'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_ROOT = os.path.join(ROOT_DIR, 'static')
+MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
+
+BASESITE_URL = env('BASESITE_URL')
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
 
 LOGIN_EXEMPT_URLS = [
-    r'^'+MEDIA_URL+'/*',
-    r'^accounts/signup/consumer/',
-    r'^accounts/signup/provider/',
-    r'^accounts/signup/success/',
-    r'^accounts/signup/[0-9a-f-]+/',
-    r'^accounts/signup/provider/[0-9a-f-]+/',
-    r'^accounts/signup/consumer/[0-9a-f-]+/',
-    r'^api/.*',
-    r'^pay/.*',
-    r'^accounts/catalogo/.*',
-    r'^payments/pay/.*',
-    r'^payments/end/.*',
-    r'^invite/',
-    r'^invite/[#0-9a-zA-Z\-]+/',
-    r'^balance/render/.*',
-    r'^media/balance/badges/*',
-    r'^password_reset/.*',
-    r'^reset/*',
-    r'^intercoop/[0-9a-zA-Z_-]+/$'
+    'static/.*',
+    'media/.*',
+    'accounts/signup/consumer/',
+    'accounts/signup/provider/',
+    'accounts/signup/success/',
+    'accounts/signup/[0-9a-f-]+/',
+    'accounts/signup/provider/[0-9a-f-]+/',
+    'accounts/signup/consumer/[0-9a-f-]+/',
+    'api/.*',
+    'pay/.*',
+    'accounts/catalogo/.*',
+    'payments/pay/.*',
+    'payments/end/.*',
+    'invite/',
+    'invite/[#0-9a-zA-Z\-]+/',
+    'balance/render/.*',
+    'media/balance/badges/*',
+    'password_reset/.*',
+    'reset/*',
+    'intercoop/[0-9a-zA-Z_-]+/'
 ]
 
 INLINE_INPUT_SEPARATOR = '&&&'
@@ -236,6 +245,7 @@ STATICFILES_FINDERS = [
 
 TASTYPIE_DEFAULT_FORMATS = ['json']
 
+
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': 'Custom',
@@ -247,13 +257,96 @@ CKEDITOR_CONFIGS = {
     },
 }
 
-SERMEPA_DEBUG = True
+# ======= Mailing configuration =======
+
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+
+# Email SMTP server configuration (can be local or an online service like SendGrid)
+EMAIL_HOST = env('EMAIL_HOST_URL')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+EMAIL_SEND_FROM = env('EMAIL_SEND_FROM')
+ENABLE_EMAIL_SENDING = env('ENABLE_EMAIL_SENDING') == 'True'
+
+
 SERMEPA_SIGNATURE_VERSION = 'HMAC_SHA256_V1'
+SERMEPA_BUTTON_IMG = '/site_media/_img/targets.jpg'
+SERMEPA_CURRENCY = '978' #Euros
 
-# Year to show in the social balance badge
-CURRENT_BALANCE_YEAR = 2018
+SERMEPA_DEBUG = env('SERMEPA_DEBUG') # Change if you want to use the production environment
+SERMEPA_URL_PRO = env('SERMEPA_URL_PRO')
+SERMEPA_URL_TEST = env('SERMEPA_URL_TEST')
+SERMEPA_MERCHANT_CODE = env('SERMEPA_MERCHANT_CODE')
+SERMEPA_TERMINAL = env('SERMEPA_TERMINAL')
+SERMEPA_SECRET_KEY = env('SERMEPA_SECRET_KEY')
 
+GMAPS_APIKEY = env('GMAPS_APIKEY')
+FCM_SERVER_KEY = env('FCM_SERVER_KEY')
 HONEYPOT_FIELD_NAME = 'body2'
 
-# Import secret settings (see settings_secret.py.template for reference)
-from mes.settings_secret import *
+# ======= App configurations =======
+
+MEMBER_CONSUMER = 'consumidora'
+MEMBER_COLAB = 'colaboradora'
+MEMBER_PROV = 'proveedora'
+MEMBER_TYPES = (
+    (MEMBER_CONSUMER, 'Socia consumidora'),
+    (MEMBER_COLAB, 'Socia colaboradora'),
+    (MEMBER_PROV, 'Socia proveedora'),
+)
+
+
+INITIAL_LATITUDE = 40.43399206106631
+INITIAL_LONGITUDE = -3.7048717038201344
+
+CURRENCY_SERVER_BASE_URL = env('CURRENCY_SERVER_BASE_URL')
+CURRENCY_SERVER_AUTH_HEADER = env('CURRENCY_SERVER_AUTH_HEADER')
+# For the connection with the currency server
+CITY_ID = env('CITY_ID')
+
+
+#### INITIAL VALUES (can be dinamically changed through SettingsProperties model)
+
+# Year to show for the Social balance report/badge
+CURRENT_BALANCE_YEAR = 2021
+
+# Year to show for the annual fee charges
+CURRENT_FEECHARGES_YEAR = 2023
+
+# Initial values only for the first migration
+DEFAULT_PROVIDER_FEE = 100.0
+DEFAULT_CONSUMER_FEE = 25.0
+DEFAULT_PROVIDER_SOCIAL_CAPITAL = 20.0
+DEFAULT_CONSUMER_SOCIAL_CAPITAL = 10.0
+DEFAULT_SPECIAL_FEE = 500.0
+
+
+# ======= Sentry Configuration ========
+ENABLE_SENTRY = env('ENABLE_SENTRY') == 'True'
+if ENABLE_SENTRY:
+    import sentry_sdk
+    sentry_sdk.init(
+        dsn=env('SENTRY_DSN'),
+        traces_sample_rate=1.0,
+        profiles_sample_rate=0.5,
+        environment=env('SENTRY_ENV')
+    )
+
+# ======= Firebase Configuration ========
+ENABLE_FIREBASE = env('ENABLE_FIREBASE') == 'True'
+if ENABLE_FIREBASE:
+
+    INSTALLED_APPS += ('fcm_django',)
+
+    from firebase_admin import initialize_app
+    FIREBASE_APP = initialize_app()
+    FCM_DJANGO_SETTINGS = {
+        "ONE_DEVICE_PER_USER": False,
+        "DELETE_INACTIVE_DEVICES": False,
+    }
+
+# ======= APP Links Configuration ======
+ASSETLINKS_FILE = os.path.join(ROOT_DIR, env('ASSETLINKS_FILE'))
+
